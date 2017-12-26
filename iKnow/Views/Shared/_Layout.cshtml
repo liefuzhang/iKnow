@@ -15,7 +15,7 @@
             <input class="search" type="text" placeholder="Search iKnow" />
             <ul class="navbar-nav">
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                <li>@Html.ActionLink("Topic", "Index", "Topic")</li>
+                <li>@Html.ActionLink("Topics", "Index", "Topic")</li>
                 <li>@Html.ActionLink("Answer", "Index", "Answer")</li>
                 <li>@Html.ActionLink("Add Question", "Index", "Question")</li>
             </ul>
@@ -25,7 +25,11 @@
             </div>
         </div>
     </div>
-    @RenderBody()
+    <div class="main">
+        <div class="content-container">
+            @RenderBody()
+        </div>
+    </div>
 
     @Scripts.Render("~/bundles/js")
     @RenderSection("scripts", required: false)

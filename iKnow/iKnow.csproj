@@ -129,6 +129,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TopicController.cs" />
     <Compile Include="EntityTypeConfigurations\AnswerConfiguration.cs" />
     <Compile Include="EntityTypeConfigurations\TopicConfiguration.cs" />
     <Compile Include="Global.asax.cs">
@@ -143,6 +144,10 @@
     <Compile Include="Migrations\201712252305033_AddMoreModelsAndRelationships.Designer.cs">
       <DependentUpon>201712252305033_AddMoreModelsAndRelationships.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712260708060_AddSomeTopicsToTopicsTable.cs" />
+    <Compile Include="Migrations\201712260708060_AddSomeTopicsToTopicsTable.Designer.cs">
+      <DependentUpon>201712260708060_AddSomeTopicsToTopicsTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\Question.cs" />
@@ -153,6 +158,7 @@
     <Compile Include="EntityTypeConfigurations\QuestionConfiguration.cs" />
     <Compile Include="EntityTypeConfigurations\UserConfiguration.cs" />
     <Compile Include="EntityTypeConfigurations\UserProfileConfiguration.cs" />
+    <Compile Include="ViewModels\TopicIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
@@ -184,6 +190,9 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Topic\Index.cshtml" />
+    <Content Include="Views\Topic\Detail.cshtml" />
+    <Content Include="Views\Topic\_TopicBodyPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -202,6 +211,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712252305033_AddMoreModelsAndRelationships.resx">
       <DependentUpon>201712252305033_AddMoreModelsAndRelationships.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712260708060_AddSomeTopicsToTopicsTable.resx">
+      <DependentUpon>201712260708060_AddSomeTopicsToTopicsTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
