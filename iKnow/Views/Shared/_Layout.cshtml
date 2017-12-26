@@ -3,22 +3,27 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto:100,200,300,400,500" rel="stylesheet">
     <title>@ViewBag.Title - iKnow</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar">
-        <span class="logo">iKnow</span>
-        <input class="search" type="text" placeholder="Search iKnow" />
-        <ul class="navbar-nav">
-            <li>@Html.ActionLink("Home", "Index", "Home")</li>
-            <li>@Html.ActionLink("Topic", "Index", "Topic")</li>
-            <li>@Html.ActionLink("Answer", "Index", "Answer")</li>
-            <li>@Html.ActionLink("Add Question", "Index", "Question")</li>
-        </ul>
-        <img class="profile-photo" />
-        <span>Zhang Liefu</span>
+    <div class="navbar box-shadow">
+        <div class="content-container">
+            <span class="logo">@Html.ActionLink("iKnow", "Index", "Home")</span>
+            <input class="search" type="text" placeholder="Search iKnow" />
+            <ul class="navbar-nav">
+                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                <li>@Html.ActionLink("Topic", "Index", "Topic")</li>
+                <li>@Html.ActionLink("Answer", "Index", "Answer")</li>
+                <li>@Html.ActionLink("Add Question", "Index", "Question")</li>
+            </ul>
+            <div class="navbar-user">
+                <img class="profile-photo" />
+                <span>Zhang Liefu</span>
+            </div>
+        </div>
     </div>
     @RenderBody()
 
