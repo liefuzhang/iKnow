@@ -8,10 +8,14 @@ namespace iKnow.Models {
         public int Id { get; set; }
         public string LoginName { get; set; }
         public UserProfile UserProfile { get; set; }
-        public ICollection<Question> Questions { get; set; }
+        public ICollection<Question> Questions { get; private set; }
+        public ICollection<Topic> Topics { get; private set; }
+        public ICollection<Answer> Answers { get; private set; }
 
         public User() {
             Questions = new HashSet<Question>();
+            Topics = new HashSet<Topic>();
+            Answers = new HashSet<Answer>();
         }
     }
 }

@@ -10,6 +10,12 @@ namespace iKnow.Models {
         public string Description { get; set; }
         public User User { get; set; }
         public int UserId { get; set; }
+        public ICollection<Topic> Topics { get; private set; }
+        public ICollection<Answer> Answers { get; private set; }
 
+        public Question() {
+            Topics = new HashSet<Topic>();
+            Answers = new HashSet<Answer>();
+        }
     }
 }

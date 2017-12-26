@@ -129,6 +129,8 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="EntityTypeConfigurations\AnswerConfiguration.cs" />
+    <Compile Include="EntityTypeConfigurations\TopicConfiguration.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -137,8 +139,14 @@
     <Compile Include="Migrations\201712251102544_InitialModels.Designer.cs">
       <DependentUpon>201712251102544_InitialModels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712252305033_AddMoreModelsAndRelationships.cs" />
+    <Compile Include="Migrations\201712252305033_AddMoreModelsAndRelationships.Designer.cs">
+      <DependentUpon>201712252305033_AddMoreModelsAndRelationships.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\Question.cs" />
+    <Compile Include="Models\Topic.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -147,14 +155,10 @@
     <Compile Include="EntityTypeConfigurations\UserProfileConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -164,8 +168,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\site.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -196,6 +199,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201712251102544_InitialModels.resx">
       <DependentUpon>201712251102544_InitialModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712252305033_AddMoreModelsAndRelationships.resx">
+      <DependentUpon>201712252305033_AddMoreModelsAndRelationships.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

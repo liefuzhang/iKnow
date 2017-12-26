@@ -8,10 +8,21 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-   @RenderBody()
+    <div class="navbar">
+        <span class="logo">iKnow</span>
+        <input class="search" type="text" placeholder="Search iKnow" />
+        <ul class="navbar-nav">
+            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+            <li>@Html.ActionLink("Topic", "Index", "Topic")</li>
+            <li>@Html.ActionLink("Answer", "Index", "Answer")</li>
+            <li>@Html.ActionLink("Add Question", "Index", "Question")</li>
+        </ul>
+        <img class="profile-photo" />
+        <span>Zhang Liefu</span>
+    </div>
+    @RenderBody()
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/js")
     @RenderSection("scripts", required: false)
 </body>
 </html>
