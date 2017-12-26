@@ -1,0 +1,21 @@
+﻿@using iKnow.ViewModels
+@model TopicIndexViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="topic-container">
+    <h3>Topics</h3>
+    <ul class="topic-list">
+        @foreach (var topic in Model.Topics) {
+            <li data-topic-id="@topic.Id">@topic.Name</li>
+        }
+    </ul>
+    @Html.Partial("_TopicBodyPartial", Model.SelectedTopic)
+</div>
+
+<div class="sidebar topic-sidebar">
+    <h3>Hot Topics</h3>
+</div>
+
+
