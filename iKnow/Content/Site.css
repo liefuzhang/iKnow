@@ -76,6 +76,13 @@ a.btn, button.btn {
     margin-top: 40px;
 }
 
+.error {
+    color: red;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 15px;
+}
+
 .sidebar {
     width: 270px;
     position: absolute;
@@ -210,4 +217,10 @@ a.btn, button.btn {
 
 .add-topic-container .btn-delete {
     margin-left: 12px;
+}
+
+.add-topic-container img {
+    width: 50px;
+    margin-right: 10px;
+    vertical-align: text-bottom;
 }

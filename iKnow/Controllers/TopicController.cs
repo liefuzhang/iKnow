@@ -3,8 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using iKnow.Models;
 
@@ -50,21 +53,33 @@ namespace iKnow.Controllers {
         // GET: Topic/Add
         public ActionResult Add() {
             var topic = new Topic();
+            var viewModel = new TopicFormViewModel {
+                Topic = topic
+            };
 
-            return View("TopicForm", topic);
+            return View("TopicForm", viewModel);
         }
 
         // POST: Topic/Save
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Save(Topic topic) {
+        public ActionResult Save(TopicFormViewModel viewModel, HttpPostedFileBase postedFile) {
             try {
+                var topic = viewModel.Topic;
                 if (topic.Id == 0) {
                     _context.Topics.Add(topic);
                 } else {
                     var topicInDb = _context.Topics.Single(t => t.Id == topic.Id);
                     topicInDb.Name = topic.Name;
                     topicInDb.Description = topic.Description;
+                }
+
+                // save icon if it exists
+                if (postedFile != null && postedFile.ContentLength > 0) {
+                    var bitmap = Bitmap.FromStream(postedFile.InputStream);
+                    var iconFolder = HostingEnvironment.MapPath(Constants.TopicIconFolderPath);
+                    var fileName = topic.Name.ToLower().Replace(' ', '-') + ".png";
+                    bitmap.Save(iconFolder + fileName, ImageFormat.Png);
                 }
 
                 _context.SaveChanges();
@@ -74,7 +89,7 @@ namespace iKnow.Controllers {
             } catch (DbEntityValidationException ex) {
                 var error = ex.EntityValidationErrors.First().ValidationErrors.First();
                 ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                return View("TopicForm", topic);
+                return View("TopicForm", viewModel);
             }
         }
 
@@ -85,7 +100,11 @@ namespace iKnow.Controllers {
                 return HttpNotFound();
             }
 
-            return View("TopicForm", topic);
+            var viewModel = new TopicFormViewModel {
+                Topic = topic
+            };
+
+            return View("TopicForm", viewModel);
         }
 
         // POST: Topic/Delete/2

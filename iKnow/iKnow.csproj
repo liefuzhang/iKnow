@@ -159,6 +159,7 @@
     <Compile Include="EntityTypeConfigurations\QuestionConfiguration.cs" />
     <Compile Include="EntityTypeConfigurations\UserConfiguration.cs" />
     <Compile Include="EntityTypeConfigurations\UserProfileConfiguration.cs" />
+    <Compile Include="ViewModels\TopicFormViewModel.cs" />
     <Compile Include="ViewModels\TopicIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

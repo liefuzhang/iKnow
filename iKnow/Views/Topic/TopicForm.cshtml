@@ -1,31 +1,39 @@
-﻿@model iKnow.Models.Topic
+﻿@model iKnow.ViewModels.TopicFormViewModel
 
 @{
     ViewBag.Title = "title";
 }
 
 <div class="add-topic-container">
-    <h3 class="page-title">@(Model.Id == 0 ? "Add Topic" : "Edit Topic")</h3>
+    <h3 class="page-title">@(Model.Topic.Id == 0 ? "Add Topic" : "Edit Topic")</h3>
     <pre class="return-topic">@Html.ActionLink("Return to Topics  >  ", "Index", "Topic")</pre>
 
-    @using (@Html.BeginForm()) {
+    @using (@Html.BeginForm("Save", "Topic", null, FormMethod.Post, new { enctype = "multipart/form-data" })) {
         <div class="form-group">
-            @Html.LabelFor(m => m.Name)
-            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Name)
+            @Html.LabelFor(m => m.Topic.Name)
+            @Html.TextBoxFor(m => m.Topic.Name, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Topic.Name, "", new { @class = "error" })
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(m => m.Description)
-            @Html.TextAreaFor(m => m.Description, 10, 50, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Description)
+            @Html.LabelFor(m => m.Topic.Description)
+            @Html.TextAreaFor(m => m.Topic.Description, 10, 50, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Topic.Description, "", new { @class = "error" })
         </div>
 
-        @Html.HiddenFor(m => m.Id)
+        <div class="form-group">
+            @Html.Label("Icon")
+            <img src="@Model.Topic.IconPath" />
+            @Html.TextBoxFor(m => m.PostedFile, new { type = "file"})
+            @Html.ValidationMessageFor(m => m.PostedFile, "", new { @class = "error" })
+            @*<input type="file" name="changeIcon" />*@
+        </div>
+
+        @Html.HiddenFor(m => m.Topic.Id)
         @Html.AntiForgeryToken()
         <button type="submit" formaction=@Url.Action("Save", "Topic") class="btn btn-func">Save</button>
-        if (Model.Id != 0) {
-            <button type="submit" formaction=@Url.Action("Delete", "Topic") class="btn btn-delete js-button-delete">Delete</button>
+        if (Model.Topic.Id != 0) {
+            <button type="submit" formaction=@Url.Action("Delete", "Topic") class="btn btn-delete js-button-delete">Delete This Topic</button>
         }
     }
 </div>

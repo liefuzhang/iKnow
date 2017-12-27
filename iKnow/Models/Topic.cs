@@ -12,17 +12,21 @@ namespace iKnow.Models {
         [Required]
         public string Name { get; set; }
         public string Description { get; set; }
-        public ICollection<User> Users { get; set; }
-        public ICollection<Question> Questions { get; set; }
         public string IconPath {
             get {
-               var file = Constants.TopicIconFolderPath + Name.ToLower().Replace(' ', '-') + ".png";
+                if (Id == 0) {
+                    return string.Empty;
+                }
+
+                var file = Constants.TopicIconFolderPath + Name.ToLower().Replace(' ', '-') + ".png";
                 if (!File.Exists(HostingEnvironment.MapPath(file))) {
                     file = Constants.TopicDefaultIconPath;
                 }
                 return file;
             }
         }
+        public ICollection<User> Users { get; set; }
+        public ICollection<Question> Questions { get; set; }
 
         public Topic() {
             Users = new HashSet<User>();

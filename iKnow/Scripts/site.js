@@ -11,7 +11,7 @@ function selectTopic() {
 
     var topicId = $this.attr("data-topic-id");
     $.ajax({
-        url: "topic/about/" + topicId,
+        url: "/topic/about/" + topicId,
         dataType: "html",
         success: function (html) {
             if (html) {
