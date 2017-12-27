@@ -5,7 +5,7 @@
 }
 
 <div class="add-topic-container">
-    <h3 class="page-title">Add Topic</h3>
+    <h3 class="page-title">@(Model.Id == 0 ? "Add Topic" : "Edit Topic")</h3>
 
     @using (@Html.BeginForm("Save", "Topic")) {
         <div class="form-group">
