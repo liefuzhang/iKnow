@@ -1,5 +1,6 @@
 ﻿$(document).ready(function () {
     $(".topic-list").on("click", "li", selectTopic);
+    $(".add-topic-container .js-button-delete").on("click", deleteTopic);
 });
 
 function selectTopic() {
@@ -20,4 +21,9 @@ function selectTopic() {
             }
         }
     });
+}
+
+function deleteTopic(e) {
+    var button = $(this);
+    return confirm("Are you sure you want to delete this topic?");
 }

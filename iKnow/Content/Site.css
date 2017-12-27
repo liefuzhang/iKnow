@@ -1,4 +1,4 @@
-﻿body {
+﻿body, pre {
     margin: 0;
     padding: 0;
     color: #333;
@@ -22,9 +22,10 @@ a {
     }
 
 
-    textarea {
-        resize: none;
-    }
+textarea {
+    resize: none;
+    overflow-x: hidden;
+}
 
 button {
     outline: none;
@@ -65,6 +66,11 @@ a.btn, button.btn {
     a.btn:active, button.btn:active {
         box-shadow: 0 1px 0 rgba(255,255,255,.06), inset 0 1px 2px rgba(0,0,0,.5);
     }
+
+.btn.btn-delete {
+    background-color: #795548;
+    border-color: #5D4037;
+}
 
 .sidebar {
     width: 270px;
@@ -183,3 +189,17 @@ a.btn, button.btn {
 .add-topic-container .btn {
     margin-top: 20px;
 }
+
+.add-topic-container .return-topic {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 14px;
+    color: #009797;
+    line-height: 1.75rem;
+}
+
+.add-topic-container .btn-delete {
+    margin-left: 20px;
+}
+

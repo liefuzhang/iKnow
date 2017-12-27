@@ -6,8 +6,9 @@
 
 <div class="add-topic-container">
     <h3 class="page-title">@(Model.Id == 0 ? "Add Topic" : "Edit Topic")</h3>
+    <pre class="return-topic">@Html.ActionLink("Return to Topics  >  ", "Index", "Topic")</pre>
 
-    @using (@Html.BeginForm("Save", "Topic")) {
+    @using (@Html.BeginForm()) {
         <div class="form-group">
             @Html.LabelFor(m => m.Name)
             @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
@@ -22,7 +23,10 @@
 
         @Html.HiddenFor(m => m.Id)
         @Html.AntiForgeryToken()
-        <button type="submit" class="btn">Save</button>
+        <button type="submit" formaction=@Url.Action("Save", "Topic") class="btn">Save</button>
+        if (Model.Id != 0) {
+            <button type="submit" formaction=@Url.Action("Delete", "Topic") class="btn btn-delete js-button-delete">Delete</button>
+        }
     }
 </div>
 

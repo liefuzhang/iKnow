@@ -61,13 +61,12 @@ namespace iKnow.Controllers {
             try {
                 if (topic.Id == 0) {
                     _context.Topics.Add(topic);
-                }
-                else {
+                } else {
                     var topicInDb = _context.Topics.Single(t => t.Id == topic.Id);
                     topicInDb.Name = topic.Name;
                     topicInDb.Description = topic.Description;
                 }
-                
+
                 _context.SaveChanges();
                 TempData["SelectedTopic"] = topic;
 
@@ -87,6 +86,21 @@ namespace iKnow.Controllers {
             }
 
             return View("TopicForm", topic);
+        }
+
+        // POST: Topic/Delete/2
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(Topic topic) {
+            var topicInDb = _context.Topics.SingleOrDefault(t => t.Id == topic.Id);
+            if (topicInDb == null) {
+                return HttpNotFound();
+            } else {
+                _context.Topics.Remove(topicInDb);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }
