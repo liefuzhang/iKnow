@@ -3,7 +3,13 @@
 
 <h4>About</h4>
 @Html.ActionLink("Enter Topic", "Detail", "Topic", new { id = Model.Id }, new { @class = "enter-topic btn" })
-<p id="topic-description">@Model.Description</p>
+
+<div class="topic-about">
+    <img src="@Model.IconPath" />
+    <p>
+        @Model.Description
+    </p>
+</div>
 
 @Html.ActionLink("+Add Topic", "Add", "Topic", null, new { @class = "add-topic" })
-@Html.ActionLink("Edit Topic", "Edit", "Topic", new { id = Model.Id }, new { @class = "btn" })
+@Html.ActionLink("Edit Topic", "Edit", "Topic", new { id = Model.Id }, new { @class = "btn  btn-func" })
