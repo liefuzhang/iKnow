@@ -2,15 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using iKnow.Models;
 
-namespace iKnow.Controllers
-{
-    public class TopicController : Controller
-    {
+namespace iKnow.Controllers {
+    public class TopicController : Controller {
         iKnowContext _context;
         public TopicController() {
             _context = new iKnowContext();
@@ -21,12 +20,12 @@ namespace iKnow.Controllers
         }
 
         // GET: Topic
-        public ActionResult Index()
-        {
+        public ActionResult Index() {
             var topics = _context.Topics.ToList();
+            var selectedTopic = TempData["SelectedTopic"] as Topic ?? topics[0];
             var viewModel = new TopicIndexViewModel {
                 Topics = topics,
-                SelectedTopic = topics[0]
+                SelectedTopic = selectedTopic
             };
 
             return View(viewModel);
@@ -52,22 +51,42 @@ namespace iKnow.Controllers
         public ActionResult Add() {
             var topic = new Topic();
 
-            return View(topic);
+            return View("TopicForm", topic);
         }
 
         // POST: Topic/Save
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Topic topic) {
-            if (!ModelState.IsValid) {
-                return View("Add");
+            try {
+                if (topic.Id == 0) {
+                    _context.Topics.Add(topic);
+                }
+                else {
+                    var topicInDb = _context.Topics.Single(t => t.Id == topic.Id);
+                    topicInDb.Name = topic.Name;
+                    topicInDb.Description = topic.Description;
+                }
+                
+                _context.SaveChanges();
+                TempData["SelectedTopic"] = topic;
+
+                return RedirectToAction("Index");
+            } catch (DbEntityValidationException ex) {
+                var error = ex.EntityValidationErrors.First().ValidationErrors.First();
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                return View("TopicForm", topic);
+            }
+        }
+
+        // GET: Topic/Edit/1
+        public ActionResult Edit(int id) {
+            var topic = _context.Topics.SingleOrDefault(t => t.Id == id);
+            if (topic == null) {
+                return HttpNotFound();
             }
 
-            topic.Id = 0;
-            _context.Topics.Add(topic);
-            _context.SaveChanges();
-
-            return RedirectToAction("Index");
-
+            return View("TopicForm", topic);
         }
     }
 }
