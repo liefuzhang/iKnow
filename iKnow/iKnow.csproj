@@ -193,6 +193,7 @@
     <Content Include="Views\Topic\Index.cshtml" />
     <Content Include="Views\Topic\Detail.cshtml" />
     <Content Include="Views\Topic\_TopicBodyPartial.cshtml" />
+    <Content Include="Views\Topic\Add.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

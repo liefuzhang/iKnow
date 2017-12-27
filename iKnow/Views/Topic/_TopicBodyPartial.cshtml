@@ -1,8 +1,8 @@
 ﻿@using iKnow.Models
 @model Topic
 
-<div class="topic-body">
-    <h5>About</h5>
-    @Html.ActionLink("Enter Topic", "Detail", "Topic", new { id = Model.Id }, null)
-    <p id="topic-description">@Model.Description</p>
-</div>
+<h4>About</h4>
+@Html.ActionLink("Enter Topic", "Detail", "Topic", new { id = Model.Id }, new {@class="enter-topic btn"})
+<p id="topic-description">@Model.Description</p>
+
+@Html.ActionLink("+Add Topic", "Add", "Topic", null, new { @class = "add-topic" })

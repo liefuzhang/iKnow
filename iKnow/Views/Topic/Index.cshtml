@@ -5,13 +5,15 @@
 }
 
 <div class="topic-container">
-    <h3>Topics</h3>
+    <h3 class="page-title">Topics</h3>
     <ul class="topic-list">
         @foreach (var topic in Model.Topics) {
-            <li data-topic-id="@topic.Id">@topic.Name</li>
+            <li data-topic-id="@topic.Id" class="@(Model.SelectedTopic.Id == topic.Id ? "active" : "")">@topic.Name</li>
         }
     </ul>
-    @Html.Partial("_TopicBodyPartial", Model.SelectedTopic)
+    <div class="topic-body">
+        @Html.Partial("_TopicBodyPartial", Model.SelectedTopic)
+    </div>
 </div>
 
 <div class="sidebar topic-sidebar">
