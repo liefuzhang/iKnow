@@ -23,5 +23,9 @@ namespace iKnow.Models {
             Topics = new HashSet<Topic>();
             Answers = new HashSet<Answer>();
         }
+
+        public void AddTopic(Topic topic) {
+            Topics.Add(topic);
+        }
     }
 }

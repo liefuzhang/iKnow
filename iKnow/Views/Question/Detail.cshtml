@@ -11,6 +11,11 @@
 </style>
 
 <div class="question-header-panel box-shadow">
+    <ul>
+        @foreach (var topic in Model.Topics) {
+            <li>@Html.ActionLink(@topic.Name, "Detail", "Topic", new { id = @topic.Id }, null)</li>
+        }
+    </ul>
     <h2>@Model.Title</h2>
     <p>@Model.Description</p>
     <button class="btn-white">

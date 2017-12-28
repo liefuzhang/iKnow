@@ -16,7 +16,7 @@ namespace iKnow.Controllers {
         }
 
         public ActionResult Detail(int id) {
-            var question = _context.Questions.SingleOrDefault(q => q.Id == id);
+            var question = _context.Questions.Include("Topics").SingleOrDefault(q => q.Id == id);
             if (question == null) {
                 return HttpNotFound();
             }
@@ -34,7 +34,10 @@ namespace iKnow.Controllers {
 
             var question = viewModel.Question;
             // TODO  remove
+            var topic = _context.Topics.SingleOrDefault(t=>t.Name == viewModel.Topic);
             question.UserId = 1;
+            question.AddTopic(topic);
+
             _context.Questions.Add(question);
             _context.SaveChanges();
             return RedirectToAction("Detail", new { id = question.Id });
