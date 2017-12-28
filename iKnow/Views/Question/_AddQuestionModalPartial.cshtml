@@ -7,6 +7,8 @@
             <h2>Write down your question here</h2>
             <p>Keep your question concise to quickly get a good answer</p>
             @Html.TextAreaFor(m => m.Question.Title, new { @class = "form-control add-question-title", placeholder = "Question title" })
+            @Html.ValidationMessageFor(m => m.Question.Title, "", new { @class = "error" })
+
             //TODO: use multi select searchbox (https://harvesthq.github.io/chosen/)
             <div class="form-group">
                 @Html.LabelFor(m=>m.Topic)

@@ -18,7 +18,8 @@ namespace iKnow {
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/site.css"));
+                        "~/Content/font-awesome.css",
+                        "~/Content/site.css"));
         }
     }
 }

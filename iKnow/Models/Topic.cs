@@ -9,7 +9,6 @@ using System.Web.Hosting;
 namespace iKnow.Models {
     public class Topic {
         public int Id { get; set; }
-        [Required]
         public string Name { get; set; }
         public string Description { get; set; }
         public string IconPath {
@@ -18,7 +17,7 @@ namespace iKnow.Models {
                     return string.Empty;
                 }
 
-                var file = Constants.TopicIconFolderPath + Name.ToLower().Replace(' ', '-') + ".png";
+                var file = Constants.TopicIconFolderPath + (Name ?? String.Empty).ToLower().Replace(' ', '-') + ".png";
                 if (!File.Exists(HostingEnvironment.MapPath(file))) {
                     file = Constants.TopicDefaultIconPath;
                 }

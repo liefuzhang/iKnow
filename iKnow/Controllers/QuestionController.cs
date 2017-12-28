@@ -15,19 +15,29 @@ namespace iKnow.Controllers {
             _context.Dispose();
         }
 
+        public ActionResult Detail(int id) {
+            var question = _context.Questions.SingleOrDefault(q => q.Id == id);
+            if (question == null) {
+                return HttpNotFound();
+            }
+
+            return View(question);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Add(AddQuestionViewModel viewModel) {
-            try {
-                var question = viewModel.Question;
-                _context.Questions.Add(question);
-                _context.SaveChanges();
-                return View("Detail", "Question");
-            } catch (DbEntityValidationException ex) {
-                var error = ex.EntityValidationErrors.First().ValidationErrors.First();
-                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            if (!ModelState.IsValid) {
+                // return to current page
                 return Redirect(Request.UrlReferrer.ToString());
             }
+
+            var question = viewModel.Question;
+            // TODO  remove
+            question.UserId = 1;
+            _context.Questions.Add(question);
+            _context.SaveChanges();
+            return RedirectToAction("Detail", new { id = question.Id });
         }
     }
 }

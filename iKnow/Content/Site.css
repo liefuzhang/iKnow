@@ -80,7 +80,28 @@ a.btn, button.btn {
 
 .btn-func {
     margin-top: 40px;
+    margin-bottom: 10px;
 }
+
+.btn-white {
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: white;
+    padding: 4px 8px;
+    cursor: pointer;
+    display: inline-block;
+    line-height: 1.5;
+    color: teal;
+    border: 1px solid teal;
+}
+
+    .btn-white:hover {
+        background-color: rgba(13,121,209,.06);
+    }
+
+    .btn-white i {
+        margin: 0 5px;
+    }
 
 .error {
     color: red;
@@ -103,6 +124,7 @@ a.btn, button.btn {
     width: 100%;
     background-color: teal;
     color: white;
+    z-index: 100;
 }
 
     .navbar .content-container {
@@ -266,9 +288,9 @@ a.btn, button.btn {
         color: #8590a6;
         background-color: white;
         text-align: center;
-        padding: 20px;
         box-shadow: 0 5px 20px 0 rgba(0,34,77,.5);
         border-radius: 2px;
+        overflow-y: auto;
     }
 
         .question-modal-container .question-modal-inner h2 {
@@ -277,7 +299,7 @@ a.btn, button.btn {
         }
 
         .question-modal-container .question-modal-inner .add-question-title {
-            width: 580px;
+            width: 530px;
             height: 50px;
             margin-top: 20px;
         }
@@ -287,17 +309,32 @@ a.btn, button.btn {
             margin-top: 10px;
         }
 
-        .question-modal-container .question-modal-inner .add-question-description p{
-            margin-top: 30px;
+        .question-modal-container .question-modal-inner .add-question-description p {
+            margin-top: 10px;
             color: #404040;
             text-align: left;
         }
 
-        .question-modal-container .question-modal-inner .add-question-description textarea{
-            width: 580px;
+        .question-modal-container .question-modal-inner .add-question-description textarea {
+            width: 530px;
             height: 70px;
             margin-top: 10px;
         }
 
-/*#endregion */
+        .question-modal-container .question-modal-inner button {
+            margin-bottom: 20px;
+        }
 
+.question-header-panel {
+    padding: 16px;
+    background-color: white;
+    margin-top: -25px;
+}
+
+.question-header-panel p {
+    font-size: 1.1rem;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+/*#endregion */

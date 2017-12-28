@@ -88,7 +88,7 @@ namespace iKnow.Controllers {
                 return RedirectToAction("Index");
             } catch (DbEntityValidationException ex) {
                 var error = ex.EntityValidationErrors.First().ValidationErrors.First();
-                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                ModelState.AddModelError(nameof(viewModel.Topic) + "." + error.PropertyName, error.ErrorMessage);
                 return View("TopicForm", viewModel);
             }
         }

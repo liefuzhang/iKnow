@@ -1,0 +1,20 @@
+﻿@model iKnow.Models.Question
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        background-color: #f3f3f3;
+    }
+</style>
+
+<div class="question-header-panel box-shadow">
+    <h2>@Model.Title</h2>
+    <p>@Model.Description</p>
+    <button class="btn-white">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        Write Answer
+    </button>
+</div>
