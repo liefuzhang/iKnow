@@ -74,6 +74,9 @@ namespace iKnow.Controllers {
                     topicInDb.Description = topic.Description;
                 }
 
+                _context.SaveChanges();
+                TempData["SelectedTopic"] = topic;
+
                 // save icon if it exists
                 if (postedFile != null && postedFile.ContentLength > 0) {
                     var bitmap = Bitmap.FromStream(postedFile.InputStream);
@@ -81,9 +84,6 @@ namespace iKnow.Controllers {
                     var fileName = topic.Name.ToLower().Replace(' ', '-') + ".png";
                     bitmap.Save(iconFolder + fileName, ImageFormat.Png);
                 }
-
-                _context.SaveChanges();
-                TempData["SelectedTopic"] = topic;
 
                 return RedirectToAction("Index");
             } catch (DbEntityValidationException ex) {

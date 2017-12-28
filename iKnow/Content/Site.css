@@ -27,6 +27,12 @@ textarea {
     overflow-x: hidden;
 }
 
+textarea, input {
+    border: 1px solid #e7eaf1;
+    border-radius: 3px;
+    padding: 6px 12px;
+}
+
 button {
     outline: none;
 }
@@ -52,12 +58,12 @@ label {
 }
 
 a.btn, button.btn {
-    border: 1px solid teal;
+    border: 1px solid #00796B;
     border-radius: 4px;
     background-color: #009797;
     font-size: 14px;
     color: white;
-    padding: 4px 5px;
+    padding: 4px 8px;
     cursor: pointer;
     display: inline-block;
     line-height: 1.5;
@@ -140,6 +146,8 @@ a.btn, button.btn {
     .main .content-container {
         position: relative;
     }
+
+/*#region topic */
 
 .topic-container {
     width: 632px;
@@ -224,3 +232,72 @@ a.btn, button.btn {
     margin-right: 10px;
     vertical-align: text-bottom;
 }
+
+/*#endregion */
+
+
+/*#region Question */
+.question-modal-container {
+    display: none;
+}
+
+    .question-modal-container.open {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, .65);
+        overflow-x: hidden;
+        z-index: 200;
+    }
+
+    .question-modal-container .question-modal-inner {
+        width: 600px;
+        max-height: calc(100vh - 50px);
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 14px;
+        color: #8590a6;
+        background-color: white;
+        text-align: center;
+        padding: 20px;
+        box-shadow: 0 5px 20px 0 rgba(0,34,77,.5);
+        border-radius: 2px;
+    }
+
+        .question-modal-container .question-modal-inner h2 {
+            color: #262626;
+            margin-top: 20px;
+        }
+
+        .question-modal-container .question-modal-inner .add-question-title {
+            width: 580px;
+            height: 50px;
+            margin-top: 20px;
+        }
+
+        .question-modal-container .question-modal-inner .form-group {
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        .question-modal-container .question-modal-inner .add-question-description p{
+            margin-top: 30px;
+            color: #404040;
+            text-align: left;
+        }
+
+        .question-modal-container .question-modal-inner .add-question-description textarea{
+            width: 580px;
+            height: 70px;
+            margin-top: 10px;
+        }
+
+/*#endregion */
+

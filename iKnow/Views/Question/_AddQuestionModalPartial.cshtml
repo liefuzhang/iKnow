@@ -1,0 +1,27 @@
+﻿@using iKnow.ViewModels
+@model AddQuestionViewModel
+
+<div class="question-modal-container">
+    <div class="question-modal-inner">
+        @using (@Html.BeginForm("Add", "Question")) {
+            <h2>Write down your question here</h2>
+            <p>Keep your question concise to quickly get a good answer</p>
+            @Html.TextAreaFor(m => m.Question.Title, new { @class = "form-control add-question-title", placeholder = "Question title" })
+            //TODO: use multi select searchbox (https://harvesthq.github.io/chosen/)
+            <div class="form-group">
+                @Html.LabelFor(m=>m.Topic)
+                @Html.TextBoxFor(m => m.Topic, new { @class = "form-control" })
+            </div>
+            <div class="add-question-description">
+                <p>Question Description (Optional):</p>
+                @Html.TextAreaFor(m => m.Question.Description, new {@class = "form-control", placeholder = "Question background, conditions and other details"})
+            </div>
+
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-func">Submit Question</button>
+        }
+
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")

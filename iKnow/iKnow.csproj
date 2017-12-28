@@ -129,6 +129,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\TopicController.cs" />
     <Compile Include="EntityTypeConfigurations\AnswerConfiguration.cs" />
     <Compile Include="EntityTypeConfigurations\TopicConfiguration.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="EntityTypeConfigurations\QuestionConfiguration.cs" />
     <Compile Include="EntityTypeConfigurations\UserConfiguration.cs" />
     <Compile Include="EntityTypeConfigurations\UserProfileConfiguration.cs" />
+    <Compile Include="ViewModels\AddQuestionViewModel.cs" />
     <Compile Include="ViewModels\TopicFormViewModel.cs" />
     <Compile Include="ViewModels\TopicIndexViewModel.cs" />
   </ItemGroup>
@@ -197,6 +199,7 @@
     <Content Include="Views\Topic\Detail.cshtml" />
     <Content Include="Views\Topic\_TopicBodyPartial.cshtml" />
     <Content Include="Views\Topic\TopicForm.cshtml" />
+    <Content Include="Views\Question\_AddQuestionModalPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
