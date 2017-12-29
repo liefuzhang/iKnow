@@ -13,7 +13,7 @@ using iKnow.Models;
 
 namespace iKnow.Controllers {
     public class TopicController : Controller {
-        iKnowContext _context;
+        private iKnowContext _context;
         public TopicController() {
             _context = new iKnowContext();
         }

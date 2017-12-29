@@ -3,6 +3,7 @@
     $(".add-topic-container .js-button-delete").on("click", deleteTopic);
     $(".js-button-add-question").on("click", toggleAddQuestionModal);
     $(".question-modal-container").on("click", toggleAddQuestionModal);
+    $(".topic-select").chosen({width: "100%", max_selected_options: 5});
 });
 
 function selectTopic() {

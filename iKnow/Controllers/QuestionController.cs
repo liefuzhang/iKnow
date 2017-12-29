@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.Validation;
+﻿using System.Collections.ObjectModel;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web.Mvc;
 using iKnow.ViewModels;
@@ -33,10 +34,14 @@ namespace iKnow.Controllers {
             }
 
             var question = viewModel.Question;
-            // TODO  remove
-            var topic = _context.Topics.SingleOrDefault(t=>t.Name == viewModel.Topic);
+            if (viewModel.TopicIds.Length > 0) {
+                var topics = _context.Topics.Where(t => viewModel.TopicIds.Contains(t.Id)).ToList();
+                foreach (var topic in topics) {
+                    question.AddTopic(topic);
+                }
+            }
+            //TODO remove
             question.UserId = 1;
-            question.AddTopic(topic);
 
             _context.Questions.Add(question);
             _context.SaveChanges();

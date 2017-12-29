@@ -7,7 +7,8 @@ namespace iKnow {
         public static void RegisterBundles(BundleCollection bundles) {
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
                         "~/Scripts/site.js",
-                        "~/Scripts/jquery-{version}.js"));
+                        "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/chosen*"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -19,6 +20,7 @@ namespace iKnow {
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                         "~/Content/font-awesome.css",
+                        "~/Content/chosen.css",
                         "~/Content/site.css"));
         }
     }

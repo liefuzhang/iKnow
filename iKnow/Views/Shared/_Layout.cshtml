@@ -36,6 +36,6 @@
     @Scripts.Render("~/bundles/js")
     @RenderSection("scripts", required: false)
 
-    @Html.Partial("../Question/_AddQuestionModalPartial", new AddQuestionViewModel { Question = new Question() })
+    @Html.Partial("../Question/_AddQuestionModalPartial", new AddQuestionViewModel())
 </body>
 </html>
