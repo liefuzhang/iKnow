@@ -3,7 +3,7 @@
     $(".add-topic-container .js-button-delete").on("click", deleteTopic);
     $(".js-button-add-question").on("click", toggleAddQuestionModal);
     $(".question-modal-container").on("click", toggleAddQuestionModal);
-    $(".topic-select").chosen({width: "100%", max_selected_options: 5});
+    $(".question-header-panel .trigger-edit").on("click", editQuestion);
 });
 
 function selectTopic() {
@@ -36,5 +36,45 @@ function toggleAddQuestionModal(e) {
         // click on the Modal form
         return;
     }
-    $(".question-modal-container").toggleClass("open");
+    var $modalContainer = $(".question-modal-container");
+
+    if ($modalContainer.hasClass("open")) {
+        $modalContainer.removeClass("open");
+        return;
+    }
+
+    if ($modalContainer.hasClass("new-form-loaded")) {
+        $(".question-modal-container").addClass("open");
+        return;
+    }
+
+    $.ajax({
+        url: "/question/new",
+        dataType: "html",
+        success: function (html) {
+            if (html) {
+                $modalContainer.html(html);
+                $modalContainer.addClass("new-form-loaded open");
+                $(".topic-select").chosen({ width: "100%", max_selected_options: 5 });
+            }
+        }
+    });
+}
+
+function editQuestion() {
+    var questionId = $(this).attr("data-question-id");
+    var $modalContainer = $(".question-modal-container");
+    $modalContainer.removeClass("new-form-loaded");
+
+    $.ajax({
+        url: "/question/new/" + questionId,
+        dataType: "html",
+        success: function (html) {
+            if (html) {
+                $modalContainer.html(html);
+                $modalContainer.addClass("open");
+                $(".topic-select").chosen({ width: "100%", max_selected_options: 5 });
+            }
+        }
+    });
 }

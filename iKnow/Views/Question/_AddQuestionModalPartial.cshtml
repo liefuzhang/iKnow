@@ -1,29 +1,28 @@
 ﻿@using System.Web.UI.WebControls
 @using iKnow.ViewModels
-@model AddQuestionViewModel
+@model QuestionFormViewModel
 
-<div class="question-modal-container">
-    <div class="question-modal-inner">
-        @using (@Html.BeginForm("Add", "Question")) {
-            <h2>Write down your question here</h2>
-            <p>Keep your question concise to quickly get a good answer</p>
+
+<div class="question-modal-inner">
+    @using (@Html.BeginForm("Save", "Question")) {
+        <h2>@Model.FormTitle</h2>
+        <p>Keep your question concise to quickly get a good answer</p>
             @Html.TextAreaFor(m => m.Question.Title, new { @class = "form-control add-question-title", placeholder = "Question title" })
             @Html.ValidationMessageFor(m => m.Question.Title, "", new { @class = "error" })
 
-            //TODO: use multi select searchbox (https://harvesthq.github.io/chosen/)
-            <div class="form-group">
-                @Html.ListBoxFor(m => m.TopicIds, Model.Topics, new { size = 6, @class="topic-select", data_placeholder = "Add Topics" })
-            </div>
-            <div class="add-question-description">
-                <p>Question Description (Optional):</p>
-                @Html.TextAreaFor(m => m.Question.Description, new { @class = "form-control", placeholder = "Question background, conditions and other details" })
-            </div>
+        <div class="form-group">
+            @Html.ListBoxFor(m => m.TopicIds, Model.Topics, new { @class = "topic-select", data_placeholder = "Add Topics" })
+        </div>
+        <div class="add-question-description">
+            <p>Question Description (Optional):</p>
+            @Html.TextAreaFor(m => m.Question.Description, new { @class = "form-control", placeholder = "Question background, conditions and other details" })
+        </div>
 
             @Html.AntiForgeryToken()
             <button type="submit" class="btn btn-func">Submit Question</button>
-        }
+    }
 
-    </div>
 </div>
+
 
 @Scripts.Render("~/bundles/jqueryval")

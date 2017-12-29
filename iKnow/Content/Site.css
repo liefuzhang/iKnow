@@ -137,6 +137,21 @@ a.btn, button.btn {
     margin-bottom: 15px;
 }
 
+.trigger-edit {
+    font-size: 14px;
+    line-height: 32px;
+    color: #8590a6;
+    cursor: pointer;
+}
+
+.trigger-edit:hover {
+    color: #7a8599;
+}
+
+.trigger-edit i {
+    margin-right: 3px;
+}
+
 .sidebar {
     width: 270px;
     position: absolute;
@@ -372,9 +387,9 @@ a.btn, button.btn {
             right: 8px;
         }
 
-        .question-modal-container .chosen-container-multi .chosen-choices li.search-field input[type="text"]{
-            height: 30px;
-        }
+    .question-modal-container .chosen-container-multi .chosen-choices li.search-field input[type="text"] {
+        height: 30px;
+    }
 
 .question-header-panel {
     padding: 16px;
@@ -409,6 +424,10 @@ a.btn, button.btn {
         .question-header-panel li a:hover {
             border-bottom: 1px solid #00796B;
         }
+
+    .question-header-panel .trigger-edit {
+        margin-left: 10px;
+    }
 
 
 /*#endregion */

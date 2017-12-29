@@ -27,5 +27,9 @@ namespace iKnow.Models {
         public void AddTopic(Topic topic) {
             Topics.Add(topic);
         }
+
+        public void ClearTopics() {
+            Topics.Clear();
+        }
     }
 }

@@ -16,7 +16,12 @@
             <li>@Html.ActionLink(@topic.Name, "Detail", "Topic", new { id = @topic.Id }, null)</li>
         }
     </ul>
-    <h2>@Model.Title</h2>
+    <h2>
+        @Model.Title
+        <span class="trigger-edit" data-question-id="@Model.Id">
+            <i class="fa fa-pencil" aria-hidden="true"></i>edit
+        </span>
+    </h2>
     <p>@Model.Description</p>
     <button class="btn-white">
         <i class="fa fa-pencil" aria-hidden="true"></i>
