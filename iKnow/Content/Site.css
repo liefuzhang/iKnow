@@ -336,6 +336,10 @@ a.btn, button.btn {
         overflow-y: auto;
     }
 
+    .question-modal-container .question-modal-inner.question-topic-inner {
+        overflow-y: visible;
+    }
+
         .question-modal-container .question-modal-inner h2 {
             color: #262626;
             margin-top: 20px;
