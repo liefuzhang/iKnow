@@ -10,6 +10,10 @@ namespace iKnow {
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/chosen*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/trumbowyg").Include(
+                        "~/Scripts/trumbowyg.js",
+                        "~/Scripts/trumbowyg.base64.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 

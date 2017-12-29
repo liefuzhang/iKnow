@@ -10,10 +10,10 @@
     }
 </style>
 
-<div class="question-header-panel box-shadow">
+<div class="question-header-panel panel">
     <ul>
         @foreach (var topic in Model.Topics) {
-            <li>@Html.ActionLink(@topic.Name, "Detail", "Topic", new {id = @topic.Id}, null)</li>
+            <li>@Html.ActionLink(@topic.Name, "Detail", "Topic", new { id = @topic.Id }, null)</li>
         }
     </ul>
     <span class="js-edit-topic trigger-edit" data-question-id="@Model.Id">
@@ -31,3 +31,38 @@
         Write Answer
     </button>
 </div>
+
+<div class="main-content-container">
+    <div class="add-answer-panel panel">
+        <div class="add-answer-header">
+            @*TODO add user image and intro*@
+            <b>Admin</b>
+        </div>
+        <div class="rich-editor">
+            <div class="rich-editor-inner" placeholder="Write your answer here..."></div>
+        </div>
+    </div>
+</div>
+
+<div class="sidebar question-sidebar"></div>
+
+@section styles {
+    <link rel="stylesheet" href="~/Content/trumbowyg.min.css" />
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/trumbowyg")
+    <script>
+        $(".rich-editor-inner").trumbowyg({
+            svgPath: "/Content/icons.svg",
+            autogrow: true,
+            btns: [
+                ['strong', 'em'],
+                ['h3', 'blockquote', 'unorderedList', 'orderedList'],
+                ['link', 'base64', 'horizontalRule'],
+                ['removeformat'],
+                ['fullscreen']
+            ]
+        });
+    </script>
+}

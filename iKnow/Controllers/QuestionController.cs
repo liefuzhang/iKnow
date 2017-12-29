@@ -77,13 +77,14 @@ namespace iKnow.Controllers {
             var questionToSave = questionPosted;
 
             if (questionPosted.Id > 0) {
-                var questionInDb = _context.Questions.Single(q => q.Id == questionPosted.Id);
+                var questionInDb = _context.Questions.Include("Topics").Single(q => q.Id == questionPosted.Id);
                 questionInDb.Title = questionPosted.Title;
                 questionInDb.Description = questionInDb.Description;
                 questionToSave = questionInDb;
             } else {
                 //TODO remove
                 questionToSave.UserId = 1;
+                _context.Questions.Add(questionToSave);
             }
 
             questionToSave.ClearTopics();
@@ -94,7 +95,6 @@ namespace iKnow.Controllers {
                 }
             }
 
-            _context.Questions.Add(questionToSave);
             _context.SaveChanges();
             return RedirectToAction("Detail", new { id = questionToSave.Id });
         }
@@ -104,7 +104,7 @@ namespace iKnow.Controllers {
         public ActionResult SaveQuestionTopics(QuestionFormViewModel formViewModel) {
             var questionPosted = formViewModel.Question;
 
-            var questionInDb = _context.Questions.Single(q => q.Id == questionPosted.Id);
+            var questionInDb = _context.Questions.Include("Topics").Single(q => q.Id == questionPosted.Id);
 
             questionInDb.ClearTopics();
             if (formViewModel.TopicIds.Length > 0) {

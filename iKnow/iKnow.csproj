@@ -169,7 +169,10 @@
     <Content Include="Content\chosen-sprite.png" />
     <Content Include="Content\chosen.css" />
     <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\icons.svg" />
     <Content Include="Content\Images\Topic\software-engineering.png" />
+    <Content Include="Content\trumbowyg.css" />
+    <Content Include="Content\trumbowyg.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -184,15 +187,14 @@
     <Content Include="Scripts\chosen.jquery.js" />
     <Content Include="Scripts\chosen.proto.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\prototype.js" />
     <Content Include="Scripts\site.js" />
+    <Content Include="Scripts\trumbowyg.base64.js" />
+    <Content Include="Scripts\trumbowyg.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -225,7 +227,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201712251102544_InitialModels.resx">

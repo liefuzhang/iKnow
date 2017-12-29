@@ -137,6 +137,14 @@ a.btn, button.btn {
     margin-bottom: 15px;
 }
 
+.panel {
+    margin-bottom: 10px;
+    background: #fff;
+    overflow: hidden;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+}
+
 .trigger-edit {
     font-size: 14px;
     line-height: 32px;
@@ -144,12 +152,18 @@ a.btn, button.btn {
     cursor: pointer;
 }
 
-.trigger-edit:hover {
-    color: #7a8599;
-}
+    .trigger-edit:hover {
+        color: #7a8599;
+    }
 
-.trigger-edit i {
-    margin-right: 3px;
+    .trigger-edit i {
+        margin-right: 3px;
+    }
+
+blockquote {
+    color: #6b7a8c;
+    border-left: 4px solid #cfd8e6;
+    padding-left: 1em;
 }
 
 .sidebar {
@@ -213,7 +227,7 @@ a.btn, button.btn {
 
 /*#region topic */
 
-.topic-container {
+.main-content-container {
     width: 632px;
 }
 
@@ -298,7 +312,7 @@ a.btn, button.btn {
     vertical-align: text-bottom;
 }
 
-/*#endregion */
+/*#endregion topic */
 
 
 /*#region Question */
@@ -336,9 +350,9 @@ a.btn, button.btn {
         overflow-y: auto;
     }
 
-    .question-modal-container .question-modal-inner.question-topic-inner {
-        overflow-y: visible;
-    }
+        .question-modal-container .question-modal-inner.question-topic-inner {
+            overflow-y: visible;
+        }
 
         .question-modal-container .question-modal-inner h2 {
             color: #262626;
@@ -435,5 +449,46 @@ a.btn, button.btn {
         margin-left: 10px;
     }
 
+.add-answer-panel .add-answer-header {
+    padding: 16px 20px;
+}
 
-/*#endregion */
+.add-answer-panel .rich-editor {
+    min-height: 160px;
+}
+
+.rich-editor .trumbowyg-button-pane {
+    border-top: 1px solid #d7e0e2;
+    background-color: white;
+}
+
+.rich-editor .trumbowyg-box {
+    min-height: 158px;
+    border: none;
+}
+
+.rich-editor .trumbowyg-editor {
+    min-height: 120px;
+}
+
+.rich-editor .trumbowyg-button-pane::after {
+    height: 0;
+}
+
+.rich-editor ul li {
+    list-style-type: disc;
+}
+
+.rich-editor ul {
+    margin-left: 40px;
+}
+
+.rich-editor label {
+    width: inherit;
+}
+
+.rich-editor .trumbowyg-button-pane button:not(.trumbowyg-disable):hover {
+    background-color: #ecf0f1;
+}
+
+/*#endregion Question */
