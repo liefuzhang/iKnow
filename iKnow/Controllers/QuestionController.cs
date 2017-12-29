@@ -98,5 +98,24 @@ namespace iKnow.Controllers {
             _context.SaveChanges();
             return RedirectToAction("Detail", new { id = questionToSave.Id });
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SaveQuestionTopics(QuestionFormViewModel formViewModel) {
+            var questionPosted = formViewModel.Question;
+
+            var questionInDb = _context.Questions.Single(q => q.Id == questionPosted.Id);
+
+            questionInDb.ClearTopics();
+            if (formViewModel.TopicIds.Length > 0) {
+                var topics = _context.Topics.Where(t => formViewModel.TopicIds.Contains(t.Id)).ToList();
+                foreach (var topic in topics) {
+                    questionInDb.AddTopic(topic);
+                }
+            }
+
+            _context.SaveChanges();
+            return RedirectToAction("Detail", new { id = questionInDb.Id });
+        }
     }
 }

@@ -4,14 +4,14 @@
 
 
 <div class="question-modal-inner question-topic-inner">
-    @using (@Html.BeginForm("Save", "Question")) {
+    @using (@Html.BeginForm("SaveQuestionTopics", "Question")) {
         <h2>Edit Topics</h2>
         <p>One queston can have 5 topics at maximum</p>
         <div class="form-group">
             @Html.ListBoxFor(m => m.TopicIds, Model.Topics, new { @class = "topic-select", data_placeholder = "Add Topics" })
         </div>
 
-        @Html.HiddenFor(m => m.Question)
+        @Html.HiddenFor(m => m.Question.Id)
 
         @Html.AntiForgeryToken()
         <button type="submit" class="btn btn-func">Submit Topics</button>
