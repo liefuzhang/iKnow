@@ -13,12 +13,15 @@
 <div class="question-header-panel box-shadow">
     <ul>
         @foreach (var topic in Model.Topics) {
-            <li>@Html.ActionLink(@topic.Name, "Detail", "Topic", new { id = @topic.Id }, null)</li>
+            <li>@Html.ActionLink(@topic.Name, "Detail", "Topic", new {id = @topic.Id}, null)</li>
         }
     </ul>
+    <span class="js-edit-topic trigger-edit" data-question-id="@Model.Id">
+        <i class="fa fa-pencil" aria-hidden="true"></i>edit
+    </span>
     <h2>
         @Model.Title
-        <span class="trigger-edit" data-question-id="@Model.Id">
+        <span class="js-edit-question trigger-edit" data-question-id="@Model.Id">
             <i class="fa fa-pencil" aria-hidden="true"></i>edit
         </span>
     </h2>

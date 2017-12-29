@@ -1,0 +1,20 @@
+﻿@using System.Web.UI.WebControls
+@using iKnow.ViewModels
+@model QuestionFormViewModel
+
+
+<div class="question-modal-inner">
+    @using (@Html.BeginForm("Save", "Question")) {
+        <h2>Edit Topics</h2>
+        <p>One queston can have 5 topics at maximum</p>
+        <div class="form-group">
+            @Html.ListBoxFor(m => m.TopicIds, Model.Topics, new { @class = "topic-select", data_placeholder = "Add Topics" })
+        </div>
+        
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-func">Submit Topics</button>
+    }
+</div>
+
+
+@Scripts.Render("~/bundles/jqueryval")

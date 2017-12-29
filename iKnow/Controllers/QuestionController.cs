@@ -17,7 +17,7 @@ namespace iKnow.Controllers {
             _context.Dispose();
         }
 
-        public PartialViewResult New(int? id) {
+        public PartialViewResult GetForm(int? id) {
             Question question = null;
             if (id.HasValue && id.Value > 0) {
                 question = _context.Questions.Include("Topics").SingleOrDefault(q => q.Id == id);
@@ -26,6 +26,21 @@ namespace iKnow.Controllers {
                 question = new Question();
             }
 
+            var viewModel = ConstructQuestionFormViewModel(question);
+
+            return PartialView("_QuestionFormModalPartial", viewModel);
+        }
+
+        public PartialViewResult GetTopic(int id) {
+            Question question = null;
+            question = _context.Questions.Include("Topics").Single(q => q.Id == id);
+
+            var viewModel = ConstructQuestionFormViewModel(question);
+
+            return PartialView("_QuestionTopicModalPartial", viewModel);
+        }
+
+        private QuestionFormViewModel ConstructQuestionFormViewModel(Question question) {
             var topics = _context.Topics.Select(t => new {
                 TopicId = t.Id,
                 TopicName = t.Name
@@ -38,8 +53,7 @@ namespace iKnow.Controllers {
                 Topics = new MultiSelectList(topics, "TopicId", "TopicName"),
                 TopicIds = selectedTopicIds
             };
-
-            return PartialView("_AddQuestionModalPartial", viewModel);
+            return viewModel;
         }
 
         public ActionResult Detail(int id) {
@@ -59,20 +73,30 @@ namespace iKnow.Controllers {
                 return Redirect(Request.UrlReferrer.ToString());
             }
 
-            var question = formViewModel.Question;
-            question.ClearTopics();
+            var questionPosted = formViewModel.Question;
+            var questionToSave = questionPosted;
+
+            if (questionPosted.Id > 0) {
+                var questionInDb = _context.Questions.Single(q => q.Id == questionPosted.Id);
+                questionInDb.Title = questionPosted.Title;
+                questionInDb.Description = questionInDb.Description;
+                questionToSave = questionInDb;
+            } else {
+                //TODO remove
+                questionToSave.UserId = 1;
+            }
+
+            questionToSave.ClearTopics();
             if (formViewModel.TopicIds.Length > 0) {
                 var topics = _context.Topics.Where(t => formViewModel.TopicIds.Contains(t.Id)).ToList();
                 foreach (var topic in topics) {
-                    question.AddTopic(topic);
+                    questionToSave.AddTopic(topic);
                 }
             }
-            //TODO remove
-            question.UserId = 1;
 
-            _context.Questions.Add(question);
+            _context.Questions.Add(questionToSave);
             _context.SaveChanges();
-            return RedirectToAction("Detail", new { id = question.Id });
+            return RedirectToAction("Detail", new { id = questionToSave.Id });
         }
     }
 }

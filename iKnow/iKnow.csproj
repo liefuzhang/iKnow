@@ -212,8 +212,9 @@
     <Content Include="Views\Topic\Detail.cshtml" />
     <Content Include="Views\Topic\_TopicBodyPartial.cshtml" />
     <Content Include="Views\Topic\TopicForm.cshtml" />
-    <Content Include="Views\Question\_AddQuestionModalPartial.cshtml" />
+    <Content Include="Views\Question\_QuestionFormModalPartial.cshtml" />
     <Content Include="Views\Question\Detail.cshtml" />
+    <Content Include="Views\Question\_QuestionTopicModalPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
