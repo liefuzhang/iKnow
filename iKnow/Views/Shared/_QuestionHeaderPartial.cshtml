@@ -1,0 +1,24 @@
+﻿@using iKnow.Models
+@model Question
+<div class="question-header-panel panel">
+    <ul>
+        @foreach (var topic in Model.Topics) {
+            <li>@Html.ActionLink(@topic.Name, "Detail", "Topic", new { id = @topic.Id }, null)</li>
+        }
+    </ul>
+    <span class="js-edit-topic trigger-edit" data-question-id="@Model.Id">
+        <i class="fa fa-pencil" aria-hidden="true"></i>edit
+    </span>
+    <h2>
+        @Model.Title
+        <span class="js-edit-question trigger-edit" data-question-id="@Model.Id">
+            <i class="fa fa-pencil" aria-hidden="true"></i>edit
+        </span>
+    </h2>
+    <p>@Model.Description</p>
+    <button class="btn-white">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        Write Answer
+    </button>
+</div>
+

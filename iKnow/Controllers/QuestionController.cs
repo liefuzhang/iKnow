@@ -62,7 +62,11 @@ namespace iKnow.Controllers {
                 return HttpNotFound();
             }
 
-            return View(question);
+            var viewModel = new QuestionDetailViewModel {
+                Question = question
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]

@@ -1,0 +1,20 @@
+﻿@model iKnow.ViewModels.AnswerDetailViewModel
+@{
+    ViewBag.Title = "Detail";
+}
+
+<style>
+    body {
+        background-color: #f3f3f3;
+    }
+</style>
+
+<div class="answer-container-inner">
+    @Html.Partial("_QuestionHeaderPartial", Model.Question)
+    <div class="main-content-container">
+        
+    </div>
+
+    <div class="sidebar answer-sidebar"></div>
+</div>
+

@@ -17,6 +17,10 @@ h1, h2, h3, h4, h5, h6, p, ul {
     margin: 0;
 }
 
+/*h1, h2, h3, h4, h5, h6, b, em {
+    font-family: "Segoe UI",Arial,sans-serif;
+}*/
+
 a {
     text-decoration: none;
     outline: none;
@@ -95,6 +99,10 @@ a.btn, button.btn {
     display: inline-block;
     line-height: 1.5;
 }
+
+    a.btn:hover, button.btn:hover {
+        border-color: #004D40;
+    }
 
     a.btn:active, button.btn:active {
         box-shadow: 0 1px 0 rgba(255,255,255,.06), inset 0 1px 2px rgba(0,0,0,.5);
@@ -316,6 +324,11 @@ blockquote {
 
 
 /*#region Question */
+.question-container-inner {
+    font-size: 15px;
+    line-height: 1.4;
+}
+
 .question-modal-container {
     display: none;
 }
@@ -417,7 +430,6 @@ blockquote {
 }
 
     .question-header-panel p {
-        font-size: 1.1rem;
         margin-top: 5px;
         margin-bottom: 15px;
     }
@@ -465,10 +477,12 @@ blockquote {
 .rich-editor .trumbowyg-box {
     min-height: 158px;
     border: none;
+    margin-bottom: 0;
 }
 
 .rich-editor .trumbowyg-editor {
     min-height: 120px;
+    padding-bottom: 0;
 }
 
 .rich-editor .trumbowyg-button-pane::after {
@@ -491,4 +505,26 @@ blockquote {
     background-color: #ecf0f1;
 }
 
+.rich-editor p {
+    padding-bottom: 1em;
+}
+
+.rich-editor .rich-editor-footer {
+    height: 52px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 30px;
+}
+
 /*#endregion Question */
+
+
+/*#region Answer Detail */
+
+.answer-container-inner {
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+/*#endregion Answer Detail*/

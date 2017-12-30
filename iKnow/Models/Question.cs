@@ -30,6 +30,6 @@ namespace iKnow.Models {
 
         public void ClearTopics() {
             Topics.Clear();
-        }
+        }        
     }
 }
