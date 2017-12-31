@@ -16,16 +16,31 @@
         <div class="add-answer-panel panel hide">
             @Html.Partial("_AnswerPanelHeaderPartial")
             @using (@Html.BeginForm("Save", "Answer")) {
-                <div class="rich-editor">
-                    @Html.TextAreaFor(m => m.AnswerContent, new { @class = "rich-editor-inner", placeholder = "Write your answer here..." })
-                    <div class="rich-editor-footer">
-                        <button type="submit" class="btn">Submit Answer</button>
-                    </div>
+            <div class="rich-editor">
+                @Html.TextAreaFor(m => m.AnswerContent, new { @class = "rich-editor-inner", placeholder = "Write your answer here..." })
+                <div class="rich-editor-footer">
+                    <button type="submit" class="btn">Submit Answer</button>
                 </div>
+            </div>
 
-                @Html.HiddenFor(m => m.Question.Id)
-                @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Question.Id)
+            @Html.AntiForgeryToken()
             }
+        </div>
+
+        <div class="all-answer-panel panel">
+            @foreach (var answer in Model.Question.Answers) {
+                <div class="answer-panel">
+                    @Html.Partial("_AnswerPanelPartial", answer)
+                </div>
+            }
+        </div>
+
+        <div class="question-content-footer panel">
+            <a class="write-answer">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+                Write Answer
+            </a>
         </div>
     </div>
 

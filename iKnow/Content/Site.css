@@ -27,11 +27,6 @@ a {
     color: inherit;
 }
 
-    a:active {
-        color: inherit;
-    }
-
-
 textarea {
     resize: none;
     overflow-x: hidden;
@@ -134,14 +129,6 @@ a.btn, button.btn {
     border: 1px solid teal;
 }
 
-    .btn-white:hover {
-        background-color: rgba(13,121,209,.06);
-    }
-
-    .btn-white i {
-        margin: 0 5px;
-    }
-
 .error {
     color: red;
     font-size: 14px;
@@ -234,6 +221,7 @@ blockquote {
 
 .main {
     margin-top: 70px;
+    margin-bottom: 10px;
 }
 
     .main .content-container {
@@ -244,6 +232,7 @@ blockquote {
 
 .main-content-container {
     width: 632px;
+    padding-bottom: 10px;
 }
 
 .page-title {
@@ -475,6 +464,7 @@ blockquote {
 
 .rich-editor .trumbowyg-button-pane {
     border-top: 1px solid #d7e0e2;
+    opacity: 0.5;
     background-color: white;
 }
 
@@ -530,7 +520,7 @@ blockquote {
     list-style-type: disc;
 }
 
-.add-answer-panel ul, .add-answer-panel ol, 
+.add-answer-panel ul, .add-answer-panel ol,
 .answer-panel ul, .answer-panel ol {
     margin-left: 40px;
 }
@@ -546,7 +536,8 @@ blockquote {
     margin-bottom: 10px;
 }
 
-.answer-panel-container .view-all-answers a {
+.answer-panel-container .view-all-answers a,
+.question-content-footer {
     height: 50px;
     display: block;
     text-align: center;
@@ -561,7 +552,40 @@ blockquote {
 .answer-panel .answer-footer {
     font-size: 14px;
     color: #8590a6;
-    padding-bottom: 20px; 
+    padding-bottom: 16px;
+    margin-top: 10px;
 }
 
+.answer-panel .answer-panel-header {
+    padding-bottom: 10px;
+}
+
+.all-answer-panel .answer-panel {
+    position: relative;
+}
+
+    .all-answer-panel .answer-panel + .answer-panel:after {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        margin: 0 20px;
+        display: block;
+        border-bottom: 1px solid #e2e2e2;
+        content: "";
+    }
+
+.write-answer {
+    cursor: pointer;
+    display: block;
+    color: teal;
+}
+
+    .write-answer:hover {
+        background-color: rgba(13,121,209,.06);
+    }
+
+    .write-answer i {
+        margin: 0 5px;
+    }
 /*#endregion Answer Detail*/

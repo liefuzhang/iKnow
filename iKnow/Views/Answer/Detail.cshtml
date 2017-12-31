@@ -15,13 +15,7 @@
         <div class="answer-panel-container">
             <div class="view-all-answers panel">@Html.ActionLink("View all " + Model.AnswerCount + " answer(s)", "Detail", "Question", new { id = Model.Question.Id }, new { @class = "text-link" })</div>
             <div class="answer-panel panel">
-                @Html.Partial("_AnswerPanelHeaderPartial")
-                <div class="answer-panel-content">
-                    @Html.Raw(Model.Answer.Content)
-                    <div class="answer-footer">
-                        Answered @Model.Answer.CreatedDate.ToString("MMM d, yyyy")
-                    </div>
-                </div>
+                @Html.Partial("_AnswerPanelPartial", Model.Answer)
             </div>
             <div class="view-all-answers panel">@Html.ActionLink("View all " + Model.AnswerCount + "answer(s)", "Detail", "Question", new { id = Model.Question.Id }, new { @class = "text-link" })</div>
         </div>

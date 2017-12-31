@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using iKnow.Models;
 using iKnow.ViewModels;
+using System.Data.Entity;
 
 namespace iKnow.Controllers {
     public class QuestionController : Controller {
@@ -61,6 +62,9 @@ namespace iKnow.Controllers {
             if (question == null) {
                 return HttpNotFound();
             }
+
+            // explicit loading (to avoid too complex query)
+            _context.Answers.Where(a => a.QuestionId == question.Id).Load();
 
             var viewModel = new QuestionDetailViewModel {
                 Question = question

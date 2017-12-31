@@ -224,6 +224,7 @@
     <Content Include="Views\Answer\Detail.cshtml" />
     <Content Include="Views\Shared\_QuestionHeaderPartial.cshtml" />
     <Content Include="Views\Shared\_AnswerPanelHeaderPartial.cshtml" />
+    <Content Include="Views\Shared\_AnswerPanelPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

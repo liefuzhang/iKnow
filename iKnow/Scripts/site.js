@@ -5,7 +5,7 @@
     $(".question-modal-container").on("click", toggleAddQuestionModal);
     $(".question-header-panel .js-edit-topic").on("click", editTopic);
     $(".question-header-panel .js-edit-question").on("click", editQuestion);
-    $(".question-header-panel #writeAnswer").on("click", toggleAddAnswerPanel);
+    $(".write-answer").on("click", showAddAnswerPanel);
 });
 
 function selectTopic() {
@@ -99,6 +99,7 @@ function editTopic() {
     });
 }
 
-function toggleAddAnswerPanel() {
-    $(".add-answer-panel").slideToggle(100);
+function showAddAnswerPanel() {
+    $(".add-answer-panel.hide").slideDown(100);
+    $('html, body').scrollTop($(".add-answer-panel").offset().top - 100);
 }
