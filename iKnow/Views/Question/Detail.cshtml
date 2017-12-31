@@ -30,7 +30,7 @@
 
         <div class="all-answer-panel panel">
             @foreach (var answer in Model.Question.Answers) {
-                <div class="answer-panel">
+                <div class="answer-panel divided-section">
                     @Html.Partial("_AnswerPanelPartial", answer)
                 </div>
             }

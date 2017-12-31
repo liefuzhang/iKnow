@@ -5,7 +5,7 @@
 @Html.ActionLink("Enter Topic", "Detail", "Topic", new { id = Model.Id }, new { @class = "enter-topic btn" })
 
 <div class="topic-about">
-    <img src="@Model.IconPath" />
+    <img src="@Model.IconPath" class="topic-icon"/>
     <p>
         @Model.Description
     </p>

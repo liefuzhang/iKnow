@@ -5,7 +5,9 @@
 }
 
 <div class="topic-container main-content-container">
-    <h3 class="page-title">Topics</h3>
+    <div class="content-header">
+        <h3>Topics</h3>
+    </div>
     <ul class="topic-list">
         @foreach (var topic in Model.Topics) {
             <li data-topic-id="@topic.Id" class="@(Model.SelectedTopic.Id == topic.Id ? "active" : "")">@topic.Name</li>

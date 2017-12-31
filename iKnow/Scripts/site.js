@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
     $(".topic-list").on("click", "li", selectTopic);
-    $(".add-topic-container .js-button-delete").on("click", deleteTopic);
+    $(".topic-form-container .js-button-delete").on("click", deleteTopic);
     $(".js-button-add-question").on("click", toggleAddQuestionModal);
     $(".question-modal-container").on("click", toggleAddQuestionModal);
     $(".question-header-panel .js-edit-topic").on("click", editTopic);

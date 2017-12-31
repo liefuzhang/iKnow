@@ -36,8 +36,16 @@ namespace iKnow.Controllers {
 
         // GET: Topic/Detail/1
         public ActionResult Detail(int id) {
+            var topic = _context.Topics.SingleOrDefault(t => t.Id == id);
+            if (topic == null) {
+                return HttpNotFound();
+            }
 
-            return View();
+            var viewModel = new TopicDetailViewModel {
+                Topic = topic
+            };
+
+            return View(viewModel);
         }
 
         // GET: Topic/About/1

@@ -173,6 +173,16 @@ blockquote {
     position: absolute;
     top: 0;
     right: 0;
+    color: #666;
+    font-size: 13px;
+}
+
+.sidebar-section {
+    margin-top: 15px;
+}
+
+.sidebar-title {
+    margin-bottom: 10px;
 }
 
 .navbar {
@@ -230,14 +240,19 @@ blockquote {
 
 /*#region topic */
 
+.topic-icon {
+    border-radius: 4px;
+}
+
 .main-content-container {
     width: 632px;
     padding-bottom: 10px;
 }
 
-.page-title {
+.content-header {
     border-bottom: 1px solid #ccc;
     margin-bottom: 20px;
+    padding-bottom: 5px;
 }
 
 .topic-container .topic-list {
@@ -293,11 +308,10 @@ blockquote {
             min-width: 60px;
             height: 60px;
             margin-right: 30px;
-            border-radius: 4px;
             margin-top: 5px;
         }
 
-.add-topic-container .return-topic {
+.topic-form-container .return-topic {
     position: absolute;
     top: 0;
     right: 0;
@@ -306,15 +320,26 @@ blockquote {
     line-height: 1.75rem;
 }
 
-.add-topic-container .btn-delete {
+.topic-form-container .btn-delete {
     margin-left: 12px;
 }
 
-.add-topic-container img {
+.topic-form-container img {
     width: 50px;
     margin-right: 10px;
     vertical-align: text-bottom;
 }
+
+.topic-detail-container .content-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+    .topic-detail-container .content-header img {
+        width: 60px;
+        margin-right: 10px;
+    }
 
 /*#endregion topic */
 
@@ -564,14 +589,14 @@ blockquote {
     position: relative;
 }
 
-    .all-answer-panel .answer-panel + .answer-panel:after {
+    .divided-section+.divided-section:after {
         position: absolute;
         left: 0;
         right: 0;
         top: 0;
         margin: 0 20px;
         display: block;
-        border-bottom: 1px solid #e2e2e2;
+        border-bottom: 1px solid #eee;
         content: "";
     }
 

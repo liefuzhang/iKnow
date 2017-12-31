@@ -1,7 +1,20 @@
-﻿
+﻿@model iKnow.ViewModels.TopicDetailViewModel
 @{
     ViewBag.Title = "Detail";
 }
 
-<h2>Detail</h2>
+<div class="topic-detail-container main-content-container">
+    <div class="content-header">
+        <img src="@Model.Topic.IconPath" class="topic-icon" />
+        <h2>
+            @Model.Topic.Name
+        </h2>
+    </div>
+</div>
 
+<div class="sidebar">
+    <div class="sidebar-section divided-section">
+        <h3 class="sidebar-title">About</h3>
+        <p>@Model.Topic.Description</p>
+    </div>
+</div>

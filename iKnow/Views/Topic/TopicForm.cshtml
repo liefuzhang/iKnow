@@ -4,8 +4,8 @@
     ViewBag.Title = "title";
 }
 
-<div class="add-topic-container">
-    <h3 class="page-title">@(Model.Topic.Id == 0 ? "Add Topic" : "Edit Topic")</h3>
+<div class="topic-form-container">
+    <h3 class="content-header">@(Model.Topic.Id == 0 ? "Add Topic" : "Edit Topic")</h3>
     <pre class="return-topic">@Html.ActionLink("Return to Topics  >  ", "Index", "Topic")</pre>
 
     @using (@Html.BeginForm("Save", "Topic", null, FormMethod.Post, new { enctype = "multipart/form-data" })) {
@@ -23,7 +23,7 @@
 
         <div class="form-group">
             @Html.Label("Icon")
-            <img src="@Model.Topic.IconPath" />
+            <img src="@Model.Topic.IconPath" class="topic-icon"/>
             @Html.TextBoxFor(m => m.PostedFile, new { type = "file"})
             @Html.ValidationMessageFor(m => m.PostedFile, "", new { @class = "error" })
             @*<input type="file" name="changeIcon" />*@
