@@ -13,12 +13,11 @@
 <div class="question-container-inner">
     @Html.Partial("_QuestionHeaderPartial", Model.Question)
     <div class="main-content-container">
-        <div class="add-answer-panel panel">
+        <div class="add-answer-panel panel hide">
             @Html.Partial("_AnswerPanelHeaderPartial")
             @using (@Html.BeginForm("Save", "Answer")) {
                 <div class="rich-editor">
                     @Html.TextAreaFor(m => m.AnswerContent, new { @class = "rich-editor-inner", placeholder = "Write your answer here..." })
-                    @*<div class="rich-editor-inner" placeholder=></div>*@
                     <div class="rich-editor-footer">
                         <button type="submit" class="btn">Submit Answer</button>
                     </div>

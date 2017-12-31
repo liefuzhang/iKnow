@@ -5,6 +5,7 @@
     $(".question-modal-container").on("click", toggleAddQuestionModal);
     $(".question-header-panel .js-edit-topic").on("click", editTopic);
     $(".question-header-panel .js-edit-question").on("click", editQuestion);
+    $(".question-header-panel #writeAnswer").on("click", toggleAddAnswerPanel);
 });
 
 function selectTopic() {
@@ -96,4 +97,8 @@ function editTopic() {
             }
         }
     });
+}
+
+function toggleAddAnswerPanel() {
+    $(".add-answer-panel").slideToggle(100);
 }
