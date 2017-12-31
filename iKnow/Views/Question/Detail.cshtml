@@ -14,10 +14,7 @@
     @Html.Partial("_QuestionHeaderPartial", Model.Question)
     <div class="main-content-container">
         <div class="add-answer-panel panel">
-            <div class="add-answer-header">
-                @*TODO add user image and intro*@
-                <b>Admin</b>
-            </div>
+            @Html.Partial("_AnswerPanelHeaderPartial")
             @using (@Html.BeginForm("Save", "Answer")) {
                 <div class="rich-editor">
                     @Html.TextAreaFor(m => m.AnswerContent, new { @class = "rich-editor-inner", placeholder = "Write your answer here..." })

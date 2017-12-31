@@ -30,10 +30,12 @@ namespace iKnow.Controllers {
             }
 
             var question = _context.Questions.Include("Topics").Single(q => q.Id == answer.Question.Id);
+            var answerCount = _context.Answers.Count(a => a.QuestionId == question.Id);
 
             var viewModel = new AnswerDetailViewModel {
                 Answer = answer,
-                Question = question
+                Question = question,
+                AnswerCount = answerCount
             };
 
             return View(viewModel);

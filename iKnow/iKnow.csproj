@@ -197,6 +197,7 @@
     <Content Include="Scripts\prototype.js" />
     <Content Include="Scripts\site.js" />
     <Content Include="Scripts\trumbowyg.base64.js" />
+    <Content Include="Scripts\trumbowyg.cleanpaste.js" />
     <Content Include="Scripts\trumbowyg.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
@@ -222,6 +223,7 @@
     <Content Include="Views\Question\_QuestionTopicModalPartial.cshtml" />
     <Content Include="Views\Answer\Detail.cshtml" />
     <Content Include="Views\Shared\_QuestionHeaderPartial.cshtml" />
+    <Content Include="Views\Shared\_AnswerPanelHeaderPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

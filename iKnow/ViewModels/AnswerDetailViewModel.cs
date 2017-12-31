@@ -10,5 +10,6 @@ namespace iKnow.ViewModels {
     public class AnswerDetailViewModel {
         public Question Question { get; set; }
         public Answer Answer { get; set; }
+        public int AnswerCount { get; set; }
     }
 }

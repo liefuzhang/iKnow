@@ -153,16 +153,19 @@ a.btn, button.btn {
     box-shadow: 0 1px 3px rgba(0,0,0,.1);
 }
 
+.text-link {
+    color: #8590a6;
+}
+
+    .text-link:hover {
+        color: #7a8599;
+    }
+
 .trigger-edit {
     font-size: 14px;
     line-height: 32px;
-    color: #8590a6;
     cursor: pointer;
 }
-
-    .trigger-edit:hover {
-        color: #7a8599;
-    }
 
     .trigger-edit i {
         margin-right: 3px;
@@ -461,9 +464,6 @@ blockquote {
         margin-left: 10px;
     }
 
-.add-answer-panel .add-answer-header {
-    padding: 16px 20px;
-}
 
 .add-answer-panel .rich-editor {
     min-height: 160px;
@@ -477,24 +477,17 @@ blockquote {
 .rich-editor .trumbowyg-box {
     min-height: 158px;
     border: none;
-    margin-bottom: 0;
+    margin: 0 auto;
 }
 
 .rich-editor .trumbowyg-editor {
     min-height: 120px;
     padding-bottom: 0;
+    padding-top: 12px;
 }
 
 .rich-editor .trumbowyg-button-pane::after {
     height: 0;
-}
-
-.rich-editor ul li {
-    list-style-type: disc;
-}
-
-.rich-editor ul {
-    margin-left: 40px;
 }
 
 .rich-editor label {
@@ -503,10 +496,6 @@ blockquote {
 
 .rich-editor .trumbowyg-button-pane button:not(.trumbowyg-disable):hover {
     background-color: #ecf0f1;
-}
-
-.rich-editor p {
-    padding-bottom: 1em;
 }
 
 .rich-editor .rich-editor-footer {
@@ -522,9 +511,53 @@ blockquote {
 
 /*#region Answer Detail */
 
+.answer-panel-header {
+    padding: 16px 20px;
+}
+
+.add-answer-panel p, .add-answer-panel li,
+.answer-panel p, .answer-panel li {
+    padding-bottom: 1em;
+}
+
+
+.add-answer-panel ul li,
+.answer-panel ul li {
+    list-style-type: disc;
+}
+
+.add-answer-panel ul, .add-answer-panel ol, 
+.answer-panel ul, .answer-panel ol {
+    margin-left: 40px;
+}
+
+
 .answer-container-inner {
     font-size: 15px;
     line-height: 1.4;
+}
+
+.answer-panel-container > div {
+    background-color: white;
+    margin-bottom: 10px;
+}
+
+.answer-panel-container .view-all-answers a {
+    height: 50px;
+    display: block;
+    text-align: center;
+    line-height: 50px;
+}
+
+.answer-panel-content {
+    padding: 0 20px;
+    font-size: 16px;
+}
+
+.answer-panel .answer-footer {
+    font-size: 14px;
+    color: #8590a6;
+    padding-bottom: 20px; 
 }
 
 /*#endregion Answer Detail*/

@@ -12,7 +12,8 @@ namespace iKnow {
 
             bundles.Add(new ScriptBundle("~/bundles/trumbowyg").Include(
                         "~/Scripts/trumbowyg.js",
-                        "~/Scripts/trumbowyg.base64.js"));
+                        "~/Scripts/trumbowyg.base64.js",
+                        "~/Scripts/trumbowyg.cleanpaste.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
