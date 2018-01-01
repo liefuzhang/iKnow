@@ -8,6 +8,9 @@ using iKnow.EntityTypeConfiguration;
 
 namespace iKnow {
     public class iKnowContext : DbContext {
+        public iKnowContext(): base("DefaultConnection") {
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Question> Questions { get; set; }

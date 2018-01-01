@@ -10,6 +10,14 @@
             @Model.Topic.Name
         </h2>
     </div>
+
+    <div class="topic-detail-inner">
+        @foreach(var questionAnswer in Model.QuestionAnswers) {
+            <h4>@questionAnswer.Key.Title</h4>
+            <div class="question-author">@questionAnswer.Key.User.LoginName @*TODO add intro*@</div>
+            <div class="question-answer-content">@Html.Raw(questionAnswer.Value.Content)</div>
+        }
+    </div>
 </div>
 
 <div class="sidebar">

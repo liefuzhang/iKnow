@@ -36,13 +36,31 @@ namespace iKnow.Controllers {
 
         // GET: Topic/Detail/1
         public ActionResult Detail(int id) {
-            var topic = _context.Topics.SingleOrDefault(t => t.Id == id);
+            var topic = _context.Topics.Include("Questions").SingleOrDefault(t => t.Id == id);
             if (topic == null) {
                 return HttpNotFound();
             }
 
+            var questionIds = topic.Questions.Select(q => q.Id).ToList();
+            var answers = _context.Answers
+                .Where(a => questionIds.Contains(a.QuestionId))
+                .GroupBy(a => a.QuestionId, (qId, g) => new {
+                    QuestionId = qId,
+                    Answer = g.FirstOrDefault()
+                }).ToList();
+
+            var questionAnswers = new Dictionary<Question, Answer>();
+            foreach (var answer in answers) {
+                if (answer.Answer != null) {
+                    var question = topic.Questions.Single(q => q.Id == answer.QuestionId);
+                    _context.Users.Where(u => u.Id == question.UserId).Load();
+                    questionAnswers.Add(question, answer.Answer);
+                }
+            }
+
             var viewModel = new TopicDetailViewModel {
-                Topic = topic
+                Topic = topic,
+                QuestionAnswers = questionAnswers
             };
 
             return View(viewModel);
