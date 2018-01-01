@@ -601,6 +601,23 @@ blockquote {
     line-height: 50px;
 }
 
+.empty-question-footer {
+    padding: 50px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #8590a6;
+}
+
+.empty-question-footer a {
+    display: inline;
+}
+
+.empty-question-footer i {
+    opacity: 0.3;
+    margin-bottom: 10px;
+}
+
 .answer-panel-content {
     padding: 0 20px;
     font-size: 16px;

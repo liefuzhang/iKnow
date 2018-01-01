@@ -36,12 +36,24 @@
             }
         </div>
 
-        <div class="question-content-footer panel">
-            <a class="write-answer">
-                <i class="fa fa-pencil" aria-hidden="true"></i>
-                Write Answer
-            </a>
-        </div>
+        @if (Model.Question.Answers.Count() > 0) {
+            <div class="question-content-footer panel">
+                <a class="write-answer">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                    Write Answer
+                </a>
+            </div>
+        } else {
+            <div class="empty-question-footer panel">
+                <i class="fa fa-edit fa-4x" aria-hidden="true"></i>
+                <div>
+                    No answers yet. Start to
+                    <a class="write-answer">
+                        write answer here
+                    </a>
+                </div>
+            </div>
+        }
     </div>
 
     <div class="sidebar question-sidebar"></div>
