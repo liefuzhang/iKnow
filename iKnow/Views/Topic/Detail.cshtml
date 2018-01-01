@@ -17,7 +17,24 @@
             <div class="divided-section">
                 <h3 class="question-answer-name">@Html.ActionLink(@questionAnswer.Key.Title, "Detail", "Question", new { id = questionAnswer.Key.Id }, null) </h3>
                 <div class="question-author">@questionAnswer.Key.User.LoginName @*TODO add intro*@</div>
-                <div class="question-answer-content">@Html.Raw(questionAnswer.Value.Content)</div>
+                <div class="short-answer-container">
+                    <div class="question-answer-content">
+                        @Html.Raw(questionAnswer.Value.ShortContext)
+                        <span class="showFullAnswer">(more)</span>
+                    </div>
+                </div>
+                <div class="expaneded-answer-container hide">
+                    <div class="question-answer-content answer-content">
+                        @Html.Raw(questionAnswer.Value.Content)
+                        <div class="answer-footer">
+                            Answered @questionAnswer.Value.CreatedDate.ToString("MMM d, yyyy")
+                            <a class="collapse-answer">
+                                <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+                                Collapse
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         }
     </div>

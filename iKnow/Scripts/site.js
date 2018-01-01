@@ -6,6 +6,10 @@
     $(".question-header-panel .js-edit-topic").on("click", editTopic);
     $(".question-header-panel .js-edit-question").on("click", editQuestion);
     $(".write-answer").on("click", showAddAnswerPanel);
+    $(".short-answer-container").on("mouseenter", toggleMoreAnswerUnderline);
+    $(".short-answer-container").on("mouseleave", toggleMoreAnswerUnderline);
+    $(".short-answer-container").on("click", showMoreAnswer);
+    $(".collapse-answer").on("click", hideMoreAnswer);
 });
 
 function selectTopic() {
@@ -102,4 +106,21 @@ function editTopic() {
 function showAddAnswerPanel() {
     $(".add-answer-panel.hide").slideDown(100);
     $('html, body').scrollTop($(".add-answer-panel").offset().top - 100);
+}
+
+function toggleMoreAnswerUnderline() {
+    $(this).find(".showFullAnswer").toggleClass("underline");
+}
+
+function showMoreAnswer() {
+    var $this = $(this);
+    $this.addClass("hide");
+    $this.next().removeClass("hide");
+}
+
+function hideMoreAnswer() {
+    var $this = $(this);
+    var $container = $this.closest(".expaneded-answer-container");
+    $container.addClass("hide");
+    $container.prev().removeClass("hide");
 }

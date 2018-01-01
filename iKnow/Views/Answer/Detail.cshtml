@@ -14,10 +14,10 @@
     <div class="main-content-container">
         <div class="answer-panel-container">
             <div class="view-all-answers panel">@Html.ActionLink("View all " + Model.AnswerCount + " answer(s)", "Detail", "Question", new { id = Model.Question.Id }, new { @class = "text-link" })</div>
-            <div class="answer-panel panel">
+            <div class="answer-panel answer-content panel">
                 @Html.Partial("_AnswerPanelPartial", Model.Answer)
             </div>
-            <div class="view-all-answers panel">@Html.ActionLink("View all " + Model.AnswerCount + "answer(s)", "Detail", "Question", new { id = Model.Question.Id }, new { @class = "text-link" })</div>
+            <div class="view-all-answers panel">@Html.ActionLink("View all " + Model.AnswerCount + " answer(s)", "Detail", "Question", new { id = Model.Question.Id }, new { @class = "text-link" })</div>
         </div>
     </div>
 
