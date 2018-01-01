@@ -395,10 +395,10 @@ blockquote {
     cursor: pointer;
 }
 
-    a.collapse-answer:hover {
-        color: #2b6dad;
-        text-decoration:none !important;
-    }   
+a.collapse-answer:hover {
+    color: #2b6dad;
+    text-decoration: none !important;
+}
 
 /*#endregion topic */
 
@@ -541,13 +541,13 @@ blockquote {
         margin-left: 10px;
     }
 
-    .add-answer-panel {
-        overflow: visible;
-    }
-
-.add-answer-panel .rich-editor {
-    min-height: 160px;
+.add-answer-panel {
+    overflow: visible;
 }
+
+    .add-answer-panel .rich-editor {
+        min-height: 160px;
+    }
 
 .rich-editor .trumbowyg-button-pane {
     border-top: 1px solid #d7e0e2;
@@ -609,12 +609,10 @@ blockquote {
     margin-left: 40px;
 }
 
-.answer-content a {
+.answer-content a:hover {
     color: #2b6dad;
+    text-decoration: underline;
 }
-    .answer-content a:hover {
-        text-decoration: underline;
-    }
 
 .answer-container-inner {
     font-size: 15px;
@@ -685,4 +683,28 @@ blockquote {
     .write-answer i {
         margin: 0 5px;
     }
+
+.answer-container .content-header {
+    margin-bottom: 5px;
+}
+
+.answer-body .divided-section {
+    padding: 16px 0;
+}
+
+    .answer-body .divided-section a:hover {
+        text-decoration: underline;
+    }
+
+.answer-body .answer-item-footer {
+    font-size: 14px;
+    color: #8590a6;
+    margin-top: 5px;
+}
+
+    .answer-body .answer-item-footer a:hover {
+        text-decoration: underline;
+        color: #2b6dad;
+    }
+
 /*#endregion Answer Detail*/

@@ -20,7 +20,23 @@ namespace iKnow.Controllers {
 
         // GET: Answer
         public ActionResult Index() {
-            return View();
+            int page = 0, pageSize = 10;
+            var questionsWithAnswerCount = _context.Questions.Take(pageSize).GroupJoin(_context.Answers,
+                q => q.Id,
+                a => a.QuestionId,
+                (question, answers) =>
+                new {
+                    Question = question,
+                    AnswerCount = answers.Count()
+                }).ToDictionary(a=>a.Question, a=>a.AnswerCount);
+            
+            var viewModel = new AnswerIndexViewModel {
+                QuestionsWithAnswerCount = questionsWithAnswerCount,
+                Page = page,
+                PageSize = pageSize
+            };
+
+            return View(viewModel);
         }
 
         public ActionResult Detail(int id) {

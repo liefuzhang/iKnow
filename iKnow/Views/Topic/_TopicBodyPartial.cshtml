@@ -2,7 +2,7 @@
 @model Topic
 
 <h4>About</h4>
-@Html.ActionLink("Enter Topic", "Detail", "Topic", new { id = Model.Id }, new { @class = "enter-topic btn" })
+@Html.ActionLink("Enter Topic", "Detail", "Topic", new { id = Model.Id }, new { @class = "enter-topic btn", target="_blank"})
 
 <div class="topic-about">
     <img src="@Model.IconPath" class="topic-icon"/>
