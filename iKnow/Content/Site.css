@@ -144,6 +144,12 @@ a.btn, button.btn {
     box-shadow: 0 1px 3px rgba(0,0,0,.1);
 }
 
+.footer {
+    padding: 20px 15px;
+    border-top: 1px solid #ccc;
+    color: #999;
+}
+
 .text-link {
     color: #8590a6;
 }
@@ -167,6 +173,20 @@ blockquote {
     border-left: 4px solid #cfd8e6;
     padding-left: 1em;
 }
+
+.divided-section {
+    position: relative;
+}
+
+    .divided-section + .divided-section:after {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        display: block;
+        border-bottom: 1px solid #eee;
+        content: "";
+    }
 
 .sidebar {
     width: 270px;
@@ -340,6 +360,18 @@ blockquote {
         width: 60px;
         margin-right: 10px;
     }
+
+.topic-detail-inner .divided-section {
+    padding: 16px 0;
+}
+
+.topic-detail-inner .question-answer-content {
+    font-size: 15px;
+}
+
+.topic-detail-inner .question-answer-name:hover {
+    text-decoration: underline;
+}
 
 /*#endregion topic */
 
@@ -585,20 +617,9 @@ blockquote {
     padding-bottom: 10px;
 }
 
-.all-answer-panel .answer-panel {
-    position: relative;
+.answer-panel:after {
+    margin: 0 20px;
 }
-
-    .divided-section+.divided-section:after {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        margin: 0 20px;
-        display: block;
-        border-bottom: 1px solid #eee;
-        content: "";
-    }
 
 .write-answer {
     cursor: pointer;

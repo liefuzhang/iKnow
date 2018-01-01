@@ -1,5 +1,6 @@
 ﻿@using iKnow.Models
 @using iKnow.ViewModels
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,12 +34,13 @@
             @RenderBody()
         </div>
     </div>
+    @RenderSection("footer", required: false)
+
+    <div class="question-modal-container">
+    </div>
 
     @Scripts.Render("~/bundles/js")
     @RenderSection("scripts", required: false)
 
-    <div class="question-modal-container">
-        @*@Html.Partial("../Question/_AddQuestionModalPartial", new AddQuestionViewModel())*@
-    </div>
 </body>
 </html>
