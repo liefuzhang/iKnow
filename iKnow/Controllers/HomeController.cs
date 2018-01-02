@@ -1,25 +1,56 @@
-﻿using System;
+﻿using iKnow.Models;
+using iKnow.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
 namespace iKnow.Controllers {
     public class HomeController : Controller {
+        private iKnowContext _context;
+
+        public HomeController() {
+            _context = new iKnowContext();
+        }
+
+        protected override void Dispose(bool disposing) {
+            _context.Dispose();
+        }
+
         public ActionResult Index() {
-            return View();
+            int page = 0, pageSize = Constants.DefaultPageSize;
+            var viewModel = constructAnswerIndexViewModel(page, pageSize);
+
+            return View(viewModel);
         }
 
-        public ActionResult About() {
-            ViewBag.Message = "Your application description page.";
+        private HomeViewModel constructAnswerIndexViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
+            var questions = _context.Questions.Include("Topics").OrderByDescending(q => q.Id).Skip(currentPage * pageSize).Take(pageSize);
+            var questionIds = questions.Select(q => q.Id).ToList();
+            var answers = _context.Answers
+                .Where(a => questionIds.Contains(a.QuestionId))
+                .GroupBy(a => a.QuestionId, (qId, g) => new {
+                    QuestionId = qId,
+                    Answer = g.FirstOrDefault()
+                }).ToList();
 
-            return View();
-        }
+            var questionAnswers = new Dictionary<Question, Answer>();
+            foreach (var answer in answers) {
+                if (answer.Answer != null) {
+                    var question = questions.Single(q => q.Id == answer.QuestionId);
+                    _context.Users.Where(u => u.Id == question.UserId).Load();
+                    questionAnswers.Add(question, answer.Answer);
+                }
+            }
 
-        public ActionResult Contact() {
-            ViewBag.Message = "Your contact page.";
+            return new HomeViewModel {
+                QuestionAnswers = questionAnswers,
+                Page = currentPage,
+                PageSize = pageSize
+            };
 
-            return View();
         }
     }
 }

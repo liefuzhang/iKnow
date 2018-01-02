@@ -162,6 +162,7 @@
     <Compile Include="EntityTypeConfigurations\UserConfiguration.cs" />
     <Compile Include="EntityTypeConfigurations\UserProfileConfiguration.cs" />
     <Compile Include="ViewModels\AnswerIndexViewModel.cs" />
+    <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\TopicDetailViewModel.cs" />
     <Compile Include="ViewModels\AnswerDetailViewModel.cs" />
     <Compile Include="ViewModels\QuestionDetailViewModel.cs" />
@@ -229,6 +230,7 @@
     <Content Include="Views\Shared\_AnswerPanelPartial.cshtml" />
     <Content Include="Views\Answer\Index.cshtml" />
     <Content Include="Views\Answer\_AnswerQuestionListPartial.cshtml" />
+    <Content Include="Views\Shared\_QuestionAnswerPairPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

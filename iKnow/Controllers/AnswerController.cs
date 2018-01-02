@@ -21,19 +21,13 @@ namespace iKnow.Controllers {
         // GET: Answer
         public ActionResult Index() {
             int page = 0, pageSize = Constants.DefaultPageSize;
-            var questionsWithAnswerCount = fetchQuestionsWithAnswerCount(page, pageSize);
-            
-            var viewModel = new AnswerIndexViewModel {
-                QuestionsWithAnswerCount = questionsWithAnswerCount,
-                Page = page,
-                PageSize = pageSize
-            };
-
+            var viewModel = constructAnswerIndexViewModel(page, pageSize);
+                        
             return View(viewModel);
         }
 
-        private IDictionary<Question, int> fetchQuestionsWithAnswerCount(int currentPage, int pageSize = Constants.DefaultPageSize) {
-            return _context.Questions.OrderBy(q=>q.Id).Skip(currentPage * pageSize).Take(pageSize).GroupJoin(_context.Answers,
+        private AnswerIndexViewModel constructAnswerIndexViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
+            var questionsWithAnswerCount = _context.Questions.OrderByDescending(q=>q.Id).Skip(currentPage * pageSize).Take(pageSize).GroupJoin(_context.Answers,
                q => q.Id,
                a => a.QuestionId,
                (question, answers) =>
@@ -41,6 +35,13 @@ namespace iKnow.Controllers {
                    Question = question,
                    AnswerCount = answers.Count()
                }).ToDictionary(a => a.Question, a => a.AnswerCount);
+
+            return new AnswerIndexViewModel {
+                QuestionsWithAnswerCount = questionsWithAnswerCount,
+                Page = currentPage,
+                PageSize = pageSize
+            };
+
         }
 
         public ActionResult Detail(int id) {
@@ -64,16 +65,11 @@ namespace iKnow.Controllers {
 
         [Route("Answer/LoadMore/{currentPage}")]
         public PartialViewResult LoadMore(int currentPage) {
-            var questionsWithAnswerCount = fetchQuestionsWithAnswerCount(++currentPage);
-            if (questionsWithAnswerCount.Count() == 0) {
+            var viewModel = constructAnswerIndexViewModel(++currentPage);
+            if (viewModel.QuestionsWithAnswerCount.Count() == 0) {
                 return null;
             }
-
-            var viewModel = new AnswerIndexViewModel {
-                QuestionsWithAnswerCount = questionsWithAnswerCount,
-                Page = currentPage
-            };
-
+            
             return PartialView("_AnswerQuestionListPartial", viewModel);
         }
 

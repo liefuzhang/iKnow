@@ -1,4 +1,24 @@
-﻿@{
+﻿@model iKnow.ViewModels.HomeViewModel
+@{
     ViewBag.Title = "Home Page";
 }
 
+<style>
+    body {
+        background-color: #f3f3f3;
+    }
+</style>
+
+<div class="question-container-inner">
+    <div class="main-content-container">
+        @foreach (var questionAnswer in Model.QuestionAnswers) {
+            <div class="home-panel panel">
+                <div class="answer-content">
+                    @Html.Partial("_QuestionAnswerPairPartial", questionAnswer)
+                </div>
+            </div>
+        }        
+    </div>
+
+    <div class="sidebar question-sidebar"></div>
+</div>
