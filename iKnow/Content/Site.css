@@ -7,6 +7,10 @@
     font-weight: normal;
 }
 
+body.modal-open {
+    overflow: hidden;
+}
+
 input, textarea, select, button {
     font-family: "Roboto",sans-serif;
     font-weight: normal;
@@ -29,7 +33,8 @@ a {
 
 textarea {
     resize: none;
-    overflow-x: hidden;
+	box-sizing: border-box;
+    overflow: hidden;
 }
 
 textarea, input {
@@ -450,6 +455,10 @@ a.collapse-answer:hover {
         overflow-y: auto;
     }
 
+    .question-modal-container .question-modal-inner form{
+        width: 556px;
+    }
+
         .question-modal-container .question-modal-inner.question-topic-inner {
             overflow-y: visible;
         }
@@ -459,10 +468,13 @@ a.collapse-answer:hover {
             margin-top: 20px;
         }
 
-        .question-modal-container .question-modal-inner .add-question-title {
-            width: 530px;
-            height: 50px;
+        .question-modal-container .question-modal-inner .add-question-title,
+        .question-modal-container .question-modal-inner .add-question-title 
+         {
+            width: 100%;
+            min-height: 50px;
             margin-top: 20px;
+            box-sizing: border-box;
         }
 
         .question-modal-container .question-modal-inner .form-group {
@@ -477,8 +489,8 @@ a.collapse-answer:hover {
         }
 
         .question-modal-container .question-modal-inner .add-question-description textarea {
-            width: 530px;
-            height: 70px;
+            width: 100%;
+            min-height: 70px;
             margin-top: 10px;
         }
 

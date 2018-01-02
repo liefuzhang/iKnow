@@ -10,6 +10,7 @@
     $(".question-answer-container").on("mouseleave", ".short-answer-container", toggleMoreAnswerUnderline);
     $(".question-answer-container").on("click", ".short-answer-container", showMoreAnswer);
     $(".question-answer-container").on("click", ".collapse-answer", hideMoreAnswer);
+    $(".question-modal-container").on("input", "textarea", textareaAutoGrow);
 });
 
 function selectTopic() {
@@ -50,7 +51,7 @@ function toggleAddQuestionModal(e) {
     }
 
     if ($modalContainer.hasClass("new-form-loaded")) {
-        $(".question-modal-container").addClass("open");
+        $modalContainer.addClass("open");
         return;
     }
 
@@ -79,7 +80,7 @@ function editQuestion() {
             if (html) {
                 $modalContainer.html(html);
                 $modalContainer.addClass("open");
-                $(".topic-select").chosen({ width: "556px", max_selected_options: 5 });
+                $(".topic-select").chosen({ width: "100%", max_selected_options: 5 });
             }
         }
     });
@@ -97,7 +98,7 @@ function editTopic() {
             if (html) {
                 $modalContainer.html(html);
                 $modalContainer.addClass("open");
-                $(".topic-select").chosen({ width: "556px", max_selected_options: 5 });
+                $(".topic-select").chosen({ width: "100%", max_selected_options: 5 });
             }
         }
     });
@@ -148,3 +149,7 @@ function loadMoreHandler(controllerName) {
     });
 }
 
+function textareaAutoGrow() {
+    var scroll_height = $(this).get(0).scrollHeight;
+    $(this).css('height', scroll_height + 'px');
+}
