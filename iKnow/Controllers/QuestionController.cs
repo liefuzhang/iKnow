@@ -96,7 +96,7 @@ namespace iKnow.Controllers {
             }
 
             questionToSave.ClearTopics();
-            if (formViewModel.TopicIds.Length > 0) {
+            if (formViewModel.TopicIds != null && formViewModel.TopicIds.Length > 0) {
                 var topics = _context.Topics.Where(t => formViewModel.TopicIds.Contains(t.Id)).ToList();
                 foreach (var topic in topics) {
                     questionToSave.AddTopic(topic);
@@ -115,7 +115,7 @@ namespace iKnow.Controllers {
             var questionInDb = _context.Questions.Include("Topics").Single(q => q.Id == questionPosted.Id);
 
             questionInDb.ClearTopics();
-            if (formViewModel.TopicIds.Length > 0) {
+            if (formViewModel.TopicIds != null && formViewModel.TopicIds.Length > 0) {
                 var topics = _context.Topics.Where(t => formViewModel.TopicIds.Contains(t.Id)).ToList();
                 foreach (var topic in topics) {
                     questionInDb.AddTopic(topic);

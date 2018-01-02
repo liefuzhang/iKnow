@@ -6,10 +6,10 @@
     $(".question-header-panel .js-edit-topic").on("click", editTopic);
     $(".question-header-panel .js-edit-question").on("click", editQuestion);
     $(".write-answer").on("click", showAddAnswerPanel);
-    $(".short-answer-container").on("mouseenter", toggleMoreAnswerUnderline);
-    $(".short-answer-container").on("mouseleave", toggleMoreAnswerUnderline);
-    $(".short-answer-container").on("click", showMoreAnswer);
-    $(".collapse-answer").on("click", hideMoreAnswer);
+    $(".question-answer-container").on("mouseenter", ".short-answer-container", toggleMoreAnswerUnderline);
+    $(".question-answer-container").on("mouseleave", ".short-answer-container", toggleMoreAnswerUnderline);
+    $(".question-answer-container").on("click", ".short-answer-container", showMoreAnswer);
+    $(".question-answer-container").on("click", ".collapse-answer", hideMoreAnswer);
 });
 
 function selectTopic() {
@@ -108,25 +108,43 @@ function showAddAnswerPanel() {
     $('html, body').scrollTop($(".add-answer-panel").offset().top - 100);
 }
 
-function toggleMoreAnswerUnderline() {
-    $(this).find(".showFullAnswer").toggleClass("underline");
+function toggleMoreAnswerUnderline(e) {
+    $(e.currentTarget).find(".showFullAnswer").toggleClass("underline");
 }
 
-function showMoreAnswer() {
-    var $this = $(this);
+function showMoreAnswer(e) {
+    var $this = $(e.currentTarget);
     $this.addClass("hide");
     $this.next().removeClass("hide");
 }
 
-function hideMoreAnswer() {
-    var $this = $(this);
+function hideMoreAnswer(e) {
+    var $this = $(e.currentTarget);
     var $container = $this.closest(".expaneded-answer-container");
     $container.addClass("hide");
     $container.prev().removeClass("hide");
 }
 
-function loadMoreDetect() {
-    if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-        alert("near bottom!");
-    }
+function loadMoreHandler(controllerName) {
+    var $this = $(this);
+    $this.hide();
+    $this.next().show();
+
+    var $questionList = $(".load-more-list");
+    var currentPage = $questionList.attr("data-current-page");
+    $.ajax({
+        url: "/" + controllerName + "/loadmore/" + currentPage,
+        dataType: "html",
+        success: function (html) {
+            if (html) {
+                $questionList.append(html);
+                $this.show();
+                $this.next().hide();
+                $questionList.attr("data-current-page", currentPage + 1);
+            } else {
+                $this.parent().addClass("end-of-list");
+            }
+        }
+    });
 }
+

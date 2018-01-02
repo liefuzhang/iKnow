@@ -11,14 +11,19 @@
 
 <div class="question-container-inner">
     <div class="main-content-container">
-        @foreach (var questionAnswer in Model.QuestionAnswers) {
-            <div class="home-panel panel">
-                <div class="answer-content">
-                    @Html.Partial("_QuestionAnswerPairPartial", questionAnswer)
-                </div>
-            </div>
-        }        
+        <div class="home-question-answer-container question-answer-container load-more-list" data-current-page=@Model.Page>
+            @Html.Partial("_QuestionAnswerPairPartial", Model.QuestionAnswers)
+        </div>
+
+        @Html.Partial("_LoadMorePartial")
     </div>
 
     <div class="sidebar question-sidebar"></div>
 </div>
+
+
+@section scripts {
+    <script>
+        $(".to-load").on("click", function () { loadMoreHandler.call(this, "home"); });
+    </script>
+}

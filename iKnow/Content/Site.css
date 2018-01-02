@@ -140,7 +140,8 @@ a.btn, button.btn {
     margin-bottom: 15px;
 }
 
-.panel {
+.panel,
+.question-container-inner .question-answer-inner {
     margin-bottom: 10px;
     background: #fff;
     overflow: hidden;
@@ -178,11 +179,13 @@ blockquote {
     padding-left: 1em;
 }
 
-.divided-section {
+.divided-section,
+.topic-detail-inner .question-answer-inner {
     position: relative;
 }
 
-    .divided-section + .divided-section:after {
+    .divided-section + .divided-section:after,
+    .topic-detail-inner .question-answer-inner:not(:first-of-type):after {
         position: absolute;
         left: 0;
         right: 0;
@@ -365,7 +368,7 @@ blockquote {
         margin-right: 10px;
     }
 
-.topic-detail-inner .divided-section {
+.topic-detail-inner .question-answer-inner {
     padding: 16px 0;
 }
 
@@ -408,7 +411,7 @@ a.collapse-answer:hover {
 
 
 /*#region Question */
-.question-container-inner {
+.question-container-inner .main-content-container {
     font-size: 15px;
     line-height: 1.4;
 }
@@ -591,6 +594,14 @@ a.collapse-answer:hover {
     padding-right: 30px;
 }
 
+h3.question-answer-name > a,
+.answer-body h3 > a {
+    color: #2b6dad;
+    font-size: 1.1rem;
+}
+
+
+
 /*#endregion Question */
 
 
@@ -716,9 +727,9 @@ a.collapse-answer:hover {
 
 .load-more {
     font-size: 14px;
+    line-height: 1.5;
     color: #8590a6;
     display: block;
-    font-size: 14px;
     margin-top: 20px;
     margin-bottom: 40px;
     text-align: center;
@@ -754,4 +765,11 @@ a.collapse-answer:hover {
     font-size: 15px;
 }
 
+.question-answer-topic a:hover {
+    text-decoration: underline;
+}
+
+.home-question-answer-container .question-answer-pair-container {
+    padding: 16px 20px;
+}
 /*#endregion Home */

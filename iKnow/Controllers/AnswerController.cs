@@ -70,7 +70,7 @@ namespace iKnow.Controllers {
                 return null;
             }
             
-            return PartialView("_AnswerQuestionListPartial", viewModel);
+            return PartialView("_AnswerQuestionListPartial", viewModel.QuestionsWithAnswerCount);
         }
 
         [HttpPost]

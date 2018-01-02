@@ -50,7 +50,16 @@ namespace iKnow.Controllers {
                 Page = currentPage,
                 PageSize = pageSize
             };
+        }
 
+        [Route("Home/LoadMore/{currentPage}")]
+        public PartialViewResult LoadMore(int currentPage) {
+            var viewModel = constructAnswerIndexViewModel(++currentPage);
+            if (viewModel.QuestionAnswers.Count() == 0) {
+                return null;
+            }
+
+            return PartialView("_QuestionAnswerPairPartial", viewModel.QuestionAnswers);
         }
     }
 }

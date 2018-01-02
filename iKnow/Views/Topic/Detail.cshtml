@@ -12,12 +12,8 @@
         </h2>
     </div>
 
-    <div class="topic-detail-inner">
-        @foreach (var questionAnswer in Model.QuestionAnswers) {
-            <div class="divided-section">
-                @Html.Partial("_QuestionAnswerPairPartial", questionAnswer)
-            </div>
-        }
+    <div class="topic-detail-inner question-answer-container">
+        @Html.Partial("_QuestionAnswerPairPartial", Model.QuestionAnswers)
     </div>
 </div>
 

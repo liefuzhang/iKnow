@@ -231,6 +231,7 @@
     <Content Include="Views\Answer\Index.cshtml" />
     <Content Include="Views\Answer\_AnswerQuestionListPartial.cshtml" />
     <Content Include="Views\Shared\_QuestionAnswerPairPartial.cshtml" />
+    <Content Include="Views\Shared\_LoadMorePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
