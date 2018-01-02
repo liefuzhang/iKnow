@@ -124,3 +124,9 @@ function hideMoreAnswer() {
     $container.addClass("hide");
     $container.prev().removeClass("hide");
 }
+
+function loadMoreDetect() {
+    if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+        alert("near bottom!");
+    }
+}

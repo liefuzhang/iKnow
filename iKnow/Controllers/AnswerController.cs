@@ -20,15 +20,8 @@ namespace iKnow.Controllers {
 
         // GET: Answer
         public ActionResult Index() {
-            int page = 0, pageSize = 10;
-            var questionsWithAnswerCount = _context.Questions.Take(pageSize).GroupJoin(_context.Answers,
-                q => q.Id,
-                a => a.QuestionId,
-                (question, answers) =>
-                new {
-                    Question = question,
-                    AnswerCount = answers.Count()
-                }).ToDictionary(a=>a.Question, a=>a.AnswerCount);
+            int page = 0, pageSize = Constants.DefaultPageSize;
+            var questionsWithAnswerCount = fetchQuestionsWithAnswerCount(page, pageSize);
             
             var viewModel = new AnswerIndexViewModel {
                 QuestionsWithAnswerCount = questionsWithAnswerCount,
@@ -37,6 +30,17 @@ namespace iKnow.Controllers {
             };
 
             return View(viewModel);
+        }
+
+        private IDictionary<Question, int> fetchQuestionsWithAnswerCount(int currentPage, int pageSize = Constants.DefaultPageSize) {
+            return _context.Questions.OrderBy(q=>q.Id).Skip(currentPage * pageSize).Take(pageSize).GroupJoin(_context.Answers,
+               q => q.Id,
+               a => a.QuestionId,
+               (question, answers) =>
+               new {
+                   Question = question,
+                   AnswerCount = answers.Count()
+               }).ToDictionary(a => a.Question, a => a.AnswerCount);
         }
 
         public ActionResult Detail(int id) {
@@ -55,6 +59,22 @@ namespace iKnow.Controllers {
             };
 
             return View(viewModel);
+        }
+
+
+        [Route("Answer/LoadMore/{currentPage}")]
+        public PartialViewResult LoadMore(int currentPage) {
+            var questionsWithAnswerCount = fetchQuestionsWithAnswerCount(++currentPage);
+            if (questionsWithAnswerCount.Count() == 0) {
+                return null;
+            }
+
+            var viewModel = new AnswerIndexViewModel {
+                QuestionsWithAnswerCount = questionsWithAnswerCount,
+                Page = currentPage
+            };
+
+            return PartialView("_AnswerQuestionListPartial", viewModel);
         }
 
         [HttpPost]

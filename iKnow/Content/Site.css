@@ -707,4 +707,34 @@ a.collapse-answer:hover {
         color: #2b6dad;
     }
 
+.load-more {
+    font-size: 14px;
+    color: #8590a6;
+    display: block;
+    font-size: 14px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    text-align: center;
+    background: linear-gradient(to bottom,#f8f8f9,#e6e6e8);
+    box-shadow: 0 1px 0 #fff inset, 0 1px 0 rgba(0,0,0,.1);
+    cursor: pointer;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+.load-more:active {
+    background: #ddd;
+    box-shadow: none;
+}
+
+.load-more.end-of-list {
+    padding: 0;
+    visibility: hidden;
+}
+
+.load-more>div {
+    padding: 5px;
+    border: 1px solid #bbb;
+}
+
 /*#endregion Answer Detail*/
