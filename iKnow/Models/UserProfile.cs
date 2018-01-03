@@ -6,7 +6,7 @@ using System.Web;
 namespace iKnow.Models {
     public class UserProfile {
         public int Id { get; set; }
-        public User User { get; set; }
+        public AppUser AppUser { get; set; }
         public string RealName { get; set; }
         public string Email { get; set; }
         public string PhotoUrl { get; set; }

@@ -24,11 +24,11 @@ namespace iKnow.Models {
                 return file;
             }
         }
-        public ICollection<User> Users { get; set; }
+        public ICollection<AppUser> AppUsers { get; set; }
         public ICollection<Question> Questions { get; set; }
 
         public Topic() {
-            Users = new HashSet<User>();
+            AppUsers = new HashSet<AppUser>();
             Questions = new HashSet<Question>();
         }
     }

@@ -14,7 +14,7 @@ namespace iKnow.Models {
 
         [MaxLength(1000)]
         public string Description { get; set; }
-        public User User { get; set; }
+        public AppUser AppUser { get; set; }
         public int UserId { get; set; }
         public ICollection<Topic> Topics { get; private set; }
         public ICollection<Answer> Answers { get; private set; }

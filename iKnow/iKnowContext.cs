@@ -11,7 +11,7 @@ namespace iKnow {
         public iKnowContext(): base("DefaultConnection") {
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }

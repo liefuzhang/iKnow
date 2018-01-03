@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 
 namespace iKnow.Models {
-    public class User {
+    public class AppUser {
         public int Id { get; set; }
         public string LoginName { get; set; }
         public UserProfile UserProfile { get; set; }
@@ -12,7 +12,7 @@ namespace iKnow.Models {
         public ICollection<Topic> Topics { get; private set; }
         public ICollection<Answer> Answers { get; private set; }
 
-        public User() {
+        public AppUser() {
             Questions = new HashSet<Question>();
             Topics = new HashSet<Topic>();
             Answers = new HashSet<Answer>();
