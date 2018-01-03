@@ -164,6 +164,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AnswerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
@@ -281,6 +282,7 @@
     <Content Include="Views\Answer\_AnswerQuestionListPartial.cshtml" />
     <Content Include="Views\Shared\_QuestionAnswerPairPartial.cshtml" />
     <Content Include="Views\Shared\_LoadMorePartial.cshtml" />
+    <None Include="Views\Account\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
