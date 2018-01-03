@@ -190,17 +190,19 @@
     <Compile Include="Migrations\201801030700092_RenameUserToAppUser.Designer.cs">
       <DependentUpon>201801030700092_RenameUserToAppUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801030735349_AddUserInheritanceToIdentityUser.cs" />
+    <Compile Include="Migrations\201801030735349_AddUserInheritanceToIdentityUser.Designer.cs">
+      <DependentUpon>201801030735349_AddUserInheritanceToIdentityUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\Constants.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\Topic.cs" />
     <Compile Include="Models\AppUser.cs" />
-    <Compile Include="Models\UserProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EntityTypeConfigurations\QuestionConfiguration.cs" />
-    <Compile Include="EntityTypeConfigurations\UserConfiguration.cs" />
-    <Compile Include="EntityTypeConfigurations\UserProfileConfiguration.cs" />
+    <Compile Include="EntityTypeConfigurations\AppUserConfiguration.cs" />
     <Compile Include="ViewModels\AnswerIndexViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\TopicDetailViewModel.cs" />
@@ -298,6 +300,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801030700092_RenameUserToAppUser.resx">
       <DependentUpon>201801030700092_RenameUserToAppUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801030735349_AddUserInheritanceToIdentityUser.resx">
+      <DependentUpon>201801030735349_AddUserInheritanceToIdentityUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

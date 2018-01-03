@@ -91,7 +91,7 @@ namespace iKnow.Controllers {
                 questionToSave = questionInDb;
             } else {
                 //TODO remove
-                questionToSave.UserId = 1;
+                questionToSave.AppUserId = "";
                 _context.Questions.Add(questionToSave);
             }
 

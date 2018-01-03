@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace iKnow.Models {
-    public class AppUser {
-        public int Id { get; set; }
-        public string LoginName { get; set; }
-        public UserProfile UserProfile { get; set; }
+    public class AppUser : IdentityUser {
         public ICollection<Question> Questions { get; private set; }
         public ICollection<Topic> Topics { get; private set; }
         public ICollection<Answer> Answers { get; private set; }

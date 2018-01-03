@@ -39,7 +39,7 @@ function deleteTopic(e) {
 }
 
 function toggleAddQuestionModal(e) {
-    if (e.target != e.currentTarget) {
+    if (e.target !== e.currentTarget) {
         // click on the Modal form
         return;
     }

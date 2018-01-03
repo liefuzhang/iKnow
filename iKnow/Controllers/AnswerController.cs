@@ -79,7 +79,7 @@ namespace iKnow.Controllers {
             var answer = new Answer {
                 Content = viewModel.AnswerContent,
                 QuestionId = viewModel.Question.Id,
-                UserId = 1, // TODO change to logged in user
+                AppUserId = "", // TODO change to logged in user
                 CreatedDate = DateTime.Now
             };
 

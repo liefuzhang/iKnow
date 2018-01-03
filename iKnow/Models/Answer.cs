@@ -11,7 +11,7 @@ namespace iKnow.Models {
         public DateTime CreatedDate { get; set; }
         public int QuestionId { get; set; }
         public Question Question { get; set; }
-        public int UserId { get; set; }
+        public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }
 
         private string _plainContent;
