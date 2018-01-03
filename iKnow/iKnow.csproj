@@ -283,6 +283,7 @@
     <Content Include="Views\Shared\_QuestionAnswerPairPartial.cshtml" />
     <Content Include="Views\Shared\_LoadMorePartial.cshtml" />
     <None Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
