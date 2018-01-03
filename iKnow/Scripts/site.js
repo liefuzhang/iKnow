@@ -44,14 +44,17 @@ function toggleAddQuestionModal(e) {
         return;
     }
     var $modalContainer = $(".question-modal-container");
+    var $body = $(document.body);
 
     if ($modalContainer.hasClass("open")) {
         $modalContainer.removeClass("open");
+        $body.removeClass("modal-open");
         return;
     }
 
     if ($modalContainer.hasClass("new-form-loaded")) {
         $modalContainer.addClass("open");
+        $body.addClass("modal-open");
         return;
     }
 
@@ -62,6 +65,7 @@ function toggleAddQuestionModal(e) {
             if (html) {
                 $modalContainer.html(html);
                 $modalContainer.addClass("new-form-loaded open");
+                $body.addClass("modal-open");
                 $(".topic-select").chosen({ width: "100%", max_selected_options: 5 });
             }
         }
@@ -80,6 +84,7 @@ function editQuestion() {
             if (html) {
                 $modalContainer.html(html);
                 $modalContainer.addClass("open");
+                $(document.body).addClass("modal-open");
                 $(".topic-select").chosen({ width: "100%", max_selected_options: 5 });
             }
         }

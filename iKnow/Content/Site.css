@@ -7,9 +7,16 @@
     font-weight: normal;
 }
 
-body.modal-open {
-    overflow: hidden;
-}
+    body.modal-open {
+        overflow: hidden;
+        /*margin-right: 17px;*/
+    }
+
+    /* only valid if all pages have scroll bar*/
+    /*body.modal-open .navbar .content-container{
+        position: relative;
+        right: 8.5px;
+    }*/
 
 input, textarea, select, button {
     font-family: "Roboto",sans-serif;
@@ -33,7 +40,7 @@ a {
 
 textarea {
     resize: none;
-	box-sizing: border-box;
+    box-sizing: border-box;
     overflow: hidden;
 }
 
@@ -455,9 +462,9 @@ a.collapse-answer:hover {
         overflow-y: auto;
     }
 
-    .question-modal-container .question-modal-inner form{
-        width: 556px;
-    }
+        .question-modal-container .question-modal-inner form {
+            width: 556px;
+        }
 
         .question-modal-container .question-modal-inner.question-topic-inner {
             overflow-y: visible;
@@ -469,8 +476,7 @@ a.collapse-answer:hover {
         }
 
         .question-modal-container .question-modal-inner .add-question-title,
-        .question-modal-container .question-modal-inner .add-question-title 
-         {
+        .question-modal-container .question-modal-inner .add-question-title {
             width: 100%;
             min-height: 50px;
             margin-top: 20px;
@@ -777,9 +783,9 @@ h3.question-answer-name > a,
     font-size: 15px;
 }
 
-.question-answer-topic a:hover {
-    text-decoration: underline;
-}
+    .question-answer-topic a:hover {
+        text-decoration: underline;
+    }
 
 .home-question-answer-container .question-answer-pair-container {
     padding: 16px 20px;
