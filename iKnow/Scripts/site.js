@@ -5,6 +5,7 @@
     $(".modal-container").on("click", (e) => toggleModal(e, "close"));
     $(".question-header-panel .js-edit-question").on("click", (e) => toggleModal(e, "editQuestion"));
     $(".question-header-panel .js-edit-topic").on("click", (e) => toggleModal(e, "editTopic"));
+    $(".register-container a").on("click", (e) => toggleModal(e, "register"));
     $(".write-answer").on("click", showAddAnswerPanel);
     $(".question-answer-container").on("mouseenter", ".short-answer-container", toggleMoreAnswerUnderline);
     $(".question-answer-container").on("mouseleave", ".short-answer-container", toggleMoreAnswerUnderline);
@@ -85,6 +86,15 @@ function toggleModal(e, action) {
 
             $.ajax({
                 url: "/question/gettopic/" + questionId,
+                dataType: "html",
+                success: commonCallback
+            });
+            break;
+        case "register":
+            $modalContainer.removeClass("new-form-loaded");
+            var queryString = $target.attr("data-return-url") ? "?returnUrl=" + $target.attr("data-return-url") : "";
+            $.ajax({
+                url: "/account/register" + queryString,
                 dataType: "html",
                 success: commonCallback
             });

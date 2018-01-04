@@ -291,7 +291,7 @@
     <None Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <None Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\_RegisterModalPartial.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
   </ItemGroup>

@@ -26,7 +26,7 @@ namespace iKnow.Models.Identity {
                 RequiredLength = 6,
                 RequireNonLetterOrDigit = false,
                 RequireDigit = false,
-                RequireLowercase = true,
+                RequireLowercase = false,
                 RequireUppercase = false,
             };
 

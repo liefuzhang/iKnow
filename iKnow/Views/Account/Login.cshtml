@@ -7,30 +7,29 @@
 <div class="login-form-container">
     <h3 class="content-header">@ViewBag.Title</h3>
     <div class="login-inner">
-        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, null)) {
+        @using (Html.BeginForm("Login", "Account", new {ReturnUrl = ViewBag.ReturnUrl}, FormMethod.Post, null)) {
             @Html.AntiForgeryToken()
-            @Html.ValidationSummary(true, "", new { @class = "error" })
+            @Html.ValidationSummary(false, "", new {@class = "error"})
             <div class="form-group">
                 @Html.LabelFor(m => m.Email)
-                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "error" })
+                @Html.TextBoxFor(m => m.Email, new {@class = "form-control"})
             </div>
             <div class="form-group">
                 @Html.LabelFor(m => m.Password)
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "error" })
+                @Html.PasswordFor(m => m.Password, new {@class = "form-control"})
             </div>
             <div class="form-group login-buttons">
                 @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                <input type="submit" value="Log in" class="btn" />
+                <input type="submit" value="Log in" class="btn"/>
             </div>
         }
         <div class="register-container">
             <span>No Account?</span>
-            <a>Register here</a>
+            <a data-return-url=@ViewBag.ReturnUrl>Register here</a>
         </div>
     </div>
 </div>
-@section Scripts {
+
+@section scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

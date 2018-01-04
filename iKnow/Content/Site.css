@@ -872,4 +872,19 @@ h3.question-answer-name > a,
         cursor: pointer;
     }
 
+    .modal-container .modal-inner .register-form {
+        width: auto;
+    }
+
+    .modal-container .modal-inner.register-modal-inner {
+        width: 450px;
+    }
+
+    .register-form h2{
+        margin-bottom: 20px;
+    }
+
+    .register-form .form-group {
+        width: 360px;
+    }
 /*#endregion */

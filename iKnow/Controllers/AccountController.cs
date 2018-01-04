@@ -11,10 +11,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 
-namespace iKnow.Controllers
-{
-    public class AccountController : Controller
-    {
+namespace iKnow.Controllers {
+    public class AccountController : Controller {
         private AppSignInManager _signInManager;
         private AppUserManager _userManager;
 
@@ -62,7 +60,7 @@ namespace iKnow.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent:true, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, shouldLockout: false);
             switch (result) {
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
@@ -75,8 +73,11 @@ namespace iKnow.Controllers
 
         //
         // GET: /Account/Register
-        public ActionResult Register() {
-            return View();
+        public PartialViewResult Register(string returnUrl) {
+            var viewModel = new RegisterViewModel {
+                ReturnUrl = returnUrl
+            };
+            return PartialView("_RegisterModalPartial", viewModel);
         }
 
         //
@@ -93,13 +94,18 @@ namespace iKnow.Controllers
                 if (result.Succeeded) {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
+                    if (model.ReturnUrl != null) {
+                        return RedirectToLocal(model.ReturnUrl);
+                    }
                     return RedirectToAction("Index", "Home");
                 }
-                AddErrors(result);
+                // only show one error to avoid redundant info
+                if (result.Errors != null && result.Errors.Any())
+                    ModelState.AddModelError("", result.Errors.First());
             }
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            return View("Login");
         }
 
         //
@@ -192,7 +198,7 @@ namespace iKnow.Controllers
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
-        
+
         protected override void Dispose(bool disposing) {
             if (disposing) {
                 if (_userManager != null) {
@@ -229,7 +235,7 @@ namespace iKnow.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
-        
+
         #endregion
 
     }
