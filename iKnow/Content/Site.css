@@ -94,7 +94,6 @@ ul {
 
 label {
     margin-right: 10px;
-    margin-bottom: 15px;
     width: 150px;
     display: inline-block;
 }
@@ -105,7 +104,7 @@ a.btn, button.btn, input.btn {
     background-color: #009797;
     font-size: 14px;
     color: white;
-    padding: 4px 10px;
+    padding: 4px 15px;
     cursor: pointer;
     display: inline-block;
     line-height: 1.5;
@@ -144,7 +143,7 @@ a.btn, button.btn, input.btn {
 .form-group {
     width: 560px;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 20px;
 }
 
@@ -154,6 +153,8 @@ a.btn, button.btn, input.btn {
 
     .form-group input {
         flex: 1 1 auto;
+        height: 37px;
+        box-sizing: border-box;
     }
 
 .underline {
@@ -163,7 +164,7 @@ a.btn, button.btn, input.btn {
 .error {
     color: red;
     font-size: 14px;
-    display: block;
+    display: inline-block;
     margin-bottom: 15px;
 }
 
@@ -347,7 +348,7 @@ blockquote {
 
     .topic-container .topic-body .add-topic {
         position: absolute;
-        right: 110px;
+        right: 120px;
         top: 0;
         font-size: 14px;
         color: #2b6dad;
@@ -825,22 +826,29 @@ h3.question-answer-name > a,
     display: inline-block;
     border-right: 1px solid #eee;
     width: 50%;
-    padding-top: 10px;
     margin-right: 60px;
 }
 
-.login-form-container .form-group {
+.login-form-container .form-group,
+.forgot-password-container .form-group {
     width: 420px;
 }
 
-.login-form-container .content-header {
-    margin-bottom: 60px;
+.login-form-container .content-header,
+.forgot-password-container .content-header {
+    margin-bottom: 50px;
+}
+
+.forgot-password-container .btn {
+    flex: 0 0 auto;
+    margin-left: auto;
 }
 
 .login-buttons {
     display: flex;
     position: relative;
     align-items: center;
+    margin-bottom: 0;
 }
 
     .login-buttons a {
@@ -855,36 +863,33 @@ h3.question-answer-name > a,
 
     .login-buttons .btn {
         flex: 0 0 auto;
-        padding-left: 15px;
-        padding-right: 15px;
     }
 
 .register-container {
     display: inline-block;
-    margin-bottom: 20px;
 }
 
     .register-container a {
         color: #2b6dad;
         margin-top: 15px;
-        margin-left: 5px;   
+        margin-left: 5px;
         display: inline-block;
         cursor: pointer;
     }
 
-    .modal-container .modal-inner .register-form {
-        width: auto;
-    }
+.modal-container .modal-inner .register-form {
+    width: auto;
+}
 
-    .modal-container .modal-inner.register-modal-inner {
-        width: 450px;
-    }
+.modal-container .modal-inner.register-modal-inner {
+    width: 450px;
+}
 
-    .register-form h2{
-        margin-bottom: 20px;
-    }
+.register-form h2 {
+    margin-bottom: 20px;
+}
 
-    .register-form .form-group {
-        width: 360px;
-    }
+.register-form .form-group {
+    width: 360px;
+}
 /*#endregion */

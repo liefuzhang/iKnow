@@ -107,17 +107,7 @@ namespace iKnow.Controllers {
             // If we got this far, something failed, redisplay form
             return View("Login");
         }
-
-        //
-        // GET: /Account/ConfirmEmail
-        public async Task<ActionResult> ConfirmEmail(string userId, string code) {
-            if (userId == null || code == null) {
-                return View("Error");
-            }
-            var result = await UserManager.ConfirmEmailAsync(userId, code);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
-        }
-
+        
         //
         // GET: /Account/ForgotPassword
         public ActionResult ForgotPassword() {
@@ -156,7 +146,6 @@ namespace iKnow.Controllers {
 
         //
         // GET: /Account/ResetPassword
-        [AllowAnonymous]
         public ActionResult ResetPassword(string code) {
             return code == null ? View("Error") : View();
         }
@@ -164,7 +153,6 @@ namespace iKnow.Controllers {
         //
         // POST: /Account/ResetPassword
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model) {
             if (!ModelState.IsValid) {
