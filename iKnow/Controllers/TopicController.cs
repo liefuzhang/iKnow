@@ -25,7 +25,16 @@ namespace iKnow.Controllers {
         // GET: Topic
         public ActionResult Index() {
             var topics = _context.Topics.ToList();
-            var selectedTopic = topics.Count > 0 ? (TempData["SelectedTopic"] as Topic ?? topics[0]) : null;
+            Topic selectedTopic = null;
+            if (
+                topics.Count > 0) {
+                if (Request["selectedTopicId"] != null) {
+                    selectedTopic = topics.SingleOrDefault(t => t.Id.ToString() == Request["selectedTopicId"]);
+                }
+                if (selectedTopic == null) {
+                    selectedTopic = topics.First();
+                }
+            }
             var viewModel = new TopicIndexViewModel {
                 Topics = topics,
                 SelectedTopic = selectedTopic
@@ -102,7 +111,6 @@ namespace iKnow.Controllers {
                 }
 
                 _context.SaveChanges();
-                TempData["SelectedTopic"] = topic;
 
                 // save icon if it exists
                 if (postedFile != null && postedFile.ContentLength > 0) {
@@ -112,7 +120,7 @@ namespace iKnow.Controllers {
                     bitmap.Save(iconFolder + fileName, ImageFormat.Png);
                 }
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { selectedTopicId = topic.Id });
             } catch (DbEntityValidationException ex) {
                 var error = ex.EntityValidationErrors.First().ValidationErrors.First();
                 ModelState.AddModelError(nameof(viewModel.Topic) + "." + error.PropertyName, error.ErrorMessage);

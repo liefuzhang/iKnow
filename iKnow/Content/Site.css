@@ -428,11 +428,11 @@ a.collapse-answer:hover {
     line-height: 1.4;
 }
 
-.question-modal-container {
+.modal-container {
     display: none;
 }
 
-    .question-modal-container.open {
+    .modal-container.open {
         position: fixed;
         top: 0;
         bottom: 0;
@@ -446,7 +446,7 @@ a.collapse-answer:hover {
         z-index: 200;
     }
 
-    .question-modal-container .question-modal-inner {
+    .modal-container .modal-inner {
         width: 600px;
         max-height: calc(100vh - 50px);
         margin: 0 auto;
@@ -462,49 +462,49 @@ a.collapse-answer:hover {
         overflow-y: auto;
     }
 
-        .question-modal-container .question-modal-inner form {
+        .modal-container .modal-inner form {
             width: 556px;
         }
 
-        .question-modal-container .question-modal-inner.question-topic-inner {
+        .modal-container .modal-inner.question-topic-inner {
             overflow-y: visible;
         }
 
-        .question-modal-container .question-modal-inner h2 {
+        .modal-container .modal-inner h2 {
             color: #262626;
             margin-top: 20px;
         }
 
-        .question-modal-container .question-modal-inner .add-question-title,
-        .question-modal-container .question-modal-inner .add-question-title {
+        .modal-container .modal-inner .add-question-title,
+        .modal-container .modal-inner .add-question-title {
             width: 100%;
             min-height: 50px;
             margin-top: 20px;
             box-sizing: border-box;
         }
 
-        .question-modal-container .question-modal-inner .form-group {
+        .modal-container .modal-inner .form-group {
             text-align: left;
             margin-top: 8px;
         }
 
-        .question-modal-container .question-modal-inner .add-question-description p {
+        .modal-container .modal-inner .add-question-description p {
             margin-top: 35px;
             color: #404040;
             text-align: left;
         }
 
-        .question-modal-container .question-modal-inner .add-question-description textarea {
+        .modal-container .modal-inner .add-question-description textarea {
             width: 100%;
             min-height: 70px;
             margin-top: 10px;
         }
 
-        .question-modal-container .question-modal-inner button {
+        .modal-container .modal-inner button {
             margin-bottom: 20px;
         }
 
-    .question-modal-container .chosen-choices {
+    .modal-container .chosen-choices {
         border: 1px solid #e7eaf1;
         border-radius: 3px;
         padding: 6px 12px;
@@ -514,17 +514,17 @@ a.collapse-answer:hover {
         overflow-y: auto;
     }
 
-    .question-modal-container .chosen-container-multi .chosen-choices li.search-choice {
+    .modal-container .chosen-container-multi .chosen-choices li.search-choice {
         padding-right: 25px !important;
     }
 
-        .question-modal-container .chosen-container-multi .chosen-choices li.search-choice .search-choice-close {
+        .modal-container .chosen-container-multi .chosen-choices li.search-choice .search-choice-close {
             opacity: 0.6;
             top: 8px;
             right: 8px;
         }
 
-    .question-modal-container .chosen-container-multi .chosen-choices li.search-field input[type="text"] {
+    .modal-container .chosen-container-multi .chosen-choices li.search-field input[type="text"] {
         height: 30px;
     }
 
@@ -545,7 +545,7 @@ a.collapse-answer:hover {
     }
 
     .question-header-panel li,
-    .question-modal-container .chosen-container-multi .chosen-choices li.search-choice {
+    .modal-container .chosen-container-multi .chosen-choices li.search-choice {
         display: inline-block;
         height: 30px;
         padding: 0 12px;

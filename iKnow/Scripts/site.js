@@ -1,16 +1,16 @@
 ﻿$(document).ready(function () {
     $(".topic-list").on("click", "li", selectTopic);
     $(".topic-form-container .js-button-delete").on("click", deleteTopic);
-    $(".js-button-add-question").on("click", toggleAddQuestionModal);
-    $(".question-modal-container").on("click", toggleAddQuestionModal);
-    $(".question-header-panel .js-edit-topic").on("click", editTopic);
-    $(".question-header-panel .js-edit-question").on("click", editQuestion);
+    $(".js-button-add-question").on("click", (e) => toggleModal(e, "addQuestion"));
+    $(".modal-container").on("click", (e) => toggleModal(e, "close"));
+    $(".question-header-panel .js-edit-question").on("click", (e) => toggleModal(e, "editQuestion"));
+    $(".question-header-panel .js-edit-topic").on("click", (e) => toggleModal(e, "editTopic"));
     $(".write-answer").on("click", showAddAnswerPanel);
     $(".question-answer-container").on("mouseenter", ".short-answer-container", toggleMoreAnswerUnderline);
     $(".question-answer-container").on("mouseleave", ".short-answer-container", toggleMoreAnswerUnderline);
     $(".question-answer-container").on("click", ".short-answer-container", showMoreAnswer);
     $(".question-answer-container").on("click", ".collapse-answer", hideMoreAnswer);
-    $(".question-modal-container").on("input", "textarea", textareaAutoGrow);
+    $(".modal-container").on("input", "textarea", textareaAutoGrow);
 });
 
 function selectTopic() {
@@ -38,75 +38,70 @@ function deleteTopic(e) {
     return confirm("Are you sure you want to delete this topic?");
 }
 
-function toggleAddQuestionModal(e) {
-    if (e.target !== e.currentTarget) {
-        // click on the Modal form
-        return;
-    }
-    var $modalContainer = $(".question-modal-container");
+function toggleModal(e, action) {
+    var $modalContainer = $(".modal-container");
     var $body = $(document.body);
+    var $target = $(e.target);
+    var commonCallback = function (html) {
+        if (html) {
+            $modalContainer.html(html);
+            $modalContainer.addClass("open");
+            $body.addClass("modal-open");
+            $(".topic-select").chosen({ width: "100%", max_selected_options: 5 });
+        }
+    };
 
-    if ($modalContainer.hasClass("open")) {
-        $modalContainer.removeClass("open");
-        $body.removeClass("modal-open");
-        return;
-    }
-
-    if ($modalContainer.hasClass("new-form-loaded")) {
-        $modalContainer.addClass("open");
-        $body.addClass("modal-open");
-        return;
-    }
-
-    $.ajax({
-        url: "/question/getform",
-        dataType: "html",
-        success: function (html) {
-            if (html) {
-                $modalContainer.html(html);
-                $modalContainer.addClass("new-form-loaded open");
+    switch (action) {
+        case "addQuestion":
+            if ($modalContainer.hasClass("new-form-loaded")) {
+                // already loaded
+                $modalContainer.addClass("open");
                 $body.addClass("modal-open");
-                $(".topic-select").chosen({ width: "100%", max_selected_options: 5 });
+                return;
             }
-        }
-    });
-}
 
-function editQuestion() {
-    var questionId = $(this).attr("data-question-id");
-    var $modalContainer = $(".question-modal-container");
-    $modalContainer.removeClass("new-form-loaded");
+            $.ajax({
+                url: "/question/getform",
+                dataType: "html",
+                success: (html) => {
+                    commonCallback(html);
+                    $modalContainer.addClass("new-form-loaded");
+                }
+            });
+            break;
+        case "editQuestion":
+            var questionId = $target.attr("data-question-id");
+            $modalContainer.removeClass("new-form-loaded");
 
-    $.ajax({
-        url: "/question/getform/" + questionId,
-        dataType: "html",
-        success: function (html) {
-            if (html) {
-                $modalContainer.html(html);
-                $modalContainer.addClass("open");
-                $(document.body).addClass("modal-open");
-                $(".topic-select").chosen({ width: "100%", max_selected_options: 5 });
+            $.ajax({
+                url: "/question/getform/" + questionId,
+                dataType: "html",
+                success: commonCallback
+            });
+            break;
+        case "editTopic":
+            questionId = $target.attr("data-question-id");
+            $modalContainer.removeClass("new-form-loaded");
+
+            $.ajax({
+                url: "/question/gettopic/" + questionId,
+                dataType: "html",
+                success: commonCallback
+            });
+            break;
+        case "close":
+        default:
+            if (e.target !== e.currentTarget) {
+                // click on the Modal form
+                return;
             }
-        }
-    });
-}
 
-function editTopic() {
-    var questionId = $(this).attr("data-question-id");
-    var $modalContainer = $(".question-modal-container");
-    $modalContainer.removeClass("new-form-loaded");
-
-    $.ajax({
-        url: "/question/gettopic/" + questionId,
-        dataType: "html",
-        success: function (html) {
-            if (html) {
-                $modalContainer.html(html);
-                $modalContainer.addClass("open");
-                $(".topic-select").chosen({ width: "100%", max_selected_options: 5 });
+            if ($modalContainer.hasClass("open")) {
+                $modalContainer.removeClass("open");
+                $body.removeClass("modal-open");
+                return;
             }
-        }
-    });
+    }
 }
 
 function showAddAnswerPanel() {
