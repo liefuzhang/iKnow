@@ -200,6 +200,7 @@
     <Compile Include="Models\Constants.cs" />
     <Compile Include="Models\Identity\AppUserManager.cs" />
     <Compile Include="Models\Identity\AppSignInManager.cs" />
+    <Compile Include="Models\Identity\EmailService.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\Topic.cs" />
     <Compile Include="Models\AppUser.cs" />
@@ -207,6 +208,10 @@
     <Compile Include="EntityTypeConfigurations\QuestionConfiguration.cs" />
     <Compile Include="EntityTypeConfigurations\AppUserConfiguration.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\Account\ForgotPasswordViewModel.cs" />
+    <Compile Include="ViewModels\Account\LoginViewModel.cs" />
+    <Compile Include="ViewModels\Account\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\Account\ResetPasswordViewModel.cs" />
     <Compile Include="ViewModels\AnswerIndexViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\TopicDetailViewModel.cs" />
@@ -282,8 +287,13 @@
     <Content Include="Views\Answer\_AnswerQuestionListPartial.cshtml" />
     <Content Include="Views\Shared\_QuestionAnswerPairPartial.cshtml" />
     <Content Include="Views\Shared\_LoadMorePartial.cshtml" />
+    <None Include="Views\Account\ForgotPassword.cshtml" />
+    <None Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <None Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

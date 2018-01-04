@@ -13,9 +13,11 @@
             <li data-topic-id="@topic.Id" class="@(Model.SelectedTopic.Id == topic.Id ? "active" : "")">@topic.Name</li>
         }
     </ul>
-    <div class="topic-body">
-        @Html.Partial("_TopicBodyPartial", Model.SelectedTopic)
-    </div>
+    @if (Model.SelectedTopic != null) {
+        <div class="topic-body">
+            @Html.Partial("_TopicBodyPartial", Model.SelectedTopic)
+        </div>
+    }
 </div>
 
 <div class="sidebar topic-sidebar">

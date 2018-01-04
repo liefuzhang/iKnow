@@ -25,7 +25,7 @@ namespace iKnow.Controllers {
         // GET: Topic
         public ActionResult Index() {
             var topics = _context.Topics.ToList();
-            var selectedTopic = TempData["SelectedTopic"] as Topic ?? topics[0];
+            var selectedTopic = topics.Count > 0 ? (TempData["SelectedTopic"] as Topic ?? topics[0]) : null;
             var viewModel = new TopicIndexViewModel {
                 Topics = topics,
                 SelectedTopic = selectedTopic
@@ -77,6 +77,7 @@ namespace iKnow.Controllers {
         }
 
         // GET: Topic/Add
+        [Authorize]
         public ActionResult Add() {
             var topic = new Topic();
             var viewModel = new TopicFormViewModel {
