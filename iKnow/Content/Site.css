@@ -12,8 +12,8 @@
         /*margin-right: 17px;*/
     }
 
-    /* only valid if all pages have scroll bar*/
-    /*body.modal-open .navbar .content-container{
+/* only valid if all pages have scroll bar*/
+/*body.modal-open .navbar .content-container{
         position: relative;
         right: 8.5px;
     }*/
@@ -99,13 +99,13 @@ label {
     display: inline-block;
 }
 
-a.btn, button.btn {
+a.btn, button.btn, input.btn {
     border: 1px solid #00796B;
     border-radius: 4px;
     background-color: #009797;
     font-size: 14px;
     color: white;
-    padding: 4px 8px;
+    padding: 4px 10px;
     cursor: pointer;
     display: inline-block;
     line-height: 1.5;
@@ -140,6 +140,21 @@ a.btn, button.btn {
     color: teal;
     border: 1px solid teal;
 }
+
+.form-group {
+    width: 560px;
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+    .form-group label {
+        flex: 0 0 auto;
+    }
+
+    .form-group input {
+        flex: 1 1 auto;
+    }
 
 .underline {
     text-decoration: underline;
@@ -791,3 +806,70 @@ h3.question-answer-name > a,
     padding: 16px 20px;
 }
 /*#endregion Home */
+
+
+/*#region identity */
+
+
+.login-link {
+    cursor: pointer;
+}
+
+.login-inner {
+    display: flex;
+    align-items: flex-end;
+}
+
+
+.login-form-container form {
+    display: inline-block;
+    border-right: 1px solid #eee;
+    width: 50%;
+    padding-top: 10px;
+    margin-right: 60px;
+}
+
+.login-form-container .form-group {
+    width: 420px;
+}
+
+.login-form-container .content-header {
+    margin-bottom: 60px;
+}
+
+.login-buttons {
+    display: flex;
+    position: relative;
+    align-items: center;
+}
+
+    .login-buttons a {
+        flex: 1 1 auto;
+        font-size: 14px;
+        color: #8590a6;
+    }
+
+        .login-buttons a:hover {
+            text-decoration: underline;
+        }
+
+    .login-buttons .btn {
+        flex: 0 0 auto;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+.register-container {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+    .register-container a {
+        color: #2b6dad;
+        margin-top: 15px;
+        margin-left: 5px;   
+        display: inline-block;
+        cursor: pointer;
+    }
+
+/*#endregion */
