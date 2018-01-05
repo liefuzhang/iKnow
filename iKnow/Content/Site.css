@@ -230,9 +230,7 @@ blockquote {
 
 .sidebar {
     width: 270px;
-    position: absolute;
-    top: 0;
-    right: 0;
+    margin-left: auto;
     color: #666;
     font-size: 13px;
 }
@@ -300,6 +298,11 @@ blockquote {
 
     .main .content-container {
         position: relative;
+        display: flex;
+    }
+
+    .main .content-container>div:first-of-type {
+        flex: 1 1 auto;
     }
 
 /*#region topic */
@@ -310,6 +313,7 @@ blockquote {
 
 .main-content-container {
     width: 632px;
+    max-width: 632px;
     padding-bottom: 10px;
 }
 
