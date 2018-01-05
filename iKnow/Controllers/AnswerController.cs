@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using Constants = iKnow.Models.Constants;
 
 namespace iKnow.Controllers {
     public class AnswerController : Controller {
@@ -79,7 +81,7 @@ namespace iKnow.Controllers {
             var answer = new Answer {
                 Content = viewModel.AnswerContent,
                 QuestionId = viewModel.Question.Id,
-                AppUserId = "0d38b290-c52b-4e7f-9117-c10db0fdd349", // TODO change to logged in user
+                AppUserId = User.Identity.GetUserId(), 
                 CreatedDate = DateTime.Now
             };
 

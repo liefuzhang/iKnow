@@ -6,6 +6,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using Constants = iKnow.Models.Constants;
 
 namespace iKnow.Controllers {
     public class HomeController : Controller {
@@ -64,8 +66,8 @@ namespace iKnow.Controllers {
 
         public PartialViewResult GetUserProfile() {
             if (User.Identity.IsAuthenticated) {
-                var currentUserName = User.Identity.Name;
-                var currentUser = _context.Users.Single(u => u.UserName == currentUserName);
+                var userId = User.Identity.GetUserId();
+                var currentUser = _context.Users.Single(u => u.Id == userId);
                 return PartialView("_UserProfilePartial", currentUser);
             }
             return PartialView("_UserProfilePartial");

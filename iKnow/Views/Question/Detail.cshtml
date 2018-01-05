@@ -11,7 +11,7 @@
 </style>
 
 <div class="question-container-inner">
-    @Html.Partial("_QuestionHeaderPartial", Model.Question)
+    @Html.Partial("_QuestionHeaderPartial", Model)
     <div class="main-content-container">
         <div class="add-answer-panel answer-content panel hide">
             @Html.Partial("_AnswerPanelHeaderPartial")
@@ -72,7 +72,7 @@
             autogrow: true,
             btns: [
                 ['strong', 'em'],
-                ['h3', 'blockquote', 'unorderedList', 'orderedList'],
+                ['h3', 'unorderedList', 'orderedList'],
                 ['link', 'base64', 'horizontalRule'],
                 ['removeformat'],
                 ['fullscreen']

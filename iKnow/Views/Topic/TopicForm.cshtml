@@ -11,13 +11,13 @@
     @using (@Html.BeginForm("Save", "Topic", null, FormMethod.Post, new { enctype = "multipart/form-data" })) {
         <div class="form-group">
             @Html.LabelFor(m => m.Topic.Name)
-            @Html.TextBoxFor(m => m.Topic.Name, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.Topic.Name, new { @class = "form-control", placeholder = "Name" })
             @Html.ValidationMessageFor(m => m.Topic.Name, "", new { @class = "error" })
         </div>
 
         <div class="form-group">
             @Html.LabelFor(m => m.Topic.Description)
-            @Html.TextAreaFor(m => m.Topic.Description, 10, 50, new { @class = "form-control" })
+            @Html.TextAreaFor(m => m.Topic.Description, 10, 50, new { @class = "form-control", placeholder = "Description" })
             @Html.ValidationMessageFor(m => m.Topic.Description, "", new { @class = "error" })
         </div>
 

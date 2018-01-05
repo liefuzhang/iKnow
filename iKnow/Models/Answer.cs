@@ -18,7 +18,8 @@ namespace iKnow.Models {
         public string PlainContent {
             get {
                 if (string.IsNullOrEmpty(_plainContent)) {
-                    return Regex.Replace(Content, "<.*?>", String.Empty);
+                    var parsed = Regex.Replace(Content, "</(p|li|h3)>", "&nbsp;");
+                    return Regex.Replace(parsed, "<.*?>", String.Empty);
                 } else {
                     return _plainContent;
                 }

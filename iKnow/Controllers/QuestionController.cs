@@ -1,10 +1,10 @@
-﻿using System.Collections.ObjectModel;
-using System.Data.Entity.Validation;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using iKnow.Models;
 using iKnow.ViewModels;
 using System.Data.Entity;
+using Constants = iKnow.Models.Constants;
+using Microsoft.AspNet.Identity;
 
 namespace iKnow.Controllers {
     public class QuestionController : Controller {
@@ -66,8 +66,13 @@ namespace iKnow.Controllers {
             // explicit loading (to avoid too complex query)
             _context.Answers.Where(a => a.QuestionId == question.Id).Load();
 
+            bool canUserEdit = User.Identity.IsAuthenticated
+                               && (question.AppUserId == User.Identity.GetUserId()
+                                   || User.IsInRole(Constants.AdminRoleName));
+
             var viewModel = new QuestionDetailViewModel {
-                Question = question
+                Question = question,
+                CanUserEdit = canUserEdit
             };
 
             return View(viewModel);
@@ -90,8 +95,7 @@ namespace iKnow.Controllers {
                 questionInDb.Description = questionInDb.Description;
                 questionToSave = questionInDb;
             } else {
-                //TODO remove
-                questionToSave.AppUserId = "0d38b290-c52b-4e7f-9117-c10db0fdd349";
+                questionToSave.AppUserId = User.Identity.GetUserId();
                 _context.Questions.Add(questionToSave);
             }
 

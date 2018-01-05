@@ -1,24 +1,27 @@
-﻿@using iKnow.Models
-@model Question
+﻿@using iKnow.ViewModels
+@model QuestionDetailViewModel
 <div class="question-header-panel panel">
     <ul>
-        @foreach (var topic in Model.Topics) {
+        @foreach (var topic in Model.Question.Topics) {
             <li>@Html.ActionLink(@topic.Name, "Detail", "Topic", new { id = @topic.Id }, null)</li>
         }
     </ul>
-    <span class="js-edit-topic trigger-edit text-link" data-question-id="@Model.Id">
-        <i class="fa fa-pencil" aria-hidden="true"></i>edit
-    </span>
-    <h2>
-        @Model.Title
-        <span class="js-edit-question trigger-edit text-link" data-question-id="@Model.Id">
+    @if (Model.CanUserEdit) {
+        <span class="js-edit-topic trigger-edit text-link" data-question-id="@Model.Question.Id">
             <i class="fa fa-pencil" aria-hidden="true"></i>edit
         </span>
+    }
+    <h2>
+        @Model.Question.Title
+        @if (Model.CanUserEdit) {
+            <span class="js-edit-question trigger-edit text-link" data-question-id="@Model.Question.Id">
+                <i class="fa fa-pencil" aria-hidden="true"></i>edit
+            </span>
+        }
     </h2>
-    <p>@Model.Description</p>
+    <p>@Model.Question.Description</p>
     <button class="write-answer btn-white">
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Write Answer
     </button>
 </div>
-

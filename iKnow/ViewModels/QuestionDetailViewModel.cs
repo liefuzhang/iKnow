@@ -12,5 +12,7 @@ namespace iKnow.ViewModels {
         [AllowHtml]
         [Required]
         public string AnswerContent { get; set; }
+
+        public bool CanUserEdit { get; set; }
     }
 }
