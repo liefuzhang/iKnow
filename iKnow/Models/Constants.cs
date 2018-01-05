@@ -11,5 +11,6 @@ namespace iKnow.Models {
         public const string UserDefaultIconPath = "/Content/Images/UserProfile/default.png";
         public const int ShortAnswerLenth = 220;
         public const int DefaultPageSize = 10;
+        public const string AdminRoleName = "Admin";
     }
 }

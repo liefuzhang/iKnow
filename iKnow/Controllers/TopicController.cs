@@ -86,7 +86,7 @@ namespace iKnow.Controllers {
         }
 
         // GET: Topic/Add
-        [Authorize]
+        [Authorize(Roles = Constants.AdminRoleName)]
         public ActionResult Add() {
             var topic = new Topic();
             var viewModel = new TopicFormViewModel {
@@ -98,6 +98,7 @@ namespace iKnow.Controllers {
 
         // POST: Topic/Save
         [HttpPost]
+        [Authorize(Roles = Constants.AdminRoleName)]
         [ValidateAntiForgeryToken]
         public ActionResult Save(TopicFormViewModel viewModel, HttpPostedFileBase postedFile) {
             try {
@@ -129,6 +130,7 @@ namespace iKnow.Controllers {
         }
 
         // GET: Topic/Edit/1
+        [Authorize(Roles = Constants.AdminRoleName)]
         public ActionResult Edit(int id) {
             var topic = _context.Topics.SingleOrDefault(t => t.Id == id);
             if (topic == null) {

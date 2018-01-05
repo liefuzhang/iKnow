@@ -199,6 +199,10 @@
     <Compile Include="Migrations\201801042244105_AddFirstNameAndLastNameToAppUser.Designer.cs">
       <DependentUpon>201801042244105_AddFirstNameAndLastNameToAppUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801050313086_SeedAdmin.cs" />
+    <Compile Include="Migrations\201801050313086_SeedAdmin.Designer.cs">
+      <DependentUpon>201801050313086_SeedAdmin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\Constants.cs" />
@@ -328,6 +332,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801042244105_AddFirstNameAndLastNameToAppUser.resx">
       <DependentUpon>201801042244105_AddFirstNameAndLastNameToAppUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801050313086_SeedAdmin.resx">
+      <DependentUpon>201801050313086_SeedAdmin.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

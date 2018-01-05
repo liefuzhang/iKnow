@@ -170,7 +170,7 @@ a.btn, button.btn, input.btn {
     color: red;
     font-size: 14px;
     display: inline-block;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .panel,
@@ -493,6 +493,10 @@ a.collapse-answer:hover {
 
         .modal-container .modal-inner.question-topic-inner {
             overflow-y: visible;
+        }
+        
+        .modal-container .modal-inner.question-topic-inner .form-group {
+            margin-top: 20px;
         }
 
         .modal-container .modal-inner h2 {
@@ -829,6 +833,11 @@ h3.question-answer-name > a,
     line-height: 45px;
 }
 
+.login-link i {
+    margin-right: 10px;
+}
+
+
 .login-inner {
     display: flex;
     align-items: flex-end;
@@ -898,10 +907,6 @@ h3.question-answer-name > a,
     width: 450px;
 }
 
-.register-form h2 {
-    margin-bottom: 20px;
-}
-
 .register-form .form-group {
     width: 360px;
 }
@@ -961,20 +966,20 @@ h3.question-answer-name > a,
         margin-right: 10px;
     }
 
-    .user-profile-dropdown-item form {
+.user-profile-dropdown-item form {
+    height: 100%;
+    width: 100%;
+}
+
+    .user-profile-dropdown-item form button {
         height: 100%;
         width: 100%;
+        border-radius: 0;
+        border: 0;
+        background-color: teal;
+        color: white;
+        cursor: pointer;
+        padding: 0;
     }
-
-        .user-profile-dropdown-item form button {
-            height: 100%;
-            width: 100%;
-            border-radius: 0;
-            border: 0;
-            background-color: teal;
-            color: white;
-            cursor: pointer;
-            padding: 0;
-        }
 
 /*#endregion User Profile*/
