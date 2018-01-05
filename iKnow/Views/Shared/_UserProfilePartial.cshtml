@@ -1,0 +1,22 @@
+﻿@model iKnow.Models.AppUser
+
+@if (Request.IsAuthenticated) {
+    <div class="user-profile-inner">
+        <img src=@Model.IconPath class="profile-photo" />
+        <span>@Model.FirstName</span>
+    </div>
+} else {
+    @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "login-link" })
+}
+
+<div class="user-profile-dropdown hide">
+    <div class="user-profile-dropdown-item">
+        @using (Html.BeginForm("LogOff", "Account")) {
+            @Html.AntiForgeryToken()
+            <button class="log-off" type="submit">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                Log off
+            </button>
+        }
+    </div>
+</div>

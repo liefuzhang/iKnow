@@ -6,9 +6,29 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.IO;
+using System.Web.Hosting;
 
 namespace iKnow.Models {
     public class AppUser : IdentityUser {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string FullName => FirstName + " " + LastName;
+
+        public string IconPath {
+            get {
+                if (Id == string.Empty) {
+                    return string.Empty;
+                }
+
+                var file = Constants.UserIconFolderPath + (Id ?? String.Empty).ToLower().Replace(' ', '-') + ".png";
+                if (!File.Exists(HostingEnvironment.MapPath(file))) {
+                    file = Constants.UserDefaultIconPath;
+                }
+                return file;
+            }
+        }
+
         public ICollection<Question> Questions { get; private set; }
         public ICollection<Topic> Topics { get; private set; }
         public ICollection<Answer> Answers { get; private set; }

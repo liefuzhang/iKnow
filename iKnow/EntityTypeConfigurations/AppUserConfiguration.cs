@@ -4,6 +4,14 @@ using System.Data.Entity.ModelConfiguration;
 namespace iKnow.EntityTypeConfiguration {
     internal class AppUserConfiguration : EntityTypeConfiguration<AppUser> {
         public AppUserConfiguration() {
+            Property(u => u.FirstName)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            Property(u => u.LastName)
+                .IsRequired()
+                .HasMaxLength(50);
+
             Property(u => u.UserName)
                 .IsRequired()
                 .HasMaxLength(255);

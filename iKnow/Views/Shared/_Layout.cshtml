@@ -24,17 +24,7 @@
                 <li><button class="js-button-add-question btn">Add Question</button></li>
             </ul>
             <div class="navbar-user">
-                <img class="profile-photo" />
-
-                @if (Request.IsAuthenticated) {
-                    <span>Admin</span>
-                    using (Html.BeginForm("LogOff", "Account", FormMethod.Post)) {
-                        @Html.AntiForgeryToken()
-                        <button type="submit">Log off</button>
-                    }
-                } else {
-                    @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "login-link" })
-                }
+                @Html.Action("GetUserProfile", "Home")
             </div>
         </div>
     </div>

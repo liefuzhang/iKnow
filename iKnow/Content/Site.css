@@ -104,7 +104,7 @@ a.btn, button.btn, input.btn {
     background-color: #009797;
     font-size: 14px;
     color: white;
-    padding: 4px 15px;
+    padding: 4px 10px;
     cursor: pointer;
     display: inline-block;
     line-height: 1.5;
@@ -155,6 +155,11 @@ a.btn, button.btn, input.btn {
         flex: 1 1 auto;
         height: 37px;
         box-sizing: border-box;
+    }
+
+    .form-group .btn {
+        padding-left: 18px;
+        padding-right: 18px;
     }
 
 .underline {
@@ -255,21 +260,23 @@ blockquote {
         display: flex;
         justify-content: flex-start;
         align-items: center;
+        position: relative;
     }
 
     .navbar .logo {
         font-size: 2rem;
         margin-right: 10px;
-        flex: auto;
+        flex: 0 0 auto;
+        min-width: 150px;
     }
 
     .navbar .search {
         margin-right: 20px;
-        flex: auto;
+        flex: 0 0 auto;
     }
 
     .navbar ul {
-        flex: auto;
+        flex: 0 0 auto;
     }
 
         .navbar ul li {
@@ -279,9 +286,11 @@ blockquote {
 
     .navbar .navbar-user {
         display: inline-block;
+        height: 100%;
         flex: 0 0 auto;
         margin-left: auto;
         margin-right: 10px;
+        max-width: 150px;
     }
 
 .main {
@@ -518,6 +527,8 @@ a.collapse-answer:hover {
 
         .modal-container .modal-inner button {
             margin-bottom: 20px;
+            padding-left: 18px;
+            padding-right: 18px;
         }
 
     .modal-container .chosen-choices {
@@ -767,10 +778,6 @@ h3.question-answer-name > a,
     margin-top: 20px;
     margin-bottom: 40px;
     text-align: center;
-    background: linear-gradient(to bottom,#f8f8f9,#e6e6e8);
-    box-shadow: 0 1px 0 #fff inset, 0 1px 0 rgba(0,0,0,.1);
-    cursor: pointer;
-    border-radius: 3px;
     box-sizing: border-box;
 }
 
@@ -787,6 +794,10 @@ h3.question-answer-name > a,
     .load-more > div {
         padding: 5px;
         border: 1px solid #bbb;
+        background: linear-gradient(to bottom,#f8f8f9,#e6e6e8);
+        box-shadow: 0 1px 0 #fff inset, 0 1px 0 rgba(0,0,0,.1);
+        cursor: pointer;
+        border-radius: 3px;
     }
 
 /*#endregion Answer Detail*/
@@ -814,6 +825,8 @@ h3.question-answer-name > a,
 
 .login-link {
     cursor: pointer;
+    height: 100%;
+    line-height: 45px;
 }
 
 .login-inner {
@@ -892,4 +905,76 @@ h3.question-answer-name > a,
 .register-form .form-group {
     width: 360px;
 }
-/*#endregion */
+
+.register-user-name {
+    justify-content: space-between;
+}
+
+    .register-user-name input {
+        width: 175px;
+        flex-grow: 0;
+    }
+/*#endregion Identity*/
+
+/*#region User Profile */
+
+.user-profile-inner {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: flex-end;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    height: 100%;
+    margin: 0 5px;
+}
+
+    .user-profile-inner .profile-photo {
+        width: 25px;
+        height: 25px;
+        border-radius: 3px;
+        border: 1px solid rgba(0,0,0,.1);
+        box-shadow: 0 1px 0 rgba(255,255,255,.1);
+        background-color: transparent;
+        margin-right: 10px;
+    }
+
+.user-profile-dropdown {
+    position: absolute;
+    right: 0;
+    top: 45px;
+}
+
+.user-profile-dropdown-item {
+    height: 40px;
+    line-height: 40px;
+    width: 120px;
+    border-top: 1px solid #00796B;
+    box-shadow: 0 1px 1px rgba(0,0,0,.4);
+    background-color: teal;
+    color: white;
+    cursor: pointer;
+}
+
+    .user-profile-dropdown-item i {
+        margin-right: 10px;
+    }
+
+    .user-profile-dropdown-item form {
+        height: 100%;
+        width: 100%;
+    }
+
+        .user-profile-dropdown-item form button {
+            height: 100%;
+            width: 100%;
+            border-radius: 0;
+            border: 0;
+            background-color: teal;
+            color: white;
+            cursor: pointer;
+            padding: 0;
+        }
+
+/*#endregion User Profile*/

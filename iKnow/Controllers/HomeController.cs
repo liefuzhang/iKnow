@@ -61,5 +61,14 @@ namespace iKnow.Controllers {
 
             return PartialView("_QuestionAnswerPairPartial", viewModel.QuestionAnswers);
         }
+
+        public PartialViewResult GetUserProfile() {
+            if (User.Identity.IsAuthenticated) {
+                var currentUserName = User.Identity.Name;
+                var currentUser = _context.Users.Single(u => u.UserName == currentUserName);
+                return PartialView("_UserProfilePartial", currentUser);
+            }
+            return PartialView("_UserProfilePartial");
+        }
     }
 }

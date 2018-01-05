@@ -12,6 +12,8 @@
     $(".question-answer-container").on("click", ".short-answer-container", showMoreAnswer);
     $(".question-answer-container").on("click", ".collapse-answer", hideMoreAnswer);
     $(".modal-container").on("input", "textarea", textareaAutoGrow);
+    $(".user-profile-inner").on("click", showUserProfileDropDown);
+    $(document).on("click", pageClickHandler);
 });
 
 function selectTopic() {
@@ -160,6 +162,15 @@ function loadMoreHandler(controllerName) {
 }
 
 function textareaAutoGrow() {
-    var scroll_height = $(this).get(0).scrollHeight;
-    $(this).css('height', scroll_height + 'px');
+    var scrollHeight = $(this).get(0).scrollHeight;
+    $(this).css('height', scrollHeight + 'px');
+}
+
+function showUserProfileDropDown() {
+    event.stopPropagation();
+    $(".user-profile-dropdown").show();
+}
+
+function pageClickHandler() {
+    $(".user-profile-dropdown").hide();
 }

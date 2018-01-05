@@ -195,6 +195,10 @@
     <Compile Include="Migrations\201801030735349_AddUserInheritanceToIdentityUser.Designer.cs">
       <DependentUpon>201801030735349_AddUserInheritanceToIdentityUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801042244105_AddFirstNameAndLastNameToAppUser.cs" />
+    <Compile Include="Migrations\201801042244105_AddFirstNameAndLastNameToAppUser.Designer.cs">
+      <DependentUpon>201801042244105_AddFirstNameAndLastNameToAppUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\Constants.cs" />
@@ -294,6 +298,7 @@
     <Content Include="Views\Account\_RegisterModalPartial.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Shared\_UserProfilePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -320,6 +325,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801030735349_AddUserInheritanceToIdentityUser.resx">
       <DependentUpon>201801030735349_AddUserInheritanceToIdentityUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801042244105_AddFirstNameAndLastNameToAppUser.resx">
+      <DependentUpon>201801042244105_AddFirstNameAndLastNameToAppUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

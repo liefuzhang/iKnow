@@ -18,7 +18,7 @@ namespace iKnow.Models.Identity {
             // Configure validation logic for usernames
             manager.UserValidator = new UserValidator<AppUser>(manager) {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                RequireUniqueEmail = true,
             };
 
             // Configure validation logic for passwords

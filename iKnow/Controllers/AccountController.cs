@@ -87,8 +87,10 @@ namespace iKnow.Controllers {
         public async Task<ActionResult> Register(RegisterViewModel model) {
             if (ModelState.IsValid) {
                 var user = new AppUser {
-                    UserName = model.Email,
-                    Email = model.Email
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email,
+                    UserName = model.Email
                 };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded) {
@@ -107,7 +109,7 @@ namespace iKnow.Controllers {
             // If we got this far, something failed, redisplay form
             return View("Login");
         }
-        
+
         //
         // GET: /Account/ForgotPassword
         public ActionResult ForgotPassword() {
