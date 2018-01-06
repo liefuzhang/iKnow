@@ -308,6 +308,7 @@
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Shared\_UserProfilePartial.cshtml" />
     <Content Include="Views\Answer\_AnswerEditIconPartial.cshtml" />
+    <Content Include="Views\Shared\_AddAnswerPanelPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

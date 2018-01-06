@@ -1,0 +1,14 @@
+﻿@model iKnow.ViewModels.QuestionDetailViewModel
+
+@Html.Partial("_AnswerPanelHeaderPartial")
+@using (@Html.BeginForm("Save", "Answer")) {
+    <div class="rich-editor">
+        @Html.TextAreaFor(m => m.AnswerContent, new { @class = "rich-editor-inner", placeholder = "Write your answer here..." })
+        <div class="rich-editor-footer">
+            <button type="submit" class="btn">Submit Answer</button>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.Question.Id)
+    @Html.AntiForgeryToken()
+}
