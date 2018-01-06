@@ -4,6 +4,7 @@
         public const string TopicDefaultIconPath = "/Content/Images/Topic/default.png";
         public const string UserIconFolderPath = "/Content/Images/UserProfile/";
         public const string UserDefaultIconPath = "/Content/Images/UserProfile/default.png";
+        public const double UserIconDefaultSize = 160;
         public const int ShortAnswerLenth = 220;
         public const int DefaultPageSize = 10;
         public const string AdminRoleName = "Admin";

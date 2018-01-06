@@ -2,7 +2,9 @@
 
 @if (Request.IsAuthenticated) {
     <div class="user-profile-inner">
-        <img src=@Model.IconPath class="profile-photo" />
+        <div class="img-container">
+            <img src=@Model.IconPath class="profile-photo" />
+        </div>
         <span>@Model.FirstName</span>
     </div>
 } else {

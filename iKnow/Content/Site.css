@@ -73,6 +73,20 @@ button {
 }
 
 
+img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,.1);
+    box-shadow: 0 1px 0 rgba(255,255,255,.1);
+}
+
 .content-container {
     width: 960px;
     margin: 0 auto;
@@ -963,14 +977,13 @@ h3.question-answer-name > a,
     margin: 0 5px;
 }
 
-    .user-profile-inner .profile-photo {
+    .user-profile-inner .img-container {
         width: 25px;
         height: 25px;
-        border-radius: 3px;
-        border: 1px solid rgba(0,0,0,.1);
-        box-shadow: 0 1px 0 rgba(255,255,255,.1);
         background-color: transparent;
         margin-right: 10px;
+        overflow: hidden;
+        position: relative;
     }
 
 .user-profile-dropdown {
@@ -1019,49 +1032,49 @@ h3.question-answer-name > a,
                 background-color: #009797;
             }
 
-            .user-profile-container .edit-profile-photo {
-                width: 160px;
-                height: 160px;
-                border-radius: 8px;
-                border: 1px solid white;
-                position: relative;
-                overflow: hidden;
-            }
+.user-profile-container .edit-profile-photo {
+    width: 160px;
+    height: 160px;
+    border-radius: 8px;
+    border: 1px solid white;
+    position: relative;
+    overflow: hidden;
+}
 
-            .edit-profile-photo .mask {
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-            }
+.edit-profile-photo .mask {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
 
-            .mask-backdrop {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                background-color: black;
-                opacity: 0.4;
-                z-index: 1;
-            }
+.mask-backdrop {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.4;
+    z-index: 1;
+}
 
-            .mask-content {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                color: white;
-                z-index: 2;
-                font-size: 18px;
-                cursor: pointer;
-            }
+.mask-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    z-index: 2;
+    font-size: 18px;
+    cursor: pointer;
+}
 
-            .mask-content i {
-                font-size: 28px;
-                margin-bottom: 10px;
-            }
+    .mask-content i {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
 
 /*#endregion User Profile*/

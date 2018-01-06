@@ -17,10 +17,6 @@ namespace iKnow.Models {
 
         public string IconPath {
             get {
-                if (Id == string.Empty) {
-                    return string.Empty;
-                }
-
                 var file = Constants.UserIconFolderPath + (Id ?? String.Empty).ToLower().Replace(' ', '-') + ".png";
                 if (!File.Exists(HostingEnvironment.MapPath(file))) {
                     file = Constants.UserDefaultIconPath;
