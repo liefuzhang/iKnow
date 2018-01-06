@@ -92,6 +92,7 @@ namespace iKnow.Controllers {
                     a => a.QuestionId == viewModel.Question.Id && a.AppUserId == currentUserId);
             if (existingAnswer != null) {
                 existingAnswer.Content = viewModel.AnswerContent;
+                existingAnswer.UpdatedDate = DateTime.Now;
                 answerToSave = existingAnswer;
             } else {
                 answerToSave = new Answer {

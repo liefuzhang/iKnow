@@ -14,7 +14,7 @@
             <h3 class="question-answer-name">@Html.ActionLink(questionAnswer.Key.Title, "Detail", "Question", new { id = questionAnswer.Key.Id }, new { target = "_blank" }) </h3>
             <div class="question-author">
                 @questionAnswer.Key.AppUser.UserName @*TODO add
-                intro*@
+                    intro*@
             </div>
             <div class="short-answer-container">
                 <div class="question-answer-content">
@@ -26,7 +26,11 @@
                 <div class="question-answer-content answer-content">
                     @Html.Raw(questionAnswer.Value.Content)
                     <div class="answer-footer">
-                        Answered @questionAnswer.Value.CreatedDate.ToString("MMM d, yyyy")
+                        @if (questionAnswer.Value.UpdatedDate == null) {
+                            <span>Answered @questionAnswer.Value.CreatedDate.ToString("MMM d, yyyy")</span>
+                        } else {
+                            <span>Updated @questionAnswer.Value.UpdatedDate.Value.ToString("MMM d, yyyy")</span>
+                        }
                         <a class="collapse-answer">
                             <i class="fa fa-angle-double-up" aria-hidden="true"></i>
                             Collapse

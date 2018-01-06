@@ -207,6 +207,10 @@
     <Compile Include="Migrations\201801050646136_AddSeedTopic.Designer.cs">
       <DependentUpon>201801050646136_AddSeedTopic.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801060316460_AddUpdatedDateToAnswer.cs" />
+    <Compile Include="Migrations\201801060316460_AddUpdatedDateToAnswer.Designer.cs">
+      <DependentUpon>201801060316460_AddUpdatedDateToAnswer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\Constants.cs" />
@@ -344,6 +348,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801050646136_AddSeedTopic.resx">
       <DependentUpon>201801050646136_AddSeedTopic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801060316460_AddUpdatedDateToAnswer.resx">
+      <DependentUpon>201801060316460_AddUpdatedDateToAnswer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
