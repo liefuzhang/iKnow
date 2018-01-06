@@ -66,13 +66,18 @@ namespace iKnow.Controllers {
             // explicit loading (to avoid too complex query)
             _context.Answers.Where(a => a.QuestionId == question.Id).Load();
 
+            var currentUserId = User.Identity.GetUserId();
             bool canUserEdit = User.Identity.IsAuthenticated
-                               && (question.AppUserId == User.Identity.GetUserId()
+                               && (question.AppUserId == currentUserId
                                    || User.IsInRole(Constants.AdminRoleName));
 
+            var existingAnswer = _context.Answers.SingleOrDefault(
+                     a => a.QuestionId == question.Id && a.AppUserId == currentUserId);
+            
             var viewModel = new QuestionDetailViewModel {
                 Question = question,
-                CanUserEdit = canUserEdit
+                CanUserEdit = canUserEdit,
+                UserAnswerId = existingAnswer != null ? existingAnswer.Id : 0
             };
 
             return View(viewModel);
@@ -80,6 +85,7 @@ namespace iKnow.Controllers {
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Save(QuestionFormViewModel formViewModel) {
             if (!ModelState.IsValid) {
                 // return to current page

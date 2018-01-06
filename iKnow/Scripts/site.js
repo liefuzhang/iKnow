@@ -57,6 +57,11 @@ function toggleModal(e, action) {
 
     switch (action) {
         case "addQuestion":
+            if (iknow.isUserAuthorized !== true) {
+                // TODO use better nofication
+                alert("please log in before you add question");
+                return;
+            }
             if ($modalContainer.hasClass("new-form-loaded")) {
                 // already loaded
                 $modalContainer.addClass("open");
@@ -118,6 +123,11 @@ function toggleModal(e, action) {
 }
 
 function showAddAnswerPanel(edit) {
+    if (iknow.isUserAuthorized !== true) {
+        // TODO use better nofication
+        alert("please log in before you write question");
+        return;
+    }
     $(".add-answer-panel.hide").slideDown(100);
     $('html, body').scrollTop($(".add-answer-panel").offset().top - 100);
 
@@ -127,7 +137,7 @@ function showAddAnswerPanel(edit) {
         btns: [
             ['strong', 'em'],
             ['h3', 'unorderedList', 'orderedList'],
-            ['link', 'base64', 'horizontalRule'],
+            ['link', 'base64'],
             ['removeformat'],
             ['fullscreen']
         ]

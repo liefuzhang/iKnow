@@ -1,6 +1,6 @@
 ﻿@model iKnow.ViewModels.QuestionDetailViewModel
 
-@Html.Partial("_AnswerPanelHeaderPartial")
+@Html.Action("GetAnswerPanelHeader", "Answer")
 @using (@Html.BeginForm("Save", "Answer")) {
     <div class="rich-editor">
         @Html.TextAreaFor(m => m.AnswerContent, new { @class = "rich-editor-inner", placeholder = "Write your answer here..." })

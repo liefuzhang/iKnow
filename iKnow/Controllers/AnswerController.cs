@@ -54,12 +54,16 @@ namespace iKnow.Controllers {
 
             var question = _context.Questions.Include("Topics").Single(q => q.Id == answer.Question.Id);
             var answerCount = _context.Answers.Count(a => a.QuestionId == question.Id);
+            var currentUserId = User.Identity.GetUserId();
+            var existingAnswer = _context.Answers.SingleOrDefault(
+                     a => a.QuestionId == question.Id && a.AppUserId == currentUserId);
 
             var questionDetailViewModel = new QuestionDetailViewModel {
                 Question = question,
                 CanUserEdit = User.Identity.IsAuthenticated
-                              && (question.AppUserId == User.Identity.GetUserId()
-                                  || User.IsInRole(Constants.AdminRoleName))
+                              && (question.AppUserId == currentUserId
+                                  || User.IsInRole(Constants.AdminRoleName)),
+                UserAnswerId = existingAnswer?.Id ?? 0
             };
 
             var viewModel = new AnswerDetailViewModel {
@@ -84,6 +88,7 @@ namespace iKnow.Controllers {
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Save(QuestionDetailViewModel viewModel) {
             var currentUserId = User.Identity.GetUserId();
             Answer answerToSave;
@@ -116,6 +121,15 @@ namespace iKnow.Controllers {
                 return PartialView("_AnswerEditIconPartial");
             }
             return null;
+        }
+    
+        public PartialViewResult GetAnswerPanelHeader() {
+            if (User.Identity.IsAuthenticated) {
+                var currentUserId = User.Identity.GetUserId();
+                var currentUser = _context.Users.Single(u => u.Id == currentUserId);
+                return PartialView("_AnswerPanelHeaderPartial", currentUser);
+            }
+            return PartialView("_AnswerPanelHeaderPartial");
         }
     }
 }

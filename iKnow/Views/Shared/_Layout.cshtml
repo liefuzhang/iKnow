@@ -38,6 +38,12 @@
     <div class="modal-container">
     </div>
 
+    <script>
+        // iknow global variable
+        var iknow = {};
+        iknow.isUserAuthorized = "@(HttpContext.Current.User.Identity.IsAuthenticated)" === "True" ? true : false;
+    </script>
+
     @Scripts.Render("~/bundles/js")
     @RenderSection("scripts", required: false)
 

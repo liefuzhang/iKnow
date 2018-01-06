@@ -1,6 +1,6 @@
 ﻿@model iKnow.Models.Answer
 
-@Html.Partial("_AnswerPanelHeaderPartial")
+@Html.Action("GetAnswerPanelHeader", "Answer")
 <div class="answer-panel-content">
     <div class="answer-panel-content-inner">@Html.Raw(Model.Content)</div>
     <div class="answer-footer">

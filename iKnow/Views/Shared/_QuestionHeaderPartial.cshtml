@@ -20,8 +20,15 @@
         }
     </h2>
     <p>@Model.Question.Description</p>
-    <button class="write-answer btn-white">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
-        Write Answer
-    </button>
+    @if (Model.UserAnswerId > 0) {
+        <a class="view-answer btn-white" href=@Url.Action("Detail", "Answer", new { id = Model.UserAnswerId })>
+            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+            View Answer
+        </a>
+    } else {
+        <button class="write-answer btn-white">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+            Write Answer
+        </button>
+    }
 </div>

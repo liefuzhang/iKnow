@@ -1,4 +1,7 @@
-﻿<div class="answer-panel-header">
+﻿@model iKnow.Models.AppUser
+<div class="answer-panel-header">
     @*TODO add user image and intro*@
-    <b>Admin</b>
+    @if (Model != null) {
+        <b>@Model.FullName</b>
+    }
 </div>

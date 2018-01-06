@@ -15,19 +15,14 @@ namespace iKnow.Models {
         public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }
 
-        private string _plainContent;
         public string PlainContent {
             get {
-                if (string.IsNullOrEmpty(_plainContent)) {
-                    var parsed = Regex.Replace(Content, "</(p|li|h3)>", "&nbsp;");
-                    return Regex.Replace(parsed, "<.*?>", String.Empty);
-                } else {
-                    return _plainContent;
-                }
+                var parsed = Regex.Replace(Content, "</(p|li|h3)>", "&nbsp;");
+                return Regex.Replace(parsed, "<.*?>", String.Empty);
             }
         }
         public string ShortContext
-            => PlainContent.Length > Constants.ShortAnswerLenth ? 
+            => PlainContent.Length > Constants.ShortAnswerLenth ?
             PlainContent.Substring(0, Constants.ShortAnswerLenth) + "..." : PlainContent;
     }
 }
