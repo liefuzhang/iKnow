@@ -11,6 +11,10 @@
 
 <div class="user-profile-dropdown hide">
     <div class="user-profile-dropdown-item">
+        <i class="fa fa-cog" aria-hidden="true"></i>
+        @Html.ActionLink("Settings", "UserProfile", "Account")
+    </div>
+    <div class="user-profile-dropdown-item">
         @using (Html.BeginForm("LogOff", "Account")) {
             @Html.AntiForgeryToken()
             <button class="log-off" type="submit">

@@ -100,9 +100,10 @@ namespace iKnow.Controllers {
         [HttpPost]
         [Authorize(Roles = Constants.AdminRoleName)]
         [ValidateAntiForgeryToken]
-        public ActionResult Save(TopicFormViewModel viewModel, HttpPostedFileBase postedFile) {
+        public ActionResult Save(TopicFormViewModel viewModel) {
             try {
                 var topic = viewModel.Topic;
+                var postedFile = viewModel.PostedFile;
                 if (topic.Id == 0) {
                     _context.Topics.Add(topic);
                 } else {
@@ -147,6 +148,7 @@ namespace iKnow.Controllers {
         // POST: Topic/Delete/2
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Constants.AdminRoleName)]
         public ActionResult Delete(Topic topic) {
             var topicInDb = _context.Topics.SingleOrDefault(t => t.Id == topic.Id);
             if (topicInDb == null) {

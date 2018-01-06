@@ -1,22 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using iKnow.Models;
 using iKnow.Models.Identity;
+using iKnow.ViewModels;
 using iKnow.ViewModels.Account;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Constants = iKnow.Models.Constants;
 
 namespace iKnow.Controllers {
     public class AccountController : Controller {
         private AppSignInManager _signInManager;
         private AppUserManager _userManager;
+        private iKnowContext _context = new iKnowContext();
 
         public AccountController() {
+            _context = new iKnowContext();
         }
 
         public AccountController(AppUserManager userManager, AppSignInManager signInManager) {
@@ -175,7 +183,6 @@ namespace iKnow.Controllers {
 
         //
         // GET: /Account/ResetPasswordConfirmation
-        [AllowAnonymous]
         public ActionResult ResetPasswordConfirmation() {
             return View();
         }
@@ -201,8 +208,46 @@ namespace iKnow.Controllers {
                     _signInManager = null;
                 }
             }
-
+            _context.Dispose();
             base.Dispose(disposing);
+        }
+
+        [Authorize]
+        public ActionResult UserProfile() {
+            var currentUserId = User.Identity.GetUserId();
+            var currentUser = _context.Users.Single(u => u.Id == currentUserId);
+            var userProfileViewModel = new UserProfileViewModel {
+                AppUser = currentUser
+            };
+
+            return View("UserProfile", userProfileViewModel);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public ActionResult SaveProfile(UserProfileViewModel viewModel) {
+            try {
+                var user = viewModel.AppUser;
+                var postedPhoto = viewModel.PostedPhoto;
+                var userInDb = _context.Users.Single(u => u.Id == user.Id);
+
+                _context.SaveChanges();
+
+                // save icon if it exists
+                if (postedPhoto != null && postedPhoto.ContentLength > 0) {
+                    var bitmap = Bitmap.FromStream(postedPhoto.InputStream);
+                    var iconFolder = HostingEnvironment.MapPath(Constants.UserIconFolderPath);
+                    var fileName = user.Id.ToLower().Replace(' ', '-') + ".png";
+                    bitmap.Save(iconFolder + fileName, ImageFormat.Png);
+                }
+
+                return RedirectToAction("Index", "Home");
+            } catch (DbEntityValidationException ex) {
+                var error = ex.EntityValidationErrors.First().ValidationErrors.First();
+                ModelState.AddModelError(nameof(viewModel.AppUser) + "." + error.PropertyName, error.ErrorMessage);
+                return View("UserProfile", viewModel);
+            }
         }
 
         #region Helpers
@@ -227,6 +272,5 @@ namespace iKnow.Controllers {
         }
 
         #endregion
-
     }
 }

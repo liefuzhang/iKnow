@@ -119,6 +119,7 @@ namespace iKnow.Controllers {
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult SaveQuestionTopics(QuestionFormViewModel formViewModel) {
             var questionPosted = formViewModel.Question;
 

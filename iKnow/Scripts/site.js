@@ -14,6 +14,7 @@
     $(".question-answer-container").on("click", ".collapse-answer", hideMoreAnswer);
     $(".modal-container").on("input", "textarea", textareaAutoGrow);
     $(".user-profile-inner").on("click", showUserProfileDropDown);
+    $(".mask-content").on("click", () => { $(".js-profile-photo-upload").click(); })
     $(document).on("click", pageClickHandler);
 });
 

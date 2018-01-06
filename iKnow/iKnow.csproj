@@ -234,6 +234,7 @@
     <Compile Include="ViewModels\AnswerDetailViewModel.cs" />
     <Compile Include="ViewModels\QuestionDetailViewModel.cs" />
     <Compile Include="ViewModels\QuestionFormViewModel.cs" />
+    <Compile Include="ViewModels\UserProfileViewModel.cs" />
     <Compile Include="ViewModels\TopicFormViewModel.cs" />
     <Compile Include="ViewModels\TopicIndexViewModel.cs" />
   </ItemGroup>
@@ -313,6 +314,7 @@
     <Content Include="Views\Shared\_UserProfilePartial.cshtml" />
     <Content Include="Views\Answer\_AnswerEditIconPartial.cshtml" />
     <Content Include="Views\Shared\_AddAnswerPanelPartial.cshtml" />
+    <Content Include="Views\Account\UserProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
