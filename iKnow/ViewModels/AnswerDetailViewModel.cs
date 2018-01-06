@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace iKnow.ViewModels {
     public class AnswerDetailViewModel {
-        public Question Question { get; set; }
+        public QuestionDetailViewModel QuestionDetailViewModel { get; set; }
         public Answer Answer { get; set; }
         public int AnswerCount { get; set; }
     }

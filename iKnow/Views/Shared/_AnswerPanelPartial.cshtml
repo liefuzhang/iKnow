@@ -2,9 +2,9 @@
 
 @Html.Partial("_AnswerPanelHeaderPartial")
 <div class="answer-panel-content">
-    @Html.Raw(Model.Content)
+    <div class="answer-panel-content-inner">@Html.Raw(Model.Content)</div>
     <div class="answer-footer">
-        Answered @Model.CreatedDate.ToString("MMM d, yyyy")
+        <span>Answered @Model.CreatedDate.ToString("MMM d, yyyy")</span>
     </div>
+    @Html.Action("EditIcon", "Answer", new { id = Model.Id })
 </div>
-

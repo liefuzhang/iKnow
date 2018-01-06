@@ -24,12 +24,12 @@ namespace iKnow.Controllers {
         public ActionResult Index() {
             int page = 0, pageSize = Constants.DefaultPageSize;
             var viewModel = constructAnswerIndexViewModel(page, pageSize);
-                        
+
             return View(viewModel);
         }
 
         private AnswerIndexViewModel constructAnswerIndexViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
-            var questionsWithAnswerCount = _context.Questions.OrderByDescending(q=>q.Id).Skip(currentPage * pageSize).Take(pageSize).GroupJoin(_context.Answers,
+            var questionsWithAnswerCount = _context.Questions.OrderByDescending(q => q.Id).Skip(currentPage * pageSize).Take(pageSize).GroupJoin(_context.Answers,
                q => q.Id,
                a => a.QuestionId,
                (question, answers) =>
@@ -55,9 +55,16 @@ namespace iKnow.Controllers {
             var question = _context.Questions.Include("Topics").Single(q => q.Id == answer.Question.Id);
             var answerCount = _context.Answers.Count(a => a.QuestionId == question.Id);
 
+            var questionDetailViewModel = new QuestionDetailViewModel {
+                Question = question,
+                CanUserEdit = User.Identity.IsAuthenticated
+                              && (question.AppUserId == User.Identity.GetUserId()
+                                  || User.IsInRole(Constants.AdminRoleName))
+            };
+
             var viewModel = new AnswerDetailViewModel {
                 Answer = answer,
-                Question = question,
+                QuestionDetailViewModel = questionDetailViewModel,
                 AnswerCount = answerCount
             };
 
@@ -71,24 +78,43 @@ namespace iKnow.Controllers {
             if (viewModel.QuestionsWithAnswerCount.Count() == 0) {
                 return null;
             }
-            
+
             return PartialView("_AnswerQuestionListPartial", viewModel.QuestionsWithAnswerCount);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Save(QuestionDetailViewModel viewModel) {
-            var answer = new Answer {
-                Content = viewModel.AnswerContent,
-                QuestionId = viewModel.Question.Id,
-                AppUserId = User.Identity.GetUserId(), 
-                CreatedDate = DateTime.Now
-            };
+            var currentUserId = User.Identity.GetUserId();
+            Answer answerToSave;
+            var existingAnswer =
+                _context.Answers.SingleOrDefault(
+                    a => a.QuestionId == viewModel.Question.Id && a.AppUserId == currentUserId);
+            if (existingAnswer != null) {
+                existingAnswer.Content = viewModel.AnswerContent;
+                answerToSave = existingAnswer;
+            } else {
+                answerToSave = new Answer {
+                    Content = viewModel.AnswerContent,
+                    QuestionId = viewModel.Question.Id,
+                    AppUserId = User.Identity.GetUserId(),
+                    CreatedDate = DateTime.Now
+                };
+                _context.Answers.Add(answerToSave);
+            }
 
-            _context.Answers.Add(answer);
             _context.SaveChanges();
 
-            return RedirectToAction("Detail", "Answer", new { id = answer.Id });
+            return RedirectToAction("Detail", "Answer", new { id = answerToSave.Id });
+        }
+
+        public PartialViewResult EditIcon(int id) {
+            var answer = _context.Answers.Single(a => a.Id == id);
+            if (User.Identity.IsAuthenticated
+                              && answer.AppUserId == User.Identity.GetUserId()) {
+                return PartialView("_AnswerEditIconPartial");
+            }
+            return null;
         }
     }
 }

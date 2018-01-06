@@ -301,10 +301,10 @@ blockquote {
         display: flex;
     }
 
-    .main .content-container>div:first-of-type {
-        flex: 1 1 auto;
-    }
-    
+        .main .content-container > div:first-of-type {
+            flex: 1 1 auto;
+        }
+
 /*#region topic */
 
 .topic-icon {
@@ -498,10 +498,10 @@ a.collapse-answer:hover {
         .modal-container .modal-inner.question-topic-inner {
             overflow-y: visible;
         }
-        
-        .modal-container .modal-inner.question-topic-inner .form-group {
-            margin-top: 20px;
-        }
+
+            .modal-container .modal-inner.question-topic-inner .form-group {
+                margin-top: 20px;
+            }
 
         .modal-container .modal-inner h2 {
             color: #262626;
@@ -733,6 +733,22 @@ h3.question-answer-name > a,
     display: flex;
 }
 
+.answer-edit-icon {
+    margin-bottom: 6px;
+    color: #2b6dad;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    top: -10px;
+}
+
+    .answer-edit-icon:hover {
+        text-decoration: underline;
+    }
+
+    .answer-edit-icon i {
+        margin-right: 3px;
+    }
 .answer-panel .answer-panel-header {
     padding-bottom: 10px;
 }
@@ -837,9 +853,9 @@ h3.question-answer-name > a,
     line-height: 45px;
 }
 
-.login-link i {
-    margin-right: 10px;
-}
+    .login-link i {
+        margin-right: 10px;
+    }
 
 
 .login-inner {
@@ -970,20 +986,20 @@ h3.question-answer-name > a,
         margin-right: 10px;
     }
 
-.user-profile-dropdown-item form {
-    height: 100%;
-    width: 100%;
-}
-
-    .user-profile-dropdown-item form button {
+    .user-profile-dropdown-item form {
         height: 100%;
         width: 100%;
-        border-radius: 0;
-        border: 0;
-        background-color: teal;
-        color: white;
-        cursor: pointer;
-        padding: 0;
     }
+
+        .user-profile-dropdown-item form button {
+            height: 100%;
+            width: 100%;
+            border-radius: 0;
+            border: 0;
+            background-color: teal;
+            color: white;
+            cursor: pointer;
+            padding: 0;
+        }
 
 /*#endregion User Profile*/

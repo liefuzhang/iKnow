@@ -7,6 +7,7 @@
     $(".question-header-panel .js-edit-topic").on("click", (e) => toggleModal(e, "editTopic"));
     $(".register-container a").on("click", (e) => toggleModal(e, "register"));
     $(".write-answer").on("click", showAddAnswerPanel);
+    $(".edit-answer").on("click", () => { showAddAnswerPanel(true); });
     $(".question-answer-container").on("mouseenter", ".short-answer-container", toggleMoreAnswerUnderline);
     $(".question-answer-container").on("mouseleave", ".short-answer-container", toggleMoreAnswerUnderline);
     $(".question-answer-container").on("click", ".short-answer-container", showMoreAnswer);
@@ -116,9 +117,27 @@ function toggleModal(e, action) {
     }
 }
 
-function showAddAnswerPanel() {
+function showAddAnswerPanel(edit) {
     $(".add-answer-panel.hide").slideDown(100);
     $('html, body').scrollTop($(".add-answer-panel").offset().top - 100);
+
+    $(".rich-editor-inner").trumbowyg({
+        svgPath: "/Content/icons.svg",
+        autogrow: true,
+        btns: [
+            ['strong', 'em'],
+            ['h3', 'unorderedList', 'orderedList'],
+            ['link', 'base64', 'horizontalRule'],
+            ['removeformat'],
+            ['fullscreen']
+        ]
+    });
+    if (edit === true) {
+        // copy content
+        var content = $(".answer-panel-content-inner").html();
+        $(".rich-editor-inner").trumbowyg('html', content);
+    }
+
 }
 
 function toggleMoreAnswerUnderline(e) {

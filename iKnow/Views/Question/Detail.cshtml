@@ -36,7 +36,7 @@
             }
         </div>
 
-        @if (Model.Question.Answers.Count() > 0) {
+        @if (Model.Question.Answers.Any()) {
             <div class="question-content-footer panel">
                 <a class="write-answer">
                     <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -66,17 +66,4 @@
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/trumbowyg")
-    <script>
-        $(".rich-editor-inner").trumbowyg({
-            svgPath: "/Content/icons.svg",
-            autogrow: true,
-            btns: [
-                ['strong', 'em'],
-                ['h3', 'unorderedList', 'orderedList'],
-                ['link', 'base64', 'horizontalRule'],
-                ['removeformat'],
-                ['fullscreen']
-            ]
-        });
-    </script>
 }
