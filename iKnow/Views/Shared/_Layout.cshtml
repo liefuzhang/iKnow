@@ -1,5 +1,6 @@
 ﻿@using iKnow.Models
 @using iKnow.ViewModels
+@using Microsoft.AspNet.Identity
 
 <!DOCTYPE html>
 <html>
@@ -42,6 +43,7 @@
         // iknow global variable
         var iknow = {};
         iknow.isUserAuthorized = "@(HttpContext.Current.User.Identity.IsAuthenticated)" === "True" ? true : false;
+        iknow.userId = "@(HttpContext.Current.User?.Identity?.GetUserId()??"")";
     </script>
 
     @Scripts.Render("~/bundles/js")

@@ -1,6 +1,7 @@
-﻿@model iKnow.ViewModels.QuestionDetailViewModel
+﻿@using Microsoft.AspNet.Identity
+@model iKnow.ViewModels.QuestionDetailViewModel
 
-@Html.Action("GetAnswerPanelHeader", "Answer")
+@Html.Action("GetAnswerPanelHeader", "Answer", new { id = User.Identity.GetUserId() })
 @using (@Html.BeginForm("Save", "Answer")) {
     <div class="rich-editor">
         @Html.TextAreaFor(m => m.AnswerContent, new { @class = "rich-editor-inner", placeholder = "Write your answer here..." })

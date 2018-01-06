@@ -123,13 +123,9 @@ namespace iKnow.Controllers {
             return null;
         }
     
-        public PartialViewResult GetAnswerPanelHeader() {
-            if (User.Identity.IsAuthenticated) {
-                var currentUserId = User.Identity.GetUserId();
-                var currentUser = _context.Users.Single(u => u.Id == currentUserId);
-                return PartialView("_AnswerPanelHeaderPartial", currentUser);
-            }
-            return PartialView("_AnswerPanelHeaderPartial");
+        public PartialViewResult GetAnswerPanelHeader(string id) {
+            var user = _context.Users.Single(u => u.Id == id);
+            return PartialView("_AnswerPanelHeaderPartial", user);
         }
     }
 }
