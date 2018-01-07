@@ -211,8 +211,21 @@
     <Compile Include="Migrations\201801060316460_AddUpdatedDateToAnswer.Designer.cs">
       <DependentUpon>201801060316460_AddUpdatedDateToAnswer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801062330581_AddSomePropertiesToAppUser.cs" />
+    <Compile Include="Migrations\201801062330581_AddSomePropertiesToAppUser.Designer.cs">
+      <DependentUpon>201801062330581_AddSomePropertiesToAppUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801070104163_ModifySomePropertiesInAppUser.cs" />
+    <Compile Include="Migrations\201801070104163_ModifySomePropertiesInAppUser.Designer.cs">
+      <DependentUpon>201801070104163_ModifySomePropertiesInAppUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801070117262_ModifySomePropertiesInAppUser1.cs" />
+    <Compile Include="Migrations\201801070117262_ModifySomePropertiesInAppUser1.Designer.cs">
+      <DependentUpon>201801070117262_ModifySomePropertiesInAppUser1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Answer.cs" />
+    <Compile Include="ViewModels\Account\ChangePasswordViewModel.cs" />
     <Compile Include="Models\Constants.cs" />
     <Compile Include="Models\Identity\AppUserManager.cs" />
     <Compile Include="Models\Identity\AppSignInManager.cs" />
@@ -315,6 +328,7 @@
     <Content Include="Views\Answer\_AnswerEditIconPartial.cshtml" />
     <Content Include="Views\Shared\_AddAnswerPanelPartial.cshtml" />
     <Content Include="Views\Account\UserProfile.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -353,6 +367,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801060316460_AddUpdatedDateToAnswer.resx">
       <DependentUpon>201801060316460_AddUpdatedDateToAnswer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801062330581_AddSomePropertiesToAppUser.resx">
+      <DependentUpon>201801062330581_AddSomePropertiesToAppUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801070104163_ModifySomePropertiesInAppUser.resx">
+      <DependentUpon>201801070104163_ModifySomePropertiesInAppUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801070117262_ModifySomePropertiesInAppUser1.resx">
+      <DependentUpon>201801070117262_ModifySomePropertiesInAppUser1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

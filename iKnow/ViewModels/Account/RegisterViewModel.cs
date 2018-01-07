@@ -18,6 +18,7 @@ namespace iKnow.ViewModels.Account {
 
         [Required]
         [EmailAddress]
+        [StringLength(50)]
         [Display(Name = "Email")]
         public string Email { get; set; }
 

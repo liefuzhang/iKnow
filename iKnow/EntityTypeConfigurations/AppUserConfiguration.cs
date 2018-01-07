@@ -12,8 +12,10 @@ namespace iKnow.EntityTypeConfiguration {
                 .IsRequired()
                 .HasMaxLength(50);
 
-            Property(u => u.UserName)
-                .IsRequired()
+            Property(u => u.Location)
+                .HasMaxLength(50);
+
+            Property(u => u.Intro)
                 .HasMaxLength(255);
 
             HasMany(u => u.Questions)

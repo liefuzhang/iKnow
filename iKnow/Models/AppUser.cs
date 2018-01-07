@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -14,6 +15,13 @@ namespace iKnow.Models {
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string FullName => FirstName + " " + LastName;
+
+        [StringLength(255)]
+        public string Intro { get; set; }
+        public byte Gender { get; set; }
+
+        [StringLength(50)]
+        public string Location { get; set; }
 
         public string IconPath {
             get {
@@ -34,7 +42,7 @@ namespace iKnow.Models {
             Topics = new HashSet<Topic>();
             Answers = new HashSet<Answer>();
         }
-        
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<AppUser> manager) {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);

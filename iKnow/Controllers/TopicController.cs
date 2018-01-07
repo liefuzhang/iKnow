@@ -117,9 +117,13 @@ namespace iKnow.Controllers {
                 // save icon if it exists
                 if (postedFile != null && postedFile.ContentLength > 0) {
                     var bitmap = Bitmap.FromStream(postedFile.InputStream);
+                    var scale = Math.Max(bitmap.Width / Constants.TopicIconDefaultSize,
+                        bitmap.Height / Constants.TopicIconDefaultSize);
+                    var resized = new Bitmap(bitmap, new Size(Convert.ToInt32(bitmap.Width / scale), Convert.ToInt32(bitmap.Height / scale)));
+
                     var iconFolder = HostingEnvironment.MapPath(Constants.TopicIconFolderPath);
                     var fileName = topic.Name.ToLower().Replace(' ', '-') + ".png";
-                    bitmap.Save(iconFolder + fileName, ImageFormat.Png);
+                    resized.Save(iconFolder + fileName, ImageFormat.Png);
                 }
 
                 return RedirectToAction("Index", new { selectedTopicId = topic.Id });

@@ -98,8 +98,10 @@ namespace iKnow.Controllers {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Email = model.Email,
-                    UserName = model.Email
+                    UserName = model.Email,
+                    Gender = 0
                 };
+
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded) {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -214,8 +216,11 @@ namespace iKnow.Controllers {
 
         [Authorize]
         public ActionResult UserProfile() {
+            if (Request["Message"] != null) {
+                ViewBag.StatusMessage = Request["Message"];
+            }
             var currentUserId = User.Identity.GetUserId();
-            var currentUser = _context.Users.Single(u => u.Id == currentUserId);
+            var currentUser = UserManager.FindById(currentUserId);
             var userProfileViewModel = new UserProfileViewModel {
                 AppUser = currentUser
             };
@@ -232,13 +237,17 @@ namespace iKnow.Controllers {
                 var postedPhoto = viewModel.PostedPhoto;
                 var userInDb = _context.Users.Single(u => u.Id == user.Id);
 
+                userInDb.Gender = user.Gender;
+                userInDb.Intro = user.Intro;
+                userInDb.Location = user.Location;
+
                 _context.SaveChanges();
 
                 // save icon if it exists
                 if (postedPhoto != null && postedPhoto.ContentLength > 0) {
                     var bitmap = Bitmap.FromStream(postedPhoto.InputStream);
-                    var scale = Math.Max(bitmap.Width/Constants.UserIconDefaultSize,
-                        bitmap.Height/Constants.UserIconDefaultSize);
+                    var scale = Math.Max(bitmap.Width / Constants.UserIconDefaultSize,
+                        bitmap.Height / Constants.UserIconDefaultSize);
                     var resized = new Bitmap(bitmap, new Size(Convert.ToInt32(bitmap.Width / scale), Convert.ToInt32(bitmap.Height / scale)));
                     var iconFolder = HostingEnvironment.MapPath(Constants.UserIconFolderPath);
                     var fileName = user.Id.ToLower().Replace(' ', '-') + ".png";
@@ -251,6 +260,36 @@ namespace iKnow.Controllers {
                 ModelState.AddModelError(nameof(viewModel.AppUser) + "." + error.PropertyName, error.ErrorMessage);
                 return View("UserProfile", viewModel);
             }
+        }
+
+        //
+        // GET: /Manage/ChangePassword
+        public ActionResult ChangePassword() {
+            return View();
+        }
+
+        //
+        // POST: /Manage/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model) {
+            if (!ModelState.IsValid) {
+                return View(model);
+            }
+            if (model.OldPassword == model.NewPassword) {
+                ModelState.AddModelError("", "New password should differ from old password.");
+                return View(model);
+            }
+            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+            if (result.Succeeded) {
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                if (user != null) {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                }
+                return RedirectToAction("UserProfile", new { Message = "Password changed successfully." });
+            }
+            AddErrors(result);
+            return View(model);
         }
 
         #region Helpers
@@ -275,5 +314,6 @@ namespace iKnow.Controllers {
         }
 
         #endregion
+
     }
 }

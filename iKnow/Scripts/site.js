@@ -14,8 +14,9 @@
     $(".question-answer-container").on("click", ".collapse-answer", hideMoreAnswer);
     $(".modal-container").on("input", "textarea", textareaAutoGrow);
     $(".user-profile-inner").on("click", showUserProfileDropDown);
-    $(".js-profile-photo-upload").on("change", readURL);
-    $(".mask-content").on("click", () => { $(".js-profile-photo-upload").click(); })
+    $(".js-profile-photo-upload").on("change", (e) => readURL(e, ".edit-profile-photo img"));
+    $(".js-topic-photo-upload").on("change", (e) => readURL(e, ".topic-form-container .img-container img"));
+    $(".mask-content").on("click", () => { $(".js-profile-photo-upload").click(); });
     $(document).on("click", pageClickHandler);
 });
 
@@ -206,14 +207,14 @@ function pageClickHandler() {
     $(".user-profile-dropdown").hide();
 }
 
-function readURL() {
-    if (this.files && this.files[0]) {
+function readURL(event, target) {
+    if (event.target.files && event.target.files[0]) {
         var reader = new FileReader();
 
         reader.onload = function (e) {
-            $(".edit-profile-photo img").attr("src", e.target.result);
+            $(target).attr("src", e.target.result);
         }
 
-        reader.readAsDataURL(this.files[0]);
+        reader.readAsDataURL(event.target.files[0]);
     }
 }

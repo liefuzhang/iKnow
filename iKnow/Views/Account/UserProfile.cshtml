@@ -9,8 +9,9 @@
     <div class="user-profile-page-inner">
         @using (Html.BeginForm("SaveProfile", "Account", null, FormMethod.Post, new { enctype = "multipart/form-data" })) {
             @Html.AntiForgeryToken()
+            @(ViewBag.StatusMessage)  // TODO use better notification
             @Html.ValidationSummary("", new { @class = "error" })
-            <div class="edit-profile-photo">
+            <div class="edit-profile-photo img-container">
                 <img src="@Model.AppUser.IconPath" />
                 <div class="mask">
                     <div class="mask-backdrop"></div>
@@ -19,19 +20,39 @@
                         Change Photo
                     </div>
                 </div>
-                @Html.TextBoxFor(m => m.PostedPhoto, new { type = "file", @class="js-profile-photo-upload hide" })
+                @Html.TextBoxFor(m => m.PostedPhoto, new { type = "file", @class = "js-profile-photo-upload hide" })
             </div>
             <div class="user-profile-form-content">
-                @*<div class="form-group">
-                        @Html.LabelFor(m => m.Email)
-                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email" })
-                    </div>*@
+                <div class="form-group">
+                    <h2>@Model.AppUser.FullName</h2>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.AppUser.Intro)
+                    @Html.TextBoxFor(m => m.AppUser.Intro, new { @class = "form-control", placeholder = "Self description" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.AppUser.Location)
+                    @Html.TextBoxFor(m => m.AppUser.Location, new { @class = "form-control", placeholder = "Location" })
+                </div>
+                <div class="form-group gender-setting">
+                    @Html.LabelFor(m => m.AppUser.Gender)
+                    @Html.RadioButtonFor(m => m.AppUser.Gender, 0, new { @class = "form-control hide" })
+                    <span>Male:</span>@Html.RadioButtonFor(m => m.AppUser.Gender, 1, new { @class = "form-control" })
+                    <span>Female:</span>@Html.RadioButtonFor(m => m.AppUser.Gender, 2, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.Label("Password")
+                    @Html.ActionLink("Change Password", "ChangePassword", "Account")
+                </div>
                 <div class="form-group">
                     <button type="submit" class="btn">Save</button>
                 </div>
-                @Html.HiddenFor(m=>m.AppUser.Id)
+                @Html.HiddenFor(m => m.AppUser.Id)
             </div>
         }
     </div>
 </div>
 
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

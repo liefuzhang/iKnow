@@ -23,8 +23,10 @@
 
         <div class="form-group">
             @Html.Label("Icon")
-            <img src="@Model.Topic.IconPath" class="topic-icon"/>
-            @Html.TextBoxFor(m => m.PostedFile, new { type = "file"})
+            <div class="img-container">
+                <img src="@Model.Topic.IconPath"/>
+            </div>
+            @Html.TextBoxFor(m => m.PostedFile, new { type = "file", @class="js-topic-photo-upload"})
             @Html.ValidationMessageFor(m => m.PostedFile, "", new { @class = "error" })
             @*<input type="file" name="changeIcon" />*@
         </div>
