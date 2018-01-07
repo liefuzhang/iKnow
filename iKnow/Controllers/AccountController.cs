@@ -66,9 +66,17 @@ namespace iKnow.Controllers {
                 return View(model);
             }
 
+            var user = UserManager.FindByEmail(model.Email);
+            if (user == null) {
+                ModelState.AddModelError("", "Invalid login attempt.");
+                return View(model);
+            }
+
+            var userName = user.UserName;
+
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(userName, model.Password, isPersistent: true, shouldLockout: false);
             switch (result) {
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
@@ -94,11 +102,24 @@ namespace iKnow.Controllers {
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model) {
             if (ModelState.IsValid) {
+                var fullName = (model.FirstName + model.LastName).ToLower();
+                var userNames = _context.Users
+                    .Where(u => u.UserName.StartsWith(fullName))
+                    .Select(u => u.UserName)
+                    .ToList();
+
+                var increment = 0;
+                while (userNames.Contains(fullName + increment)) {
+                    increment++;
+                }
+
+                var userName = fullName + increment;
+
                 var user = new AppUser {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Email = model.Email,
-                    UserName = model.Email,
+                    UserName = userName,
                     Gender = 0
                 };
 
@@ -215,17 +236,29 @@ namespace iKnow.Controllers {
         }
 
         [Authorize]
-        public ActionResult UserProfile() {
-            if (Request["Message"] != null) {
-                ViewBag.StatusMessage = Request["Message"];
-            }
-            var currentUserId = User.Identity.GetUserId();
-            var currentUser = UserManager.FindById(currentUserId);
-            var userProfileViewModel = new UserProfileViewModel {
-                AppUser = currentUser
-            };
+        [Route("Account/UserProfile/{userName?}")]
+        public ActionResult UserProfile(string userName) {
+            if (userName == null) {
+                if (Request["Message"] != null) {
+                    ViewBag.StatusMessage = Request["Message"];
+                }
+                var currentUserId = User.Identity.GetUserId();
+                var currentUser = UserManager.FindById(currentUserId);
 
-            return View("UserProfile", userProfileViewModel);
+                var userProfileViewModel = new UserProfileViewModel {
+                    AppUser = currentUser
+                };
+                return View("UserProfile", userProfileViewModel);
+            } else {
+                var user = UserManager.FindByName(userName);
+                if (user == null) {
+                    return HttpNotFound();
+                }
+                var userProfileViewModel = new UserProfileViewModel {
+                    AppUser = user
+                };
+                return View("UserProfileReadOnly", userProfileViewModel);
+            }
         }
 
         [HttpPost]

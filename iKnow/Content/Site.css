@@ -83,7 +83,6 @@ img {
     left: 50%;
     transform: translate(-50%,-50%);
     border-radius: 3px;
-    border: 1px solid rgba(0,0,0,.1);
     box-shadow: 0 1px 0 rgba(255,255,255,.1);
 }
 
@@ -431,9 +430,10 @@ blockquote {
     align-items: center;
 }
 
-    .topic-detail-container .content-header img {
-        width: 60px;
+    .topic-detail-container .content-header .img-container {
         margin-right: 10px;
+        width: 60px;
+        height: 60px;
     }
 
 .topic-detail-inner .question-answer-inner {
@@ -448,8 +448,21 @@ blockquote {
     font-size: 15px;
 }
 
-.question-answer-name:hover {
-    text-decoration: underline;
+.question-answer-name {
+    font-size: 20px;
+    line-height: 1.2;
+}
+
+.question-author {
+    display: flex;
+    align-items: center;
+    margin: 13px 0 5px 0;
+}
+
+.question-author .img-container {
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
 }
 
 .short-answer-container {
@@ -677,7 +690,7 @@ a.collapse-answer:hover {
 h3.question-answer-name > a,
 .answer-body h3 > a {
     color: #2b6dad;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
 }
 
 
@@ -687,9 +700,25 @@ h3.question-answer-name > a,
 
 /*#region Answer Detail */
 
+.user-intro {
+    color: #555;
+    font-size: 14px;
+}
+
 .answer-panel-header {
     padding: 16px 20px;
+    display: flex;
+    align-items: center;
 }
+
+    .answer-panel-header .img-container {
+        width: 38px;
+        height: 38px;
+        border-radius: 2px;
+        margin-right: 15px;
+        flex: 0 0 auto;
+    }
+
 
 .answer-content p, .answer-content li {
     padding-bottom: 1em;
@@ -868,12 +897,12 @@ h3.question-answer-name > a,
     font-size: 15px;
 }
 
-    .question-answer-topic a:hover {
-        text-decoration: underline;
-    }
-
 .home-question-answer-container .question-answer-pair-container {
     padding: 16px 20px;
+}
+
+.question-answer-inner a:hover {
+    text-decoration: underline;
 }
 /*#endregion Home */
 
@@ -1046,7 +1075,8 @@ h3.question-answer-name > a,
                 background-color: #009797;
             }
 
-.user-profile-container form {
+.user-profile-container form,
+.user-profile-container .user-profile-readonly {
     display: flex;
 }
 
@@ -1076,9 +1106,14 @@ h3.question-answer-name > a,
         text-decoration: underline;
     }
 
-    .user-profile-form-content .btn {
-        margin-left: auto;
-    }
+.user-profile-form-content .btn {
+    margin-left: auto;
+}
+
+
+.user-profile-container .user-profile-readonly span {
+    font-size: 14px;
+}
 
 .edit-profile-photo .mask {
     position: absolute;

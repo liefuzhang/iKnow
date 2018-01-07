@@ -1,0 +1,61 @@
+﻿@using Microsoft.AspNet.Identity
+@using iKnow.Models
+@using Constants = iKnow.Models.Constants
+@model iKnow.ViewModels.UserProfileViewModel
+@{
+    ViewBag.Title = Model.AppUser.FullName + "'s Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="user-profile-container">
+    <h3 class="content-header">@ViewBag.Title</h3>
+    <div class="user-profile-page-inner">
+        <div class="user-profile-readonly">
+            <div class="edit-profile-photo img-container">
+                <img src="@Model.AppUser.IconPath" />
+            </div>
+            <div class="user-profile-form-content">
+                <div class="form-group">
+                    <h2>@Model.AppUser.FullName</h2>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.AppUser.Intro)
+                    <span>
+                        @if (Model.AppUser.Intro != null) {
+                            @(Model.AppUser.Intro)
+                        } else {
+                            @Html.Raw("<i>Not set</i>")
+                        }
+                    </span>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.AppUser.Location)
+                    <span>
+                        @if (Model.AppUser.Location != null) {
+                            @(Model.AppUser.Location)
+                        }
+                        else {
+                            @Html.Raw("<i>Not set</i>")
+                        }
+                    </span>
+                </div>
+                <div class="form-group gender-setting">
+                    @Html.LabelFor(m => m.AppUser.Gender)
+                    @{
+                        switch (Model.AppUser.Gender) {
+                            case Constants.GenderMale:
+                                <span>Male</span>
+                                break;
+                            case Constants.GenderFemale:
+                                <span>Female</span>
+                                break;
+                            default:
+                                <span><i>Not Set</i></span>
+                                break;
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

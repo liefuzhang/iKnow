@@ -8,7 +8,10 @@ using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.IO;
+using System.Security.Policy;
 using System.Web.Hosting;
+using System.Data.Entity.Infrastructure;
+using System.Web.UI;
 
 namespace iKnow.Models {
     public class AppUser : IdentityUser {
@@ -30,6 +33,15 @@ namespace iKnow.Models {
                     file = Constants.UserDefaultIconPath;
                 }
                 return file;
+            }
+        }
+
+        public string ProfilePageUrl {
+            get {
+                var url =
+                    $"http{((HttpContext.Current.Request.IsSecureConnection) ? "s" : "")}://{HttpContext.Current.Request.Url.Host}{"/Account/UserProfile/" + UserName}";
+
+                return url;
             }
         }
 
