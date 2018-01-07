@@ -219,10 +219,6 @@
     <Compile Include="Migrations\201801070104163_ModifySomePropertiesInAppUser.Designer.cs">
       <DependentUpon>201801070104163_ModifySomePropertiesInAppUser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201801070117262_ModifySomePropertiesInAppUser1.cs" />
-    <Compile Include="Migrations\201801070117262_ModifySomePropertiesInAppUser1.Designer.cs">
-      <DependentUpon>201801070117262_ModifySomePropertiesInAppUser1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Answer.cs" />
     <Compile Include="ViewModels\Account\ChangePasswordViewModel.cs" />
@@ -374,9 +370,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801070104163_ModifySomePropertiesInAppUser.resx">
       <DependentUpon>201801070104163_ModifySomePropertiesInAppUser.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801070117262_ModifySomePropertiesInAppUser1.resx">
-      <DependentUpon>201801070117262_ModifySomePropertiesInAppUser1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

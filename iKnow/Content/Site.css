@@ -706,7 +706,7 @@ h3.question-answer-name > a,
 }
 
 .answer-panel-header {
-    padding: 16px 20px;
+    padding: 16px 0;
     display: flex;
     align-items: center;
 }
@@ -776,8 +776,16 @@ h3.question-answer-name > a,
         margin-bottom: 10px;
     }
 
+    .all-answer-panel {
+        padding: 0 20px;
+    }
+
+    .answer-panel-view-count {
+        height: 50px;
+        line-height: 50px;
+    }
+
 .answer-panel-content {
-    padding: 0 20px;
     font-size: 16px;
 }
 
@@ -808,10 +816,6 @@ h3.question-answer-name > a,
 
 .answer-panel .answer-panel-header {
     padding-bottom: 10px;
-}
-
-.answer-panel:after {
-    margin: 0 20px;
 }
 
 .write-answer, .view-answer {

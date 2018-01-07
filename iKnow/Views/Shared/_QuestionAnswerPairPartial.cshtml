@@ -22,7 +22,7 @@
                     <a href="@questionAnswer.Key.AppUser.ProfilePageUrl">
                         <b>@questionAnswer.Key.AppUser.FullName</b>
                     </a>
-                    <span class="user-intro">@(questionAnswer.Key.AppUser.Intro != null ? ", " + questionAnswer.Key.AppUser.Intro : "")</span>
+                    <span class="user-intro">@(!string.IsNullOrEmpty(questionAnswer.Key.AppUser.Intro) ? ", " + questionAnswer.Key.AppUser.Intro : "")</span>
                 </span>
             </div>
             <div class="short-answer-container">

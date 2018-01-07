@@ -18,16 +18,18 @@
                 @Html.Partial("_AddAnswerPanelPartial", Model)
             }
         </div>
-
-        <div class="all-answer-panel panel">
-            @foreach (var answer in Model.Question.Answers) {
-                <div class="answer-panel answer-content divided-section">
-                    @Html.Partial("_AnswerPanelPartial", answer)
-                </div>
-            }
-        </div>
-
+        
         @if (Model.Question.Answers.Any()) {
+            <div class="all-answer-panel panel">
+                <div class="answer-panel-view-count answer-panel divided-section">
+                    <b>@(Model.Question.Answers.Count() + " Answer(s)")</b>
+                </div>
+                @foreach (var answer in Model.Question.Answers) {
+                    <div class="answer-panel answer-content divided-section">
+                        @Html.Partial("_AnswerPanelPartial", answer)
+                    </div>
+                }
+            </div>
             <div class="question-content-footer panel">
                 <a class="write-answer">
                     <i class="fa fa-pencil" aria-hidden="true"></i>

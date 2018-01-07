@@ -21,7 +21,7 @@
                 <div class="form-group">
                     @Html.LabelFor(m => m.AppUser.Intro)
                     <span>
-                        @if (Model.AppUser.Intro != null) {
+                        @if (!string.IsNullOrEmpty(Model.AppUser.Intro)) {
                             @(Model.AppUser.Intro)
                         } else {
                             @Html.Raw("<i>Not set</i>")
@@ -31,7 +31,7 @@
                 <div class="form-group">
                     @Html.LabelFor(m => m.AppUser.Location)
                     <span>
-                        @if (Model.AppUser.Location != null) {
+                        @if (!string.IsNullOrEmpty(Model.AppUser.Location)) {
                             @(Model.AppUser.Location)
                         }
                         else {
