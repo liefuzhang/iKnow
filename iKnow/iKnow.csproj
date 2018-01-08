@@ -327,6 +327,7 @@
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\UserProfileReadOnly.cshtml" />
     <Content Include="Views\Shared\_SideBarRecommendedTopics.cshtml" />
+    <Content Include="Views\Shared\_SideBarSiteInfo.cshtml" />
     <None Include="Views\Shared\_SideBarRelatedQuestions.cshtml" />
   </ItemGroup>
   <ItemGroup>
