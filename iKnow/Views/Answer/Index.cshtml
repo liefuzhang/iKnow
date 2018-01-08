@@ -6,7 +6,7 @@
 
 <div class="answer-container main-content-container">
     <div class="content-header">
-        <h3>Hot Questions</h3>
+        <h3>Recommended Questions</h3>
     </div>
     <div class="answer-body load-more-list" data-current-page=@Model.Page>
         @Html.Partial("_AnswerQuestionListPartial", Model.QuestionsWithAnswerCount)
@@ -14,8 +14,13 @@
     @Html.Partial("_LoadMorePartial")
 </div>
 
-<div class="sidebar topic-sidebar">
-    <h3>Hot Topics</h3>
+<div class="sidebar ">
+    <div class="topic-sidebar sidebar-section divided-section">
+        @Html.Action("GetRecommentedTopics", "Topic")
+    </div>
+    <div class="sidebar-section divided-section">
+        @Html.Partial("_SideBarSiteInfo")
+    </div>
 </div>
 
 @section scripts {

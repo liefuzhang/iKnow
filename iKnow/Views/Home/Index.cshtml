@@ -10,15 +10,22 @@
 </style>
 
 <div class="question-container-inner">
-    <div class="main-content-container">
-        <div class="home-question-answer-container question-answer-container load-more-list" data-current-page=@Model.Page>
-            @Html.Partial("_QuestionAnswerPairPartial", Model.QuestionAnswers)
+    <div class="question-detail-container">
+        <div class="main-content-container">
+            <div class="home-question-answer-container question-answer-container load-more-list" data-current-page=@Model.Page>
+                @Html.Partial("_QuestionAnswerPairPartial", Model.QuestionAnswers)
+            </div>
+
+            @Html.Partial("_LoadMorePartial")
         </div>
-
-        @Html.Partial("_LoadMorePartial")
+        
+        <div class="sidebar question-sidebar">
+            <div class="panel">
+                @Html.Action("GetRecommentedTopics", "Topic")
+            </div>
+            @Html.Partial("_SideBarSiteInfo")
+        </div>
     </div>
-
-    <div class="sidebar question-sidebar"></div>
 </div>
 
 

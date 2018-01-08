@@ -13,20 +13,29 @@
     @if (User.Identity.IsAuthenticated) {
         @Html.Partial("_QuestionHeaderPartial", Model.QuestionDetailViewModel)
     }
-    <div class="main-content-container">
-        <div class="add-answer-panel answer-content panel hide">
-            @Html.Partial("_AddAnswerPanelPartial", Model.QuestionDetailViewModel)
-        </div>
-        <div class="answer-panel-container">
-            <div class="view-all-answers panel">@Html.ActionLink("View all " + Model.AnswerCount + " answer(s)", "Detail", "Question", new { id = Model.QuestionDetailViewModel.Question.Id }, new { @class = "text-link" })</div>
-            <div class="answer-panel answer-content panel">
-                @Html.Partial("_AnswerPanelPartial", Model.Answer)
+    <div class="answer-detail-container">
+        <div class="main-content-container">
+            <div class="add-answer-panel answer-content panel hide">
+                @Html.Partial("_AddAnswerPanelPartial", Model.QuestionDetailViewModel)
             </div>
-            <div class="view-all-answers panel">@Html.ActionLink("View all " + Model.AnswerCount + " answer(s)", "Detail", "Question", new { id = Model.QuestionDetailViewModel.Question.Id }, new { @class = "text-link" })</div>
+            <div class="answer-panel-container">
+                <div class="view-all-answers panel">@Html.ActionLink("View all " + Model.AnswerCount + " answer(s)", "Detail", "Question", new { id = Model.QuestionDetailViewModel.Question.Id }, new { @class = "text-link" })</div>
+                <div class="answer-panel answer-content panel">
+                    @Html.Partial("_AnswerPanelPartial", Model.Answer)
+                </div>
+                <div class="view-all-answers panel">@Html.ActionLink("View all " + Model.AnswerCount + " answer(s)", "Detail", "Question", new { id = Model.QuestionDetailViewModel.Question.Id }, new { @class = "text-link" })</div>
+            </div>
+        </div>
+
+        <div class="sidebar answer-sidebar">
+            <div class="sidebar question-sidebar">
+                <div class="panel">
+                    @Html.Action("GetRelatedQuestions", "Question", new { id = Model.QuestionDetailViewModel.Question.Id })
+                </div>
+                @Html.Partial("_SideBarSiteInfo")
+            </div>
         </div>
     </div>
-
-    <div class="sidebar answer-sidebar"></div>
 </div>
 
 

@@ -297,6 +297,7 @@ namespace iKnow.Controllers {
 
         //
         // GET: /Manage/ChangePassword
+        [Authorize]
         public ActionResult ChangePassword() {
             return View();
         }
@@ -305,6 +306,7 @@ namespace iKnow.Controllers {
         // POST: /Manage/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model) {
             if (!ModelState.IsValid) {
                 return View(model);

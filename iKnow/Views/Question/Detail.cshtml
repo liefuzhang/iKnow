@@ -52,8 +52,9 @@
 
         <div class="sidebar question-sidebar">
             <div class="panel">
-                @Html.Action("GetRelatedQuestions", "Question", new { id = Model.Question.Id })
+                @Html.Action("GetRelatedQuestions", "Question", new {id = Model.Question.Id})
             </div>
+            @Html.Partial("_SideBarSiteInfo")
         </div>
     </div>
 </div>

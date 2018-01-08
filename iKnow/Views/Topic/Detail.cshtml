@@ -20,17 +20,16 @@
 </div>
 
 <div class="sidebar">
-    <div class="sidebar-section divided-section">
-        <h3 class="sidebar-title">About</h3>
-        <p>@Model.Topic.Description</p>
-    </div>
+    @if (!string.IsNullOrEmpty(Model.Topic.Description)) {
+        <div class="sidebar-section divided-section">
+            <h3 class="sidebar-title">About</h3>
+            <p>@Model.Topic.Description</p>
+        </div>
+    }
     <div class="topic-sidebar sidebar-section divided-section">
         @Html.Action("GetRecommentedTopics", "Topic", new {id = Model.Topic.Id})
     </div>
-</div>
-
-@section footer {
-    <div class="footer content-container">
-        &copy;@(DateTime.Now.Year + " iKnow")
+    <div class="sidebar-section divided-section">
+        @Html.Partial("_SideBarSiteInfo")
     </div>
-}
+</div>

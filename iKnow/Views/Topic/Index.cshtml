@@ -21,8 +21,11 @@
 </div>
 
 <div class="sidebar">
-    <div class="topic-sidebar  sidebar-section">
+    <div class="topic-sidebar  sidebar-section divided-section">
         @Html.Action("GetRecommentedTopics", "Topic")
+    </div>
+    <div class="sidebar-section divided-section">
+        @Html.Partial("_SideBarSiteInfo")
     </div>
 </div>
 

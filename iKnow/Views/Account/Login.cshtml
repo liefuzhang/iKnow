@@ -7,16 +7,16 @@
 <div class="login-form-container">
     <h3 class="content-header">@ViewBag.Title</h3>
     <div class="login-inner">
-        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, null)) {
+        @using (Html.BeginForm("Login", "Account", new {ReturnUrl = ViewBag.ReturnUrl}, FormMethod.Post, null)) {
             @Html.AntiForgeryToken()
-            @Html.ValidationSummary(false, "", new { @class = "error" })
+            @Html.ValidationSummary(false, "", new {@class = "error"})
             <div class="form-group">
                 @Html.LabelFor(m => m.Email)
-                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email" })
+                @Html.TextBoxFor(m => m.Email, new {@class = "form-control", placeholder = "Email"})
             </div>
             <div class="form-group">
                 @Html.LabelFor(m => m.Password)
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+                @Html.PasswordFor(m => m.Password, new {@class = "form-control", placeholder = "Password"})
             </div>
             <div class="form-group login-buttons">
                 @Html.ActionLink("Forgot your password?", "ForgotPassword")
@@ -30,6 +30,15 @@
     </div>
 </div>
 
+@section footer {
+    <div class="footer content-container">
+        &copy;@(DateTime.Now.Year + " iKnow")
+        &middot;
+        <span>@Html.ActionLink("Contact us", "Contact", "Home", null, new { @class = "text-link" })</span>
+    </div>
+}
+
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
