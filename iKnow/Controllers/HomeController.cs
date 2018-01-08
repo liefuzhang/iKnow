@@ -72,5 +72,9 @@ namespace iKnow.Controllers {
             }
             return PartialView("_UserProfilePartial");
         }
+
+        public ActionResult ContactUs() {
+            throw new NotImplementedException();
+        }
     }
 }
