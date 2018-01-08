@@ -28,7 +28,7 @@ namespace iKnow.Controllers {
             return View(viewModel);
         }
 
-        private AnswerIndexViewModel constructAnswerIndexViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
+        private QuestionAnswerCountViewModel constructAnswerIndexViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
             var questionsWithAnswerCount = _context.Questions.OrderByDescending(q => q.Id).Skip(currentPage * pageSize).Take(pageSize).GroupJoin(_context.Answers,
                q => q.Id,
                a => a.QuestionId,
@@ -38,7 +38,7 @@ namespace iKnow.Controllers {
                    AnswerCount = answers.Count()
                }).ToDictionary(a => a.Question, a => a.AnswerCount);
 
-            return new AnswerIndexViewModel {
+            return new QuestionAnswerCountViewModel {
                 QuestionsWithAnswerCount = questionsWithAnswerCount,
                 Page = currentPage,
                 PageSize = pageSize

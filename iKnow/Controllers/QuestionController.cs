@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using iKnow.Models;
 using iKnow.ViewModels;
@@ -73,7 +74,7 @@ namespace iKnow.Controllers {
 
             var existingAnswer = _context.Answers.SingleOrDefault(
                      a => a.QuestionId == question.Id && a.AppUserId == currentUserId);
-            
+
             var viewModel = new QuestionDetailViewModel {
                 Question = question,
                 CanUserEdit = canUserEdit,
@@ -135,6 +136,31 @@ namespace iKnow.Controllers {
 
             _context.SaveChanges();
             return RedirectToAction("Detail", new { id = questionInDb.Id });
+        }
+
+        public PartialViewResult GetRelatedQuestions(int id) {
+            var currentQuestion = _context.Questions.Include("Topics").Single(q => q.Id == id);
+            var topicIds = currentQuestion.Topics.Select(t => t.Id);
+            var relatedQuestions = _context.Questions.Where(q => q.Id != id && q.Topics.Any(t => topicIds.Contains(t.Id)));
+
+            if (!relatedQuestions.Any()) {
+                return null;
+            }
+
+            var questionsWithAnswerCount = relatedQuestions.GroupJoin(_context.Answers,
+                q => q.Id,
+                a => a.QuestionId,
+                (question, answers) =>
+                    new {
+                        Question = question,
+                        AnswerCount = answers.Count()
+                    }).Take(5).ToDictionary(a => a.Question, a => a.AnswerCount);
+
+            var viewModel = new QuestionAnswerCountViewModel {
+                QuestionsWithAnswerCount = questionsWithAnswerCount
+            };
+
+            return PartialView("_SideBarRelatedQuestions", viewModel);
         }
     }
 }

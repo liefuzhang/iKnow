@@ -257,8 +257,13 @@ blockquote {
     width: 270px;
     margin-left: auto;
     color: #666;
-    font-size: 13px;
+    font-size: 14px;
 }
+
+    .sidebar .panel {
+        margin-left: -30px;
+        padding: 0 20px;
+    }
 
 .sidebar-section {
     margin-top: 15px;
@@ -459,11 +464,11 @@ blockquote {
     margin: 13px 0 5px 0;
 }
 
-.question-author .img-container {
-    width: 25px;
-    height: 25px;
-    margin-right: 10px;
-}
+    .question-author .img-container {
+        width: 25px;
+        height: 25px;
+        margin-right: 10px;
+    }
 
 .short-answer-container {
     cursor: pointer;
@@ -641,6 +646,10 @@ a.collapse-answer:hover {
         margin-left: 10px;
     }
 
+.question-detail-container {
+    display: flex;
+}
+
 .add-answer-panel {
     overflow: visible;
 }
@@ -776,14 +785,17 @@ h3.question-answer-name > a,
         margin-bottom: 10px;
     }
 
-    .all-answer-panel {
-        padding: 0 20px;
-    }
+.all-answer-panel {
+    padding: 0 20px;
+}
 
-    .answer-panel-view-count {
-        height: 50px;
-        line-height: 50px;
-    }
+.panel-title {
+    height: 50px;
+    line-height: 50px;
+    font-weight: bold;
+    border-bottom: 1px solid #eee;
+    color: #333;
+}
 
 .answer-panel-content {
     font-size: 16px;
@@ -1156,3 +1168,27 @@ h3.question-answer-name > a,
     }
 
 /*#endregion User Profile*/
+
+/*#region sidebar */
+
+.related-question-list {
+    padding: 16px 0;
+}
+
+    .related-question-list .related-question-item {
+        margin-bottom: 12px;
+    }
+
+.related-question-item a {
+    color: #2b6dad;
+}
+
+    .related-question-item a:hover {
+        text-decoration: underline;
+    }
+
+.related-question-item .related-question-item-count {
+    color: #8590a6;
+}
+
+/*#endregion sidebar*/

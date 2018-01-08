@@ -12,44 +12,50 @@
 
 <div class="question-container-inner">
     @Html.Partial("_QuestionHeaderPartial", Model)
-    <div class="main-content-container">
-        <div class="add-answer-panel answer-content panel hide">
-            @if (User.Identity.IsAuthenticated) {
-                @Html.Partial("_AddAnswerPanelPartial", Model)
-            }
-        </div>
-        
-        @if (Model.Question.Answers.Any()) {
-            <div class="all-answer-panel panel">
-                <div class="answer-panel-view-count answer-panel divided-section">
-                    <b>@(Model.Question.Answers.Count() + " Answer(s)")</b>
-                </div>
-                @foreach (var answer in Model.Question.Answers) {
-                    <div class="answer-panel answer-content divided-section">
-                        @Html.Partial("_AnswerPanelPartial", answer)
-                    </div>
+    <div class="question-detail-container">
+        <div class="main-content-container">
+            <div class="add-answer-panel answer-content panel hide">
+                @if (User.Identity.IsAuthenticated) {
+                    @Html.Partial("_AddAnswerPanelPartial", Model)
                 }
             </div>
-            <div class="question-content-footer panel">
-                <a class="write-answer">
-                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                    Write Answer
-                </a>
-            </div>
-        } else {
-            <div class="empty-question-footer panel">
-                <i class="fa fa-edit fa-4x" aria-hidden="true"></i>
-                <div>
-                    No answers yet. Start to
+
+            @if (Model.Question.Answers.Any()) {
+                <div class="all-answer-panel panel">
+                    <div class="panel-title answer-panel">
+                        @(Model.Question.Answers.Count() + " Answer(s)")
+                    </div>
+                    @foreach (var answer in Model.Question.Answers) {
+                        <div class="answer-panel answer-content divided-section">
+                            @Html.Partial("_AnswerPanelPartial", answer)
+                        </div>
+                    }
+                </div>
+                <div class="question-content-footer panel">
                     <a class="write-answer">
-                        write answer here
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                        Write Answer
                     </a>
                 </div>
-            </div>
-        }
-    </div>
+            } else {
+                <div class="empty-question-footer panel">
+                    <i class="fa fa-edit fa-4x" aria-hidden="true"></i>
+                    <div>
+                        No answers yet. Start to
+                        <a class="write-answer">
+                            write answer here
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
 
-    <div class="sidebar question-sidebar"></div>
+        <div class="sidebar question-sidebar">
+            <div class="panel">
+                @Html.Action("GetRelatedQuestions", "Question", new { id = Model.Question.Id })
+            </div>
+        </div>
+    </div>
 </div>
 
 @section styles {

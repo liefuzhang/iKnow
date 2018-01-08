@@ -1,0 +1,17 @@
+﻿@using iKnow.ViewModels
+@model QuestionAnswerCountViewModel
+
+<div class="related-questions ">
+    <div class="panel-title">
+        Related Questions
+    </div>
+
+    <div class="related-question-list">
+        @foreach (var question in Model.QuestionsWithAnswerCount) {
+            <div class="related-question-item">
+                @Html.ActionLink(@question.Key.Title, "Detail", "Question", new { id = question.Key.Id }, null)
+                <span class="related-question-item-count">@(question.Value + " answer(s)")</span>
+            </div>
+        }
+    </div>
+</div>

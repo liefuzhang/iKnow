@@ -237,7 +237,7 @@
     <Compile Include="ViewModels\Account\LoginViewModel.cs" />
     <Compile Include="ViewModels\Account\RegisterViewModel.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordViewModel.cs" />
-    <Compile Include="ViewModels\AnswerIndexViewModel.cs" />
+    <Compile Include="ViewModels\QuestionAnswerCountViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\TopicDetailViewModel.cs" />
     <Compile Include="ViewModels\AnswerDetailViewModel.cs" />
@@ -326,6 +326,7 @@
     <Content Include="Views\Account\UserProfile.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\UserProfileReadOnly.cshtml" />
+    <None Include="Views\Shared\_SideBarRelatedQuestions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
