@@ -20,8 +20,10 @@
     }
 </div>
 
-<div class="sidebar topic-sidebar">
-    <h3>Hot Topics</h3>
+<div class="sidebar">
+    <div class="topic-sidebar  sidebar-section">
+        @Html.Action("GetRecommentedTopics", "Topic")
+    </div>
 </div>
 
 

@@ -1,0 +1,17 @@
+﻿@model IEnumerable<iKnow.Models.Topic>
+
+<h3 class="sidebar-title">Recommended Topics</h3>
+<div class="recommended-topic-list">
+    @foreach (var topic in Model) {
+        <div class="recommended-topic-item">
+            <a href="@Url.Action("Detail", "Topic", new {id = topic.Id})">
+                <span class="img-container">
+                    <img src=@topic.IconPath />
+                </span>
+            </a>
+            <a href="@Url.Action("Detail", "Topic", new {id = topic.Id})">
+                <span>@topic.Name</span>
+            </a>
+        </div>
+    }
+</div>

@@ -24,6 +24,9 @@
         <h3 class="sidebar-title">About</h3>
         <p>@Model.Topic.Description</p>
     </div>
+    <div class="topic-sidebar sidebar-section divided-section">
+        @Html.Action("GetRecommentedTopics", "Topic", new {id = Model.Topic.Id})
+    </div>
 </div>
 
 @section footer {

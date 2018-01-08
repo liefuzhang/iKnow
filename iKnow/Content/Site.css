@@ -266,7 +266,8 @@ blockquote {
     }
 
 .sidebar-section {
-    margin-top: 15px;
+    margin-bottom: 15px;
+    padding-top: 15px;
 }
 
 .sidebar-title {
@@ -390,7 +391,7 @@ blockquote {
         right: 120px;
         top: 0;
         font-size: 14px;
-        color: #2b6dad;
+        color: #259;
     }
 
     .topic-container .topic-body .topic-about {
@@ -475,7 +476,7 @@ blockquote {
 }
 
 .showFullAnswer {
-    color: #2b6dad;
+    color: #259;
 }
 
 .question-answer-content .answer-footer {
@@ -489,7 +490,7 @@ blockquote {
 }
 
 a.collapse-answer:hover {
-    color: #2b6dad;
+    color: #259;
     text-decoration: none !important;
 }
 
@@ -698,7 +699,7 @@ a.collapse-answer:hover {
 
 h3.question-answer-name > a,
 .answer-body h3 > a {
-    color: #2b6dad;
+    color: #259;
     font-size: 1.2rem;
 }
 
@@ -743,7 +744,7 @@ h3.question-answer-name > a,
 }
 
 .answer-content a {
-    color: #2b6dad;
+    color: #259;
 }
 
     .answer-content a:hover {
@@ -811,7 +812,7 @@ h3.question-answer-name > a,
 
 .answer-edit-icon {
     margin-bottom: 6px;
-    color: #2b6dad;
+    color: #259;
     cursor: pointer;
     display: inline-block;
     position: relative;
@@ -870,7 +871,7 @@ h3.question-answer-name > a,
 
     .answer-body .answer-item-footer a:hover {
         text-decoration: underline;
-        color: #2b6dad;
+        color: #259;
     }
 
 .load-more {
@@ -991,7 +992,7 @@ h3.question-answer-name > a,
 }
 
     .register-container a {
-        color: #2b6dad;
+        color: #259;
         margin-top: 15px;
         margin-left: 5px;
         display: inline-block;
@@ -1115,7 +1116,7 @@ h3.question-answer-name > a,
 
 .user-profile-container a {
     font-size: 14px;
-    color: #2b6dad;
+    color: #259;
 }
 
     .user-profile-container a:hover {
@@ -1180,7 +1181,7 @@ h3.question-answer-name > a,
     }
 
 .related-question-item a {
-    color: #2b6dad;
+    color: #259;
 }
 
     .related-question-item a:hover {
@@ -1191,4 +1192,26 @@ h3.question-answer-name > a,
     color: #8590a6;
 }
 
+.recommended-topic-item {
+    display: block;
+    padding-top: 6px;
+    margin-bottom: 10px;
+    line-height: 40px;
+}
+
+.recommended-topic-item  a {
+    display: inline-block;
+}
+    .recommended-topic-item .img-container {
+        width: 40px;
+        height: 40px;
+        margin-right: 16px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .recommended-topic-item span {
+        font-weight: bold;
+        color: #259;
+    }
 /*#endregion sidebar*/

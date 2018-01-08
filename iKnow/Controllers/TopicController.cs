@@ -164,5 +164,12 @@ namespace iKnow.Controllers {
 
             return RedirectToAction("Index");
         }
+
+        public PartialViewResult GetRecommentedTopics(int? id) {
+            IEnumerable<Topic> topics = id == null
+                ? _context.Topics.OrderBy(t => Guid.NewGuid()).Take(5).ToList()
+                : _context.Topics.Where(t => t.Id != id.Value).OrderBy(t => Guid.NewGuid()).Take(5).ToList();
+            return PartialView("_SideBarRecommendedTopics", topics);
+        }
     }
 }
