@@ -168,6 +168,7 @@
     <Compile Include="Controllers\AnswerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\TopicController.cs" />
     <Compile Include="EntityTypeConfigurations\AnswerConfiguration.cs" />
     <Compile Include="EntityTypeConfigurations\TopicConfiguration.cs" />
@@ -237,6 +238,7 @@
     <Compile Include="ViewModels\Account\LoginViewModel.cs" />
     <Compile Include="ViewModels\Account\RegisterViewModel.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordViewModel.cs" />
+    <Compile Include="ViewModels\SearchResultViewModel.cs" />
     <Compile Include="ViewModels\QuestionAnswerCountViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\TopicDetailViewModel.cs" />
@@ -326,6 +328,7 @@
     <Content Include="Views\Account\UserProfileReadOnly.cshtml" />
     <Content Include="Views\Shared\_SideBarRecommendedTopics.cshtml" />
     <Content Include="Views\Shared\_SideBarSiteInfo.cshtml" />
+    <None Include="Views\Search\_SearchResultPartialView.cshtml" />
     <None Include="Views\Shared\_SideBarRelatedQuestions.cshtml" />
   </ItemGroup>
   <ItemGroup>

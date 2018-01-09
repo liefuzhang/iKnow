@@ -6,14 +6,13 @@ using System.Data.Entity.Validation;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using iKnow.Models;
 
 namespace iKnow.Controllers {
     public class TopicController : Controller {
-        private iKnowContext _context;
+        private readonly iKnowContext _context;
         public TopicController() {
             _context = new iKnowContext();
         }
@@ -116,7 +115,7 @@ namespace iKnow.Controllers {
 
                 // save icon if it exists
                 if (postedFile != null && postedFile.ContentLength > 0) {
-                    var bitmap = Bitmap.FromStream(postedFile.InputStream);
+                    var bitmap = Image.FromStream(postedFile.InputStream);
                     var scale = Math.Max(bitmap.Width / Constants.TopicIconDefaultSize,
                         bitmap.Height / Constants.TopicIconDefaultSize);
                     var resized = new Bitmap(bitmap, new Size(Convert.ToInt32(bitmap.Width / scale), Convert.ToInt32(bitmap.Height / scale)));

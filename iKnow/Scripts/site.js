@@ -17,6 +17,8 @@
     $(".js-profile-photo-upload").on("change", (e) => readURL(e, ".edit-profile-photo img"));
     $(".js-topic-photo-upload").on("change", (e) => readURL(e, ".topic-form-container .img-container img"));
     $(".mask-content").on("click", () => { $(".js-profile-photo-upload").click(); });
+    $(".search").on("keyup", search);
+    $(".search-container .btn").on("click", search);
     $(document).on("click", pageClickHandler);
 });
 
@@ -216,5 +218,25 @@ function readURL(event, target) {
         }
 
         reader.readAsDataURL(event.target.files[0]);
+    }
+}
+
+function search(e) {
+    var input = $("search").val();
+    if (input == "") {
+        return;
+    }
+
+    if ($(e.currentTarget).hasClass("search") && e.keyCode == 13 || 
+        $(e.currentTarget).hasClass("btn")) {
+        $.ajax({
+            url: "/search/getresult?input=" + input,
+            dataType: "html",
+            success: function (html) {
+                if (html) {
+                    $(".search-result-container").html(html);
+                }
+            }
+        });
     }
 }

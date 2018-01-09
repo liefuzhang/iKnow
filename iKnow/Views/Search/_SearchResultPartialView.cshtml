@@ -1,0 +1,23 @@
+﻿@model iKnow.ViewModels.SearchResultViewModel
+
+<div class="search-result">
+    <div class="search-result-section">
+        <div class="search-result-title">Topic</div>
+        <ul>
+            @foreach (var topic in Model.Topics) {
+                <li>@Html.ActionLink(topic.Name, "Detail", "Topic")</li>
+            }
+        </ul>
+    </div><div class="search-result-section">
+        <div class="search-result-title">Questions</div>
+        <div>
+            @foreach (var question in Model.QuestionsWithAnswerCount) {
+                <a href="@Url.Action("Detail", "Question", new {id = question.Key.Id})">
+                    <span>@question.Key.Title</span>
+                    <span>@(question.Value + " answer(s)")</span>
+                </a>
+            }
+        </div>
+    </div>
+
+</div>
