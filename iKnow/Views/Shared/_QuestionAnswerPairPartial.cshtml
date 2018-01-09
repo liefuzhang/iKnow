@@ -14,12 +14,12 @@
             <h3 class="question-answer-name">@Html.ActionLink(questionAnswer.Key.Title, "Detail", "Question", new { id = questionAnswer.Key.Id }, new { target = "_blank" }) </h3>
             <div class="question-author">
                 <span class="img-container">
-                    <a href="@questionAnswer.Key.AppUser.ProfilePageUrl">
+                    <a href="@questionAnswer.Key.AppUser.ProfilePageUrl" target="_blank">
                         <img src="@questionAnswer.Key.AppUser.IconPath" />
                     </a>
                 </span>
                 <span class="user-info">
-                    <a href="@questionAnswer.Key.AppUser.ProfilePageUrl">
+                    <a href="@questionAnswer.Key.AppUser.ProfilePageUrl" target="_blank">
                         <b>@questionAnswer.Key.AppUser.FullName</b>
                     </a>
                     <span class="user-intro">@(!string.IsNullOrEmpty(questionAnswer.Key.AppUser.Intro) ? ", " + questionAnswer.Key.AppUser.Intro : "")</span>

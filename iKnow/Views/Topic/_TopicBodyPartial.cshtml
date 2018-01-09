@@ -1,12 +1,16 @@
 ﻿@using iKnow.Models
 @model Topic
 
-<h4>About</h4>
+<a href=@Url.Action("Detail", "Topic", new { id = Model.Id }) target="_blank">
+    <h4>@Model.Name</h4>
+</a>
 @Html.ActionLink("Enter Topic", "Detail", "Topic", new { id = Model.Id }, new { @class = "enter-topic btn", target = "_blank" })
 
 <div class="topic-about">
     <div class="img-container">
-        <img src="@Model.IconPath"/>
+        <a href=@Url.Action("Detail", "Topic", new {id = Model.Id}) target="_blank">
+            <img src="@Model.IconPath" />
+        </a>
     </div>
     <p>
         @Model.Description

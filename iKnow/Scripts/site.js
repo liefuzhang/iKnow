@@ -64,7 +64,7 @@ function toggleModal(e, action) {
         case "addQuestion":
             if (iknow.isUserAuthorized !== true) {
                 // TODO use better nofication
-                alert("please log in before you add question");
+                alert("Please log in before you add question");
                 return;
             }
             if ($modalContainer.hasClass("new-form-loaded")) {
@@ -130,7 +130,7 @@ function toggleModal(e, action) {
 function showAddAnswerPanel(edit) {
     if (iknow.isUserAuthorized !== true) {
         // TODO use better nofication
-        alert("please log in before you write question");
+        alert("Please log in before you write question");
         return;
     }
     $(".add-answer-panel.hide").slideDown(100);
