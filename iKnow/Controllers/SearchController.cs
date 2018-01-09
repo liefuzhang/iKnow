@@ -19,10 +19,10 @@ namespace iKnow.Controllers {
         public PartialViewResult GetResult(string input) {
             var keywords = input.Trim().Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
             var topics = _context.Topics
-                .Where(topic => keywords.All(keyword => topic.Name.StartsWith(keyword) || topic.Name.Contains(" " + keyword))).Take(3);
+                .Where(topic => keywords.All(keyword => topic.Name.ToLower().StartsWith(keyword.ToLower()) || topic.Name.ToLower().Contains(" " + keyword.ToLower()))).Take(3);
 
             var questions = _context.Questions
-                .Where(question => keywords.All(keyword => question.Title.StartsWith(keyword) || question.Title.Contains(" " + keyword))).Take(6);
+                .Where(question => keywords.All(keyword => question.Title.ToLower().StartsWith(keyword.ToLower()) || question.Title.ToLower().Contains(" " + keyword.ToLower()))).Take(6);
 
             var questionsWithAnswerCount = questions.GroupJoin(_context.Answers,
                q => q.Id,
