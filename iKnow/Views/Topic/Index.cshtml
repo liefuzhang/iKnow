@@ -2,6 +2,7 @@
 @model TopicIndexViewModel
 @{
     ViewBag.Title = "Index";
+    ViewBag.CurrentPage = "Topic";
 }
 
 <div class="topic-container main-content-container">
@@ -25,7 +26,7 @@
         @Html.Action("GetRecommentedTopics", "Topic")
     </div>
     <div class="sidebar-section divided-section">
-        @Html.Partial("_SideBarSiteInfo")
+        @Html.Partial("_SideBarSiteInfoPartial")
     </div>
 </div>
 

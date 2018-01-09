@@ -290,19 +290,23 @@ blockquote {
     top: 0;
     height: 45px;
     width: 100%;
-    background-color: teal;
+    background: teal;
+    background: -webkit-linear-gradient(top,#009688,#00796B);
+    background: linear-gradient(to bottom,#009688,#00796B);
     color: white;
     z-index: 100;
 }
 
-.navbar a {
-    color: #eee;
-}
-
-    .navbar a:hover {
-        text-decoration: none;
-        color: white;
+    .navbar .navbar-nav a,
+    .logo a {
+        color: #eee;
     }
+
+        .navbar .navbar-nav a:hover,
+        .logo a:hover {
+            text-decoration: none;
+            color: white;
+        }
 
     .navbar .content-container {
         height: inherit;
@@ -324,23 +328,33 @@ blockquote {
         flex: 0 0 auto;
     }
 
-    .navbar ul {
-        flex: 0 0 auto;
-    }
+.navbar-nav {
+    flex: 0 0 auto;
+    height: 45px;
+    line-height: 45px;
+}
 
-        .navbar ul li {
-            display: inline;
-            padding: 0 10px;
-        }
+ul.navbar-nav li {
+    padding: 0 10px;
+    height: 100%;
+    display: inline-block;
+}
 
-    .navbar .navbar-user {
-        display: inline-block;
-        height: 100%;
-        flex: 0 0 auto;
-        margin-left: auto;
-        margin-right: 10px;
-        position: relative;
-    }
+.navbar-nav li.active {
+    background: #00796B;
+    background: -webkit-linear-gradient(top,#00796B,#00695C);
+    background: linear-gradient(to bottom,#00796B,#00695C);
+}
+
+
+.navbar .navbar-user {
+    display: inline-block;
+    height: 100%;
+    flex: 0 0 auto;
+    margin-left: auto;
+    margin-right: 10px;
+    position: relative;
+}
 
 .main {
     margin-top: 70px;
@@ -1247,9 +1261,9 @@ h3.question-answer-name > a,
     background-color: #e1eaf2;
 }
 
-.search:focus {
-    background-color: white;
-}
+    .search:focus {
+        background-color: white;
+    }
 
 .search-container .btn {
     height: 32px;
@@ -1288,14 +1302,14 @@ h3.question-answer-name > a,
     padding: 8px;
 }
 
-.search-result ul li {
-    height: auto;
-    line-height: inherit;
-}
+    .search-result ul li {
+        height: auto;
+        line-height: inherit;
+    }
 
-.search-result ul a:hover {
-    text-decoration: underline;
-}
+    .search-result ul a:hover {
+        text-decoration: underline;
+    }
 
 .search-result-title {
     padding: 2px 8px;
@@ -1310,9 +1324,10 @@ h3.question-answer-name > a,
     height: 100%;
 }
 
-.search-result-question a:hover {
-    background-color: #eef4fa;
-}
+    .search-result-question a:hover {
+        text-decoration: none;
+        background-color: #eef4fa;
+    }
 
 .search-answer-count {
     color: #8590a6;

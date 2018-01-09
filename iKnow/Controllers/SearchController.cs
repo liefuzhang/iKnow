@@ -38,7 +38,7 @@ namespace iKnow.Controllers {
                 QuestionsWithAnswerCount = questionsWithAnswerCount
             };
 
-            return PartialView("_SearchResultPartialView", viewModel);
+            return PartialView("_SearchResultPartial", viewModel);
         }
     }
 }

@@ -326,10 +326,11 @@
     <Content Include="Views\Account\UserProfile.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\UserProfileReadOnly.cshtml" />
-    <Content Include="Views\Shared\_SideBarRecommendedTopics.cshtml" />
-    <Content Include="Views\Shared\_SideBarSiteInfo.cshtml" />
-    <None Include="Views\Search\_SearchResultPartialView.cshtml" />
-    <None Include="Views\Shared\_SideBarRelatedQuestions.cshtml" />
+    <Content Include="Views\Shared\_SideBarRecommendedTopicsPartial.cshtml" />
+    <Content Include="Views\Shared\_SideBarSiteInfoPartial.cshtml" />
+    <None Include="Views\Search\_SearchResultPartial.cshtml" />
+    <Content Include="Views\Shared\_NavbarPartial.cshtml" />
+    <None Include="Views\Shared\_SideBarRelatedQuestionsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -2,6 +2,7 @@
 @model QuestionAnswerCountViewModel
 @{
     ViewBag.Title = "Index";
+    ViewBag.CurrentPage = "Answer";
 }
 
 <div class="answer-container main-content-container">
@@ -19,7 +20,7 @@
         @Html.Action("GetRecommentedTopics", "Topic")
     </div>
     <div class="sidebar-section divided-section">
-        @Html.Partial("_SideBarSiteInfo")
+        @Html.Partial("_SideBarSiteInfoPartial")
     </div>
 </div>
 

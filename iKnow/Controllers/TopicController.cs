@@ -168,7 +168,7 @@ namespace iKnow.Controllers {
             IEnumerable<Topic> topics = id == null
                 ? _context.Topics.OrderBy(t => Guid.NewGuid()).Take(5).ToList()
                 : _context.Topics.Where(t => t.Id != id.Value).OrderBy(t => Guid.NewGuid()).Take(5).ToList();
-            return PartialView("_SideBarRecommendedTopics", topics);
+            return PartialView("_SideBarRecommendedTopicsPartial", topics);
         }
     }
 }

@@ -16,21 +16,7 @@
 <body>
     <div class="navbar box-shadow">
         <div class="content-container">
-            <span class="logo">@Html.ActionLink("iKnow", "Index", "Home")</span>
-            <div class="search-container">
-                <input class="search" type="text" placeholder="Search iKnow"/>
-                <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
-                <div class="search-result-container"></div>
-            </div>
-            <ul class="navbar-nav">
-                <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                <li>@Html.ActionLink("Topics", "Index", "Topic")</li>
-                <li>@Html.ActionLink("Answer", "Index", "Answer")</li>
-                <li><button class="js-button-add-question btn">Add Question</button></li>
-            </ul>
-            <div class="navbar-user">
-                @Html.Action("GetUserProfile", "Home")
-            </div>
+            @Html.Partial("_NavbarPartial")
         </div>
     </div>
     <div class="main">

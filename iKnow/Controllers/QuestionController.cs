@@ -163,7 +163,7 @@ namespace iKnow.Controllers {
                 QuestionsWithAnswerCount = questionsWithAnswerCount
             };
 
-            return PartialView("_SideBarRelatedQuestions", viewModel);
+            return PartialView("_SideBarRelatedQuestionsPartial", viewModel);
         }
     }
 }
