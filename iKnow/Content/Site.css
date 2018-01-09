@@ -334,7 +334,7 @@ blockquote {
         flex: 0 0 auto;
         margin-left: auto;
         margin-right: 10px;
-        max-width: 150px;
+        position: relative;
     }
 
 .main {
@@ -644,6 +644,7 @@ a.collapse-answer:hover {
     }
 
     .question-header-panel li,
+    .search-result ul li,
     .modal-container .chosen-container-multi .chosen-choices li.search-choice {
         display: inline-block;
         height: 30px;
@@ -1025,12 +1026,16 @@ h3.question-answer-name > a,
     align-items: center;
     cursor: pointer;
     justify-content: flex-end;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
     height: 100%;
     margin: 0 5px;
 }
+
+    .user-profile-inner span {
+        max-width: 155px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
 
     .user-profile-inner .img-container {
         width: 25px;
@@ -1040,7 +1045,7 @@ h3.question-answer-name > a,
 
 .user-profile-dropdown {
     position: absolute;
-    right: 0;
+    left: 0;
     top: 45px;
 }
 
@@ -1226,11 +1231,18 @@ h3.question-answer-name > a,
 
 .search-container {
     position: relative;
+    font-size: 15px;
 }
 
 .search {
     border: 1px solid #00796B;
+    width: 220px;
     height: 18px;
+    background-color: #e1eaf2;
+}
+
+.search:focus {
+    background-color: white;
 }
 
 .search-container .btn {
@@ -1263,6 +1275,45 @@ h3.question-answer-name > a,
     border-radius: 5px;
     box-shadow: 0 1px 4px rgba(0,0,0,.5);
     color: #222;
+    overflow: hidden;
 }
 
+.search-result ul {
+    padding: 8px;
+}
+
+.search-result ul li {
+    height: auto;
+    line-height: inherit;
+}
+
+.search-result ul a:hover {
+    text-decoration: underline;
+}
+
+.search-result-title {
+    padding: 2px 8px;
+    background: #f6f6f6;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.search-result-question a {
+    padding: 8px;
+    display: block;
+    height: 100%;
+}
+
+.search-result-question a:hover {
+    background-color: #eef4fa;
+}
+
+.search-answer-count {
+    color: #8590a6;
+}
+
+.search-no-result {
+    color: #666;
+    padding: 8px;
+}
 /*#endregion search*/

@@ -50,7 +50,7 @@ function deleteTopic(e) {
 function toggleModal(e, action) {
     var $modalContainer = $(".modal-container");
     var $body = $(document.body);
-    var $target = $(e.target);
+    var $target = $(e.currentTarget);
     var commonCallback = function (html) {
         if (html) {
             $modalContainer.html(html);
@@ -207,27 +207,30 @@ function showUserProfileDropDown() {
 
 function pageClickHandler() {
     $(".user-profile-dropdown").hide();
+    closeSearchResult(event);
 }
 
 function readURL(event, target) {
-    if (event.target.files && event.target.files[0]) {
+    if (event.currentTarget.files && event.currentTarget.files[0]) {
         var reader = new FileReader();
 
         reader.onload = function (e) {
-            $(target).attr("src", e.target.result);
+            $(target).attr("src", e.currentTarget.result);
         }
 
-        reader.readAsDataURL(event.target.files[0]);
+        reader.readAsDataURL(event.currentTarget.files[0]);
     }
 }
 
 function search(e) {
-    var input = $("search").val();
-    if (input == "") {
+    var input = $(".search").val();
+    if (input === "" ||
+        ($(e.currentTarget).hasClass("search") && e.keyCode === 27)) {
+        $(".search-result-container").html("");
         return;
     }
 
-    if ($(e.currentTarget).hasClass("search") && e.keyCode == 13 || 
+    if ($(e.currentTarget).hasClass("search") && e.keyCode === 13 || 
         $(e.currentTarget).hasClass("btn")) {
         $.ajax({
             url: "/search/getresult?input=" + input,
@@ -239,4 +242,12 @@ function search(e) {
             }
         });
     }
+}
+
+function closeSearchResult(e) {
+    if ($(e.target).parents(".search-container").length > 0) {
+        return;
+    }
+
+    $(".search-result-container").html("");
 }
