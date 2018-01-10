@@ -156,7 +156,7 @@ function showAddAnswerPanel(edit) {
 }
 
 function toggleMoreAnswerUnderline(e) {
-    $(e.currentTarget).find(".showFullAnswer").toggleClass("underline");
+    $(e.currentTarget).find(".blue-link-color").toggleClass("underline");
 }
 
 function showMoreAnswer(e) {

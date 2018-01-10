@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity.Validation;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
@@ -153,7 +158,7 @@ namespace iKnow.Controllers {
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model) {
             if (ModelState.IsValid) {
-                var user = await UserManager.FindByNameAsync(model.Email);
+                var user = await UserManager.FindByEmailAsync(model.Email);
                 if (user == null) {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
@@ -163,20 +168,51 @@ namespace iKnow.Controllers {
                 // Send an email with this link
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                await SendForgotPasswordMailAsync(user.Id, callbackUrl);
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        
         //
         // GET: /Account/ForgotPasswordConfirmation
         public ActionResult ForgotPasswordConfirmation() {
             return View();
         }
 
+        private async Task SendForgotPasswordMailAsync(string userId, string callbackUrl) {
+            var emailTemplate = HostingEnvironment.MapPath("~/App_Data/EmailTemplateForgotPassword.htm");
+            var user = await UserManager.FindByIdAsync(userId);
+            var logoUrl = HostingEnvironment.MapPath("~/Content/Images/logo.png");
+
+            var body = string.Empty;
+            if (!string.IsNullOrEmpty(emailTemplate)) {
+                using (StreamReader reader = new StreamReader(emailTemplate)) {
+                    body = reader.ReadToEnd();
+                }
+            }
+            body = body.Replace("{UserName}", HttpUtility.HtmlEncode(user.FullName));
+            body = body.Replace("{LogoUrl}", logoUrl);   
+            body = body.Replace("{ResetUrl}", callbackUrl);
+
+            using (MailMessage mailMessage = new MailMessage("fuzicabin@gmail.com", user.Email)) {
+                mailMessage.Subject = "Reset Password - iKnow";
+                mailMessage.Body = body;
+                mailMessage.IsBodyHtml = true;
+                var smtp = new SmtpClient {
+                    Host = ConfigurationManager.AppSettings["GmailHost"],
+                    Port = Int32.Parse(ConfigurationManager.AppSettings["GmailPort"]),
+                    EnableSsl = Boolean.Parse(ConfigurationManager.AppSettings["GmailSsl"]),
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(ConfigurationManager.AppSettings["GmailUserName"], ConfigurationManager.AppSettings["GmailPassword"])
+                };
+                await smtp.SendMailAsync(mailMessage);
+            }
+        }
+        
         //
         // GET: /Account/ResetPassword
         public ActionResult ResetPassword(string code) {
@@ -191,7 +227,7 @@ namespace iKnow.Controllers {
             if (!ModelState.IsValid) {
                 return View(model);
             }
-            var user = await UserManager.FindByNameAsync(model.Email);
+            var user = await UserManager.FindByEmailAsync(model.Email);
             if (user == null) {
                 // Don't reveal that the user does not exist
                 return RedirectToAction("ResetPasswordConfirmation", "Account");

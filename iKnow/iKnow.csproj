@@ -227,7 +227,6 @@
     <Compile Include="Models\Constants.cs" />
     <Compile Include="Models\Identity\AppUserManager.cs" />
     <Compile Include="Models\Identity\AppSignInManager.cs" />
-    <Compile Include="Models\Identity\EmailService.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\Topic.cs" />
     <Compile Include="Models\AppUser.cs" />
@@ -251,12 +250,14 @@
     <Compile Include="ViewModels\TopicIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\EmailTemplateForgotPassword.htm" />
     <Content Include="Content\chosen-sprite%402x.png" />
     <Content Include="Content\chosen-sprite.png" />
     <Content Include="Content\chosen.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\icons.svg" />
     <Content Include="Content\Images\connected-world.png" />
+    <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\Topic\default.png" />
     <Content Include="Content\Images\Topic\internet.png" />
     <Content Include="Content\Images\Topic\new-zealand.png" />
@@ -275,6 +276,7 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Content Include="AppSettings.config" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\chosen.jquery.js" />
     <Content Include="Scripts\chosen.proto.js" />
@@ -289,8 +291,6 @@
     <Content Include="Scripts\trumbowyg.cleanpaste.js" />
     <Content Include="Scripts\trumbowyg.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Views\Error\Error.html" />
-    <Content Include="Views\Error\404.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -300,7 +300,7 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Error\Error.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -335,12 +335,10 @@
     <Content Include="Views\Shared\_SideBarSiteInfoPartial.cshtml" />
     <None Include="Views\Search\_SearchResultPartial.cshtml" />
     <Content Include="Views\Shared\_NavbarPartial.cshtml" />
-    <Content Include="Views\Error\404.cshtml" />
+    <Content Include="Views\Shared\404.cshtml" />
     <None Include="Views\Shared\_SideBarRelatedQuestionsPartial.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />

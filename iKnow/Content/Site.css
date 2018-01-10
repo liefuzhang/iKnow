@@ -248,6 +248,10 @@ blockquote {
     padding-left: 1em;
 }
 
+.blue-link-color {
+    color: #259;
+}
+
 .divided-section,
 .topic-detail-inner .question-answer-inner {
     position: relative;
@@ -511,10 +515,6 @@ ul.navbar-nav li {
 
 .short-answer-container {
     cursor: pointer;
-}
-
-.showFullAnswer {
-    color: #259;
 }
 
 .question-answer-content .answer-footer {
