@@ -1,17 +1,30 @@
 ﻿@{
     ViewBag.Title = "Contact";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
+<div class="contact-container">
+    <h3 class="content-header">@ViewBag.Title</h3>
+    <div class="contact-content">
+        <p>
+            iKnow is an Quora-like open source project that aims to provide people with a platform where they can share their
+            knowledge and different perspectives on various topics. As the knowledge explodes in modern society, sharing with
+            and learning from other people have become more important than ever.
+        </p>
+        <p>Stay informed. Stay connected.</p>
+        <p>
+            Contact: <a href="mailto:liefuzhangnz@gmail.com">liefuzhangnz@gmail.com</a>
+        </p>
 
-<address>
-    <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+        <div class="img-container">
+            <img src="/Content/Images/connected-world.png" />
+        </div>
+    </div>
+</div>
+
+@section footer {
+    <div class="footer content-container">
+        &copy;&nbsp;@(DateTime.Now.Year + " iKnow")
+        &middot;
+        <span>@Html.ActionLink("Contact us", "Contact", "Home", null, new { @class = "text-link" })</span>
+    </div>
+}

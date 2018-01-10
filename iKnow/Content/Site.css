@@ -1093,6 +1093,10 @@ h3.question-answer-name > a,
         display: block;
     }
 
+        .user-profile-dropdown-item a:hover {
+            text-decoration: none;
+        }
+
     .user-profile-dropdown-item form {
         height: 100%;
         width: 100%;
@@ -1338,3 +1342,28 @@ h3.question-answer-name > a,
     padding: 8px;
 }
 /*#endregion search*/
+
+/*#region contact */
+
+.contact-content {
+    width: 660px;
+    font-size: 18px;
+    box-sizing: border-box;
+    margin-top: 50px;
+    margin: 0 auto;
+}
+
+.contact-content p {
+    padding: 0 45px;
+    padding-bottom: 1em;
+}
+
+    .contact-content .img-container {
+        width: 630px;
+        height: 450px;
+        margin-top: 20px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+/*#endregion contact */
