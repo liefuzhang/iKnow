@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Error 404";
+}
+
+<div class="error-container">
+    <div class="error-inner">
+        <h3>Page Not Found</h3>
+        <p>
+            Oops! We can't find the page
+            you're looking for.
+        </p>
+        <p class="error-link">
+            <a href="javascript:history.go(-1);">Go Back</a>
+            &nbsp;&middot;&nbsp;
+            @Html.ActionLink("iKnow Home", "Index", "Home")
+        </p>
+    </div>
+</div>

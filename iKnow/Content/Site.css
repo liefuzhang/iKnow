@@ -1367,3 +1367,28 @@ h3.question-answer-name > a,
     }
 
 /*#endregion contact */
+
+
+/*#region error */
+
+.error-container {
+    text-align: center;
+}
+
+.error-inner {
+    margin-top: 50px;
+    display: inline-block;
+    text-align: left;
+}
+
+.error-inner p {
+    margin: 5px 0;
+}
+
+p.error-link {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #259;
+}
+
+/*#endregion error */

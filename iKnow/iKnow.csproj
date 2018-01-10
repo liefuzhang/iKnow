@@ -166,6 +166,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AnswerController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
@@ -255,10 +256,12 @@
     <Content Include="Content\chosen.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\icons.svg" />
+    <Content Include="Content\Images\connected-world.png" />
     <Content Include="Content\Images\Topic\default.png" />
     <Content Include="Content\Images\Topic\internet.png" />
     <Content Include="Content\Images\Topic\new-zealand.png" />
     <Content Include="Content\Images\Topic\software-engineering.png" />
+    <Content Include="Content\Images\UserProfile\default.png" />
     <Content Include="Content\trumbowyg.css" />
     <Content Include="Content\trumbowyg.min.css" />
     <Content Include="favicon.ico" />
@@ -330,10 +333,12 @@
     <Content Include="Views\Shared\_SideBarSiteInfoPartial.cshtml" />
     <None Include="Views\Search\_SearchResultPartial.cshtml" />
     <Content Include="Views\Shared\_NavbarPartial.cshtml" />
+    <Content Include="Views\Shared\404.cshtml" />
     <None Include="Views\Shared\_SideBarRelatedQuestionsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Error\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
