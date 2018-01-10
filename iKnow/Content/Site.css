@@ -291,8 +291,8 @@ blockquote {
     height: 45px;
     width: 100%;
     background: teal;
-    background: -webkit-linear-gradient(top,#009688,#00796B);
-    background: linear-gradient(to bottom,#009688,#00796B);
+    background: -webkit-linear-gradient(top,teal,#00796B);
+    background: linear-gradient(to bottom,teal,#00796B);
     color: white;
     z-index: 100;
 }
