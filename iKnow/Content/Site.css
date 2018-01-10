@@ -298,12 +298,14 @@ blockquote {
 }
 
     .navbar .navbar-nav a,
-    .logo a {
+    .logo a,
+    .login-link{
         color: #eee;
     }
 
         .navbar .navbar-nav a:hover,
-        .logo a:hover {
+        .logo a:hover,
+        .login-link:hover {
             text-decoration: none;
             color: white;
         }

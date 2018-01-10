@@ -1,0 +1,33 @@
+﻿@model HandleErrorInfo
+@{
+    ViewBag.Title = "Error";
+}
+
+<div class="error-container">
+    <div class="error-inner">
+        <h3>Unexpected Error</h3>
+        <p>
+            Oops! An error occured and you request couldn't be completed.
+        </p>
+        <p class="error-link">
+            <a href="javascript:history.go(-1);">Go Back</a>
+            &nbsp;&middot;&nbsp;
+            @Html.ActionLink("iKnow Home", "Index", "Home")
+        </p>
+
+        @if (Model != null && HttpContext.Current.IsDebuggingEnabled) {
+            <div>
+                <p>
+                    <b>Exception:</b> @Model.Exception.Message<br />
+                    <b>Controller:</b> @Model.ControllerName<br />
+                    <b>Action:</b> @Model.ActionName
+                </p>
+                <div style="overflow:scroll">
+                    <pre>
+                    @Model.Exception.StackTrace
+                </pre>
+                </div>
+            </div>
+        }
+    </div>
+</div>
