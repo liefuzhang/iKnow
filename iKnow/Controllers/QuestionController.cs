@@ -100,7 +100,7 @@ namespace iKnow.Controllers {
             if (questionPosted.Id > 0) {
                 var questionInDb = _context.Questions.Include("Topics").Single(q => q.Id == questionPosted.Id);
                 questionInDb.Title = questionPosted.Title;
-                questionInDb.Description = questionInDb.Description;
+                questionInDb.Description = questionPosted.Description;
                 questionToSave = questionInDb;
             } else {
                 questionToSave.AppUserId = User.Identity.GetUserId();

@@ -992,13 +992,14 @@ h3.question-answer-name > a,
 }
 
     .login-buttons a {
-        flex: 1 1 auto;
+        flex: 0 0 auto;
         font-size: 14px;
         color: #8590a6;
     }
 
     .login-buttons .btn {
         flex: 0 0 auto;
+        margin-left: auto;
     }
 
 .register-container {
@@ -1372,22 +1373,23 @@ h3.question-answer-name > a,
     display: none;
 }
 
-.error {
+.error, .warning {
     position: fixed;
     top: 50px;
-    left: 0;
-    width: 100%;
+    left: 50%;
+    width: auto;
     height: 0;
     overflow: hidden;
     opacity: 0;
+    transform: translateX(-50%);
 }
 
-.validation-summary-errors ul {
+.validation-summary-errors ul, .warning div {
     margin: 0 auto;
     width: 300px;
 }
 
-    .validation-summary-errors ul li {
+    .validation-summary-errors ul li, .warning div {
         padding: 15px 15px 15px 50px;
         background-color: #bd362f;
         color: white;
@@ -1401,13 +1403,19 @@ h3.question-answer-name > a,
         margin-bottom: 6px;
     }
 
-        .validation-summary-errors ul li:hover {
+    .warning div {
+        background-color: #f89406;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVEhL5ZSvTsNQFMbXZGICMYGYmJhAQIJAICYQPAACiSDB8AiICQQJT4CqQEwgJvYASAQCiZiYmJhAIBATCARJy+9rTsldd8sKu1M0+dLb057v6/lbq/2rK0mS/TRNj9cWNAKPYIJII7gIxCcQ51cvqID+GIEX8ASG4B1bK5gIZFeQfoJdEXOfgX4QAQg7kH2A65yQ87lyxb27sggkAzAuFhbbg1K2kgCkB1bVwyIR9m2L7PRPIhDUIXgGtyKw575yz3lTNs6X4JXnjV+LKM/m3MydnTbtOKIjtz6VhCBq4vSm3ncdrD2lk0VgUXSVKjVDJXJzijW1RQdsU7F77He8u68koNZTz8Oz5yGa6J3H3lZ0xYgXBK2QymlWWA+RWnYhskLBv2vmE+hBMCtbA7KX5drWyRT/2JsqZ2IvfB9Y4bWDNMFbJRFmC9E74SoS0CqulwjkC0+5bpcV1CZ8NMej4pjy0U+doDQsGyo1hzVJttIjhQ7GnBtRFN1UarUlH8F3xict+HY07rEzoUGPlWcjRFRr4/gChZgc3ZL2d8oAAAAASUVORK5CYII=);
+        box-sizing: border-box;
+    }
+
+        .validation-summary-errors ul li:hover, .warning div:hover {
             box-shadow: 0 0 12px #000;
             opacity: 1;
             cursor: pointer;
         }
 
-.validation-summary-errors {
+.validation-summary-errors, .warning-display {
     animation: fadeout 8s ease-in;
 }
 

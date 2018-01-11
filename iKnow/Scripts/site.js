@@ -20,6 +20,8 @@
     $(".search").on("keyup", search);
     $(".search-container .btn").on("click", search);
     $(".error").on("click", "li", hideError);
+    $(".modal-container").on("click", ".error li", hideError);
+    $(".warning").on("click", "div", hideError);
     $(document).on("click", pageClickHandler);
 });
 
@@ -64,8 +66,7 @@ function toggleModal(e, action) {
     switch (action) {
         case "addQuestion":
             if (iknow.isUserAuthorized !== true) {
-                // TODO use better nofication
-                alert("Please log in before you add question");
+                showWarning("Please log in before you add question");
                 return;
             }
             if ($modalContainer.hasClass("new-form-loaded")) {
@@ -130,8 +131,7 @@ function toggleModal(e, action) {
 
 function showAddAnswerPanel(edit) {
     if (iknow.isUserAuthorized !== true) {
-        // TODO use better nofication
-        alert("Please log in before you write question");
+        showWarning("Please log in before you write question");
         return;
     }
     $(".add-answer-panel.hide").slideDown(100);
@@ -231,7 +231,7 @@ function search(e) {
         return;
     }
 
-    if ($(e.currentTarget).hasClass("search") && e.keyCode === 13 || 
+    if ($(e.currentTarget).hasClass("search") && e.keyCode === 13 ||
         $(e.currentTarget).hasClass("btn")) {
         $.ajax({
             url: "/search/getresult?input=" + input,
@@ -255,4 +255,16 @@ function closeSearchResult(e) {
 
 function hideError() {
     $(this).hide();
+}
+
+function showWarning(message) {
+    cleanUpErrorAndWarning();
+    $(".warning").html("");
+    $("<div>").html(message).appendTo($(".warning"));
+    setTimeout(() => { $(".warning").addClass("warning-display"); }, 50);
+}
+
+function cleanUpErrorAndWarning() {
+    $(".warning").removeClass("warning-display");
+    $(".error").removeClass("validation-summary-errors");
 }

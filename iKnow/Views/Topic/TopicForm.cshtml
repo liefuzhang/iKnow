@@ -9,16 +9,15 @@
     <pre class="return-topic">@Html.ActionLink("Return to Topics  >  ", "Index", "Topic")</pre>
 
     @using (@Html.BeginForm("Save", "Topic", null, FormMethod.Post, new { enctype = "multipart/form-data" })) {
+        @Html.ValidationSummary("", new { @class = "error" })
         <div class="form-group">
             @Html.LabelFor(m => m.Topic.Name)
             @Html.TextBoxFor(m => m.Topic.Name, new { @class = "form-control", placeholder = "Name" })
-            @Html.ValidationMessageFor(m => m.Topic.Name, "", new { @class = "error" })
         </div>
 
         <div class="form-group">
             @Html.LabelFor(m => m.Topic.Description)
             @Html.TextAreaFor(m => m.Topic.Description, 10, 50, new { @class = "form-control", placeholder = "Description" })
-            @Html.ValidationMessageFor(m => m.Topic.Description, "", new { @class = "error" })
         </div>
 
         <div class="form-group">
@@ -27,7 +26,6 @@
                 <img src="@Model.Topic.IconPath"/>
             </div>
             @Html.TextBoxFor(m => m.PostedFile, new { type = "file", @class="js-topic-photo-upload"})
-            @Html.ValidationMessageFor(m => m.PostedFile, "", new { @class = "error" })
             @*<input type="file" name="changeIcon" />*@
         </div>
 

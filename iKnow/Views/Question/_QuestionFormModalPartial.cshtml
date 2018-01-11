@@ -5,10 +5,11 @@
 
 <div class="modal-inner">
     @using (@Html.BeginForm("Save", "Question")) {
+        @Html.ValidationSummary("", new { @class = "error" })
+
         <h2>@Model.FormTitle</h2>
         <p>Keep your question concise to quickly get a good answer</p>
         @Html.TextAreaFor(m => m.Question.Title, new { @class = "form-control add-question-title", placeholder = "Question title" })
-        @Html.ValidationMessageFor(m => m.Question.Title, "", new { @class = "error" })
 
         <div class="form-group">
             @Html.ListBoxFor(m => m.TopicIds, Model.Topics, new { @class = "topic-select", data_placeholder = "Add Topics" })
