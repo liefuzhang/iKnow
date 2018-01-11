@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     $(".topic-list").on("click", "li", selectTopic);
     $(".topic-form-container .js-button-delete").on("click", deleteTopic);
-    $(".js-button-add-question").on("click", (e) => toggleModal(e, "addQuestion"));
+    $(".add-question-button").on("click", (e) => toggleModal(e, "addQuestion"));
     $(".modal-container").on("click", (e) => toggleModal(e, "close"));
     $(".question-header-panel .js-edit-question").on("click", (e) => toggleModal(e, "editQuestion"));
     $(".question-header-panel .js-edit-topic").on("click", (e) => toggleModal(e, "editTopic"));

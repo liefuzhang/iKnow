@@ -97,6 +97,10 @@ namespace iKnow.Controllers {
             var questionPosted = formViewModel.Question;
             var questionToSave = questionPosted;
 
+            if (!questionPosted.Title.EndsWith("?")) {
+                questionPosted.Title += "?";
+            }
+
             if (questionPosted.Id > 0) {
                 var questionInDb = _context.Questions.Include("Topics").Single(q => q.Id == questionPosted.Id);
                 questionInDb.Title = questionPosted.Title;

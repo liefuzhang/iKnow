@@ -63,6 +63,10 @@ button {
     user-select: none;
 }
 
+.align-right {
+    margin-left: auto;
+}
+
 ::-webkit-input-placeholder { /* Chrome */
     color: #999;
 }
@@ -154,7 +158,7 @@ a.btn, button.btn, input.btn {
 }
 
 .btn-func {
-    margin-top: 40px;
+    margin-top: 20px;
     margin-bottom: 10px;
 }
 
@@ -297,14 +301,14 @@ blockquote {
     .navbar .navbar-nav a,
     .logo a,
     .login-link,
-    .user-profile-inner span {
+    .user-profile-inner {
         color: #eee;
     }
 
         .navbar .navbar-nav a:hover,
         .logo a:hover,
         .login-link:hover,
-        .user-profile-inner span:hover {
+        .user-profile-inner:hover {
             text-decoration: none;
             color: white;
         }
@@ -336,15 +340,23 @@ blockquote {
 }
 
 ul.navbar-nav li {
-    padding: 0 10px;
     height: 100%;
     display: inline-block;
 }
+
+    ul.navbar-nav li a {
+        padding: 0 10px;
+        display: inline-block;
+    }
 
 .navbar-nav li.active {
     background: #00796B;
     background: -webkit-linear-gradient(top,#00796B,#00695C);
     background: linear-gradient(to bottom,#00796B,#00695C);
+}
+
+.navbar .add-question-button {
+    margin-left: 30px;
 }
 
 
@@ -453,10 +465,6 @@ ul.navbar-nav li {
     font-size: 14px;
     color: #009797;
     line-height: 1.75rem;
-}
-
-.topic-form-container .btn-delete {
-    margin-left: 12px;
 }
 
 .topic-form-container .img-container {
@@ -1384,24 +1392,24 @@ h3.question-answer-name > a,
     transform: translateX(-50%);
 }
 
-.validation-summary-errors ul, .warning div {
-    margin: 0 auto;
-    width: 300px;
-}
-
-    .validation-summary-errors ul li, .warning div {
-        padding: 15px 15px 15px 50px;
-        background-color: #bd362f;
-        color: white;
-        box-shadow: 0 0 12px #999;
-        border-radius: 3px;
-        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHOSURBVEhLrZa/SgNBEMZzh0WKCClSCKaIYOED+AAKeQQLG8HWztLCImBrYadgIdY+gIKNYkBFSwu7CAoqCgkkoGBI/E28PdbLZmeDLgzZzcx83/zZ2SSXC1j9fr+I1Hq93g2yxH4iwM1vkoBWAdxCmpzTxfkN2RcyZNaHFIkSo10+8kgxkXIURV5HGxTmFuc75B2RfQkpxHG8aAgaAFa0tAHqYFfQ7Iwe2yhODk8+J4C7yAoRTWI3w/4klGRgR4lO7Rpn9+gvMyWp+uxFh8+H+ARlgN1nJuJuQAYvNkEnwGFck18Er4q3egEc/oO+mhLdKgRyhdNFiacC0rlOCbhNVz4H9FnAYgDBvU3QIioZlJFLJtsoHYRDfiZoUyIxqCtRpVlANq0EU4dApjrtgezPFad5S19Wgjkc0hNVnuF4HjVA6C7QrSIbylB+oZe3aHgBsqlNqKYH48jXyJKMuAbiyVJ8KzaB3eRc0pg9VwQ4niFryI68qiOi3AbjwdsfnAtk0bCjTLJKr6mrD9g8iq/S/B81hguOMlQTnVyG40wAcjnmgsCNESDrjme7wfftP4P7SP4N3CJZdvzoNyGq2c/HWOXJGsvVg+RA/k2MC/wN6I2YA2Pt8GkAAAAASUVORK5CYII=);
-        background-position: 15px center;
-        background-repeat: no-repeat;
-        opacity: 0.8;
-        font-size: 14px;
-        margin-bottom: 6px;
+    .validation-summary-errors ul, .warning div {
+        margin: 0 auto;
+        width: 300px;
     }
+
+        .validation-summary-errors ul li, .warning div {
+            padding: 15px 15px 15px 50px;
+            background-color: #bd362f;
+            color: white;
+            box-shadow: 0 0 12px #999;
+            border-radius: 3px;
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHOSURBVEhLrZa/SgNBEMZzh0WKCClSCKaIYOED+AAKeQQLG8HWztLCImBrYadgIdY+gIKNYkBFSwu7CAoqCgkkoGBI/E28PdbLZmeDLgzZzcx83/zZ2SSXC1j9fr+I1Hq93g2yxH4iwM1vkoBWAdxCmpzTxfkN2RcyZNaHFIkSo10+8kgxkXIURV5HGxTmFuc75B2RfQkpxHG8aAgaAFa0tAHqYFfQ7Iwe2yhODk8+J4C7yAoRTWI3w/4klGRgR4lO7Rpn9+gvMyWp+uxFh8+H+ARlgN1nJuJuQAYvNkEnwGFck18Er4q3egEc/oO+mhLdKgRyhdNFiacC0rlOCbhNVz4H9FnAYgDBvU3QIioZlJFLJtsoHYRDfiZoUyIxqCtRpVlANq0EU4dApjrtgezPFad5S19Wgjkc0hNVnuF4HjVA6C7QrSIbylB+oZe3aHgBsqlNqKYH48jXyJKMuAbiyVJ8KzaB3eRc0pg9VwQ4niFryI68qiOi3AbjwdsfnAtk0bCjTLJKr6mrD9g8iq/S/B81hguOMlQTnVyG40wAcjnmgsCNESDrjme7wfftP4P7SP4N3CJZdvzoNyGq2c/HWOXJGsvVg+RA/k2MC/wN6I2YA2Pt8GkAAAAASUVORK5CYII=);
+            background-position: 15px center;
+            background-repeat: no-repeat;
+            opacity: 0.8;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
 
     .warning div {
         background-color: #f89406;

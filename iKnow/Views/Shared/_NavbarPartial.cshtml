@@ -5,10 +5,10 @@
     <div class="search-result-container"></div>
 </div>
 <ul class="navbar-nav">
-    <li class="@(ViewBag.CurrentPage == "Home" ? "active" : "")">@Html.ActionLink("Home", "Index", "Home")</li>
-    <li class="@(ViewBag.CurrentPage == "Topic" ? "active" : "")">@Html.ActionLink("Topics", "Index", "Topic")</li>
-    <li class="@(ViewBag.CurrentPage == "Answer" ? "active" : "")">@Html.ActionLink("Answer", "Index", "Answer")</li>
-    <li><button class="js-button-add-question btn">Add Question</button></li>
+    <li class="@(ViewBag.CurrentPage == "Home" ? "active" : "")">@Html.ActionLink("Home", "Index", "Home")</li><!--
+    --><li class="@(ViewBag.CurrentPage == "Topic" ? "active" : "")">@Html.ActionLink("Topics", "Index", "Topic")</li><!--
+    --><li class="@(ViewBag.CurrentPage == "Answer" ? "active" : "")">@Html.ActionLink("Answer", "Index", "Answer")</li><!--
+    --><li><button class="add-question-button btn">Add Question</button></li>
 </ul>
 <div class="navbar-user">
     @Html.Action("GetUserProfile", "Home")

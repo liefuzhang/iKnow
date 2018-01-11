@@ -23,18 +23,21 @@
         <div class="form-group">
             @Html.Label("Icon")
             <div class="img-container">
-                <img src="@Model.Topic.IconPath"/>
+                <img src="@Model.Topic.IconPath" />
             </div>
-            @Html.TextBoxFor(m => m.PostedFile, new { type = "file", @class="js-topic-photo-upload"})
+            @Html.TextBoxFor(m => m.PostedFile, new { type = "file", @class = "js-topic-photo-upload" })
             @*<input type="file" name="changeIcon" />*@
         </div>
 
         @Html.HiddenFor(m => m.Topic.Id)
         @Html.AntiForgeryToken()
-        <button type="submit" formaction=@Url.Action("Save", "Topic") class="btn btn-func">Save</button>
-        if (Model.Topic.Id != 0) {
-            <button type="submit" formaction=@Url.Action("Delete", "Topic") class="btn btn-delete js-button-delete">Delete This Topic</button>
-        }
+
+        <div class="form-group">
+            @if (Model.Topic.Id != 0) {
+                <button type="submit" formaction=@Url.Action("Delete", "Topic") class="btn btn-delete js-button-delete">Delete This Topic</button>
+            }
+            <button type="submit" formaction=@Url.Action("Save", "Topic") class="btn btn-func align-right">Save</button>
+        </div>
     }
 </div>
 
