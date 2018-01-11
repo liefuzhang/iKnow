@@ -19,6 +19,7 @@
     $(".mask-content").on("click", () => { $(".js-profile-photo-upload").click(); });
     $(".search").on("keyup", search);
     $(".search-container .btn").on("click", search);
+    $(".error").on("click", "li", hideError);
     $(document).on("click", pageClickHandler);
 });
 
@@ -250,4 +251,8 @@ function closeSearchResult(e) {
     }
 
     $(".search-result-container").html("");
+}
+
+function hideError() {
+    $(this).hide();
 }
