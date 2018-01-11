@@ -1408,7 +1408,7 @@ h3.question-answer-name > a,
         }
 
 .validation-summary-errors {
-    animation: fadeout 5s ease-in;
+    animation: fadeout 8s ease-in;
 }
 
 @-moz-keyframes fadeout {
