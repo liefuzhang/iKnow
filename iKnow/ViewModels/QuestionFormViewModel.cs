@@ -13,5 +13,6 @@ namespace iKnow.ViewModels {
 
         public String FormTitle => Question != null && Question.Id > 0 ? "Edit your question here" : "Write down your question here";
 
+        public bool? CanUserDelete { get; set; }
     }
 }

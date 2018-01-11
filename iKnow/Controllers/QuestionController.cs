@@ -50,12 +50,17 @@ namespace iKnow.Controllers {
             }).ToList();
 
             var selectedTopicIds = question.Topics.Select(t => t.Id).ToArray();
+            var currentUserId = User.Identity.GetUserId();
 
             var viewModel = new QuestionFormViewModel {
                 Question = question,
                 Topics = new MultiSelectList(topics, "TopicId", "TopicName"),
-                TopicIds = selectedTopicIds
+                TopicIds = selectedTopicIds,
+                CanUserDelete = User.Identity.IsAuthenticated
+                               && (question.AppUserId == currentUserId
+                                   || User.IsInRole(Constants.AdminRoleName))
             };
+
             return viewModel;
         }
 
@@ -69,7 +74,7 @@ namespace iKnow.Controllers {
             _context.Answers.Where(a => a.QuestionId == question.Id).Load();
 
             var currentUserId = User.Identity.GetUserId();
-            bool canUserEdit = User.Identity.IsAuthenticated
+            bool canUserEditQuestion = User.Identity.IsAuthenticated
                                && (question.AppUserId == currentUserId
                                    || User.IsInRole(Constants.AdminRoleName));
 
@@ -78,8 +83,9 @@ namespace iKnow.Controllers {
 
             var viewModel = new QuestionDetailViewModel {
                 Question = question,
-                CanUserEdit = canUserEdit,
-                UserAnswerId = existingAnswer != null ? existingAnswer.Id : 0
+                CanUserEditQuestion = canUserEditQuestion,
+                UserAnswerId = existingAnswer?.Id ?? 0,
+                CanUserDeleteAnswerPanelAnswer = existingAnswer != null
             };
 
             return View(viewModel);
@@ -168,6 +174,23 @@ namespace iKnow.Controllers {
             };
 
             return PartialView("_SideBarRelatedQuestionsPartial", viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult Delete(QuestionFormViewModel viewModel) {
+            var currentUserId = User.Identity.GetUserId();
+            var question = _context.Questions.Include("Answers").Single(q => q.Id == viewModel.Question.Id);
+            if (question.AppUserId == currentUserId
+                || User.IsInRole(Constants.AdminRoleName)) {
+                _context.Answers.RemoveRange(question.Answers);
+                _context.Questions.Remove(question);
+
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

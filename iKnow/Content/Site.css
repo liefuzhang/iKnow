@@ -1034,6 +1034,10 @@ h3.question-answer-name > a,
     width: 360px;
 }
 
+.register-form h2 {
+    margin-bottom: 20px;
+}
+
 .register-user-name {
     justify-content: space-between;
 }

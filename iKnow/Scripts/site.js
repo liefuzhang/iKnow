@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
     $(".topic-list").on("click", "li", selectTopic);
     $(".topic-form-container .js-button-delete").on("click", deleteTopic);
+    $(".modal-container").on("click", ".js-button-delete", deleteTopic);
     $(".add-question-button").on("click", (e) => toggleModal(e, "addQuestion"));
     $(".modal-container").on("click", (e) => toggleModal(e, "close"));
     $(".question-header-panel .js-edit-question").on("click", (e) => toggleModal(e, "editQuestion"));
@@ -47,7 +48,8 @@ function selectTopic() {
 
 function deleteTopic(e) {
     var button = $(this);
-    return confirm("Are you sure you want to delete this topic?");
+    var message = button.attr("data-delete-message");
+    return confirm(message);
 }
 
 function toggleModal(e, action) {

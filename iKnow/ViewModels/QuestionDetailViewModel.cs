@@ -11,8 +11,9 @@ namespace iKnow.ViewModels {
         public Question Question { get; set; }
         [AllowHtml]
         [Required]
-        public string AnswerContent { get; set; }
-        public bool CanUserEdit { get; set; }
+        public string AnswerPanelContent { get; set; }
+        public bool CanUserDeleteAnswerPanelAnswer { get; set; }
+        public bool CanUserEditQuestion { get; set; }
         public int UserAnswerId { get; set; }
     }
 }

@@ -60,10 +60,11 @@ namespace iKnow.Controllers {
 
             var questionDetailViewModel = new QuestionDetailViewModel {
                 Question = question,
-                CanUserEdit = User.Identity.IsAuthenticated
+                CanUserEditQuestion = User.Identity.IsAuthenticated
                               && (question.AppUserId == currentUserId
                                   || User.IsInRole(Constants.AdminRoleName)),
-                UserAnswerId = existingAnswer?.Id ?? 0
+                UserAnswerId = existingAnswer?.Id ?? 0,
+                CanUserDeleteAnswerPanelAnswer = existingAnswer != null
             };
 
             var viewModel = new AnswerDetailViewModel {
@@ -96,12 +97,12 @@ namespace iKnow.Controllers {
                 _context.Answers.SingleOrDefault(
                     a => a.QuestionId == viewModel.Question.Id && a.AppUserId == currentUserId);
             if (existingAnswer != null) {
-                existingAnswer.Content = viewModel.AnswerContent;
+                existingAnswer.Content = viewModel.AnswerPanelContent;
                 existingAnswer.UpdatedDate = DateTime.Now;
                 answerToSave = existingAnswer;
             } else {
                 answerToSave = new Answer {
-                    Content = viewModel.AnswerContent,
+                    Content = viewModel.AnswerPanelContent,
                     QuestionId = viewModel.Question.Id,
                     AppUserId = User.Identity.GetUserId(),
                     CreatedDate = DateTime.Now
@@ -126,6 +127,23 @@ namespace iKnow.Controllers {
         public PartialViewResult GetAnswerPanelHeader(string id) {
             var user = _context.Users.Single(u => u.Id == id);
             return PartialView("_AnswerPanelHeaderPartial", user);
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult Delete(QuestionDetailViewModel viewModel) {
+            var currentUserId = User.Identity.GetUserId();
+            var answer = _context.Answers.Single(a => a.Id == viewModel.UserAnswerId);
+            if (question.AppUserId == currentUserId
+                || User.IsInRole(Constants.AdminRoleName)) {
+                _context.Answers.RemoveRange(question.Answers);
+                _context.Questions.Remove(question);
+
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }
