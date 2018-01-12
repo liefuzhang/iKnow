@@ -21,8 +21,17 @@ namespace iKnow.Models {
                 return Regex.Replace(parsed, "<.*?>", String.Empty);
             }
         }
-        public string ShortContext
-            => PlainContent.Length > Constants.ShortAnswerLenth ?
-            PlainContent.Substring(0, Constants.ShortAnswerLenth) + "..." : PlainContent;
+
+        public string ShortContent
+            => PlainContent.Length > Constants.ShortAnswerLenth
+                ? PlainContent.Substring(0, Constants.ShortAnswerLenth) + "..."
+                : PlainContent;
+
+        public string ShortContentImageData {
+            get {
+                var match = Regex.Match(Content, "<img src=\\\"data:.*?\">");
+                return match.Success ? match.Value : null;
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@
 using iKnow.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -110,7 +111,12 @@ namespace iKnow.Controllers {
                 _context.Answers.Add(answerToSave);
             }
 
-            _context.SaveChanges();
+            try {
+                _context.SaveChanges();
+            } catch (DbEntityValidationException e) {
+
+                throw e;
+            }
 
             return RedirectToAction("Detail", "Answer", new { id = answerToSave.Id });
         }

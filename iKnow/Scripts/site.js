@@ -171,7 +171,7 @@ function showMoreAnswer(e) {
 
 function hideMoreAnswer(e) {
     var $this = $(e.currentTarget);
-    var $container = $this.closest(".expaneded-answer-container");
+    var $container = $this.closest(".expanded-answer-container");
     $container.addClass("hide");
     $container.prev().removeClass("hide");
 }

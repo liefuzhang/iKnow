@@ -27,11 +27,18 @@
             </div>
             <div class="short-answer-container">
                 <div class="question-answer-content">
-                    @Html.Raw(questionAnswer.Value.ShortContext)
-                    <span class="blue-link-color">(more)</span>
+                    @if (questionAnswer.Value.ShortContentImageData != null) {
+                        <div class="img-container">
+                            @Html.Raw(questionAnswer.Value.ShortContentImageData)
+                        </div>
+                    }
+                    <span>
+                        @Html.Raw(questionAnswer.Value.ShortContent)
+                        <span class="blue-link-color">(more)</span>
+                    </span>
                 </div>
             </div>
-            <div class="expaneded-answer-container hide">
+            <div class="expanded-answer-container hide">
                 <div class="question-answer-content answer-content">
                     @Html.Raw(questionAnswer.Value.Content)
                     <div class="answer-footer">
