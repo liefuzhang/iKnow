@@ -3,6 +3,7 @@
     $(".topic-form-container .js-button-delete").on("click", deleteEntity);
     $(".modal-container").on("click", ".js-button-delete", deleteEntity);
     $(".add-answer-panel").on("click", ".js-button-delete", deleteEntity);
+    $(".add-answer-panel").on("submit", "form", submitAnswer);
     $(".add-question-button").on("click", (e) => toggleModal(e, "addQuestion"));
     $(".modal-container").on("click", (e) => toggleModal(e, "close"));
     $(".question-header-panel .js-edit-question").on("click", (e) => toggleModal(e, "editQuestion"));
@@ -270,4 +271,8 @@ function showWarning(message) {
 function cleanUpErrorAndWarning() {
     $(".warning").removeClass("warning-display");
     $(".error").removeClass("validation-summary-errors");
+}
+
+function submitAnswer() {
+    $(this).get(0).elements["AnswerPanelContent"].value = $(".trumbowyg-editor").html();
 }

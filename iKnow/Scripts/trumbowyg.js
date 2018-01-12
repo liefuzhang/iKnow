@@ -555,47 +555,47 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
             t.$ed
                 .on('dblclick', 'img', t.o.imgDblClickHandler)
-                .on('keydown', function (e) {
-                    if ((e.ctrlKey || e.metaKey) && !e.altKey) {
-                        ctrl = true;
-                        var key = t.keys[String.fromCharCode(e.which).toUpperCase()];
+                //.on('keydown', function (e) {
+                //    if ((e.ctrlKey || e.metaKey) && !e.altKey) {
+                //        ctrl = true;
+                //        var key = t.keys[String.fromCharCode(e.which).toUpperCase()];
 
-                        try {
-                            t.execCmd(key.fn, key.param);
-                            return false;
-                        } catch (c) {
-                        }
-                    }
-                })
+                //        try {
+                //            t.execCmd(key.fn, key.param);
+                //            return false;
+                //        } catch (c) {
+                //        }
+                //    }
+                //})
                 .on('compositionstart compositionupdate', function () {
                     composition = true;
                 })
-                .on(updateEventName + ' compositionend', function (e) {
-                    if (e.type === 'compositionend') {
-                        composition = false;
-                    } else if (composition) {
-                        return;
-                    }
+                //.on(updateEventName + ' compositionend', function (e) {
+                //    if (e.type === 'compositionend') {
+                //        composition = false;
+                //    } else if (composition) {
+                //        return;
+                //    }
 
-                    var keyCode = e.which;
+                //    var keyCode = e.which;
 
-                    if (keyCode >= 37 && keyCode <= 40) {
-                        return;
-                    }
+                //    if (keyCode >= 37 && keyCode <= 40) {
+                //        return;
+                //    }
 
-                    if ((e.ctrlKey || e.metaKey) && (keyCode === 89 || keyCode === 90)) {
-                        t.$c.trigger('tbwchange');
-                    } else if (!ctrl && keyCode !== 17) {
-                        t.semanticCode(false, e.type === 'compositionend' && keyCode === 13);
-                        t.$c.trigger('tbwchange');
-                    } else if (typeof e.which === 'undefined') {
-                        t.semanticCode(false, false, true);
-                    }
+                //    if ((e.ctrlKey || e.metaKey) && (keyCode === 89 || keyCode === 90)) {
+                //        t.$c.trigger('tbwchange');
+                //    } else if (!ctrl && keyCode !== 17) {
+                //        t.semanticCode(false, e.type === 'compositionend' && keyCode === 13);
+                //        t.$c.trigger('tbwchange');
+                //    } else if (typeof e.which === 'undefined') {
+                //        t.semanticCode(false, false, true);
+                //    }
 
-                    setTimeout(function () {
-                        ctrl = false;
-                    }, 200);
-                })
+                //    setTimeout(function () {
+                //        ctrl = false;
+                //    }, 200);
+                //})
                 .on('mouseup keydown keyup', function (e) {
                     if ((!e.ctrlKey && !e.metaKey) || e.altKey) {
                         setTimeout(function () { // "hold on" to the ctrl key for 200ms

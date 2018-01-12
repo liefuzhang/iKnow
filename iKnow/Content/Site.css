@@ -512,6 +512,10 @@ ul.navbar-nav li {
     margin-bottom: 4px;
 }
 
+.expanded-answer-container .question-answer-content img {
+    margin-top: 10px;
+}
+
 .short-answer-container .question-answer-content .img-container img {
     position: static;
     width: 100%;
