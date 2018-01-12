@@ -1,7 +1,8 @@
 ﻿$(document).ready(function () {
     $(".topic-list").on("click", "li", selectTopic);
-    $(".topic-form-container .js-button-delete").on("click", deleteTopic);
-    $(".modal-container").on("click", ".js-button-delete", deleteTopic);
+    $(".topic-form-container .js-button-delete").on("click", deleteEntity);
+    $(".modal-container").on("click", ".js-button-delete", deleteEntity);
+    $(".add-answer-panel").on("click", ".js-button-delete", deleteEntity);
     $(".add-question-button").on("click", (e) => toggleModal(e, "addQuestion"));
     $(".modal-container").on("click", (e) => toggleModal(e, "close"));
     $(".question-header-panel .js-edit-question").on("click", (e) => toggleModal(e, "editQuestion"));
@@ -46,7 +47,7 @@ function selectTopic() {
     });
 }
 
-function deleteTopic(e) {
+function deleteEntity(e) {
     var button = $(this);
     var message = button.attr("data-delete-message");
     return confirm(message);
@@ -152,7 +153,7 @@ function showAddAnswerPanel(edit) {
     });
     if (edit === true) {
         // copy content
-        var content = $(".answer-panel-content-inner").html();
+        var content = $(event.target).siblings(".answer-panel-content-inner").html();
         $(".rich-editor-inner").trumbowyg('html', content);
     }
 

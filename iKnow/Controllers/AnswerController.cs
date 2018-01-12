@@ -123,27 +123,25 @@ namespace iKnow.Controllers {
             }
             return null;
         }
-    
+
         public PartialViewResult GetAnswerPanelHeader(string id) {
             var user = _context.Users.Single(u => u.Id == id);
             return PartialView("_AnswerPanelHeaderPartial", user);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
         public ActionResult Delete(QuestionDetailViewModel viewModel) {
             var currentUserId = User.Identity.GetUserId();
             var answer = _context.Answers.Single(a => a.Id == viewModel.UserAnswerId);
-            if (question.AppUserId == currentUserId
-                || User.IsInRole(Constants.AdminRoleName)) {
-                _context.Answers.RemoveRange(question.Answers);
-                _context.Questions.Remove(question);
+            if (answer.AppUserId == currentUserId) {
+                _context.Answers.Remove(answer);
 
                 _context.SaveChanges();
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Detail", "Question", new { id = viewModel.Question.Id });
         }
     }
 }

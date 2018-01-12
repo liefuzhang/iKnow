@@ -9,10 +9,11 @@
             @if (Model.CanUserDeleteAnswerPanelAnswer) {
                 <button type="submit" formaction=@Url.Action("Delete", "Answer") class="btn btn-delete js-button-delete" data-delete-message="Are you sure you want to delete this answer?">Delete</button>
             }
-            <button type="submit" class="btn">Submit Answer</button>
+            <button type="submit" class="btn align-right">Submit Answer</button>
         </div>
     </div>
 
+    @Html.HiddenFor(m => m.UserAnswerId)
     @Html.HiddenFor(m => m.Question.Id)
     @Html.AntiForgeryToken()
 }
