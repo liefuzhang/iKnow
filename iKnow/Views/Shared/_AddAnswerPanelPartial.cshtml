@@ -4,7 +4,9 @@
 @Html.Action("GetAnswerPanelHeader", "Answer", new { id = User.Identity.GetUserId() })
 @using (@Html.BeginForm("Save", "Answer")) {
     <div class="rich-editor">
-        @Html.TextAreaFor(m => m.AnswerPanelContent, new { @class = "rich-editor-inner", placeholder = "Write your answer here..." })
+        @Html.HiddenFor(m => m.AnswerPanelContent, new { @class = "answer-content-hidden" })
+        <div class="rich-editor-inner">
+        </div>
         <div class="rich-editor-footer">
             @if (Model.CanUserDeleteAnswerPanelAnswer) {
                 <button type="submit" formaction=@Url.Action("Delete", "Answer") class="btn btn-delete js-button-delete" data-delete-message="Are you sure you want to delete this answer?">Delete</button>

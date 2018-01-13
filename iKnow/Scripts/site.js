@@ -141,23 +141,58 @@ function showAddAnswerPanel(edit) {
     $(".add-answer-panel.hide").slideDown(100);
     $('html, body').scrollTop($(".add-answer-panel").offset().top - 100);
 
-    $(".rich-editor-inner").trumbowyg({
-        svgPath: "/Content/icons.svg",
-        autogrow: true,
-        btns: [
-            ['strong', 'em'],
-            ['h3', 'unorderedList', 'orderedList'],
-            ['link', 'base64'],
-            ['removeformat'],
-            ['fullscreen']
-        ]
-    });
     if (edit === true) {
         // copy content
-        var content = $(event.target).siblings(".answer-panel-content-inner").html();
-        $(".rich-editor-inner").trumbowyg('html', content);
+        var content = $(event.currentTarget).siblings(".answer-panel-content-inner").html();
+        $(".rich-editor-inner").html(content);
     }
 
+    var quill = new Quill(".rich-editor-inner", {
+        placeholder: "Write your answer here...",
+        modules: {
+            toolbar: [['bold', 'italic'],
+                        [{ 'header': 2 }, 'blockquote'],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        ['link', 'image'],
+                        ['clean']]
+        },
+        theme: "snow",
+        formats: [
+          'bold',
+          'italic',
+          'link',
+          'header',
+          'list',
+          'blockquote',
+          'image',
+          'indent'
+        ], clipboard: {
+            matchVisual: false
+        }
+    });
+
+    $(".ql-editor")
+        .on('mousewheel DOMMouseScroll', function (e) {
+            preventOuterScrolling(e);
+        });
+}
+
+function preventOuterScrolling(e) {
+    if (e.currentTarget.scrollHeight === e.currentTarget.offsetHeight) {
+        return;
+    }
+
+    var delta = 0;
+    if (e.originalEvent.wheelDelta) { // will work in most cases
+        delta = e.originalEvent.wheelDelta;
+    } else if (e.originalEvent.detail) { // fallback for Firefox
+        delta = -e.originalEvent.detail;
+    }
+    var scrollTop = $(e.currentTarget).scrollTop();
+    if (delta < 0 && scrollTop > e.currentTarget.scrollHeight - e.currentTarget.offsetHeight - 5
+        || delta > 0 && scrollTop < 5) {
+        e.preventDefault();
+    }
 }
 
 function toggleMoreAnswerUnderline(e) {
@@ -221,8 +256,7 @@ function readURL(event, target) {
 
         reader.onload = function (e) {
             $(target).attr("src", e.currentTarget.result);
-        }
-
+        };
         reader.readAsDataURL(event.currentTarget.files[0]);
     }
 }
@@ -274,5 +308,5 @@ function cleanUpErrorAndWarning() {
 }
 
 function submitAnswer() {
-    $(this).get(0).elements["AnswerPanelContent"].value = $(".trumbowyg-editor").html();
+    $(this).get(0).elements["AnswerPanelContent"].value = $(".ql-editor").html();
 }

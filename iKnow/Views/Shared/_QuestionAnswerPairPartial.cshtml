@@ -32,19 +32,21 @@
                             @Html.Raw(questionAnswer.Value.ShortContentImageData)
                         </div>
                     }
-                    <span>
+                    <div class="question-answer-content-text">
                         @Html.Raw(questionAnswer.Value.ShortContent)
-                        <span class="blue-link-color">(more)</span>
-                    </span>
+                        <span class="blue-link-color"> (more)</span>
+                    </div>
                 </div>
             </div>
             <div class="expanded-answer-container hide">
                 <div class="question-answer-content answer-content">
+                    
                     @Html.Raw(questionAnswer.Value.Content)
                     <div class="answer-footer">
                         @if (questionAnswer.Value.UpdatedDate == null) {
                             <span>Answered @questionAnswer.Value.CreatedDate.ToString("MMM d, yyyy")</span>
-                        } else {
+                        }
+                        else {
                             <span>Updated @questionAnswer.Value.UpdatedDate.Value.ToString("MMM d, yyyy")</span>
                         }
                         <a class="collapse-answer">

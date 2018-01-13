@@ -52,7 +52,7 @@
 
         <div class="sidebar question-sidebar">
             <div class="panel">
-                @Html.Action("GetRelatedQuestions", "Question", new {id = Model.Question.Id})
+                @Html.Action("GetRelatedQuestions", "Question", new { id = Model.Question.Id })
             </div>
             @Html.Partial("_SideBarSiteInfoPartial")
         </div>
@@ -60,10 +60,10 @@
 </div>
 
 @section styles {
-    <link rel="stylesheet" href="~/Content/trumbowyg.min.css" />
+    <link rel="stylesheet" href="~/Content/quill.snow.css" />
 }
 
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/trumbowyg")
+    <script src="/Scripts/quill.min.js"></script>
 }

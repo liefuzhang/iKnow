@@ -17,8 +17,8 @@ namespace iKnow.Models {
 
         public string PlainContent {
             get {
-                var parsed = Regex.Replace(Content, "</(p|li|h3)>", "&nbsp;");
-                return Regex.Replace(parsed, "<.*?>", String.Empty);
+                var parsed = Regex.Replace(Content, "</(p|li|h2|blockquote)>", " ");
+                return Regex.Replace(parsed, "<.*?>", String.Empty).Trim();
             }
         }
 
