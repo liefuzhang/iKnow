@@ -255,7 +255,6 @@
     <Content Include="Content\chosen-sprite.png" />
     <Content Include="Content\chosen.css" />
     <Content Include="Content\font-awesome.css" />
-    <Content Include="Content\icons.svg" />
     <Content Include="Content\Images\connected-world.png" />
     <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\Topic\default.png" />

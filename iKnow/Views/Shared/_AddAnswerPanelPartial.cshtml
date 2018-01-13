@@ -5,6 +5,8 @@
 @using (@Html.BeginForm("Save", "Answer")) {
     <div class="rich-editor">
         @Html.HiddenFor(m => m.AnswerPanelContent, new { @class = "answer-content-hidden" })
+        <div class="full-screen enter-full-screen"><i class="fa fa-expand" aria-hidden="true"></i></div>
+        <div class="full-screen exit-full-screen"><i class="fa fa-compress" aria-hidden="true"></i></div>
         <div class="rich-editor-inner">
         </div>
         <div class="rich-editor-footer">

@@ -733,9 +733,32 @@ a.collapse-answer:hover {
 
     .add-answer-panel .rich-editor {
         min-height: 160px;
+        position: relative;
     }
 
-.answer-content  p,
+        .add-answer-panel .rich-editor .full-screen {
+            position: absolute;
+            right: 25px;
+            top: 9px;
+            width: 20px;
+            height: 20px;
+            z-index: 100;
+            background-color: transparent;
+            color: #444;
+            border: none;
+            padding: 2px;
+            opacity: 0.6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .add-answer-panel .rich-editor .full-screen:hover {
+                color: #06c;
+                cursor: pointer;
+            }
+
+.answer-content p,
 .answer-content li,
 .answer-content blockquote {
     margin-bottom: 1em !important;
@@ -751,6 +774,7 @@ a.collapse-answer:hover {
     border-right: none;
     border-top: 1px solid #d7e0e2;
     border-bottom: 1px solid #d7e0e2;
+    height: 42px;
 }
 
 .rich-editor-inner.ql-container.ql-snow {
@@ -758,13 +782,13 @@ a.collapse-answer:hover {
     font-family: inherit;
     font-size: 15px;
     line-height: 1.6;
-    max-height: calc(100vh - 180px);
+    max-height: calc(100vh - 196px);
     border: none;
 }
 
 .rich-editor .ql-editor {
     padding: 12px 20px;
-    max-height: calc(100vh - 180px);
+    max-height: calc(100vh - 220px);
     line-height: 1.6;
 }
 
@@ -777,7 +801,7 @@ a.collapse-answer:hover {
 .answer-content h3,
 .answer-content h4,
 .answer-content h5,
-.answer-content h6{
+.answer-content h6 {
     font-size: 18px;
     margin: 1em 0;
 }
@@ -798,8 +822,45 @@ a.collapse-answer:hover {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    z-index: 500;
     padding: 0 20px;
 }
+
+.editor-full-screen .add-answer-panel form {
+    background-color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.ediotr-full-screen .main,
+.editor-full-screen .add-answer-panel {
+    position: relative;
+    z-index: 200;
+}
+
+.add-answer-panel .rich-editor .exit-full-screen,
+.ediotr-full-screen .add-answer-panel .rich-editor .enter-full-screen {
+    display: none;
+}
+
+.ediotr-full-screen .add-answer-panel .rich-editor .exit-full-screen {
+    display: block;
+}
+
+
+.editor-full-screen .rich-editor {
+    width: 632px;
+    height: calc(100vh);
+    margin: 0 auto;
+}
+
+    .editor-full-screen .rich-editor .rich-editor-inner.ql-container.ql-snow,
+    .editor-full-screen .rich-editor .ql-editor {
+        height: calc(100vh - 94px);
+        max-height: none;
+    }
 
 h3.question-answer-name > a,
 .answer-body h3 > a {
@@ -852,9 +913,9 @@ h3.question-answer-name > a,
         counter-increment: list-0;
     }
 
-    .answer-content ol li:before {
-        content: counter(list-0, decimal) '. ';
-    }
+        .answer-content ol li:before {
+            content: counter(list-0, decimal) '. ';
+        }
 
     .answer-content p, .answer-content li {
         margin-bottom: 1em;
@@ -871,7 +932,7 @@ h3.question-answer-name > a,
     .answer-content .answer-panel-header img {
         margin: 0;
     }
-    
+
     .answer-content a {
         color: #259 !important;
         text-decoration: none !important;

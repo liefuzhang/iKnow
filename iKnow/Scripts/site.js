@@ -147,7 +147,22 @@ function showAddAnswerPanel(edit) {
         $(".rich-editor-inner").html(content);
     }
 
-    var quill = new Quill(".rich-editor-inner", {
+    var quill = getEditoer();
+
+    $(".ql-editor")
+        .on("mousewheel DOMMouseScroll", function (e) {
+            preventOuterScrolling(e);
+        });
+
+    $(".full-screen")
+        .on("click", function (e) {
+            $("body").toggleClass("modal-open editor-full-screen");
+        });
+
+}
+
+function getEditoer() {
+    return new Quill(".rich-editor-inner", {
         placeholder: "Write your answer here...",
         modules: {
             toolbar: [['bold', 'italic'],
@@ -170,11 +185,6 @@ function showAddAnswerPanel(edit) {
             matchVisual: false
         }
     });
-
-    $(".ql-editor")
-        .on('mousewheel DOMMouseScroll', function (e) {
-            preventOuterScrolling(e);
-        });
 }
 
 function preventOuterScrolling(e) {
