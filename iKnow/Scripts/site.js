@@ -181,10 +181,12 @@ function getEditoer() {
           'blockquote',
           'image',
           'indent'
-        ], clipboard: {
+        ], 
+        clipboard: {
             matchVisual: false
-        }
-    });
+        },
+        bounds: ".rich-editor"
+        });
 }
 
 function preventOuterScrolling(e) {
@@ -318,5 +320,12 @@ function cleanUpErrorAndWarning() {
 }
 
 function submitAnswer() {
-    $(this).get(0).elements["AnswerPanelContent"].value = $(".ql-editor").html();
+    var $editor = $(".ql-editor");
+    if ($editor.text().trim().length === 0 
+        && $editor.find('img').length === 0) {
+        showWarning("Content can not be empty.");
+        return false;
+    }
+    if ($(".ql-editor").html())
+        $(this).get(0).elements["AnswerPanelContent"].value = $(".ql-editor").html();
 }

@@ -734,6 +734,7 @@ a.collapse-answer:hover {
     .add-answer-panel .rich-editor {
         min-height: 160px;
         position: relative;
+        overflow-y: hidden;
     }
 
         .add-answer-panel .rich-editor .full-screen {
@@ -938,6 +939,10 @@ h3.question-answer-name > a,
         text-decoration: none !important;
     }
 
+        .answer-content a:hover {
+            text-decoration: underline !important;
+        }
+
 .answer-container-inner .answer-panel {
     padding: 0 20px;
 }
@@ -1026,16 +1031,16 @@ h3.question-answer-name > a,
     display: inline-block;
 }
 
-    .write-answer:hover,
-    .view-answer:hover {
-        background-color: rgba(13,121,209,.06);
-        text-decoration: none;
-    }
+.write-answer:hover,
+.view-answer:hover {
+    background-color: rgba(13,121,209,.06);
+    text-decoration: none;
+}
 
-    .write-answer i,
-    .view-answer i {
-        margin: 0 5px;
-    }
+.write-answer i,
+.view-answer i {
+    margin: 0 5px;
+}
 
 .answer-container .content-header {
     margin-bottom: 5px;
