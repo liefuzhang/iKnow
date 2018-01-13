@@ -1022,7 +1022,7 @@ h3.question-answer-name > a,
     color: teal;
 }
 
-.view-answer {
+.question-header-panel .view-answer {
     display: inline-block;
 }
 

@@ -31,12 +31,21 @@
                         </div>
                     }
                 </div>
-                <div class="question-content-footer panel">
-                    <a class="write-answer">
-                        <i class="fa fa-pencil" aria-hidden="true"></i>
-                        Write Answer
-                    </a>
-                </div>
+                if (Model.UserAnswerId > 0) {
+                    <div class="question-content-footer panel">
+                        <a class="view-answer" href=@Url.Action("Detail", "Answer", new { id = Model.UserAnswerId })>
+                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                            View Answer
+                        </a>
+                    </div>
+                } else {
+                    <div class="question-content-footer panel">
+                        <a class="write-answer">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                            Write Answer
+                        </a>
+                    </div>
+                }
             } else {
                 <div class="empty-question-footer panel">
                     <i class="fa fa-edit fa-4x" aria-hidden="true"></i>
