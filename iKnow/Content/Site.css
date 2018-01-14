@@ -383,7 +383,7 @@ ul.navbar-nav li {
 
 .navbar .add-question-button {
     margin-left: 30px;
-    background-color: #368BC1;
+    background-color: #368ab0;
     border: 1px solid #277aac;
     line-height: 28px;
 }
@@ -482,10 +482,10 @@ ul.navbar-nav li {
         display: flex;
     }
 
-    .topic-container .topic-body .topic-about p {
-        flex: 1;
-        min-width: 50%;
-    }
+        .topic-container .topic-body .topic-about p {
+            flex: 1;
+            min-width: 50%;
+        }
 
         .topic-container .topic-body .topic-about img {
             border-radius: 4px;
@@ -522,7 +522,8 @@ ul.navbar-nav li {
 }
 
     .topic-detail-container .content-header .img-container {
-        margin-right: 10px;
+        margin-right: 15px;
+        padding-bottom: 10px;
         width: 60px;
         height: 60px;
     }
@@ -534,6 +535,20 @@ ul.navbar-nav li {
 .topic-detail-inner .question-answer-topic {
     display: none;
 }
+
+.topic-empty-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 50px;
+    flex-direction: column;
+    color: #8590a6;
+}
+
+    .topic-empty-container i {
+        opacity: 0.3;
+        margin-bottom: 10px;
+    }
 
 .question-answer-content {
     font-size: 15px;
@@ -1288,7 +1303,7 @@ h3.question-answer-name > a,
 }
 
     .user-profile-dropdown-item:hover {
-        background-color: #368BC1;
+        background-color: #368ab0;
     }
 
     .user-profile-dropdown-item i {
@@ -1322,7 +1337,7 @@ h3.question-answer-name > a,
         }
 
             .user-profile-dropdown-item form button:hover {
-                background-color: #368BC1;
+                background-color: #368ab0;
             }
 
 .user-profile-container form,
