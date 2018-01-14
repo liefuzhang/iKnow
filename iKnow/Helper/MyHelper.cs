@@ -1,6 +1,10 @@
 ﻿namespace iKnow.Helper {
     public class MyHelper {
         public static string UppercaseWords(string value) {
+            if (value == null) {
+                return null;
+            }
+
             char[] array = value.ToCharArray();
             // Handle the first letter in the string.
             if (array.Length >= 1) {
@@ -21,6 +25,10 @@
         }
 
         public static string CapitalizeWords(string value) {
+            if (value == null) {
+                return null;
+            }
+
             char[] array = value.ToCharArray();
             // Handle the first letter in the string.
             if (array.Length >= 1) {

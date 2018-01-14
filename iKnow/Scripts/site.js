@@ -134,11 +134,18 @@ function toggleModal(e, action) {
 }
 
 function showAddAnswerPanel(edit) {
+    if (!$(".add-answer-panel").hasClass("hide")) {
+        // if already opened, scroll to it and return
+        $('html, body').scrollTop($(".add-answer-panel").offset().top - 100);
+        return;
+    }
+
     if (iknow.isUserAuthorized !== true) {
         showWarning("Please log in before you write question");
         return;
     }
-    $(".add-answer-panel.hide").slideDown(100);
+
+    $(".add-answer-panel.hide").slideDown(100).removeClass("hide");
     $('html, body').scrollTop($(".add-answer-panel").offset().top - 100);
 
     if (edit === true) {
