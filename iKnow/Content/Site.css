@@ -155,7 +155,7 @@ a.btn, button.btn, input.btn {
 
     a.btn:active, button.btn:active,
     a.btn:focus, button.btn:focus {
-        background: #277aac;
+        background-color: #277aac;
         box-shadow: inset 0px 0px 10px #174a80;
         -moz-box-shadow: inset 0px 0px 10px #174a80;
         -webkit-box-shadow: inset 0px 0px 10px #174a80;
@@ -163,8 +163,22 @@ a.btn, button.btn, input.btn {
 
 .btn.btn-delete {
     background-color: #795548;
-    border-color: #5D4037;
 }
+
+.btn.btn-delete:hover {
+    background: #836155;
+    box-shadow: 0px 0px 2px #836155;
+    -moz-box-shadow: 0px 0px 2px #836155;
+    -webkit-box-shadow: 0px 0px 2px #836155;
+}
+
+    .btn.btn-delete:active,
+    .btn.btn-delete:focus {
+        background-color: #765040;
+        box-shadow: 0px 0px 2px #553937;
+        -moz-box-shadow: 0px 0px 2px #553937;
+        -webkit-box-shadow: 0px 0px 2px #553937;
+    }
 
 .btn-func {
     margin-top: 20px;
@@ -214,7 +228,7 @@ textarea:focus {
             flex: 0 0 auto;
             height: auto;
         }
-        
+
 .underline {
     text-decoration: underline;
 }
@@ -441,15 +455,16 @@ ul.navbar-nav li {
     position: relative;
 }
 
-    .topic-container .topic-body h4 {
-        margin-top: 25px;
-        margin-bottom: 15px;
-    }
+.topic-container .topic-body > a {
+    display: inline-block;
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
 
     .topic-container .topic-body .enter-topic {
         position: absolute;
         right: 0;
-        top: -4px;
+        top: -3px;
     }
 
     .topic-container .topic-body .add-topic {
@@ -458,6 +473,7 @@ ul.navbar-nav li {
         top: 0;
         font-size: 14px;
         color: #259;
+        line-height: 24px;
     }
 
     .topic-container .topic-body .topic-about {
@@ -864,14 +880,14 @@ a.collapse-answer:hover {
     z-index: 200;
 }
 
-.add-answer-panel .rich-editor .exit-full-screen,
-.editor-full-screen .add-answer-panel .rich-editor .enter-full-screen {
-    display: none;
-}
+    .add-answer-panel .rich-editor .exit-full-screen,
+    .editor-full-screen .add-answer-panel .rich-editor .enter-full-screen {
+        display: none;
+    }
 
-.editor-full-screen .add-answer-panel .rich-editor .exit-full-screen {
-    display: block;
-}
+    .editor-full-screen .add-answer-panel .rich-editor .exit-full-screen {
+        display: block;
+    }
 
 
 .editor-full-screen .rich-editor {
