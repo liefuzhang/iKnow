@@ -168,6 +168,7 @@
     <Compile Include="Controllers\AnswerController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Helper\MyHelper.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\TopicController.cs" />
@@ -263,7 +264,7 @@
     <Content Include="Content\Images\Topic\software-engineering.png" />
     <Content Include="Content\Images\UserProfile\default.png" />
     <Content Include="Content\quill.snow.css" />
-    <Content Include="favicon.ico" />
+    <Content Include="favicon.png" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

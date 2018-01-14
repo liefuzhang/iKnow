@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using iKnow.Models;
 using iKnow.ViewModels;
 using System.Data.Entity;
+using iKnow.Helper;
 using Constants = iKnow.Models.Constants;
 using Microsoft.AspNet.Identity;
 
@@ -100,13 +101,16 @@ namespace iKnow.Controllers {
                 return Redirect(Request.UrlReferrer.ToString());
             }
 
-            var questionPosted = formViewModel.Question;
-            var questionToSave = questionPosted;
+            formViewModel.Question.Title = MyHelper.CapitalizeWords(formViewModel.Question.Title);
+            formViewModel.Question.Description = MyHelper.CapitalizeWords(formViewModel.Question.Description);
 
-            if (!questionPosted.Title.EndsWith("?")) {
-                questionPosted.Title += "?";
+            if (!formViewModel.Question.Title.EndsWith("?")) {
+                formViewModel.Question.Title += "?";
             }
 
+            var questionPosted = formViewModel.Question;
+            var questionToSave = questionPosted;
+            
             if (questionPosted.Id > 0) {
                 var questionInDb = _context.Questions.Include("Topics").Single(q => q.Id == questionPosted.Id);
                 questionInDb.Title = questionPosted.Title;
