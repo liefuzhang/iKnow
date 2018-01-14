@@ -132,24 +132,33 @@ label {
 }
 
 a.btn, button.btn, input.btn {
-    border: 1px solid #00796B;
-    border-radius: 4px;
-    background-color: #009797;
+    border-radius: 2px;
+    background-color: #297fa3;
     font-size: 14px;
-    color: white;
-    padding: 4px 10px;
+    font-weight: 500;
+    color: #fefefe;
+    padding: 0 30px;
     cursor: pointer;
     display: inline-block;
-    line-height: 1.5;
+    line-height: 30px;
+    height: 30px;
+    border: none;
 }
 
     a.btn:hover, button.btn:hover {
-        border-color: #004D40;
+        background: #368BC1;
+        box-shadow: 0px 0px 2px #368BC1;
+        -moz-box-shadow: 0px 0px 2px #368BC1;
+        -webkit-box-shadow: 0px 0px 2px #368BC1;
         text-decoration: none;
     }
 
-    a.btn:active, button.btn:active {
-        box-shadow: 0 1px 0 rgba(255,255,255,.06), inset 0 1px 2px rgba(0,0,0,.5);
+    a.btn:active, button.btn:active,
+    a.btn:focus, button.btn:focus {
+        background: #277aac;
+        box-shadow: inset 0px 0px 10px #174a80;
+        -moz-box-shadow: inset 0px 0px 10px #174a80;
+        -webkit-box-shadow: inset 0px 0px 10px #174a80;
     }
 
 .btn.btn-delete {
@@ -170,8 +179,18 @@ a.btn, button.btn, input.btn {
     cursor: pointer;
     display: inline-block;
     line-height: 1.5;
-    color: teal;
-    border: 1px solid teal;
+    color: #297fa3;
+    border: 1px solid #297fa3;
+}
+
+input[type="password"]:focus,
+input[type="text"]:focus,
+textarea:focus {
+    outline: none;
+    border: 1px solid #206890;
+    box-shadow: 0px 0px 4px #206890;
+    -moz-box-shadow: 0px 0px 4px #206890;
+    -webkit-box-shadow: 0px 0px 4px #206890;
 }
 
 .form-group {
@@ -195,12 +214,7 @@ a.btn, button.btn, input.btn {
             flex: 0 0 auto;
             height: auto;
         }
-
-    .form-group .btn {
-        padding-left: 18px;
-        padding-right: 18px;
-    }
-
+        
 .underline {
     text-decoration: underline;
 }
@@ -292,9 +306,7 @@ blockquote {
     top: 0;
     height: 45px;
     width: 100%;
-    background: teal;
-    background: -webkit-linear-gradient(top,teal,#00796B);
-    background: linear-gradient(to bottom,teal,#00796B);
+    background: #297fa3;
     color: white;
     z-index: 100;
 }
@@ -303,7 +315,7 @@ blockquote {
     .logo a,
     .login-link,
     .user-profile-inner {
-        color: #eee;
+        color: white;
     }
 
         .navbar .navbar-nav a:hover,
@@ -311,7 +323,7 @@ blockquote {
         .login-link:hover,
         .user-profile-inner:hover {
             text-decoration: none;
-            color: white;
+            color: #eee;
         }
 
     .navbar .content-container {
@@ -351,14 +363,19 @@ ul.navbar-nav li {
     }
 
 .navbar-nav li.active {
-    background: #00796B;
-    background: -webkit-linear-gradient(top,#00796B,#00695C);
-    background: linear-gradient(to bottom,#00796B,#00695C);
+    background: #206890;
 }
 
 .navbar .add-question-button {
     margin-left: 30px;
+    background-color: #368BC1;
+    border: 1px solid #277aac;
+    line-height: 28px;
 }
+
+    .navbar .add-question-button:hover {
+        color: #eee;
+    }
 
 
 .navbar .navbar-user {
@@ -411,12 +428,12 @@ ul.navbar-nav li {
         margin-bottom: 10px;
         border-radius: 30px;
         border: 1px solid #daecf5;
-        color: #009797;
+        color: #297fa3;
         cursor: pointer;
     }
 
         .topic-container .topic-list li.active {
-            background-color: #009797;
+            background-color: #297fa3;
             color: white;
         }
 
@@ -437,7 +454,7 @@ ul.navbar-nav li {
 
     .topic-container .topic-body .add-topic {
         position: absolute;
-        right: 120px;
+        right: 150px;
         top: 0;
         font-size: 14px;
         color: #259;
@@ -464,7 +481,7 @@ ul.navbar-nav li {
     top: 0;
     right: 0;
     font-size: 14px;
-    color: #009797;
+    color: #259;
     line-height: 1.75rem;
 }
 
@@ -596,7 +613,7 @@ a.collapse-answer:hover {
     }
 
     .modal-container .modal-inner {
-        width: 600px;
+        width: 620px;
         max-height: calc(100vh - 50px);
         margin: 0 auto;
         display: flex;
@@ -612,7 +629,7 @@ a.collapse-answer:hover {
     }
 
         .modal-container .modal-inner form {
-            width: 556px;
+            width: 560px;
         }
 
         .modal-container .modal-inner.question-topic-inner {
@@ -655,8 +672,6 @@ a.collapse-answer:hover {
 
         .modal-container .modal-inner button {
             margin-bottom: 20px;
-            padding-left: 18px;
-            padding-right: 18px;
         }
 
     .modal-container .chosen-choices {
@@ -668,6 +683,14 @@ a.collapse-answer:hover {
         min-height: 50px;
         overflow-y: auto;
     }
+
+        .modal-container .chosen-choices:visited {
+            outline: none;
+            border: 1px solid #206890;
+            box-shadow: 0px 0px 4px #206890;
+            -moz-box-shadow: 0px 0px 4px #206890;
+            -webkit-box-shadow: 0px 0px 4px #206890;
+        }
 
     .modal-container .chosen-container-multi .chosen-choices li.search-choice {
         padding-right: 25px !important;
@@ -707,7 +730,7 @@ a.collapse-answer:hover {
         padding: 0 12px;
         font-size: 14px;
         line-height: 30px;
-        color: teal;
+        color: #297fa3;
         background: #eef4fa;
         border-radius: 100px;
         margin: 3px 5px 3px 0;
@@ -842,11 +865,11 @@ a.collapse-answer:hover {
 }
 
 .add-answer-panel .rich-editor .exit-full-screen,
-.ediotr-full-screen .add-answer-panel .rich-editor .enter-full-screen {
+.editor-full-screen .add-answer-panel .rich-editor .enter-full-screen {
     display: none;
 }
 
-.ediotr-full-screen .add-answer-panel .rich-editor .exit-full-screen {
+.editor-full-screen .add-answer-panel .rich-editor .exit-full-screen {
     display: block;
 }
 
@@ -1024,7 +1047,7 @@ h3.question-answer-name > a,
 .write-answer, .view-answer {
     cursor: pointer;
     display: block;
-    color: teal;
+    color: #297fa3;
 }
 
 .question-header-panel .view-answer {
@@ -1234,15 +1257,15 @@ h3.question-answer-name > a,
     height: 40px;
     line-height: 40px;
     width: 120px;
-    border-top: 1px solid #00796B;
+    border-top: 1px solid #206890;
     box-shadow: 0 1px 1px rgba(0,0,0,.4);
-    background-color: teal;
+    background-color: #297fa3;
     color: white;
     cursor: pointer;
 }
 
     .user-profile-dropdown-item:hover {
-        background-color: #009797;
+        background-color: #368BC1;
     }
 
     .user-profile-dropdown-item i {
@@ -1269,14 +1292,14 @@ h3.question-answer-name > a,
             width: 100%;
             border: 0;
             text-align: left;
-            background-color: teal;
+            background-color: #297fa3;
             color: white;
             cursor: pointer;
             padding: 0;
         }
 
             .user-profile-dropdown-item form button:hover {
-                background-color: #009797;
+                background-color: #368BC1;
             }
 
 .user-profile-container form,
@@ -1421,7 +1444,7 @@ h3.question-answer-name > a,
 }
 
 .search {
-    border: 1px solid #00796B;
+    border: 1px solid #206890;
     width: 220px;
     height: 18px;
     background-color: #e1eaf2;
@@ -1438,13 +1461,9 @@ h3.question-answer-name > a,
     right: 0;
     top: 0;
     border-radius: 0 3px 3px 0;
-    border: 1px solid #00796B;
+    border: 1px solid #206890;
     padding: 0;
 }
-
-    .search-container .btn:hover {
-        border: 1px solid #00796B;
-    }
 
     .search-container .btn:active {
         box-shadow: inset 0 0 1px rgba(0,0,0,.5);
