@@ -101,8 +101,8 @@ namespace iKnow.Controllers {
                 return Redirect(Request.UrlReferrer.ToString());
             }
 
-            formViewModel.Question.Title = MyHelper.CapitalizeWords(formViewModel.Question.Title);
-            formViewModel.Question.Description = MyHelper.CapitalizeWords(formViewModel.Question.Description);
+            formViewModel.Question.Title = MyHelper.CapitalizeWords(formViewModel.Question.Title).Trim();
+            formViewModel.Question.Description = MyHelper.CapitalizeWords(formViewModel.Question.Description).Trim();
 
             if (!formViewModel.Question.Title.EndsWith("?")) {
                 formViewModel.Question.Title += "?";

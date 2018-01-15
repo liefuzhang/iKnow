@@ -1,4 +1,7 @@
-﻿namespace iKnow.Helper {
+﻿using System.Text.RegularExpressions;
+using System.Web;
+
+namespace iKnow.Helper {
     public class MyHelper {
         public static string UppercaseWords(string value) {
             if (value == null) {
@@ -36,7 +39,7 @@
                     array[0] = char.ToUpper(array[0]);
                 }
             }
-            
+
             return new string(array);
         }
     }

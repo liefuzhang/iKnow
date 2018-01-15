@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace iKnow.Models {
     public class Question {
@@ -10,9 +11,11 @@ namespace iKnow.Models {
 
         [Required]
         [MaxLength(255)]
+        [AllowHtml]
         public string Title { get; set; }
 
         [MaxLength(1000)]
+        [AllowHtml]
         public string Description { get; set; }
         public AppUser AppUser { get; set; }
         public string AppUserId { get; set; }

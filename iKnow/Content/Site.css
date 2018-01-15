@@ -485,6 +485,7 @@ ul.navbar-nav li {
         .topic-container .topic-body .topic-about p {
             flex: 1;
             min-width: 50%;
+            white-space: pre-wrap;
         }
 
         .topic-container .topic-body .topic-about img {
@@ -753,6 +754,7 @@ a.collapse-answer:hover {
     .question-header-panel p {
         margin-top: 5px;
         margin-bottom: 15px;
+        white-space: pre-wrap;
     }
 
     .question-header-panel ul {
@@ -844,13 +846,13 @@ a.collapse-answer:hover {
     font-family: inherit;
     font-size: 15px;
     line-height: 1.6;
-    max-height: calc(100vh - 196px);
+    max-height: calc(100vh - 236px);
     border: none;
 }
 
 .rich-editor .ql-editor {
     padding: 12px 20px;
-    max-height: calc(100vh - 220px);
+    max-height: calc(100vh - 260px);
     line-height: 1.6;
 }
 

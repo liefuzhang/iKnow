@@ -96,7 +96,12 @@ function toggleModal(e, action) {
             $.ajax({
                 url: "/question/getform/" + questionId,
                 dataType: "html",
-                success: commonCallback
+                success: (html) => {
+                    commonCallback(html);
+                    var $textArea = $(".add-question-description textarea");
+                    var scrollHeight = $(".add-question-description textarea").get(0).scrollHeight;
+                    $textArea.css('height', scrollHeight + 'px');
+                }
             });
             break;
         case "editTopic":
@@ -188,12 +193,12 @@ function getEditoer() {
           'blockquote',
           'image',
           'indent'
-        ], 
+        ],
         clipboard: {
             matchVisual: false
         },
         bounds: ".rich-editor"
-        });
+    });
 }
 
 function preventOuterScrolling(e) {
@@ -328,7 +333,7 @@ function cleanUpErrorAndWarning() {
 
 function submitAnswer() {
     var $editor = $(".ql-editor");
-    if ($editor.text().trim().length === 0 
+    if ($editor.text().trim().length === 0
         && $editor.find('img').length === 0) {
         showWarning("Content can not be empty.");
         return false;
