@@ -113,9 +113,10 @@ namespace iKnow.Controllers {
 
             try {
                 _context.SaveChanges();
-            } catch (DbEntityValidationException e) {
-
-                throw e;
+            } catch (DbEntityValidationException ex) {
+                var error = ex.EntityValidationErrors.First().ValidationErrors.First();
+                ModelState.AddModelError("", error.ErrorMessage);
+                return View("~/Views/Question/Detail.cshtml", viewModel);
             }
 
             return RedirectToAction("Detail", "Answer", new { id = answerToSave.Id });

@@ -516,6 +516,10 @@ ul.navbar-nav li {
     height: 50px;
 }
 
+.topic-form-container textarea {
+    overflow-y: auto;
+}
+
 .topic-detail-container .content-header {
     display: flex;
     justify-content: flex-start;

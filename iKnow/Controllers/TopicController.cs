@@ -102,6 +102,10 @@ namespace iKnow.Controllers {
         [ValidateAntiForgeryToken]
         public ActionResult Save(TopicFormViewModel viewModel) {
             try {
+                if (!ModelState.IsValid) {
+                    return View("TopicForm", viewModel);
+                }
+
                 var topic = viewModel.Topic;
                 topic.Name = MyHelper.UppercaseWords(topic.Name)?.Trim();
                 topic.Description = MyHelper.CapitalizeWords(topic.Description)?.Trim();
@@ -131,7 +135,7 @@ namespace iKnow.Controllers {
                 return RedirectToAction("Index", new { selectedTopicId = topic.Id });
             } catch (DbEntityValidationException ex) {
                 var error = ex.EntityValidationErrors.First().ValidationErrors.First();
-                ModelState.AddModelError(nameof(viewModel.Topic) + "." + error.PropertyName, error.ErrorMessage);
+                ModelState.AddModelError("", error.ErrorMessage);
                 return View("TopicForm", viewModel);
             }
         }

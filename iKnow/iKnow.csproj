@@ -224,6 +224,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Answer.cs" />
+    <Compile Include="Models\ImageFileTypesAttribute.cs" />
     <Compile Include="ViewModels\Account\ChangePasswordViewModel.cs" />
     <Compile Include="Models\Constants.cs" />
     <Compile Include="Models\Identity\AppUserManager.cs" />

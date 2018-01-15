@@ -9,7 +9,7 @@ namespace iKnow.ViewModels {
     public class TopicFormViewModel {
         public Topic Topic { get; set; }
 
-        [RegularExpression(@"([a-zA-Z0-9\s_\\.\-:()])+(.png|.jpg)$", ErrorMessage = "Only png/jpg files allowed.")]
+        [ImageFileTypes("jpg,jpeg,png")]
         public HttpPostedFileBase PostedFile { get; set; }
     }
 }
