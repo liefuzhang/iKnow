@@ -26,6 +26,8 @@
     $(".modal-container").on("click", ".error li", hideError);
     $(".warning").on("click", "div", hideError);
     $(document).on("click", pageClickHandler);
+    $(window).scroll(backToTopDetect);
+    $(".back-top").on("click", goToTop);
 });
 
 function selectTopic() {
@@ -343,4 +345,19 @@ function submitAnswer() {
     }
     if ($(".ql-editor").html())
         $(this).get(0).elements["AnswerPanelContent"].value = $(".ql-editor").html();
+}
+
+function backToTopDetect() {
+    if ($(this).scrollTop() > 500) {
+        $(".back-top-container").fadeIn();
+    } else {
+        $(".back-top-container").fadeOut();
+    }
+}
+
+function goToTop() {
+    $("html, body")
+        .animate({
+            scrollTop: 0
+        }, 300);
 }

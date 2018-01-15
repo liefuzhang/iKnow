@@ -103,8 +103,8 @@ namespace iKnow.Controllers {
         public ActionResult Save(TopicFormViewModel viewModel) {
             try {
                 var topic = viewModel.Topic;
-                topic.Name = MyHelper.UppercaseWords(topic.Name).Trim();
-                topic.Description = MyHelper.CapitalizeWords(topic.Description).Trim();
+                topic.Name = MyHelper.UppercaseWords(topic.Name)?.Trim();
+                topic.Description = MyHelper.CapitalizeWords(topic.Description)?.Trim();
                 var postedFile = viewModel.PostedFile;
                 if (topic.Id == 0) {
                     _context.Topics.Add(topic);
