@@ -301,6 +301,10 @@ namespace iKnow.Controllers {
         [ValidateAntiForgeryToken]
         public ActionResult SaveProfile(UserProfileViewModel viewModel) {
             try {
+                if (!ModelState.IsValid) {
+                    return View("UserProfile", viewModel);
+                }
+
                 var user = viewModel.AppUser;
                 var postedPhoto = viewModel.PostedPhoto;
                 var userInDb = _context.Users.Single(u => u.Id == user.Id);
