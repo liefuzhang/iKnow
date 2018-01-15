@@ -139,38 +139,41 @@ function toggleModal(e, action) {
 }
 
 function showAddAnswerPanel(edit) {
-    if (!$(".add-answer-panel").hasClass("hide")) {
-        // if already opened, scroll to it and return
-        $('html, body').scrollTop($(".add-answer-panel").offset().top - 100);
-        return;
-    }
+    if ($(".add-answer-panel").hasClass("hide")) {
+        // if not already opened
+        if (iknow.isUserAuthorized !== true) {
+            showWarning("Please log in before you write question");
+            return;
+        }
 
-    if (iknow.isUserAuthorized !== true) {
-        showWarning("Please log in before you write question");
-        return;
-    }
+        if (edit === true) {
+            // copy content
+            var content = $(event.currentTarget).siblings(".answer-panel-content-inner").html();
+            $(".rich-editor-inner").html(content);
+        }
 
-    $(".add-answer-panel.hide").slideDown(100).removeClass("hide");
-    $('html, body').scrollTop($(".add-answer-panel").offset().top - 100);
+        var quill = getEditoer();
 
-    if (edit === true) {
-        // copy content
-        var content = $(event.currentTarget).siblings(".answer-panel-content-inner").html();
-        $(".rich-editor-inner").html(content);
-    }
+        $(".ql-editor")
+            .on("mousewheel DOMMouseScroll", function (e) {
+                preventOuterScrolling(e);
+            });
 
-    var quill = getEditoer();
+        $(".full-screen")
+            .on("click", function (e) {
+                $("body").toggleClass("modal-open editor-full-screen");
+            });
 
-    $(".ql-editor")
-        .on("mousewheel DOMMouseScroll", function (e) {
-            preventOuterScrolling(e);
+        $("html, body").animate({
+            scrollTop: $(".main-content-container").offset().top - 100
+        }, 0, () => {
+            $(".add-answer-panel.hide").slideDown(100).removeClass("hide");
+            $(".ql-editor").get(0).focus();
         });
-
-    $(".full-screen")
-        .on("click", function (e) {
-            $("body").toggleClass("modal-open editor-full-screen");
-        });
-
+    } else {
+        $("html, body").scrollTop($(".main-content-container").offset().top - 100);
+        $(".ql-editor").get(0).focus();
+    }
 }
 
 function getEditoer() {
