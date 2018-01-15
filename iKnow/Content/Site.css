@@ -1478,6 +1478,11 @@ h3.question-answer-name > a,
     padding-top: 5px;
     line-height: 1.8;
 }
+
+.topic-description-sidebar p {
+    white-space: pre-wrap;    
+}
+
 /*#endregion sidebar*/
 
 /*#region search */
