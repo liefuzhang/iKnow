@@ -7,22 +7,25 @@
             @if (questionAnswer.Key.Topics != null && questionAnswer.Key.Topics.Count > 0) {
                 <span class="question-answer-topic">
                     Topic &middot;
-                    @Html.ActionLink(questionAnswer.Key.Topics.First().Name, "Detail", "Topic", new { id = questionAnswer.Key.Topics.First().Id }, null)
+                    @{
+                        var topic = questionAnswer.Key.Topics.OrderBy(t => Guid.NewGuid()).First();
+                        @Html.ActionLink(topic.Name, "Detail", "Topic", new { id = topic.Id }, null)
+                    }
                 </span>
             }
 
             <h3 class="question-answer-name">@Html.ActionLink(questionAnswer.Key.Title, "Detail", "Question", new { id = questionAnswer.Key.Id }, new { target = "_blank" }) </h3>
             <div class="question-author">
                 <span class="img-container">
-                    <a href="@questionAnswer.Key.AppUser.ProfilePageUrl" target="_blank">
-                        <img src="@questionAnswer.Key.AppUser.IconPath" />
+                    <a href="@questionAnswer.Value.AppUser.ProfilePageUrl" target="_blank">
+                        <img src="@questionAnswer.Value.AppUser.IconPath" />
                     </a>
                 </span>
                 <span class="user-info">
-                    <a href="@questionAnswer.Key.AppUser.ProfilePageUrl" target="_blank">
-                        <b>@questionAnswer.Key.AppUser.FullName</b>
+                    <a href="@questionAnswer.Value.AppUser.ProfilePageUrl" target="_blank">
+                        <b>@questionAnswer.Value.AppUser.FullName</b>
                     </a>
-                    <span class="user-intro">@(!string.IsNullOrEmpty(questionAnswer.Key.AppUser.Intro) ? ", " + questionAnswer.Key.AppUser.Intro : "")</span>
+                    <span class="user-intro">@(!string.IsNullOrEmpty(questionAnswer.Value.AppUser.Intro) ? ", " + questionAnswer.Value.AppUser.Intro : "")</span>
                 </span>
             </div>
             <div class="short-answer-container">
@@ -46,8 +49,7 @@
                     <div class="answer-footer">
                         @if (questionAnswer.Value.UpdatedDate == null) {
                             <span>Answered @questionAnswer.Value.CreatedDate.ToString("MMM d, yyyy")</span>
-                        }
-                        else {
+                        } else {
                             <span>Updated @questionAnswer.Value.UpdatedDate.Value.ToString("MMM d, yyyy")</span>
                         }
                         <a class="collapse-answer">
@@ -59,4 +61,4 @@
             </div>
         </div>
     </div>
-}
+                        }

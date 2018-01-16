@@ -62,7 +62,7 @@ namespace iKnow.Controllers {
             foreach (var answer in answers) {
                 if (answer.Answer != null) {
                     var question = topic.Questions.Single(q => q.Id == answer.QuestionId);
-                    _context.Users.Where(u => u.Id == question.AppUserId).Load();
+                    _context.Users.Where(u => u.Id == answer.Answer.AppUserId).Load();
                     questionAnswers.Add(question, answer.Answer);
                 }
             }
