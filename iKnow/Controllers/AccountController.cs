@@ -71,7 +71,7 @@ namespace iKnow.Controllers {
                 return View(model);
             }
 
-            var user = UserManager.FindByEmail(model.Email);
+            var user = UserManager.FindByEmail(model.Email.Trim());
             if (user == null) {
                 ModelState.AddModelError("", "Invalid login attempt.");
                 return View(model);
@@ -107,7 +107,7 @@ namespace iKnow.Controllers {
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model) {
             if (ModelState.IsValid) {
-                var fullName = (model.FirstName + model.LastName).ToLower();
+                var fullName = (model.FirstName.Trim() + model.LastName.Trim()).ToLower();
                 var userNames = _context.Users
                     .Where(u => u.UserName.StartsWith(fullName))
                     .Select(u => u.UserName)
@@ -121,11 +121,12 @@ namespace iKnow.Controllers {
                 var userName = fullName + increment;
 
                 var user = new AppUser {
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    Email = model.Email,
+                    FirstName = model.FirstName.Trim(),
+                    LastName = model.LastName.Trim(),
+                    Email = model.Email.Trim(),
                     UserName = userName,
-                    Gender = 0
+                    Gender = 0,
+                    DefaultIconNumber = (byte)(new Random()).Next(10)
                 };
 
                 var result = await UserManager.CreateAsync(user, model.Password);
@@ -158,7 +159,7 @@ namespace iKnow.Controllers {
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model) {
             if (ModelState.IsValid) {
-                var user = await UserManager.FindByEmailAsync(model.Email);
+                var user = await UserManager.FindByEmailAsync(model.Email.Trim());
                 if (user == null) {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");

@@ -4,7 +4,9 @@
         public const string TopicDefaultIconPath = "/Content/Images/Topic/default.png";
         public const double TopicIconDefaultSize = 60;
         public const string UserIconFolderPath = "/Content/Images/UserProfile/";
-        public const string UserDefaultIconPath = "/Content/Images/UserProfile/default.png";
+        public const string UserDefaultIconName = "default";
+        public const string UserDefaultIconExtension = ".png";
+        public const int UserDefaultIconMaxNumber = 9;
         public const double UserIconDefaultSize = 160;
         public const int ShortAnswerLenth = 180;
         public const int DefaultPageSize = 10;

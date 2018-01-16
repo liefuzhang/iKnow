@@ -222,6 +222,18 @@
     <Compile Include="Migrations\201801070104163_ModifySomePropertiesInAppUser.Designer.cs">
       <DependentUpon>201801070104163_ModifySomePropertiesInAppUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801160735003_ChangeAdminAccount.cs" />
+    <Compile Include="Migrations\201801160735003_ChangeAdminAccount.Designer.cs">
+      <DependentUpon>201801160735003_ChangeAdminAccount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801160827562_SeedTopics.cs" />
+    <Compile Include="Migrations\201801160827562_SeedTopics.Designer.cs">
+      <DependentUpon>201801160827562_SeedTopics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801160922393_AddDefaultIconNumberToAppUser.cs" />
+    <Compile Include="Migrations\201801160922393_AddDefaultIconNumberToAppUser.Designer.cs">
+      <DependentUpon>201801160922393_AddDefaultIconNumberToAppUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\ImageFileTypesAttribute.cs" />
@@ -377,6 +389,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801070104163_ModifySomePropertiesInAppUser.resx">
       <DependentUpon>201801070104163_ModifySomePropertiesInAppUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801160735003_ChangeAdminAccount.resx">
+      <DependentUpon>201801160735003_ChangeAdminAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801160827562_SeedTopics.resx">
+      <DependentUpon>201801160827562_SeedTopics.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801160922393_AddDefaultIconNumberToAppUser.resx">
+      <DependentUpon>201801160922393_AddDefaultIconNumberToAppUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

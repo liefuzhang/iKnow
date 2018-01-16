@@ -26,11 +26,13 @@ namespace iKnow.Models {
         [StringLength(50)]
         public string Location { get; set; }
 
+        public Byte DefaultIconNumber { get; set; }
+
         public string IconPath {
             get {
                 var file = Constants.UserIconFolderPath + (Id ?? String.Empty).ToLower().Replace(' ', '-') + ".png";
                 if (!File.Exists(HostingEnvironment.MapPath(file))) {
-                    file = Constants.UserDefaultIconPath;
+                    file = Constants.UserIconFolderPath + Constants.UserDefaultIconName + DefaultIconNumber + Constants.UserDefaultIconExtension;
                 }
                 return file;
             }
