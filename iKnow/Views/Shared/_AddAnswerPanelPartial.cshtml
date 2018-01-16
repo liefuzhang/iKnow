@@ -10,10 +10,10 @@
         <div class="rich-editor-inner">
         </div>
         <div class="rich-editor-footer">
+            <button type="submit" class="btn align-right flex-order-2">Submit Answer</button>
             @if (Model.CanUserDeleteAnswerPanelAnswer) {
-                <button type="submit" formaction=@Url.Action("Delete", "Answer") class="btn btn-delete js-button-delete" data-delete-message="Are you sure you want to delete this answer?">Delete</button>
+                <button type="submit" formaction=@Url.Action("Delete", "Answer") class="btn btn-delete flex-order-1 js-button-delete" data-delete-message="Are you sure you want to delete this answer?">Delete</button>
             }
-            <button type="submit" class="btn align-right">Submit Answer</button>
         </div>
     </div>
 

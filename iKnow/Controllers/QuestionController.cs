@@ -59,7 +59,8 @@ namespace iKnow.Controllers {
                 TopicIds = selectedTopicIds,
                 CanUserDelete = User.Identity.IsAuthenticated
                                && (question.AppUserId == currentUserId
-                                   || User.IsInRole(Constants.AdminRoleName))
+                                   || User.IsInRole(Constants.AdminRoleName)
+                               && question.Id > 0)
             };
 
             return viewModel;
@@ -110,7 +111,7 @@ namespace iKnow.Controllers {
 
             var questionPosted = formViewModel.Question;
             var questionToSave = questionPosted;
-            
+
             if (questionPosted.Id > 0) {
                 var questionInDb = _context.Questions.Include("Topics").Single(q => q.Id == questionPosted.Id);
                 questionInDb.Title = questionPosted.Title;

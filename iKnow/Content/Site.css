@@ -417,6 +417,14 @@ ul.navbar-nav li {
             flex: 1 1 auto;
         }
 
+        .flex-order-1 {
+            order: 1;
+        }
+
+        .flex-order-2 {
+            order: 2;
+        }
+
 /*#region topic */
 
 .main-content-container {
@@ -1614,6 +1622,7 @@ h3.question-answer-name > a,
     overflow: hidden;
     opacity: 0;
     transform: translateX(-50%);
+    z-index: 1000;
 }
 
     .validation-summary-errors ul, .warning div {

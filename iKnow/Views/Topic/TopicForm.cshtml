@@ -32,10 +32,10 @@
         @Html.AntiForgeryToken()
 
         <div class="form-group">
+            <button type="submit" formaction=@Url.Action("Save", "Topic") class="btn btn-func align-right flex-order-2">Save</button>
             @if (Model.Topic.Id != 0) {
-                <button type="submit" formaction=@Url.Action("Delete", "Topic") class="btn btn-func btn-delete js-button-delete" data-delete-message="Are you sure you want to delete this topic?">Delete This Topic</button>
+                <button type="submit" formaction=@Url.Action("Delete", "Topic") class="btn btn-func btn-delete flex-order-1 js-button-delete" data-delete-message="Are you sure you want to delete this topic?">Delete This Topic</button>
             }
-            <button type="submit" formaction=@Url.Action("Save", "Topic") class="btn btn-func align-right">Save</button>
         </div>
     }
 </div>
