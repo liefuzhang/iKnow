@@ -111,19 +111,19 @@ namespace iKnow.Controllers {
 
             var questionPosted = formViewModel.Question;
             var questionToSave = questionPosted;
-
-            // check if question title is unique 
-            if (_context.Questions.Any(q => q.Title == questionToSave.Title)) {
-                TempData["pageError"] = "Question already exists.";
-                return Redirect(Request.UrlReferrer.ToString());
-            }
-
+            
             if (questionPosted.Id > 0) {
                 var questionInDb = _context.Questions.Include("Topics").Single(q => q.Id == questionPosted.Id);
                 questionInDb.Title = questionPosted.Title;
                 questionInDb.Description = questionPosted.Description;
                 questionToSave = questionInDb;
             } else {
+                // check if new question title is unique 
+                if (_context.Questions.Any(q => q.Title == questionToSave.Title)) {
+                    TempData["pageError"] = "Question already exists.";
+                    return Redirect(Request.UrlReferrer.ToString());
+                }
+
                 questionToSave.AppUserId = User.Identity.GetUserId();
                 _context.Questions.Add(questionToSave);
             }

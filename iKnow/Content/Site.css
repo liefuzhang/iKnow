@@ -734,7 +734,7 @@ a.collapse-answer:hover {
     }
 
     .modal-container .chosen-container .chosen-results {
-        max-height: 160px;
+        max-height: 150px;
     }
 
     .modal-container .chosen-choices:visited {
@@ -794,6 +794,7 @@ a.collapse-answer:hover {
 
     .question-header-panel .trigger-edit {
         margin-left: 10px;
+        white-space: nowrap;
     }
 
 .question-detail-container,
@@ -989,37 +990,41 @@ h3.question-answer-name > a,
     }
 
     .answer-content ol li {
-        counter-increment: list-0;
+        counter-increment: list-0 !important;
     }
 
         .answer-content ol li:before {
-            content: counter(list-0, decimal) '. ';
+            content: counter(list-0, decimal) '. ' !important;
         }
 
     .answer-content p, .answer-content li {
         margin-bottom: 1em;
     }
 
-    .answer-content img {
-        position: static;
-        max-width: 95%;
-        transform: none;
-        margin: 1em auto;
-        display: block;
-    }
+.rich-editor .ql-snow .ql-editor li {
+    padding-left: 0 !important;
+}
 
-    .answer-content .answer-panel-header img {
-        margin: 0;
-    }
+.answer-content img {
+    position: static;
+    max-width: 95%;
+    transform: none;
+    margin: 1em auto;
+    display: block;
+}
 
-    .answer-content a {
-        color: #259 !important;
-        text-decoration: none !important;
-    }
+.answer-content .answer-panel-header img {
+    margin: 0;
+}
 
-        .answer-content a:hover {
-            text-decoration: underline !important;
-        }
+.answer-content a {
+    color: #259 !important;
+    text-decoration: none !important;
+}
+
+    .answer-content a:hover {
+        text-decoration: underline !important;
+    }
 
 .answer-container-inner .answer-panel {
     padding: 0 20px;
@@ -1454,7 +1459,7 @@ h3.question-answer-name > a,
 }
 
 .related-question-list .related-question-item {
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 }
 
 .related-question-item a {
@@ -1463,6 +1468,7 @@ h3.question-answer-name > a,
 
 .related-question-item .related-question-item-count {
     color: #8590a6;
+    white-space: nowrap;
 }
 
 .recommended-topic-item {

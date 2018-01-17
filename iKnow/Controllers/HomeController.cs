@@ -42,11 +42,9 @@ namespace iKnow.Controllers {
 
             var questionAnswers = new Dictionary<Question, Answer>();
             foreach (var answer in answers) {
-                if (answer.Answer != null) {
-                    var question = questions.Single(q => q.Id == answer.QuestionId);
-                    _context.Users.Where(u => u.Id == answer.Answer.AppUserId).Load();
-                    questionAnswers.Add(question, answer.Answer);
-                }
+                var question = questions.Single(q => q.Id == answer.QuestionId);
+                _context.Users.Where(u => u.Id == answer.Answer.AppUserId).Load();
+                questionAnswers.Add(question, answer.Answer);
             }
 
             return new HomeViewModel {
