@@ -10,7 +10,7 @@
             Sql(@"
 DELETE FROM [dbo].[Answers]
 DELETE FROM [dbo].[Questions]
-DELETE FROM [dbo].[AppUsers]
+DELETE FROM [dbo].[AspNetUsers]
 
 INSERT INTO [dbo].[AspNetUsers] ([Email], [EmailConfirmed], [PasswordHash], [SecurityStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEndDateUtc], [LockoutEnabled], [AccessFailedCount], [UserName], [Id], [FirstName], [LastName], [Intro], [Gender], [Location], [DefaultIconNumber]) VALUES (N'MarkBalaba@iknow.com', 0, N'ACyoyqqPCRKMipexzBVQUItl/pq3xyWbTk3hCqeFMH2AvmPctqyC2pRwsv4P1iHP8Q==', N'058486b1-4b54-423f-b3c1-2b22fb8ee4ce', NULL, 0, 0, NULL, 0, 0, N'markbalaba0', N'02f28cbf-ef25-463f-9c77-901ae627ac54', N'Mark', N'Balaba', N'Bachelor Physical Fitness', 1, N'Cagayan De Oro, Philippines', 7)
 INSERT INTO [dbo].[AspNetUsers] ([Email], [EmailConfirmed], [PasswordHash], [SecurityStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEndDateUtc], [LockoutEnabled], [AccessFailedCount], [UserName], [Id], [FirstName], [LastName], [Intro], [Gender], [Location], [DefaultIconNumber]) VALUES (N'MitulGedeeya@iknow.com', 0, N'APFYRPcgkuVq0qtIL0QdJPc1IZ+7oOK3agJ7FlYcUzlRIpnHVMyRW5ngGvv7/VLa4g==', N'71fba719-9ea0-4b1e-8ff7-6983965b8476', NULL, 0, 0, NULL, 0, 0, N'mitulgedeeya0', N'127317d1-c913-403f-ac63-dbfb4b6c0d3a', N'Mitul', N'Gedeeya', N'Reader , Thinker and Implementer !!', 1, N'Surat, Gujarat, India', 0)
