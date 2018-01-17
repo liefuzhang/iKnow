@@ -14,5 +14,6 @@
         public const byte GenderNotSet = 0;
         public const byte GenderMale = 1;
         public const byte GenderFemale = 2;
+        public const int RecommendedTopicNumber = 7;
     }
 }
