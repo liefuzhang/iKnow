@@ -1638,6 +1638,7 @@ h3.question-answer-name > a,
     opacity: 0;
     transform: translateX(-50%);
     z-index: 1000;
+    text-align: left;
 }
 
     .validation-summary-errors ul, .warning div {
@@ -1645,7 +1646,7 @@ h3.question-answer-name > a,
         width: 300px;
     }
 
-        .validation-summary-errors ul li, .warning div {
+        .validation-summary-errors ul li, .warning div, .warning.severe-warning div {
             padding: 15px 15px 15px 50px;
             background-color: #bd362f;
             color: white;

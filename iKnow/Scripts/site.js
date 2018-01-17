@@ -28,6 +28,10 @@
     $(document).on("click", pageClickHandler);
     $(window).scroll(backToTopDetect);
     $(".back-top").on("click", goToTop);
+
+    if (iknow.pageError) {
+        showWarning(iknow.pageError, isSevere = true);
+    }
 });
 
 function selectTopic() {
@@ -324,15 +328,21 @@ function hideError() {
     $(this).hide();
 }
 
-function showWarning(message) {
+function showWarning(message, isSevere) {
+    $warning = $(".warning");
     cleanUpErrorAndWarning();
-    $(".warning").html("");
-    $("<div>").html(message).appendTo($(".warning"));
-    setTimeout(() => { $(".warning").addClass("warning-display"); }, 50);
+    $warning.html("");
+    $("<div>").html(message).appendTo($warning);
+    if (isSevere) {
+        $warning.addClass("severe-warning");
+    }
+    setTimeout(() => {
+        $warning.addClass("warning-display");
+    }, 50);
 }
 
 function cleanUpErrorAndWarning() {
-    $(".warning").removeClass("warning-display");
+    $(".warning").removeClass("warning-display severe-warning");
     $(".error").removeClass("validation-summary-errors");
 }
 
