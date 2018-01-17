@@ -8,7 +8,7 @@
         public const string UserDefaultIconExtension = ".png";
         public const int UserDefaultIconMaxNumber = 9;
         public const double UserIconDefaultSize = 160;
-        public const int ShortAnswerLenth = 180;
+        public const int ShortAnswerLength = 200;
         public const int DefaultPageSize = 10;
         public const string AdminRoleName = "Admin";
         public const byte GenderNotSet = 0;

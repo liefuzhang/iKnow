@@ -311,8 +311,8 @@ namespace iKnow.Controllers {
                 var userInDb = _context.Users.Single(u => u.Id == user.Id);
 
                 userInDb.Gender = user.Gender;
-                userInDb.Intro = user.Intro;
-                userInDb.Location = user.Location;
+                userInDb.Intro = user.Intro?.Trim();
+                userInDb.Location = user.Location?.Trim();
 
                 _context.SaveChanges();
 

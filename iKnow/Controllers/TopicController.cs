@@ -56,7 +56,9 @@ namespace iKnow.Controllers {
                 .GroupBy(a => a.QuestionId, (qId, g) => new {
                     QuestionId = qId,
                     Answer = g.OrderBy(a => Guid.NewGuid()).FirstOrDefault()
-                }).ToList();
+                })
+                .OrderBy(a => Guid.NewGuid())
+                .ToList();
 
             var questionAnswers = new Dictionary<Question, Answer>();
             foreach (var answer in answers) {

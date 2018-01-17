@@ -23,13 +23,13 @@ namespace iKnow.Models {
         }
 
         public string ShortContent
-            => PlainContent.Length > Constants.ShortAnswerLenth
-                ? PlainContent.Substring(0, Constants.ShortAnswerLenth) + "..."
+            => PlainContent.Length > Constants.ShortAnswerLength
+                ? PlainContent.Substring(0, Constants.ShortAnswerLength) + "..."
                 : PlainContent;
 
         public string ShortContentImageData {
             get {
-                var match = Regex.Match(Content, "<img src=\\\"data:.*?\">");
+                var match = Regex.Match(Content, "<img src=\\\".*?\">");
                 return match.Success ? match.Value : null;
             }
         }

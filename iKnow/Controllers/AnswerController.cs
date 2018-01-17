@@ -37,7 +37,9 @@ namespace iKnow.Controllers {
                new {
                    Question = question,
                    AnswerCount = answers.Count()
-               }).ToDictionary(a => a.Question, a => a.AnswerCount);
+               })
+               .OrderBy(a => Guid.NewGuid())
+               .ToDictionary(a => a.Question, a => a.AnswerCount);
 
             return new QuestionAnswerCountViewModel {
                 QuestionsWithAnswerCount = questionsWithAnswerCount,
