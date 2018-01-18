@@ -8,10 +8,10 @@ namespace iKnow.Migrations
         public override void Up()
         {
             RenameTable(name: "dbo.AppUsers", newName: "AspNetUsers");
-            DropForeignKey("dbo.UserProfiles", "Id", "dbo.AppUsers");
-            DropForeignKey("dbo.Answers", "UserId", "dbo.AppUsers");
-            DropForeignKey("dbo.Questions", "UserId", "dbo.AppUsers");
-            DropForeignKey("dbo.TopicUsers", "UserId", "dbo.AppUsers");
+            DropForeignKey("dbo.UserProfiles", "Id", "dbo.Users");
+            DropForeignKey("dbo.Answers", "UserId", "dbo.Users");
+            DropForeignKey("dbo.Questions", "UserId", "dbo.Users");
+            DropForeignKey("dbo.TopicUsers", "UserId", "dbo.Users");
             DropIndex("dbo.Answers", new[] { "UserId" });
             DropIndex("dbo.Questions", new[] { "UserId" });
             DropIndex("dbo.UserProfiles", new[] { "Id" });
