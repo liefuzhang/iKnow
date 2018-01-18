@@ -241,8 +241,18 @@ function showMoreAnswer(e) {
 function hideMoreAnswer(e) {
     var $this = $(e.currentTarget);
     var $container = $this.closest(".expanded-answer-container");
+    var $author = $container.siblings(".question-author");
+    var $window = $(window);
+    var $outerContainer = $container.closest(".question-answer-inner");
+    var expandedAnswerBottom = $outerContainer.height() - $window.scrollTop();
+
     $container.addClass("hide");
     $container.prev().removeClass("hide");
+
+    if ($window.scrollTop() > $author.offset().top) {
+        var scrollTo = $outerContainer.height() - expandedAnswerBottom;
+        $window.scrollTop(scrollTo);
+    }
 }
 
 function loadMoreHandler(controllerName) {

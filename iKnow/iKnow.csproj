@@ -318,7 +318,6 @@
     <Content Include="Content\Images\UserProfile\5bece49d-76a0-4184-88f7-9e420fec1666.png" />
     <Content Include="Content\Images\UserProfile\75245e73-98c1-4828-a7b7-77c0eefa3d7d.png" />
     <Content Include="Content\Images\UserProfile\929981dc-d19d-42df-8e7e-f6896239ff54.png" />
-    <Content Include="Content\Images\UserProfile\9d4ae61e-3214-432f-9c65-695cf25b468e.png" />
     <Content Include="Content\Images\UserProfile\b6072fcd-7589-46f6-841a-d3c2adb8323d.png" />
     <Content Include="Content\Images\UserProfile\b800d30a-5fcc-49d8-b9bc-cbcdb7fc9a50.png" />
     <Content Include="Content\Images\UserProfile\bd3c0d34-47aa-4eb0-b003-f137b139b3f8.png" />
@@ -350,6 +349,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Content Include="AppSettings.config" />
     <None Include="Properties\PublishProfiles\EC2-iknow.pubxml" />
+    <None Include="Properties\PublishProfiles\test.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\chosen.jquery.js" />
     <Content Include="Scripts\chosen.proto.js" />
@@ -390,8 +390,8 @@
     <Content Include="Views\Answer\_AnswerQuestionListPartial.cshtml" />
     <Content Include="Views\Shared\_QuestionAnswerPairPartial.cshtml" />
     <Content Include="Views\Shared\_LoadMorePartial.cshtml" />
-    <None Include="Views\Account\ForgotPassword.cshtml" />
-    <None Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\_RegisterModalPartial.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
@@ -404,10 +404,10 @@
     <Content Include="Views\Account\UserProfileReadOnly.cshtml" />
     <Content Include="Views\Shared\_SideBarRecommendedTopicsPartial.cshtml" />
     <Content Include="Views\Shared\_SideBarSiteInfoPartial.cshtml" />
-    <None Include="Views\Search\_SearchResultPartial.cshtml" />
+    <Content Include="Views\Search\_SearchResultPartial.cshtml" />
     <Content Include="Views\Shared\_NavbarPartial.cshtml" />
     <Content Include="Views\Shared\404.cshtml" />
-    <None Include="Views\Shared\_SideBarRelatedQuestionsPartial.cshtml" />
+    <Content Include="Views\Shared\_SideBarRelatedQuestionsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
