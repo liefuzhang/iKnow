@@ -72,11 +72,11 @@
     function onErrors(event, validator) {  // 'this' is the form element
         var container = $(this).find("[data-valmsg-summary=true]"),
             list = container.find("ul");
-            cleanUpErrorAndWarning();
+        cleanUpErrorAndWarning();
 
         if (list && list.length && validator.errorList.length) {
             list.empty();
-            setTimeout(() => {
+            setTimeout(function () {
                 container.addClass("validation-summary-errors").removeClass("validation-summary-valid");
             }, 50);
 

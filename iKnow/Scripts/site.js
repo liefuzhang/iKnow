@@ -4,22 +4,22 @@
     $(".modal-container").on("click", ".js-button-delete", deleteEntity);
     $(".add-answer-panel").on("click", ".js-button-delete", deleteEntity);
     $(".add-answer-panel").on("submit", "form", submitAnswer);
-    $(".add-question-button").on("click", (e) => toggleModal(e, "addQuestion"));
-    $(".modal-container").on("click", (e) => toggleModal(e, "close"));
-    $(".question-header-panel .js-edit-question").on("click", (e) => toggleModal(e, "editQuestion"));
-    $(".question-header-panel .js-edit-topic").on("click", (e) => toggleModal(e, "editTopic"));
-    $(".register-container a").on("click", (e) => toggleModal(e, "register"));
+    $(".add-question-button").on("click", function (e) { toggleModal(e, "addQuestion") });
+    $(".modal-container").on("click", function (e) { toggleModal(e, "close") });
+    $(".question-header-panel .js-edit-question").on("click", function (e) { toggleModal(e, "editQuestion") });
+    $(".question-header-panel .js-edit-topic").on("click", function (e) { toggleModal(e, "editTopic") });
+    $(".register-container a").on("click", function (e) { toggleModal(e, "register") });
     $(".write-answer").on("click", showAddAnswerPanel);
-    $(".edit-answer").on("click", () => { showAddAnswerPanel(true); });
+    $(".edit-answer").on("click", function () { showAddAnswerPanel(true); });
     $(".question-answer-container").on("mouseenter", ".short-answer-container", toggleMoreAnswerUnderline);
     $(".question-answer-container").on("mouseleave", ".short-answer-container", toggleMoreAnswerUnderline);
     $(".question-answer-container").on("click", ".short-answer-container", showMoreAnswer);
     $(".question-answer-container").on("click", ".collapse-answer", hideMoreAnswer);
     $(".modal-container").on("input", "textarea", textareaAutoGrow);
     $(".user-profile-inner").on("click", showUserProfileDropDown);
-    $(".js-profile-photo-upload").on("change", (e) => readURL(e, ".edit-profile-photo img"));
-    $(".js-topic-photo-upload").on("change", (e) => readURL(e, ".topic-form-container .img-container img"));
-    $(".mask-content").on("click", () => { $(".js-profile-photo-upload").click(); });
+    $(".js-profile-photo-upload").on("change", function (e) { readURL(e, ".edit-profile-photo img") });
+    $(".js-topic-photo-upload").on("change", function (e) { readURL(e, ".topic-form-container .img-container img") });
+    $(".mask-content").on("click", function () { $(".js-profile-photo-upload").click(); });
     $(".search").on("keyup", search);
     $(".search-container .btn").on("click", search);
     $(".error").on("click", "li", hideError);
@@ -93,7 +93,7 @@ function toggleModal(e, action) {
             $.ajax({
                 url: "/question/getform",
                 dataType: "html",
-                success: (html) => {
+                success: function (html) {
                     commonCallback(html);
                     $modalContainer.addClass("new-form-loaded");
                 }
@@ -106,7 +106,7 @@ function toggleModal(e, action) {
             $.ajax({
                 url: "/question/getform/" + questionId,
                 dataType: "html",
-                success: (html) => {
+                success: function (html) {
                     commonCallback(html);
                     var $textArea = $(".add-question-description textarea");
                     var scrollHeight = $(".add-question-description textarea").get(0).scrollHeight;
@@ -162,7 +162,7 @@ function showAddAnswerPanel(edit) {
             $(".rich-editor-inner").html(content);
         }
 
-        var quill = getEditoer();
+        var quill = getEditor();
 
         $(".ql-editor")
             .on("mousewheel DOMMouseScroll", function (e) {
@@ -176,7 +176,7 @@ function showAddAnswerPanel(edit) {
 
         $("html, body").animate({
             scrollTop: $(".main-content-container").offset().top - 100
-        }, 0, () => {
+        }, 0, function () {
             $(".add-answer-panel.hide").slideDown(100).removeClass("hide");
             $(".ql-editor").get(0).focus();
         });
@@ -186,7 +186,7 @@ function showAddAnswerPanel(edit) {
     }
 }
 
-function getEditoer() {
+function getEditor() {
     return new Quill(".rich-editor-inner", {
         placeholder: "Write your answer here...",
         modules: {
@@ -350,7 +350,7 @@ function showWarning(message, isSevere) {
     if (isSevere) {
         $warning.addClass("severe-warning");
     }
-    setTimeout(() => {
+    setTimeout(function () {
         $warning.addClass("warning-display");
     }, 50);
 }
