@@ -9,7 +9,6 @@
     <div class="user-profile-page-inner">
         @using (Html.BeginForm("SaveProfile", "Account", null, FormMethod.Post, new {enctype = "multipart/form-data"})) {
             @Html.AntiForgeryToken()
-            @(ViewBag.StatusMessage) // TODO use better notification
             @Html.ValidationSummary("", new {@class = "error"})
             <div class="edit-profile-photo img-container">
                 <img src="@Model.AppUser.IconPath"/>
