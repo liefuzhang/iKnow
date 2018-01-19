@@ -276,7 +276,7 @@ namespace iKnow.Controllers {
         public ActionResult UserProfile(string userName) {
             if (userName == null) {
                 if (Request["Message"] != null) {
-                    ViewBag.StatusMessage = Request["Message"];
+                    TempData["statusMessage"] = Request["Message"];
                 }
                 var currentUserId = User.Identity.GetUserId();
                 var currentUser = UserManager.FindById(currentUserId);

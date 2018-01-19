@@ -32,6 +32,10 @@
     if (iknow.pageError) {
         showWarning(iknow.pageError, isSevere = true);
     }
+
+    if (iknow.statusMessage) {
+        showWarning(iknow.statusMessage);
+    }
 });
 
 function selectTopic() {
