@@ -1633,6 +1633,11 @@ h3.question-answer-name > a,
         margin-right: auto;
     }
 
+    .contact-note {
+        font-size: 15px;
+        margin-top: 10px;
+    }
+
 /*#endregion contact */
 
 
