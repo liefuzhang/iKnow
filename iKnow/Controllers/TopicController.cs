@@ -111,7 +111,7 @@ namespace iKnow.Controllers {
                 topic.Description = MyHelper.CapitalizeWords(topic.Description)?.Trim();
 
                 // check if topic name is unique 
-                if (_context.Topics.Any(q => q.Name == topic.Name)) {
+                if (topic.Id > 0 && _context.Topics.Any(q => q.Name == topic.Name)) {
                     ModelState.AddModelError("", "Topic already exists.");
                     return View("TopicForm", viewModel);
                 }
