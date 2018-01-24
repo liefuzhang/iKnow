@@ -109,15 +109,14 @@ namespace iKnow.Controllers {
                 var topic = viewModel.Topic;
                 topic.Name = MyHelper.UppercaseWords(topic.Name)?.Trim();
                 topic.Description = MyHelper.CapitalizeWords(topic.Description)?.Trim();
-
-                // check if topic name is unique 
-                if (topic.Id > 0 && _context.Topics.Any(q => q.Name == topic.Name)) {
-                    ModelState.AddModelError("", "Topic already exists.");
-                    return View("TopicForm", viewModel);
-                }
-
+                
                 var postedFile = viewModel.PostedFile;
                 if (topic.Id == 0) {
+                    // check if topic name is unique 
+                    if (_context.Topics.Any(q => q.Name == topic.Name)) {
+                        ModelState.AddModelError("", "Topic already exists.");
+                        return View("TopicForm", viewModel);
+                    }
                     _context.Topics.Add(topic);
                 } else {
                     var topicInDb = _context.Topics.Single(t => t.Id == topic.Id);
