@@ -75,13 +75,19 @@ namespace iKnow.Controllers {
             // explicit loading (to avoid too complex query)
             _context.Answers.Where(a => a.QuestionId == question.Id).Load();
 
+            var viewModel = QuestionDetailViewModel(question);
+
+            return View(viewModel);
+        }
+
+        private QuestionDetailViewModel QuestionDetailViewModel(Question question) {
             var currentUserId = User.Identity.GetUserId();
             bool canUserEditQuestion = User.Identity.IsAuthenticated
-                               && (question.AppUserId == currentUserId
-                                   || User.IsInRole(Constants.AdminRoleName));
+                                       && (question.AppUserId == currentUserId
+                                           || User.IsInRole(Constants.AdminRoleName));
 
             var existingAnswer = _context.Answers.SingleOrDefault(
-                     a => a.QuestionId == question.Id && a.AppUserId == currentUserId);
+                a => a.QuestionId == question.Id && a.AppUserId == currentUserId);
 
             var viewModel = new QuestionDetailViewModel {
                 Question = question,
@@ -89,8 +95,7 @@ namespace iKnow.Controllers {
                 UserAnswerId = existingAnswer?.Id ?? 0,
                 CanUserDeleteAnswerPanelAnswer = existingAnswer != null
             };
-
-            return View(viewModel);
+            return viewModel;
         }
 
         [HttpPost]
@@ -102,42 +107,57 @@ namespace iKnow.Controllers {
                 return Redirect(Request.UrlReferrer.ToString());
             }
 
-            formViewModel.Question.Title = MyHelper.CapitalizeWords(formViewModel.Question.Title)?.Trim();
-            formViewModel.Question.Description = MyHelper.CapitalizeWords(formViewModel.Question.Description)?.Trim();
+            TrimInput(formViewModel.Question);
 
-            if (!formViewModel.Question.Title.EndsWith("?")) {
-                formViewModel.Question.Title += "?";
+            // check if new question title is unique 
+            if (DoesQuestionTitleExist(formViewModel.Question)) {
+                TempData["pageError"] = "Question already exists.";
+                return Redirect(Request.UrlReferrer.ToString());
             }
 
-            var questionPosted = formViewModel.Question;
-            var questionToSave = questionPosted;
-            
-            if (questionPosted.Id > 0) {
-                var questionInDb = _context.Questions.Include("Topics").Single(q => q.Id == questionPosted.Id);
-                questionInDb.Title = questionPosted.Title;
-                questionInDb.Description = questionPosted.Description;
+            var questionSaved = SaveQuestion(formViewModel);
+            return RedirectToAction("Detail", new { id = questionSaved.Id });
+        }
+
+        private Question SaveQuestion(QuestionFormViewModel formViewModel) {
+            var questionToSave = formViewModel.Question;
+            if (formViewModel.Question.Id > 0) {
+                var questionInDb = _context.Questions.Include("Topics").Single(q => q.Id == formViewModel.Question.Id);
+                questionInDb.Title = formViewModel.Question.Title;
+                questionInDb.Description = formViewModel.Question.Description;
                 questionToSave = questionInDb;
             } else {
-                // check if new question title is unique 
-                if (_context.Questions.Any(q => q.Title == questionToSave.Title)) {
-                    TempData["pageError"] = "Question already exists.";
-                    return Redirect(Request.UrlReferrer.ToString());
-                }
-
                 questionToSave.AppUserId = User.Identity.GetUserId();
                 _context.Questions.Add(questionToSave);
             }
 
+            UpdateQuestionTopics(questionToSave, formViewModel.TopicIds);
+
+            _context.SaveChanges();
+            return questionToSave;
+        }
+
+        private void UpdateQuestionTopics(Question questionToSave, int[] topicIds) {
             questionToSave.ClearTopics();
-            if (formViewModel.TopicIds != null && formViewModel.TopicIds.Length > 0) {
-                var topics = _context.Topics.Where(t => formViewModel.TopicIds.Contains(t.Id)).ToList();
+            if (topicIds != null && topicIds.Length > 0) {
+                var topics = _context.Topics.Where(t => topicIds.Contains(t.Id)).ToList();
                 foreach (var topic in topics) {
                     questionToSave.AddTopic(topic);
                 }
             }
+        }
 
-            _context.SaveChanges();
-            return RedirectToAction("Detail", new { id = questionToSave.Id });
+        private bool DoesQuestionTitleExist(Question question) {
+            return question.Id == 0 && _context.Questions.Any(q => q.Title == question.Title);
+        }
+
+        private static void TrimInput(Question question) {
+            question.Title = MyHelper.CapitalizeWords(question.Title)?.Trim();
+            question.Description = MyHelper.CapitalizeWords(question.Description)?.Trim();
+
+            if (question.Title != null && !question.Title.EndsWith("?")) {
+                question.Title += "?";
+            }
         }
 
         [HttpPost]
@@ -148,13 +168,7 @@ namespace iKnow.Controllers {
 
             var questionInDb = _context.Questions.Include("Topics").Single(q => q.Id == questionPosted.Id);
 
-            questionInDb.ClearTopics();
-            if (formViewModel.TopicIds != null && formViewModel.TopicIds.Length > 0) {
-                var topics = _context.Topics.Where(t => formViewModel.TopicIds.Contains(t.Id)).ToList();
-                foreach (var topic in topics) {
-                    questionInDb.AddTopic(topic);
-                }
-            }
+            UpdateQuestionTopics(questionInDb, formViewModel.TopicIds);
 
             _context.SaveChanges();
             return RedirectToAction("Detail", new { id = questionInDb.Id });
@@ -169,6 +183,13 @@ namespace iKnow.Controllers {
                 return null;
             }
 
+            var viewModel = ConstructQuestionAnswerCountViewModel(relatedQuestions);
+
+            return PartialView("_SideBarRelatedQuestionsPartial", viewModel);
+        }
+
+        private QuestionAnswerCountViewModel ConstructQuestionAnswerCountViewModel(IQueryable<Question> relatedQuestions) {
+            const int relatedQuestionMaxNumber = 5;
             var questionsWithAnswerCount = relatedQuestions.GroupJoin(_context.Answers,
                 q => q.Id,
                 a => a.QuestionId,
@@ -177,14 +198,13 @@ namespace iKnow.Controllers {
                         Question = question,
                         AnswerCount = answers.Count()
                     }).OrderBy(a => Guid.NewGuid())
-                    .Take(5)
-                    .ToDictionary(a => a.Question, a => a.AnswerCount);
+                .Take(relatedQuestionMaxNumber)
+                .ToDictionary(a => a.Question, a => a.AnswerCount);
 
             var viewModel = new QuestionAnswerCountViewModel {
                 QuestionsWithAnswerCount = questionsWithAnswerCount
             };
-
-            return PartialView("_SideBarRelatedQuestionsPartial", viewModel);
+            return viewModel;
         }
 
         [HttpPost]
