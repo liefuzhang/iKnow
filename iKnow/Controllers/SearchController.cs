@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using iKnow.Models;
 using iKnow.ViewModels;
 
 namespace iKnow.Controllers {
@@ -17,28 +18,47 @@ namespace iKnow.Controllers {
         }
 
         public PartialViewResult GetResult(string input) {
-            var keywords = input.Trim().Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
-            var topics = _context.Topics
-                .Where(topic => keywords.All(keyword => topic.Name.ToLower().StartsWith(keyword.ToLower()) || topic.Name.ToLower().Contains(" " + keyword.ToLower()))).Take(3);
+            var keywords = TrimInput(input);
+            var topics = GetTopics(keywords);
+            var questions = GetQuestions(keywords);
 
-            var questions = _context.Questions
-                .Where(question => keywords.All(keyword => question.Title.ToLower().StartsWith(keyword.ToLower()) || question.Title.ToLower().Contains(" " + keyword.ToLower()))).Take(6);
+            var viewModel = ConstructSearchResultViewModel(questions, topics);
 
+            return PartialView("_SearchResultPartial", viewModel);
+        }
+
+        private SearchResultViewModel ConstructSearchResultViewModel(IQueryable<Question> questions, IQueryable<Topic> topics) {
+            // TODO: can we reuse the query in AnswerController ConstructAnswerIndexViewModel method?
             var questionsWithAnswerCount = questions.GroupJoin(_context.Answers,
-               q => q.Id,
-               a => a.QuestionId,
-               (question, answers) =>
-               new {
-                   Question = question,
-                   AnswerCount = answers.Count()
-               }).ToDictionary(a => a.Question, a => a.AnswerCount);
+                q => q.Id,
+                a => a.QuestionId,
+                (question, answers) =>
+                    new {
+                        Question = question,
+                        AnswerCount = answers.Count()
+                    }).ToDictionary(a => a.Question, a => a.AnswerCount);
 
             var viewModel = new SearchResultViewModel {
                 Topics = topics,
                 QuestionsWithAnswerCount = questionsWithAnswerCount
             };
+            return viewModel;
+        }
 
-            return PartialView("_SearchResultPartial", viewModel);
+        private IQueryable<Question> GetQuestions(string[] keywords) {
+            const int questionCount = 6;
+            return _context.Questions
+                .Where(question => keywords.All(keyword => question.Title.ToLower().StartsWith(keyword.ToLower()) || question.Title.ToLower().Contains(" " + keyword.ToLower()))).Take(questionCount);
+        }
+
+        private IQueryable<Topic> GetTopics(string[] keywords) {
+            const int topicCount = 3;
+            return _context.Topics
+                .Where(topic => keywords.All(keyword => topic.Name.ToLower().StartsWith(keyword.ToLower()) || topic.Name.ToLower().Contains(" " + keyword.ToLower()))).Take(topicCount);
+        }
+
+        private static string[] TrimInput(string input) {
+            return input.Trim().Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }
