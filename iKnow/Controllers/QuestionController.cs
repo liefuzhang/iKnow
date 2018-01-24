@@ -36,8 +36,7 @@ namespace iKnow.Controllers {
         }
 
         public PartialViewResult GetTopic(int id) {
-            Question question = null;
-            question = _context.Questions.Include("Topics").Single(q => q.Id == id);
+            var question = _context.Questions.Include("Topics").Single(q => q.Id == id);
 
             var viewModel = ConstructQuestionFormViewModel(question);
 
@@ -75,12 +74,12 @@ namespace iKnow.Controllers {
             // explicit loading (to avoid too complex query)
             _context.Answers.Where(a => a.QuestionId == question.Id).Load();
 
-            var viewModel = QuestionDetailViewModel(question);
+            var viewModel = ConstructQuestionDetailViewModel(question);
 
             return View(viewModel);
         }
 
-        private QuestionDetailViewModel QuestionDetailViewModel(Question question) {
+        private QuestionDetailViewModel ConstructQuestionDetailViewModel(Question question) {
             var currentUserId = User.Identity.GetUserId();
             bool canUserEditQuestion = User.Identity.IsAuthenticated
                                        && (question.AppUserId == currentUserId

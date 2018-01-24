@@ -106,20 +106,20 @@ namespace iKnow.Controllers {
         [Authorize(Roles = Constants.AdminRoleName)]
         [ValidateAntiForgeryToken]
         public ActionResult Save(TopicFormViewModel viewModel) {
+            if (!ModelState.IsValid) {
+                return View("TopicForm", viewModel);
+            }
+
+            var topic = viewModel.Topic;
+            TrimInput(topic);
+
+            // check if topic name is unique 
+            if (DoesTopicNameExist(topic)) {
+                ModelState.AddModelError("", "Topic already exists.");
+                return View("TopicForm", viewModel);
+            }
+
             try {
-                if (!ModelState.IsValid) {
-                    return View("TopicForm", viewModel);
-                }
-
-                var topic = viewModel.Topic;
-                TrimInput(topic);
-
-                // check if topic name is unique 
-                if (DoesTopicNameExist(topic)) {
-                    ModelState.AddModelError("", "Topic already exists.");
-                    return View("TopicForm", viewModel);
-                }
-
                 SaveTopic(topic);
 
                 SaveTopicIcon(viewModel.PostedFile, topic);
