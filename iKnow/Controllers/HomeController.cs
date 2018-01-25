@@ -11,7 +11,7 @@ using Constants = iKnow.Models.Constants;
 
 namespace iKnow.Controllers {
     public class HomeController : Controller {
-        private iKnowContext _context;
+        private readonly iKnowContext _context;
 
         public HomeController() {
             _context = new iKnowContext();
@@ -23,14 +23,15 @@ namespace iKnow.Controllers {
 
         public ActionResult Index() {
             int page = 0, pageSize = Constants.DefaultPageSize;
-            var viewModel = constructAnswerIndexViewModel(page, pageSize);
+            var viewModel = ConstructAnswerIndexViewModel(page, pageSize);
 
             return View(viewModel);
         }
 
-        private HomeViewModel constructAnswerIndexViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
+        private HomeViewModel ConstructAnswerIndexViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
             var questions = _context.Questions.Include("Topics").OrderByDescending(q => q.Id).Skip(currentPage * pageSize).Take(pageSize);
             var questionIds = questions.Select(q => q.Id).ToList();
+            // TODO: can we reuse the query in TopicController ConstructTopicDetailViewModel method
             var answers = _context.Answers
                 .Where(a => questionIds.Contains(a.QuestionId))
                 .GroupBy(a => a.QuestionId, (qId, g) => new {
@@ -56,7 +57,7 @@ namespace iKnow.Controllers {
 
         [Route("Home/LoadMore/{currentPage}")]
         public PartialViewResult LoadMore(int currentPage) {
-            var viewModel = constructAnswerIndexViewModel(++currentPage);
+            var viewModel = ConstructAnswerIndexViewModel(++currentPage);
             if (viewModel.QuestionAnswers.Count() == 0) {
                 return null;
             }

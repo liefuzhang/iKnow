@@ -83,7 +83,7 @@ function toggleModal(e, action) {
                 showWarning("Please log in before you add question");
                 return;
             }
-            if ($modalContainer.hasClass("new-form-loaded")) {
+            if ($modalContainer.hasClass("new-question-form-loaded")) {
                 // already loaded
                 $modalContainer.addClass("open");
                 $body.addClass("modal-open");
@@ -95,13 +95,13 @@ function toggleModal(e, action) {
                 dataType: "html",
                 success: function (html) {
                     commonCallback(html);
-                    $modalContainer.addClass("new-form-loaded");
+                    $modalContainer.addClass("new-question-form-loaded");
                 }
             });
             break;
         case "editQuestion":
             var questionId = $target.attr("data-question-id");
-            $modalContainer.removeClass("new-form-loaded");
+            $modalContainer.removeClass("new-question-form-loaded");
 
             $.ajax({
                 url: "/question/getform/" + questionId,
@@ -116,7 +116,7 @@ function toggleModal(e, action) {
             break;
         case "editTopic":
             questionId = $target.attr("data-question-id");
-            $modalContainer.removeClass("new-form-loaded");
+            $modalContainer.removeClass("new-question-form-loaded");
 
             $.ajax({
                 url: "/question/gettopic/" + questionId,
@@ -125,12 +125,21 @@ function toggleModal(e, action) {
             });
             break;
         case "register":
-            $modalContainer.removeClass("new-form-loaded");
+            if ($modalContainer.hasClass("register-form-loaded")) {
+                // already loaded
+                $modalContainer.addClass("open");
+                $body.addClass("modal-open");
+                return;
+            }
+
             var queryString = $target.attr("data-return-url") ? "?returnUrl=" + $target.attr("data-return-url") : "";
             $.ajax({
                 url: "/account/register" + queryString,
                 dataType: "html",
-                success: commonCallback
+                success: function (html) {
+                    commonCallback(html);
+                    $modalContainer.addClass("register-form-loaded");
+                }
             });
             break;
         case "close":
