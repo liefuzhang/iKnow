@@ -1,17 +1,15 @@
 ﻿using iKnow.Models;
 using iKnow.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Constants = iKnow.Models.Constants;
 
 namespace iKnow.Controllers {
     public class AnswerController : Controller {
-        private iKnowContext _context = new iKnowContext();
+        private readonly iKnowContext _context;
 
         public AnswerController() {
             _context = new iKnowContext();
@@ -24,12 +22,12 @@ namespace iKnow.Controllers {
         // GET: Answer
         public ActionResult Index() {
             int page = 0, pageSize = Constants.DefaultPageSize;
-            var viewModel = constructAnswerIndexViewModel(page, pageSize);
+            var viewModel = ConstructAnswerIndexViewModel(page, pageSize);
 
             return View(viewModel);
         }
 
-        private QuestionAnswerCountViewModel constructAnswerIndexViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
+        private QuestionAnswerCountViewModel ConstructAnswerIndexViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
             var questionsWithAnswerCount = _context.Questions.OrderByDescending(q => q.Id).Skip(currentPage * pageSize).Take(pageSize).GroupJoin(_context.Answers,
                q => q.Id,
                a => a.QuestionId,
@@ -55,35 +53,43 @@ namespace iKnow.Controllers {
                 return HttpNotFound();
             }
 
+            var viewModel = ConstructAnswerDetailViewModel(answer);
+
+            return View(viewModel);
+        }
+
+        private AnswerDetailViewModel ConstructAnswerDetailViewModel(Answer answer) {
             var question = _context.Questions.Include("Topics").Single(q => q.Id == answer.Question.Id);
             var answerCount = _context.Answers.Count(a => a.QuestionId == question.Id);
+
+            // TODO: can we utilize ConstructQuestionDetailViewModel method in QuestionController?
             var currentUserId = User.Identity.GetUserId();
             var existingAnswer = _context.Answers.SingleOrDefault(
-                     a => a.QuestionId == question.Id && a.AppUserId == currentUserId);
+                a => a.QuestionId == question.Id && a.AppUserId == currentUserId);
 
             var questionDetailViewModel = new QuestionDetailViewModel {
                 Question = question,
                 CanUserEditQuestion = User.Identity.IsAuthenticated
-                              && (question.AppUserId == currentUserId
-                                  || User.IsInRole(Constants.AdminRoleName)),
+                                      && (question.AppUserId == currentUserId
+                                          || User.IsInRole(Constants.AdminRoleName)),
                 UserAnswerId = existingAnswer?.Id ?? 0,
                 CanUserDeleteAnswerPanelAnswer = existingAnswer != null
             };
+
 
             var viewModel = new AnswerDetailViewModel {
                 Answer = answer,
                 QuestionDetailViewModel = questionDetailViewModel,
                 AnswerCount = answerCount
             };
-
-            return View(viewModel);
+            return viewModel;
         }
 
 
         [Route("Answer/LoadMore/{currentPage}")]
         public PartialViewResult LoadMore(int currentPage) {
-            var viewModel = constructAnswerIndexViewModel(++currentPage);
-            if (viewModel.QuestionsWithAnswerCount.Count() == 0) {
+            var viewModel = ConstructAnswerIndexViewModel(++currentPage);
+            if (!viewModel.QuestionsWithAnswerCount.Any()) {
                 return null;
             }
 

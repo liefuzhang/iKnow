@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity.Validation;
 using System.Drawing;
@@ -8,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Net.Mime;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
@@ -26,7 +24,7 @@ namespace iKnow.Controllers {
     public class AccountController : Controller {
         private AppSignInManager _signInManager;
         private AppUserManager _userManager;
-        private iKnowContext _context = new iKnowContext();
+        private readonly iKnowContext _context;
 
         public AccountController() {
             _context = new iKnowContext();
@@ -58,6 +56,9 @@ namespace iKnow.Controllers {
         //
         // GET: /Account/Login
         public ActionResult Login(string returnUrl) {
+            if (User.Identity.IsAuthenticated) {
+                return RedirectToAction("Index", "Home");
+            }
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -67,29 +68,29 @@ namespace iKnow.Controllers {
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl) {
-            if (!ModelState.IsValid) {
-                return View(model);
-            }
-
-            var user = UserManager.FindByEmail(model.Email.Trim());
-            if (user == null) {
-                ModelState.AddModelError("", "Invalid login attempt.");
-                return View(model);
-            }
-
-            var userName = user.UserName;
-
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(userName, model.Password, isPersistent: true, shouldLockout: false);
-            switch (result) {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.Failure:
-                default:
+            if (ModelState.IsValid) {
+                var user = UserManager.FindByEmail(model.Email.Trim());
+                if (user == null) {
                     ModelState.AddModelError("", "Invalid login attempt.");
+                    ViewBag.ReturnUrl = returnUrl;
                     return View(model);
+                }
+
+                var userName = user.UserName;
+
+                // This doesn't count login failures towards account lockout
+                // To enable password failures to trigger account lockout, change to shouldLockout: true
+                var result = await SignInManager.PasswordSignInAsync(userName, model.Password, isPersistent: true, shouldLockout: false);
+
+                if (result == SignInStatus.Success) {
+                    return RedirectToLocal(returnUrl);
+                }
+                ModelState.AddModelError("", "Invalid login attempt.");
             }
+
+            // If we got this far, something failed, redisplay form
+            ViewBag.ReturnUrl = returnUrl;
+            return View(model);
         }
 
         //
@@ -107,18 +108,7 @@ namespace iKnow.Controllers {
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model) {
             if (ModelState.IsValid) {
-                var fullName = (model.FirstName.Trim() + model.LastName.Trim()).ToLower();
-                var userNames = _context.Users
-                    .Where(u => u.UserName.StartsWith(fullName))
-                    .Select(u => u.UserName)
-                    .ToList();
-
-                var increment = 0;
-                while (userNames.Contains(fullName + increment)) {
-                    increment++;
-                }
-
-                var userName = fullName + increment;
+                var userName = GetUserName(model);
 
                 var user = new AppUser {
                     FirstName = model.FirstName.Trim(),
@@ -132,19 +122,30 @@ namespace iKnow.Controllers {
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded) {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
-                    if (model.ReturnUrl != null) {
-                        return RedirectToLocal(model.ReturnUrl);
-                    }
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToLocal(model.ReturnUrl);
                 }
-                // only show one error to avoid redundant info
-                if (result.Errors != null && result.Errors.Any())
-                    ModelState.AddModelError("", result.Errors.First());
+                AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form
+            ViewBag.ReturnUrl = model.ReturnUrl;
             return View("Login");
+        }
+
+        private string GetUserName(RegisterViewModel model) {
+            var fullName = (model.FirstName.Trim() + model.LastName.Trim()).ToLower();
+            var userNames = _context.Users
+                .Where(u => u.UserName.StartsWith(fullName))
+                .Select(u => u.UserName)
+                .ToList();
+
+            var increment = 0;
+            while (userNames.Contains(fullName + increment)) {
+                increment++;
+            }
+
+            var userName = fullName + increment;
+            return userName;
         }
 
         //
@@ -176,7 +177,7 @@ namespace iKnow.Controllers {
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-        
+
         //
         // GET: /Account/ForgotPasswordConfirmation
         public ActionResult ForgotPasswordConfirmation() {
@@ -184,21 +185,10 @@ namespace iKnow.Controllers {
         }
 
         private async Task SendForgotPasswordMailAsync(string userId, string callbackUrl) {
-            var emailTemplate = HostingEnvironment.MapPath("~/App_Data/EmailTemplateForgotPassword.htm");
             var user = await UserManager.FindByIdAsync(userId);
-            var logoUrl = HostingEnvironment.MapPath("~/Content/Images/logo.png");
+            var body = ConstructEmailBody(user, callbackUrl);
 
-            var body = string.Empty;
-            if (!string.IsNullOrEmpty(emailTemplate)) {
-                using (StreamReader reader = new StreamReader(emailTemplate)) {
-                    body = reader.ReadToEnd();
-                }
-            }
-            body = body.Replace("{UserName}", HttpUtility.HtmlEncode(user.FullName));
-            body = body.Replace("{LogoUrl}", logoUrl);   
-            body = body.Replace("{ResetUrl}", callbackUrl);
-
-            using (MailMessage mailMessage = new MailMessage("fuzicabin@gmail.com", user.Email)) {
+            using (MailMessage mailMessage = new MailMessage(ConfigurationManager.AppSettings["GmailUserName"], user.Email)) {
                 mailMessage.Subject = "Reset Password - iKnow";
                 mailMessage.Body = body;
                 mailMessage.IsBodyHtml = true;
@@ -213,7 +203,23 @@ namespace iKnow.Controllers {
                 await smtp.SendMailAsync(mailMessage);
             }
         }
-        
+
+        private static string ConstructEmailBody(AppUser user, string callbackUrl) {
+            var emailTemplate = HostingEnvironment.MapPath("~/App_Data/EmailTemplateForgotPassword.htm");
+            var logoUrl = HostingEnvironment.MapPath("~/Content/Images/logo.png");
+
+            var body = string.Empty;
+            if (!string.IsNullOrEmpty(emailTemplate)) {
+                using (StreamReader reader = new StreamReader(emailTemplate)) {
+                    body = reader.ReadToEnd();
+                }
+            }
+            body = body.Replace("{UserName}", HttpUtility.HtmlEncode(user.FullName));
+            body = body.Replace("{LogoUrl}", logoUrl);
+            body = body.Replace("{ResetUrl}", callbackUrl);
+            return body;
+        }
+
         //
         // GET: /Account/ResetPassword
         public ActionResult ResetPassword(string code) {
@@ -275,6 +281,7 @@ namespace iKnow.Controllers {
         [Route("Account/UserProfile/{userName?}")]
         public ActionResult UserProfile(string userName) {
             if (userName == null) {
+                // View user's own profile
                 if (Request["Message"] != null) {
                     TempData["statusMessage"] = Request["Message"];
                 }
@@ -307,25 +314,10 @@ namespace iKnow.Controllers {
                 }
 
                 var user = viewModel.AppUser;
+                SaveUserChanges(user);
+
                 var postedPhoto = viewModel.PostedPhoto;
-                var userInDb = _context.Users.Single(u => u.Id == user.Id);
-
-                userInDb.Gender = user.Gender;
-                userInDb.Intro = user.Intro?.Trim();
-                userInDb.Location = user.Location?.Trim();
-
-                _context.SaveChanges();
-
-                // save icon if it exists
-                if (postedPhoto != null && postedPhoto.ContentLength > 0) {
-                    var bitmap = Bitmap.FromStream(postedPhoto.InputStream);
-                    var scale = Math.Max(bitmap.Width / Constants.UserIconDefaultSize,
-                        bitmap.Height / Constants.UserIconDefaultSize);
-                    var resized = new Bitmap(bitmap, new Size(Convert.ToInt32(bitmap.Width / scale), Convert.ToInt32(bitmap.Height / scale)));
-                    var iconFolder = HostingEnvironment.MapPath(Constants.UserIconFolderPath);
-                    var fileName = user.Id.ToLower().Replace(' ', '-') + ".png";
-                    resized.Save(iconFolder + fileName, ImageFormat.Png);
-                }
+                SaveUserIcon(postedPhoto, user);
 
                 return RedirectToAction("Index", "Home");
             } catch (DbEntityValidationException ex) {
@@ -333,6 +325,30 @@ namespace iKnow.Controllers {
                 ModelState.AddModelError(nameof(viewModel.AppUser) + "." + error.PropertyName, error.ErrorMessage);
                 return View("UserProfile", viewModel);
             }
+        }
+
+        private static void SaveUserIcon(HttpPostedFileBase postedPhoto, AppUser user) {
+            // save icon if it exists
+            if (postedPhoto != null && postedPhoto.ContentLength > 0) {
+                var bitmap = Bitmap.FromStream(postedPhoto.InputStream);
+                var scale = Math.Max(bitmap.Width / Constants.UserIconDefaultSize,
+                    bitmap.Height / Constants.UserIconDefaultSize);
+                var resized = new Bitmap(bitmap,
+                    new Size(Convert.ToInt32(bitmap.Width / scale), Convert.ToInt32(bitmap.Height / scale)));
+                var iconFolder = HostingEnvironment.MapPath(Constants.UserIconFolderPath);
+                var fileName = user.Id.ToLower().Replace(' ', '-') + ".png";
+                resized.Save(iconFolder + fileName, ImageFormat.Png);
+            }
+        }
+
+        private void SaveUserChanges(AppUser user) {
+            var userInDb = _context.Users.Single(u => u.Id == user.Id);
+
+            userInDb.Gender = user.Gender;
+            userInDb.Intro = user.Intro?.Trim();
+            userInDb.Location = user.Location?.Trim();
+
+            _context.SaveChanges();
         }
 
         //

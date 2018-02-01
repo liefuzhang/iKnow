@@ -6,6 +6,7 @@ using System.Data.Entity.Validation;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using iKnow.Models;
@@ -26,8 +27,7 @@ namespace iKnow.Controllers {
         public ActionResult Index() {
             var topics = _context.Topics.ToList();
             Topic selectedTopic = null;
-            if (
-                topics.Count > 0) {
+            if (topics.Count > 0) {
                 if (Request["selectedTopicId"] != null) {
                     selectedTopic = topics.SingleOrDefault(t => t.Id.ToString() == Request["selectedTopicId"]);
                 }
@@ -50,6 +50,12 @@ namespace iKnow.Controllers {
                 return HttpNotFound();
             }
 
+            var viewModel = ConstructTopicDetailViewModel(topic);
+
+            return View(viewModel);
+        }
+
+        private TopicDetailViewModel ConstructTopicDetailViewModel(Topic topic) {
             var questionIds = topic.Questions.Select(q => q.Id).ToList();
             var answers = _context.Answers
                 .Where(a => questionIds.Contains(a.QuestionId))
@@ -71,8 +77,7 @@ namespace iKnow.Controllers {
                 Topic = topic,
                 QuestionAnswers = questionAnswers
             };
-
-            return View(viewModel);
+            return viewModel;
         }
 
         // GET: Topic/About/1
@@ -101,43 +106,23 @@ namespace iKnow.Controllers {
         [Authorize(Roles = Constants.AdminRoleName)]
         [ValidateAntiForgeryToken]
         public ActionResult Save(TopicFormViewModel viewModel) {
+            if (!ModelState.IsValid) {
+                return View("TopicForm", viewModel);
+            }
+
+            var topic = viewModel.Topic;
+            TrimInput(topic);
+
+            // check if topic name is unique 
+            if (DoesTopicNameExist(topic)) {
+                ModelState.AddModelError("", "Topic already exists.");
+                return View("TopicForm", viewModel);
+            }
+
             try {
-                if (!ModelState.IsValid) {
-                    return View("TopicForm", viewModel);
-                }
+                SaveTopic(topic);
 
-                var topic = viewModel.Topic;
-                topic.Name = MyHelper.UppercaseWords(topic.Name)?.Trim();
-                topic.Description = MyHelper.CapitalizeWords(topic.Description)?.Trim();
-
-                // check if topic name is unique 
-                if (_context.Topics.Any(q => q.Name == topic.Name)) {
-                    ModelState.AddModelError("", "Topic already exists.");
-                    return View("TopicForm", viewModel);
-                }
-
-                var postedFile = viewModel.PostedFile;
-                if (topic.Id == 0) {
-                    _context.Topics.Add(topic);
-                } else {
-                    var topicInDb = _context.Topics.Single(t => t.Id == topic.Id);
-                    topicInDb.Name = topic.Name;
-                    topicInDb.Description = topic.Description;
-                }
-
-                _context.SaveChanges();
-
-                // save icon if it exists
-                if (postedFile != null && postedFile.ContentLength > 0) {
-                    var bitmap = Image.FromStream(postedFile.InputStream);
-                    var scale = Math.Max(bitmap.Width / Constants.TopicIconDefaultSize,
-                        bitmap.Height / Constants.TopicIconDefaultSize);
-                    var resized = new Bitmap(bitmap, new Size(Convert.ToInt32(bitmap.Width / scale), Convert.ToInt32(bitmap.Height / scale)));
-
-                    var iconFolder = HostingEnvironment.MapPath(Constants.TopicIconFolderPath);
-                    var fileName = topic.Name.ToLower().Replace(' ', '-') + ".png";
-                    resized.Save(iconFolder + fileName, ImageFormat.Png);
-                }
+                SaveTopicIcon(viewModel.PostedFile, topic);
 
                 return RedirectToAction("Index", new { selectedTopicId = topic.Id });
             } catch (DbEntityValidationException ex) {
@@ -145,6 +130,43 @@ namespace iKnow.Controllers {
                 ModelState.AddModelError("", error.ErrorMessage);
                 return View("TopicForm", viewModel);
             }
+        }
+
+        private static void TrimInput(Topic topic) {
+            topic.Name = MyHelper.UppercaseWords(topic.Name)?.Trim();
+            topic.Description = MyHelper.CapitalizeWords(topic.Description)?.Trim();
+        }
+
+        private void SaveTopic(Topic topic) {
+            if (topic.Id == 0) {
+                _context.Topics.Add(topic);
+            } else {
+
+                var topicInDb = _context.Topics.Single(t => t.Id == topic.Id);
+                topicInDb.Name = topic.Name;
+                topicInDb.Description = topic.Description;
+            }
+
+            _context.SaveChanges();
+        }
+
+        private static void SaveTopicIcon(HttpPostedFileBase postedFile, Topic topic) {
+            // save icon if it exists
+            if (postedFile != null && postedFile.ContentLength > 0) {
+                var bitmap = Image.FromStream(postedFile.InputStream);
+                var scale = Math.Max(bitmap.Width / Constants.TopicIconDefaultSize,
+                    bitmap.Height / Constants.TopicIconDefaultSize);
+                var resized = new Bitmap(bitmap,
+                    new Size(Convert.ToInt32(bitmap.Width / scale), Convert.ToInt32(bitmap.Height / scale)));
+
+                var iconFolder = HostingEnvironment.MapPath(Constants.TopicIconFolderPath);
+                var fileName = topic.Name.ToLower().Replace(' ', '-') + ".png";
+                resized.Save(iconFolder + fileName, ImageFormat.Png);
+            }
+        }
+
+        private bool DoesTopicNameExist(Topic topic) {
+            return topic.Id == 0 && _context.Topics.Any(q => q.Name == topic.Name);
         }
 
         // GET: Topic/Edit/1
