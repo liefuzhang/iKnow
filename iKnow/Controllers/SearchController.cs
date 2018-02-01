@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using iKnow.Models;
+using iKnow.Core.Models;
+using iKnow.Persistence;
 using iKnow.ViewModels;
 
 namespace iKnow.Controllers {

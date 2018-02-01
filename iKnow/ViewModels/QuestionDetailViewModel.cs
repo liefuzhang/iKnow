@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using iKnow.Models;
 using System.ComponentModel.DataAnnotations;
+using iKnow.Core.Models;
 
 namespace iKnow.ViewModels {
     public class QuestionDetailViewModel {

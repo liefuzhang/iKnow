@@ -1,5 +1,5 @@
-﻿@using iKnow.Models
-@model Topic
+﻿@using iKnow.Core.Models
+@model iKnow.Core.Models.Topic
 
 <a href=@Url.Action("Detail", "Topic", new { id = Model.Id }) target="_blank">
     <h4>@Model.Name</h4>

@@ -11,14 +11,15 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
-using iKnow.Models;
-using iKnow.Models.Identity;
+using iKnow.Core.Models;
+using iKnow.Core.Models.Identity;
 using iKnow.ViewModels;
-using iKnow.ViewModels.Account;
+using iKnow.ViewModels.Account;
+using iKnow.Persistence;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Constants = iKnow.Models.Constants;
+using Constants = iKnow.Core.Models.Constants;
 
 namespace iKnow.Controllers {
     public class AccountController : Controller {

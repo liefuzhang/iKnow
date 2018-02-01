@@ -1,11 +1,12 @@
-﻿using iKnow.Models;
-using iKnow.ViewModels;
+﻿using iKnow.ViewModels;
 using System;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web.Mvc;
+using iKnow.Core.Models;
 using Microsoft.AspNet.Identity;
-using Constants = iKnow.Models.Constants;
+using Constants = iKnow.Core.Models.Constants;
+using iKnow.Persistence;
 
 namespace iKnow.Controllers {
     public class AnswerController : Controller {

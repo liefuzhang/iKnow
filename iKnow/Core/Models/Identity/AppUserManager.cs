@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using iKnow.Persistence;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 
-namespace iKnow.Models.Identity {
+namespace iKnow.Core.Models.Identity {
     public class AppUserManager : UserManager<AppUser> {
         public AppUserManager(IUserStore<AppUser> store)
             : base(store) {

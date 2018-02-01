@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Data.Entity;
-using iKnow.Models;
-using iKnow.EntityTypeConfiguration;
+﻿using System.Data.Entity;
+using iKnow.Core.Models;
+using iKnow.Persistence.EntityTypeConfigurations;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace iKnow {
+namespace iKnow.Persistence {
     public class iKnowContext : IdentityDbContext<AppUser> {
         public iKnowContext(): base("DefaultConnection") {
         }

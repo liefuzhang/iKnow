@@ -1,3 +1,5 @@
+using iKnow.Persistence;
+
 namespace iKnow.Migrations
 {
     using System;
@@ -5,14 +7,14 @@ namespace iKnow.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<iKnow.iKnowContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<iKnowContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(iKnow.iKnowContext context)
+        protected override void Seed(iKnowContext context)
         {
             //  This method will be called after migrating to the latest version.
 

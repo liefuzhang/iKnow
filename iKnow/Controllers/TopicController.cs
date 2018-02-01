@@ -9,25 +9,29 @@ using System.Linq;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
-using iKnow.Models;
+using iKnow.Core;
+using iKnow.Core.Models;
 using iKnow.Helper;
+using iKnow.Persistence;
 
 namespace iKnow.Controllers {
     public class TopicController : Controller {
-        private readonly iKnowContext _context;
-        public TopicController() {
-            _context = new iKnowContext();
+        //Todo remove
+        private iKnowContext _context = new iKnowContext();
+        private readonly IUnitOfWork _unitOfWork;
+        public TopicController(IUnitOfWork unitOfWork) {
+            _unitOfWork = unitOfWork;
         }
 
-        protected override void Dispose(bool disposing) {
-            _context.Dispose();
+        public TopicController() {
+            _unitOfWork = new UnitOfWork();
         }
 
         // GET: Topic
         public ActionResult Index() {
-            var topics = _context.Topics.ToList();
+            var topics = _unitOfWork.TopicRepository.GetAll();
             Topic selectedTopic = null;
-            if (topics.Count > 0) {
+            if (topics.Any()) {
                 if (Request["selectedTopicId"] != null) {
                     selectedTopic = topics.SingleOrDefault(t => t.Id.ToString() == Request["selectedTopicId"]);
                 }
@@ -45,7 +49,7 @@ namespace iKnow.Controllers {
 
         // GET: Topic/Detail/1
         public ActionResult Detail(int id) {
-            var topic = _context.Topics.Include("Questions").SingleOrDefault(t => t.Id == id);
+            var topic = _unitOfWork.TopicRepository.SingleOrDefault(t => t.Id == id, includeProperties: "Questions");
             if (topic == null) {
                 return HttpNotFound();
             }

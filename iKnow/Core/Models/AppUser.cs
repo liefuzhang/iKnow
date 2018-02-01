@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using System.IO;
-using System.Security.Policy;
-using System.Web.Hosting;
-using System.Data.Entity.Infrastructure;
-using System.Web.UI;
 
-namespace iKnow.Models {
+namespace iKnow.Core.Models {
     public class AppUser : IdentityUser {
         public string FirstName { get; set; }
         public string LastName { get; set; }

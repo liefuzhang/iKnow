@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace iKnow.Models {
+namespace iKnow.Core.Models {
     public class ImageFileTypesAttribute : ValidationAttribute {
         private readonly List<string> _types;
 

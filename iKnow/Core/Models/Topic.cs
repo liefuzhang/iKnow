@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Hosting;
 
-namespace iKnow.Models {
+namespace iKnow.Core.Models {
     public class Topic {
         public int Id { get; set; }
 

@@ -1,13 +1,14 @@
-﻿using iKnow.Models;
-using iKnow.ViewModels;
+﻿using iKnow.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using iKnow.Core.Models;
+using iKnow.Persistence;
 using Microsoft.AspNet.Identity;
-using Constants = iKnow.Models.Constants;
+using Constants = iKnow.Core.Models.Constants;
 
 namespace iKnow.Controllers {
     public class HomeController : Controller {

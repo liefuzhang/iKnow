@@ -1,7 +1,7 @@
-﻿using iKnow.Models;
-using System.Data.Entity.ModelConfiguration;
+﻿using System.Data.Entity.ModelConfiguration;
+using iKnow.Core.Models;
 
-namespace iKnow.EntityTypeConfiguration {
+namespace iKnow.Persistence.EntityTypeConfigurations {
     internal class AppUserConfiguration : EntityTypeConfiguration<AppUser> {
         public AppUserConfiguration() {
             Property(u => u.FirstName)

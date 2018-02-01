@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using iKnow.Models;
 using iKnow.ViewModels;
 using System.Data.Entity;
+using iKnow.Core.Models;
 using iKnow.Helper;
-using Constants = iKnow.Models.Constants;
+using iKnow.Persistence;
+using Constants = iKnow.Core.Models.Constants;
 using Microsoft.AspNet.Identity;
 
 namespace iKnow.Controllers {
