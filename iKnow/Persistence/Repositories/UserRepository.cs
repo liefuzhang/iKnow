@@ -3,13 +3,11 @@ using iKnow.Core.Models;
 using iKnow.Core.Repositories;
 
 namespace iKnow.Persistence.Repositories {
-    public class TopicRepositoryRepository : Repository<Topic>, ITopicRepository {
+    public class UserRepository : Repository<AppUser>, IUserRepository {
         private iKnowContext _iKnowContext;
-
-        public TopicRepositoryRepository(iKnowContext context) : base(context) {
+        public UserRepository(iKnowContext context) : base(context) {
             _iKnowContext = context;
         }
-
 
     }
 }

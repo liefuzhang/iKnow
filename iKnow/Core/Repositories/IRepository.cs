@@ -8,22 +8,37 @@ namespace iKnow.Core.Repositories {
         IEnumerable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "");
-
-        TEntity GetById(int id);
+            string includeProperties = "",
+            int? skip = null,
+            int? take = null);
 
         IEnumerable<TEntity> GetAll(
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "");
+            string includeProperties = "",
+            int? skip = null,
+            int? take = null);
+
+        TEntity GetById(int id);
 
         TEntity SingleOrDefault(
-            Expression<Func<TEntity, bool>> predicate,
+            Expression<Func<TEntity, bool>> filter,
             string includeProperties = "");
 
         TEntity Single(
-            Expression<Func<TEntity, bool>> predicate,
+            Expression<Func<TEntity, bool>> filter,
             string includeProperties = "");
 
+        TEntity FirstOrDefault(
+            Expression<Func<TEntity, bool>> filter,
+            string includeProperties = "");
+
+        TEntity First(
+            Expression<Func<TEntity, bool>> filter,
+            string includeProperties = "");
+
+        int Count(Expression<Func<TEntity, bool>> filter);
+        bool Any(Expression<Func<TEntity, bool>> filter);
+        bool All(Expression<Func<TEntity, bool>> filter);
         void Add(TEntity entity);
         void AddRange(IEnumerable<TEntity> entities);
         void Remove(TEntity entity);

@@ -9,57 +9,104 @@ using iKnow.Core.Repositories;
 namespace iKnow.Persistence.Repositories {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class {
         protected readonly DbContext Context;
-        private DbSet<TEntity> _dbSet;
+        private readonly DbSet<TEntity> _dbSet;
+        private IQueryable<TEntity> _query;
 
         public Repository(DbContext context) {
             Context = context;
             _dbSet = Context.Set<TEntity>();
+            _query = _dbSet;
         }
 
         // refer to https://docs.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application
 
-        public virtual IEnumerable<TEntity> Get(
+        private IQueryable<TEntity> GetQueryable(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "") {
-            IQueryable<TEntity> query = _dbSet;
+            string includeProperties = null,
+            int? skip = null,
+            int? take = null) {
+            includeProperties = includeProperties ?? "";
 
             if (filter != null) {
-                query = query.Where(filter);
+                _query = _query.Where(filter);
             }
 
-            query = AddIncludeProperty(includeProperties, query);
+            foreach (var includeProperty in includeProperties.Split
+                (new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
+                _query = _query.Include(includeProperty);
+            }
 
             if (orderBy != null) {
-                return orderBy(query).ToList();
+                _query = orderBy(_query);
             }
-            return query.ToList();
+
+            if (skip.HasValue) {
+                _query = _query.Skip(skip.Value);
+            }
+
+            if (take.HasValue) {
+                _query = _query.Take(take.Value);
+            }
+
+            return _query;
+        }
+
+        public IEnumerable<TEntity> Get(
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            string includeProperties = "",
+            int? skip = null,
+            int? take = null) {
+            return GetQueryable(filter, orderBy, includeProperties, skip, take).ToList();
+        }
+
+        public IEnumerable<TEntity> GetAll(
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            string includeProperties = "",
+            int? skip = null,
+            int? take = null) {
+            return GetQueryable(null, orderBy, includeProperties, skip, take).ToList();
         }
 
         public TEntity GetById(int id) {
             return _dbSet.Find(id);
         }
 
-        public IEnumerable<TEntity> GetAll(
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "") {
-            return Get(filter: null, orderBy: orderBy, includeProperties: includeProperties);
-        }
-
         public TEntity SingleOrDefault(
-            Expression<Func<TEntity, bool>> predicate,
+            Expression<Func<TEntity, bool>> filter,
             string includeProperties = "") {
-            IQueryable<TEntity> query = _dbSet;
-            query = AddIncludeProperty(includeProperties, query);
-            return query.SingleOrDefault(predicate);
+            return GetQueryable(filter, null, includeProperties).SingleOrDefault();
         }
 
         public TEntity Single(
-            Expression<Func<TEntity, bool>> predicate,
+            Expression<Func<TEntity, bool>> filter,
             string includeProperties = "") {
-            IQueryable<TEntity> query = _dbSet;
-            query = AddIncludeProperty(includeProperties, query);
-            return query.Single(predicate);
+            return GetQueryable(filter, null, includeProperties).Single();
+        }
+
+        public TEntity FirstOrDefault(
+            Expression<Func<TEntity, bool>> filter,
+            string includeProperties = "") {
+            return GetQueryable(filter, null, includeProperties).FirstOrDefault();
+        }
+
+        public TEntity First(
+            Expression<Func<TEntity, bool>> filter,
+            string includeProperties = "") {
+            return GetQueryable(filter, null, includeProperties).First();
+        }
+
+        public int Count(Expression<Func<TEntity, bool>> filter) {
+            return GetQueryable(filter).Count();
+        }
+
+        public bool Any(Expression<Func<TEntity, bool>> filter) {
+            return GetQueryable(filter).Any();
+        }
+
+        public bool All(Expression<Func<TEntity, bool>> filter) {
+            return _query.All(filter);
         }
 
         public void Add(TEntity entity) {
@@ -76,15 +123,6 @@ namespace iKnow.Persistence.Repositories {
 
         public void RemoveRange(IEnumerable<TEntity> entities) {
             _dbSet.RemoveRange(entities);
-        }
-
-        // Helper methods
-        private static IQueryable<TEntity> AddIncludeProperty(string includeProperties, IQueryable<TEntity> query) {
-            foreach (var includeProperty in includeProperties.Split
-                (new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
-                query = query.Include(includeProperty);
-            }
-            return query;
         }
     }
 }

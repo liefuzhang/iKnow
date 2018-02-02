@@ -177,7 +177,10 @@
     <Compile Include="Core\Models\ImageFileTypesAttribute.cs" />
     <Compile Include="Core\Models\Question.cs" />
     <Compile Include="Core\Models\Topic.cs" />
+    <Compile Include="Core\Repositories\IQuestionRepository.cs" />
     <Compile Include="Core\Repositories\IRepository.cs" />
+    <Compile Include="Core\Repositories\IAnswerRepository.cs" />
+    <Compile Include="Core\Repositories\IUserRepository.cs" />
     <Compile Include="Core\Repositories\ITopicRepository.cs" />
     <Compile Include="Helper\MyHelper.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
@@ -256,7 +259,10 @@
     <Compile Include="Persistence\EntityTypeConfigurations\QuestionConfiguration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\TopicConfiguration.cs" />
     <Compile Include="Persistence\iKnowContext.cs" />
+    <Compile Include="Persistence\Repositories\QuestionRepository.cs" />
     <Compile Include="Persistence\Repositories\Repository.cs" />
+    <Compile Include="Persistence\Repositories\AnswerRepository.cs" />
+    <Compile Include="Persistence\Repositories\UserRepository.cs" />
     <Compile Include="Persistence\Repositories\TopicRepository.cs" />
     <Compile Include="Persistence\UnitOfWork.cs" />
     <Compile Include="ViewModels\Account\ChangePasswordViewModel.cs" />

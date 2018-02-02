@@ -13,11 +13,10 @@ using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Helper;
 using iKnow.Persistence;
+using iKnow.Persistence.Repositories;
 
 namespace iKnow.Controllers {
     public class TopicController : Controller {
-        //Todo remove
-        private iKnowContext _context = new iKnowContext();
         private readonly IUnitOfWork _unitOfWork;
         public TopicController(IUnitOfWork unitOfWork) {
             _unitOfWork = unitOfWork;
@@ -27,9 +26,14 @@ namespace iKnow.Controllers {
             _unitOfWork = new UnitOfWork();
         }
 
+        protected override void Dispose(bool disposing) {
+            _unitOfWork.Dispose();
+            base.Dispose(disposing);
+        }
+
         // GET: Topic
         public ActionResult Index() {
-            var topics = _unitOfWork.TopicRepository.GetAll();
+            var topics = _unitOfWork.TopicRepository.GetAll().ToList();
             Topic selectedTopic = null;
             if (topics.Any()) {
                 if (Request["selectedTopicId"] != null) {
@@ -49,7 +53,7 @@ namespace iKnow.Controllers {
 
         // GET: Topic/Detail/1
         public ActionResult Detail(int id) {
-            var topic = _unitOfWork.TopicRepository.SingleOrDefault(t => t.Id == id, includeProperties: "Questions");
+            var topic = _unitOfWork.TopicRepository.SingleOrDefault(t => t.Id == id, "Questions");
             if (topic == null) {
                 return HttpNotFound();
             }
@@ -61,22 +65,8 @@ namespace iKnow.Controllers {
 
         private TopicDetailViewModel ConstructTopicDetailViewModel(Topic topic) {
             var questionIds = topic.Questions.Select(q => q.Id).ToList();
-            var answers = _context.Answers
-                .Where(a => questionIds.Contains(a.QuestionId))
-                .GroupBy(a => a.QuestionId, (qId, g) => new {
-                    QuestionId = qId,
-                    Answer = g.OrderBy(a => Guid.NewGuid()).FirstOrDefault()
-                })
-                .OrderBy(a => Guid.NewGuid())
-                .ToList();
-
-            var questionAnswers = new Dictionary<Question, Answer>();
-            foreach (var answer in answers) {
-                var question = topic.Questions.Single(q => q.Id == answer.QuestionId);
-                _context.Users.Where(u => u.Id == answer.Answer.AppUserId).Load();
-                questionAnswers.Add(question, answer.Answer);
-            }
-
+            var questionAnswers = _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds);
+            
             var viewModel = new TopicDetailViewModel {
                 Topic = topic,
                 QuestionAnswers = questionAnswers
@@ -86,7 +76,7 @@ namespace iKnow.Controllers {
 
         // GET: Topic/About/1
         public PartialViewResult About(int id) {
-            var topic = _context.Topics.SingleOrDefault(t => t.Id == id);
+            var topic = _unitOfWork.TopicRepository.SingleOrDefault(t => t.Id == id);
             if (topic == null) {
                 return null;
             }
@@ -143,17 +133,18 @@ namespace iKnow.Controllers {
 
         private void SaveTopic(Topic topic) {
             if (topic.Id == 0) {
-                _context.Topics.Add(topic);
+                _unitOfWork.TopicRepository.Add(topic);
             } else {
-
-                var topicInDb = _context.Topics.Single(t => t.Id == topic.Id);
+                //TODO check if we need to mark modified property
+                var topicInDb = _unitOfWork.TopicRepository.Single(t => t.Id == topic.Id);
                 topicInDb.Name = topic.Name;
                 topicInDb.Description = topic.Description;
             }
 
-            _context.SaveChanges();
+            _unitOfWork.Complete();
         }
 
+        // todo move to ImageFileGenerator 
         private static void SaveTopicIcon(HttpPostedFileBase postedFile, Topic topic) {
             // save icon if it exists
             if (postedFile != null && postedFile.ContentLength > 0) {
@@ -170,13 +161,13 @@ namespace iKnow.Controllers {
         }
 
         private bool DoesTopicNameExist(Topic topic) {
-            return topic.Id == 0 && _context.Topics.Any(q => q.Name == topic.Name);
+            return topic.Id == 0 && _unitOfWork.TopicRepository.Any(q => q.Name == topic.Name);
         }
 
         // GET: Topic/Edit/1
         [Authorize(Roles = Constants.AdminRoleName)]
         public ActionResult Edit(int id) {
-            var topic = _context.Topics.SingleOrDefault(t => t.Id == id);
+            var topic = _unitOfWork.TopicRepository.SingleOrDefault(t => t.Id == id);
             if (topic == null) {
                 return HttpNotFound();
             }
@@ -193,12 +184,12 @@ namespace iKnow.Controllers {
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Constants.AdminRoleName)]
         public ActionResult Delete(Topic topic) {
-            var topicInDb = _context.Topics.SingleOrDefault(t => t.Id == topic.Id);
+            var topicInDb = _unitOfWork.TopicRepository.SingleOrDefault(t => t.Id == topic.Id);
             if (topicInDb == null) {
                 return HttpNotFound();
             } else {
-                _context.Topics.Remove(topicInDb);
-                _context.SaveChanges();
+                _unitOfWork.TopicRepository.Remove(topicInDb);
+                _unitOfWork.Complete();
             }
 
             return RedirectToAction("Index");
@@ -206,8 +197,10 @@ namespace iKnow.Controllers {
 
         public PartialViewResult GetRecommentedTopics(int? id) {
             IEnumerable<Topic> topics = id == null
-                ? _context.Topics.OrderBy(t => Guid.NewGuid()).Take(Constants.RecommendedTopicNumber).ToList()
-                : _context.Topics.Where(t => t.Id != id.Value).OrderBy(t => Guid.NewGuid()).Take(Constants.RecommendedTopicNumber).ToList();
+                ? _unitOfWork.TopicRepository.GetAll(q => q.OrderBy(t => Guid.NewGuid()), null, null,
+                    Constants.RecommendedTopicNumber).ToList()
+                : _unitOfWork.TopicRepository.Get(t => t.Id != id.Value, q => q.OrderBy(t => Guid.NewGuid()), null, null,
+                    Constants.RecommendedTopicNumber).ToList();
             return PartialView("_SideBarRecommendedTopicsPartial", topics);
         }
     }
