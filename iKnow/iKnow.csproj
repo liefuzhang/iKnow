@@ -168,6 +168,7 @@
     <Compile Include="Controllers\AnswerController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Core\IImageFileGenerator.cs" />
     <Compile Include="Core\IUnitOfWork.cs" />
     <Compile Include="Core\Models\Answer.cs" />
     <Compile Include="Core\Models\AppUser.cs" />
@@ -259,6 +260,7 @@
     <Compile Include="Persistence\EntityTypeConfigurations\QuestionConfiguration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\TopicConfiguration.cs" />
     <Compile Include="Persistence\iKnowContext.cs" />
+    <Compile Include="Persistence\ImageFileGenerator.cs" />
     <Compile Include="Persistence\Repositories\QuestionRepository.cs" />
     <Compile Include="Persistence\Repositories\Repository.cs" />
     <Compile Include="Persistence\Repositories\AnswerRepository.cs" />

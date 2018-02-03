@@ -8,13 +8,13 @@ namespace iKnow.Core.Repositories {
         IEnumerable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "",
+            string includeProperties = null,
             int? skip = null,
             int? take = null);
 
         IEnumerable<TEntity> GetAll(
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "",
+            string includeProperties = null,
             int? skip = null,
             int? take = null);
 
@@ -22,19 +22,19 @@ namespace iKnow.Core.Repositories {
 
         TEntity SingleOrDefault(
             Expression<Func<TEntity, bool>> filter,
-            string includeProperties = "");
+            string includeProperties = null);
 
         TEntity Single(
             Expression<Func<TEntity, bool>> filter,
-            string includeProperties = "");
+            string includeProperties = null);
 
         TEntity FirstOrDefault(
             Expression<Func<TEntity, bool>> filter,
-            string includeProperties = "");
+            string includeProperties = null);
 
         TEntity First(
             Expression<Func<TEntity, bool>> filter,
-            string includeProperties = "");
+            string includeProperties = null);
 
         int Count(Expression<Func<TEntity, bool>> filter);
         bool Any(Expression<Func<TEntity, bool>> filter);

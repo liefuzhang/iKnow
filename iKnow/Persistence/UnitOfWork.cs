@@ -13,7 +13,7 @@ namespace iKnow.Persistence {
 
         public UnitOfWork() {
             _context = new iKnowContext();
-            TopicRepository = new TopicRepositoryRepository(_context);
+            TopicRepository = new TopicRepository(_context);
             UserRepository = new UserRepository(_context);
             AnswerRepository = new AnswerRepository(_context);
             QuestionRepository = new QuestionRepository(_context);

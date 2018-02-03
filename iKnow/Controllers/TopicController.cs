@@ -18,12 +18,15 @@ using iKnow.Persistence.Repositories;
 namespace iKnow.Controllers {
     public class TopicController : Controller {
         private readonly IUnitOfWork _unitOfWork;
-        public TopicController(IUnitOfWork unitOfWork) {
+        private readonly IImageFileGenerator _imageFileGenerator;
+        public TopicController(IUnitOfWork unitOfWork, IImageFileGenerator imageFileGenerator) {
             _unitOfWork = unitOfWork;
+            _imageFileGenerator = imageFileGenerator;
         }
 
         public TopicController() {
             _unitOfWork = new UnitOfWork();
+            _imageFileGenerator = new ImageFileGenerator();
         }
 
         protected override void Dispose(bool disposing) {
@@ -116,26 +119,25 @@ namespace iKnow.Controllers {
             try {
                 SaveTopic(topic);
 
-                SaveTopicIcon(viewModel.PostedFile, topic);
+                _imageFileGenerator.SaveTopicIcon(viewModel.PostedFile, topic);
 
                 return RedirectToAction("Index", new { selectedTopicId = topic.Id });
             } catch (DbEntityValidationException ex) {
-                var error = ex.EntityValidationErrors.First().ValidationErrors.First();
-                ModelState.AddModelError("", error.ErrorMessage);
+                var error = ex.EntityValidationErrors?.FirstOrDefault()?.ValidationErrors?.FirstOrDefault();
+                ModelState.AddModelError("", error?.ErrorMessage);
                 return View("TopicForm", viewModel);
             }
         }
 
         private static void TrimInput(Topic topic) {
-            topic.Name = MyHelper.UppercaseWords(topic.Name)?.Trim();
-            topic.Description = MyHelper.CapitalizeWords(topic.Description)?.Trim();
+            topic.Name = MyHelper.UppercaseWords(topic.Name?.Trim());
+            topic.Description = MyHelper.CapitalizeWords(topic.Description?.Trim());
         }
 
         private void SaveTopic(Topic topic) {
             if (topic.Id == 0) {
                 _unitOfWork.TopicRepository.Add(topic);
             } else {
-                //TODO check if we need to mark modified property
                 var topicInDb = _unitOfWork.TopicRepository.Single(t => t.Id == topic.Id);
                 topicInDb.Name = topic.Name;
                 topicInDb.Description = topic.Description;
@@ -143,23 +145,7 @@ namespace iKnow.Controllers {
 
             _unitOfWork.Complete();
         }
-
-        // todo move to ImageFileGenerator 
-        private static void SaveTopicIcon(HttpPostedFileBase postedFile, Topic topic) {
-            // save icon if it exists
-            if (postedFile != null && postedFile.ContentLength > 0) {
-                var bitmap = Image.FromStream(postedFile.InputStream);
-                var scale = Math.Max(bitmap.Width / Constants.TopicIconDefaultSize,
-                    bitmap.Height / Constants.TopicIconDefaultSize);
-                var resized = new Bitmap(bitmap,
-                    new Size(Convert.ToInt32(bitmap.Width / scale), Convert.ToInt32(bitmap.Height / scale)));
-
-                var iconFolder = HostingEnvironment.MapPath(Constants.TopicIconFolderPath);
-                var fileName = topic.Name.ToLower().Replace(' ', '-') + ".png";
-                resized.Save(iconFolder + fileName, ImageFormat.Png);
-            }
-        }
-
+        
         private bool DoesTopicNameExist(Topic topic) {
             return topic.Id == 0 && _unitOfWork.TopicRepository.Any(q => q.Name == topic.Name);
         }
@@ -187,10 +173,10 @@ namespace iKnow.Controllers {
             var topicInDb = _unitOfWork.TopicRepository.SingleOrDefault(t => t.Id == topic.Id);
             if (topicInDb == null) {
                 return HttpNotFound();
-            } else {
-                _unitOfWork.TopicRepository.Remove(topicInDb);
-                _unitOfWork.Complete();
             }
+
+            _unitOfWork.TopicRepository.Remove(topicInDb);
+            _unitOfWork.Complete();
 
             return RedirectToAction("Index");
         }

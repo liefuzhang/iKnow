@@ -55,7 +55,7 @@ namespace iKnow.Persistence.Repositories {
         public IEnumerable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "",
+            string includeProperties = null,
             int? skip = null,
             int? take = null) {
             return GetQueryable(filter, orderBy, includeProperties, skip, take).ToList();
@@ -63,7 +63,7 @@ namespace iKnow.Persistence.Repositories {
 
         public IEnumerable<TEntity> GetAll(
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "",
+            string includeProperties = null,
             int? skip = null,
             int? take = null) {
             return GetQueryable(null, orderBy, includeProperties, skip, take).ToList();
@@ -75,25 +75,25 @@ namespace iKnow.Persistence.Repositories {
 
         public TEntity SingleOrDefault(
             Expression<Func<TEntity, bool>> filter,
-            string includeProperties = "") {
+            string includeProperties = null) {
             return GetQueryable(filter, null, includeProperties).SingleOrDefault();
         }
 
         public TEntity Single(
             Expression<Func<TEntity, bool>> filter,
-            string includeProperties = "") {
+            string includeProperties = null) {
             return GetQueryable(filter, null, includeProperties).Single();
         }
 
         public TEntity FirstOrDefault(
             Expression<Func<TEntity, bool>> filter,
-            string includeProperties = "") {
+            string includeProperties = null) {
             return GetQueryable(filter, null, includeProperties).FirstOrDefault();
         }
 
         public TEntity First(
             Expression<Func<TEntity, bool>> filter,
-            string includeProperties = "") {
+            string includeProperties = null) {
             return GetQueryable(filter, null, includeProperties).First();
         }
 
