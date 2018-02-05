@@ -45,8 +45,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         private void InitializeQuestionsAndAnswersAndTopics() {
-            _topic1 = new Topic {Id = 1, Name = "tn1"};
-            _topic2 = new Topic {Id = 2, Name = "tn2"};
+            _topic1 = new Topic { Id = 1, Name = "tn1" };
+            _topic2 = new Topic { Id = 2, Name = "tn2" };
             _newQuestion = new Question { Id = 0, Title = null, Description = null, AppUserId = null };
             _question1 = new Question { Id = 1, Title = "t1", Description = "d1", AppUserId = "1" };
             _question2 = new Question { Id = 2, Title = "t2", Description = "d2", AppUserId = "2" };
@@ -122,7 +122,7 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void GetForm_IdIsNotNull_GetQuestionUsingId() {
+        public void GetForm_IdIsNotNull_GetQuestion() {
             _controller.GetForm(_question1.Id);
 
             _unitOfWork.Verify(u => u.QuestionRepository.Single(It.IsAny<Expression<Func<Question, bool>>>(), It.IsAny<string>()));
@@ -135,7 +135,7 @@ namespace iKnow.UnitTests.Controllers {
             Assert.That(result.Model, Is.TypeOf<QuestionFormViewModel>());
             Assert.That((result.Model as QuestionFormViewModel).Question, Is.EqualTo(_question1));
         }
-        
+
         [Test]
         public void GetForm_IdIsNotNull_ReturnQuestionTopicIdsInViewModel() {
             _question1.AddTopic(_topic1);
@@ -215,7 +215,7 @@ namespace iKnow.UnitTests.Controllers {
             Assert.That(result.Model, Is.TypeOf<QuestionFormViewModel>());
             Assert.That((result.Model as QuestionFormViewModel).CanUserDelete, Is.True);
         }
-        
+
         [Test]
         public void GetTopic_WhenCalled_ReturnPartialViewResult() {
             var result = _controller.GetTopic(_question1.Id);
@@ -224,7 +224,7 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void GetTopic_WhenCalled_GetQuestionUsingId() {
+        public void GetTopic_WhenCalled_GetQuestion() {
             _controller.GetTopic(_question1.Id);
 
             _unitOfWork.Verify(u => u.QuestionRepository.Single(It.IsAny<Expression<Func<Question, bool>>>(), It.IsAny<string>()));
@@ -259,9 +259,107 @@ namespace iKnow.UnitTests.Controllers {
             var result = _controller.GetTopic(_question1.Id);
 
             Assert.That(result.Model, Is.TypeOf<QuestionFormViewModel>());
-            Assert.That((result.Model as QuestionFormViewModel).TopicIds, Is.EquivalentTo(new [] {_topic1.Id, _topic2.Id}));
+            Assert.That((result.Model as QuestionFormViewModel).TopicIds, Is.EquivalentTo(new[] { _topic1.Id, _topic2.Id }));
         }
 
+        [Test]
+        public void Detail_WhenCalled_GetQuestion() {
+            _controller.Detail(_question1.Id);
+
+            _unitOfWork.Verify(u => u.QuestionRepository.SingleOrDefault(It.IsAny<Expression<Func<Question, bool>>>(),
+                        It.IsAny<string>()));
+        }
+
+        [Test]
+        public void Detail_WhenCalled_GetAnswer() {
+            _unitOfWork.Setup(u => u.AnswerRepository.Get(
+                It.IsAny<Expression<Func<Answer, bool>>>(),
+                It.IsAny<Func<IQueryable<Answer>, IOrderedQueryable<Answer>>>(),
+                null,
+                null,
+                null));
+
+            _controller.Detail(_question1.Id);
+
+            _unitOfWork.Verify(u => u.AnswerRepository.Get(
+                It.IsAny<Expression<Func<Answer, bool>>>(),
+                It.IsAny<Func<IQueryable<Answer>, IOrderedQueryable<Answer>>>(),
+                null,
+                null,
+                null));
+        }
+
+        [Test]
+        public void Detail_WhenCalled_ReturnViewResult() {
+
+        }
+
+        [Test]
+        public void Detail_WhenCalled_ReturnQuestionInViewModel() {
+
+        }
+
+        [Test]
+        public void Detail_QuestionNotFound_ReturnHttpNotFoundResult() {
+
+        }
+
+        [Test]
+        public void Detail_UserNotAuthenticated_UserCannotEditQuestion() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(false);
+
+            var result = _controller.Detail(_question1.Id);
+
+            Assert.That((result as ViewResult).Model, Is.TypeOf<QuestionDetailViewModel>());
+            Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).CanUserEditQuestion, Is.False);
+        }
+
+        [Test]
+        public void Detail_CurrentUserIsNotQuestionOwnerOrAdmin_UserCannotEditQuestion() {
+            var claim = new Claim("testUserName2", _question2.AppUserId);
+            _identity.Setup(i => i.FindFirst(It.IsAny<string>())).Returns(claim);
+
+            var result = _controller.Detail(_question1.Id);
+
+            Assert.That((result as ViewResult).Model, Is.TypeOf<QuestionDetailViewModel>());
+            Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).CanUserEditQuestion, Is.False);
+        }
+
+        [Test]
+        public void Detail_CurrentUserIsQuestionOwner_UserCanEditQuestion() {
+            var result = _controller.Detail(_question1.Id);
+
+            Assert.That((result as ViewResult).Model, Is.TypeOf<QuestionDetailViewModel>());
+            Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).CanUserEditQuestion, Is.True);
+        }
+
+        [Test]
+        public void Detail_CurrentUserIsAdmin_UserCanDelete() {
+            var claim = new Claim("testUserName2", _question2.AppUserId);
+            _identity.Setup(i => i.FindFirst(It.IsAny<string>())).Returns(claim);
+            _user.Setup(u => u.IsInRole(Constants.AdminRoleName)).Returns(true);
+
+            var result = _controller.Detail(_question1.Id);
+
+            Assert.That((result as ViewResult).Model, Is.TypeOf<QuestionDetailViewModel>());
+            Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).CanUserEditQuestion, Is.True);
+        }
+
+        [Test]
+        public void Detail_CurrentUserHasExistingAnswer_ReturnExistingAnswerIdInViewModel() {
+        }
+
+        [Test]
+        public void Detail_CurrentUserHasExistingAnswer_UserCanDeleteAnswerPanelAnswer() {
+        }
+
+        [Test]
+        public void Detail_CurrentUserHasNoExistingAnswer_ReturnZeroAndUserAnswerIdInViewModel() {
+        }
+
+        [Test]
+        public void Detail_CurrentUserHasExistingAnswer_UserCannotDeleteAnswerPanelAnswer() {
+        }
 
     }
 }
