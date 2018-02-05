@@ -13,6 +13,7 @@ namespace iKnow.Persistence.Repositories {
             _iKnowContext = context;
         }
         
+        //TODO should we have this in a provider class? As it's not returning Answer collection
         public IDictionary<Question, Answer> GetQuestionAnswerPairsForGivenQuestions(List<int> questionIds) {
             var answers = _iKnowContext.Answers
                 .Where(a => questionIds.Contains(a.QuestionId))

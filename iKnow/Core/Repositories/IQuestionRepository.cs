@@ -7,6 +7,6 @@ using iKnow.Core.Models;
 
 namespace iKnow.Core.Repositories {
     public interface IQuestionRepository : IRepository<Question> {
-        
+        IDictionary<Question, int> GetQuestionsWithAnswerCount(IEnumerable<Question> questions, int? maxNumber);
     }
 }

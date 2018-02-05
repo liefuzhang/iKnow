@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using iKnow.ViewModels;
 using System.Data.Entity;
+using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Helper;
 using iKnow.Persistence;
@@ -12,20 +14,25 @@ using Microsoft.AspNet.Identity;
 
 namespace iKnow.Controllers {
     public class QuestionController : Controller {
-        private iKnowContext _context;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public QuestionController(IUnitOfWork unitOfWork) {
+            _unitOfWork = unitOfWork;
+        }
 
         public QuestionController() {
-            _context = new iKnowContext();
+            _unitOfWork = new UnitOfWork();
         }
 
         protected override void Dispose(bool disposing) {
-            _context.Dispose();
+            _unitOfWork.Dispose();
+            base.Dispose(disposing);
         }
 
         public PartialViewResult GetForm(int? id) {
             Question question = null;
             if (id.HasValue && id.Value > 0) {
-                question = _context.Questions.Include("Topics").SingleOrDefault(q => q.Id == id);
+                question = _unitOfWork.QuestionRepository.SingleOrDefault(q => q.Id == id, "Topics");
             }
             if (question == null) {
                 question = new Question();
@@ -37,7 +44,7 @@ namespace iKnow.Controllers {
         }
 
         public PartialViewResult GetTopic(int id) {
-            var question = _context.Questions.Include("Topics").Single(q => q.Id == id);
+            var question = _unitOfWork.QuestionRepository.Single(q => q.Id == id, "Topics");
 
             var viewModel = ConstructQuestionFormViewModel(question);
 
@@ -45,7 +52,7 @@ namespace iKnow.Controllers {
         }
 
         private QuestionFormViewModel ConstructQuestionFormViewModel(Question question) {
-            var topics = _context.Topics.Select(t => new {
+            var topics = _unitOfWork.TopicRepository.GetAll().Select(t => new {
                 TopicId = t.Id,
                 TopicName = t.Name
             }).ToList();
@@ -67,13 +74,13 @@ namespace iKnow.Controllers {
         }
 
         public ActionResult Detail(int id) {
-            var question = _context.Questions.Include("Topics").SingleOrDefault(q => q.Id == id);
+            var question = _unitOfWork.QuestionRepository.SingleOrDefault(q => q.Id == id, "Topics");
             if (question == null) {
                 return HttpNotFound();
             }
 
-            // explicit loading (to avoid too complex query)
-            _context.Answers.Where(a => a.QuestionId == question.Id).Load();
+            // Load question into context
+            _unitOfWork.AnswerRepository.Get(a => a.QuestionId == question.Id);
 
             var viewModel = ConstructQuestionDetailViewModel(question);
 
@@ -86,7 +93,7 @@ namespace iKnow.Controllers {
                                        && (question.AppUserId == currentUserId
                                            || User.IsInRole(Constants.AdminRoleName));
 
-            var existingAnswer = _context.Answers.SingleOrDefault(
+            var existingAnswer = _unitOfWork.AnswerRepository.SingleOrDefault(
                 a => a.QuestionId == question.Id && a.AppUserId == currentUserId);
 
             var viewModel = new QuestionDetailViewModel {
@@ -122,25 +129,25 @@ namespace iKnow.Controllers {
         private Question SaveQuestion(QuestionFormViewModel formViewModel) {
             var questionToSave = formViewModel.Question;
             if (formViewModel.Question.Id > 0) {
-                var questionInDb = _context.Questions.Include("Topics").Single(q => q.Id == formViewModel.Question.Id);
+                var questionInDb = _unitOfWork.QuestionRepository.Single(q => q.Id == formViewModel.Question.Id, "Topics");
                 questionInDb.Title = formViewModel.Question.Title;
                 questionInDb.Description = formViewModel.Question.Description;
                 questionToSave = questionInDb;
             } else {
                 questionToSave.AppUserId = User.Identity.GetUserId();
-                _context.Questions.Add(questionToSave);
+                _unitOfWork.QuestionRepository.Add(questionToSave);
             }
 
             UpdateQuestionTopics(questionToSave, formViewModel.TopicIds);
 
-            _context.SaveChanges();
+            _unitOfWork.Complete();
             return questionToSave;
         }
 
         private void UpdateQuestionTopics(Question questionToSave, int[] topicIds) {
             questionToSave.ClearTopics();
             if (topicIds != null && topicIds.Length > 0) {
-                var topics = _context.Topics.Where(t => topicIds.Contains(t.Id)).ToList();
+                var topics = _unitOfWork.TopicRepository.Get(t => topicIds.Contains(t.Id));
                 foreach (var topic in topics) {
                     questionToSave.AddTopic(topic);
                 }
@@ -148,7 +155,7 @@ namespace iKnow.Controllers {
         }
 
         private bool DoesQuestionTitleExist(Question question) {
-            return question.Id == 0 && _context.Questions.Any(q => q.Title == question.Title);
+            return question.Id == 0 && _unitOfWork.QuestionRepository.Any(q => q.Title == question.Title);
         }
 
         private static void TrimInput(Question question) {
@@ -166,18 +173,18 @@ namespace iKnow.Controllers {
         public ActionResult SaveQuestionTopics(QuestionFormViewModel formViewModel) {
             var questionPosted = formViewModel.Question;
 
-            var questionInDb = _context.Questions.Include("Topics").Single(q => q.Id == questionPosted.Id);
+            var questionInDb = _unitOfWork.QuestionRepository.Single(q => q.Id == questionPosted.Id, "Topics");
 
             UpdateQuestionTopics(questionInDb, formViewModel.TopicIds);
 
-            _context.SaveChanges();
+            _unitOfWork.Complete();
             return RedirectToAction("Detail", new { id = questionInDb.Id });
         }
 
         public PartialViewResult GetRelatedQuestions(int id) {
-            var currentQuestion = _context.Questions.Include("Topics").Single(q => q.Id == id);
+            var currentQuestion = _unitOfWork.QuestionRepository.Single(q => q.Id == id, "Topics");
             var topicIds = currentQuestion.Topics.Select(t => t.Id);
-            var relatedQuestions = _context.Questions.Where(q => q.Id != id && q.Topics.Any(t => topicIds.Contains(t.Id)));
+            var relatedQuestions = _unitOfWork.QuestionRepository.Get(q => q.Id != id && q.Topics.Any(t => topicIds.Contains(t.Id)));
 
             if (!relatedQuestions.Any()) {
                 return null;
@@ -188,18 +195,9 @@ namespace iKnow.Controllers {
             return PartialView("_SideBarRelatedQuestionsPartial", viewModel);
         }
 
-        private QuestionAnswerCountViewModel ConstructQuestionAnswerCountViewModel(IQueryable<Question> relatedQuestions) {
+        private QuestionAnswerCountViewModel ConstructQuestionAnswerCountViewModel(IEnumerable<Question> relatedQuestions) {
             const int relatedQuestionMaxNumber = 5;
-            var questionsWithAnswerCount = relatedQuestions.GroupJoin(_context.Answers,
-                q => q.Id,
-                a => a.QuestionId,
-                (question, answers) =>
-                    new {
-                        Question = question,
-                        AnswerCount = answers.Count()
-                    }).OrderBy(a => Guid.NewGuid())
-                .Take(relatedQuestionMaxNumber)
-                .ToDictionary(a => a.Question, a => a.AnswerCount);
+            var questionsWithAnswerCount = _unitOfWork.QuestionRepository.GetQuestionsWithAnswerCount(relatedQuestions, relatedQuestionMaxNumber);
 
             var viewModel = new QuestionAnswerCountViewModel {
                 QuestionsWithAnswerCount = questionsWithAnswerCount
@@ -212,13 +210,13 @@ namespace iKnow.Controllers {
         [Authorize]
         public ActionResult Delete(QuestionFormViewModel viewModel) {
             var currentUserId = User.Identity.GetUserId();
-            var question = _context.Questions.Include("Answers").Single(q => q.Id == viewModel.Question.Id);
+            var question = _unitOfWork.QuestionRepository.Single(q => q.Id == viewModel.Question.Id, "Answers");
             if (question.AppUserId == currentUserId
                 || User.IsInRole(Constants.AdminRoleName)) {
-                _context.Answers.RemoveRange(question.Answers);
-                _context.Questions.Remove(question);
+                _unitOfWork.AnswerRepository.RemoveRange(question.Answers);
+                _unitOfWork.QuestionRepository.Remove(question);
 
-                _context.SaveChanges();
+                _unitOfWork.Complete();
             }
 
             return RedirectToAction("Index", "Home");
