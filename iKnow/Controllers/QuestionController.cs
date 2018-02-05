@@ -32,7 +32,7 @@ namespace iKnow.Controllers {
         public PartialViewResult GetForm(int? id) {
             Question question = null;
             if (id.HasValue && id.Value > 0) {
-                question = _unitOfWork.QuestionRepository.SingleOrDefault(q => q.Id == id, "Topics");
+                question = _unitOfWork.QuestionRepository.Single(q => q.Id == id, "Topics");
             }
             if (question == null) {
                 question = new Question();

@@ -18,7 +18,6 @@ namespace iKnow.UnitTests.Controllers {
     [TestFixture]
     public class TopicControllerTests {
         private Mock<IUnitOfWork> _unitOfWork;
-        private Mock<HttpRequestBase> _request;
         private TopicController _controller;
         private Topic _topic1;
         private Topic _topic2;
@@ -72,9 +71,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         private void SetupController() {
-            _request = new Mock<HttpRequestBase>();
             var context = new Mock<HttpContextBase>();
-            context.SetupGet(x => x.Request).Returns(_request.Object);
+            context.SetupGet(x => x.Request).Returns(new Mock<HttpRequestBase>().Object);
 
             _controller = new TopicController(_unitOfWork.Object, _imageFileGenerator.Object);
             _controller.ControllerContext = new ControllerContext(
@@ -83,7 +81,7 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void Index_WhenCalled_GetAllTopics() {
-            _request.Setup(r => r["selectedTopicId"]).Returns(_topic1.Id.ToString());
+            new Mock<HttpRequestBase>().Setup(r => r["selectedTopicId"]).Returns(_topic1.Id.ToString());
 
             _controller.Index();
 
@@ -99,7 +97,7 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void Index_RequestHasASelectedTopicId_ReturnTheTopicInTheViewModel() {
-            _request.Setup(r => r["selectedTopicId"]).Returns(_topic2.Id.ToString());
+            new Mock<HttpRequestBase>().Setup(r => r["selectedTopicId"]).Returns(_topic2.Id.ToString());
 
             var result = _controller.Index();
 
