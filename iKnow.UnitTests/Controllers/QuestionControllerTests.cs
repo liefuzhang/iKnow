@@ -418,7 +418,6 @@ namespace iKnow.UnitTests.Controllers {
         [Test]
         public void Save_WhenCalled_SaveQuestion() {
             var viewModel = GetExistingQuestionFormViewModel();
-            _unitOfWork.Setup(u => u.Complete());
 
             _controller.Save(viewModel);
 
@@ -440,7 +439,6 @@ namespace iKnow.UnitTests.Controllers {
         [Test]
         public void Save_NewQuestion_CheckIfQuestionTitleIsUnique() {
             var viewModel = GetNewQuestionFormViewModel();
-            _unitOfWork.Setup(u => u.QuestionRepository.Any(It.IsAny<Expression<Func<Question, bool>>>()));
 
             _controller.Save(viewModel);
 
@@ -450,7 +448,6 @@ namespace iKnow.UnitTests.Controllers {
         [Test]
         public void Save_NewQuestion_AddQuestion() {
             var viewModel = GetNewQuestionFormViewModel();
-            _unitOfWork.Setup(u => u.QuestionRepository.Add(It.IsAny<Question>()));
 
             _controller.Save(viewModel);
 
@@ -533,7 +530,7 @@ namespace iKnow.UnitTests.Controllers {
             _unitOfWork.Setup(u => u.TopicRepository.Get(It.IsAny<Expression<Func<Topic, bool>>>(),
                 It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
                 It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
-                .Returns(new [] {_topic1});
+                .Returns(new[] { _topic1 });
 
             _controller.Save(viewModel);
 
@@ -554,12 +551,21 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void SaveQuestionTopics_WhenCalled_SaveQuestion() {
+            var viewModel = GetExistingQuestionFormViewModel();
 
+            _controller.SaveQuestionTopics(viewModel);
+
+            _unitOfWork.Verify(u => u.Complete());
         }
 
         [Test]
         public void SaveQuestionTopics_WhenCalled_ReturnRedirectToRouteResultWithQuestionIdInRouteValue() {
+            var viewModel = GetExistingQuestionFormViewModel();
 
+            var result = _controller.SaveQuestionTopics(viewModel);
+
+            Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
+            Assert.That((result as RedirectToRouteResult).RouteValues["Id"], Is.EqualTo(_question1.Id));
         }
 
         [Test]
@@ -578,6 +584,127 @@ namespace iKnow.UnitTests.Controllers {
                 It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()));
         }
 
+        [Test]
+        public void GetRelatedQuestions_WhenCalled_GetCurrentQuestion() {
+            _controller.GetRelatedQuestions(_question2.Id);
+
+            _unitOfWork.Verify(u => u.QuestionRepository.Single(It.IsAny<Expression<Func<Question, bool>>>(), It.IsAny<string>()));
+        }
+
+        [Test]
+        public void GetRelatedQuestions_WhenCalled_GetQuestions() {
+            _unitOfWork.Setup(u => u.QuestionRepository.Get(
+                It.IsAny<Expression<Func<Question, bool>>>(),
+                It.IsAny<Func<IQueryable<Question>, IOrderedQueryable<Question>>>(),
+                null,
+                null,
+                null))
+                .Returns(new[] { _question1 });
+
+            _controller.GetRelatedQuestions(_question2.Id);
+
+            _unitOfWork.Verify(u => u.QuestionRepository.Get(
+                It.IsAny<Expression<Func<Question, bool>>>(),
+                It.IsAny<Func<IQueryable<Question>, IOrderedQueryable<Question>>>(),
+                null,
+                null,
+                null));
+        }
+
+        [Test]
+        public void GetRelatedQuestions_WhenCalled_GetQuestionsWithAnswerCount() {
+            _unitOfWork.Setup(u => u.QuestionRepository.Get(
+                It.IsAny<Expression<Func<Question, bool>>>(),
+                It.IsAny<Func<IQueryable<Question>, IOrderedQueryable<Question>>>(),
+                null,
+                null,
+                null))
+                .Returns(new[] { _question1 });
+
+            _controller.GetRelatedQuestions(_question2.Id);
+
+            _unitOfWork.Verify(u => u.QuestionRepository.GetQuestionsWithAnswerCount(It.IsAny<IEnumerable<Question>>(), It.IsAny<int>()));
+        }
+
+        [Test]
+        public void GetRelatedQuestions_WhenCalled_ReturnPartialView() {
+            _unitOfWork.Setup(u => u.QuestionRepository.Get(
+                It.IsAny<Expression<Func<Question, bool>>>(),
+                It.IsAny<Func<IQueryable<Question>, IOrderedQueryable<Question>>>(),
+                null,
+                null,
+                null))
+                .Returns(new[] { _question1 });
+
+            var result = _controller.GetRelatedQuestions(_question2.Id);
+
+            Assert.That(result, Is.TypeOf<PartialViewResult>());
+        }
+
+        [Test]
+        public void Delete_WhenCalled_GetQuestion() {
+            var viewModel = GetExistingQuestionFormViewModel();
+
+            _controller.Delete(viewModel);
+
+            _unitOfWork.Verify(u => u.QuestionRepository.Single(It.IsAny<Expression<Func<Question, bool>>>(), It.IsAny<string>()));
+        }
+
+        [Test]
+        public void Delete_WhenCalled_ReturnRedirectToRouteResult() {
+            var viewModel = GetExistingQuestionFormViewModel();
+
+            var result = _controller.Delete(viewModel);
+
+            Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
+        }
+
+        [Test]
+        public void Delete_CurrentUserIsQuestionOwner_RemoveAnswersAndQuestionThenComplete() {
+            _unitOfWork.Setup(u => u.AnswerRepository.RemoveRange(It.IsAny<IEnumerable<Answer>>()));
+
+            var viewModel = GetExistingQuestionFormViewModel();
+
+            var result = _controller.Delete(viewModel);
+
+            _unitOfWork.Verify(u => u.AnswerRepository.RemoveRange(It.IsAny<IEnumerable<Answer>>()));
+            _unitOfWork.Verify(u => u.QuestionRepository.Remove(It.IsAny<Question>()));
+            _unitOfWork.Verify(u => u.Complete());
+        }
+
+        [Test]
+        public void Delete_CurrentUserIsAdminButNotQuestionOwner_RemoveAnswersAndQuestionThenComplete() {
+            var claim = new Claim("testUserName2", _question2.AppUserId);
+            _identity.Setup(i => i.FindFirst(It.IsAny<string>())).Returns(claim);
+            _user.Setup(u => u.IsInRole(Constants.AdminRoleName)).Returns(true);
+
+            _unitOfWork.Setup(u => u.AnswerRepository.RemoveRange(It.IsAny<IEnumerable<Answer>>()));
+
+            var viewModel = GetExistingQuestionFormViewModel();
+
+            var result = _controller.Delete(viewModel);
+
+            _unitOfWork.Verify(u => u.AnswerRepository.RemoveRange(It.IsAny<IEnumerable<Answer>>()));
+            _unitOfWork.Verify(u => u.QuestionRepository.Remove(It.IsAny<Question>()));
+            _unitOfWork.Verify(u => u.Complete());
+        }
+
+        [Test]
+        public void Delete_CurrentUserIsNotAdminOrQuestionOwner_ShouldNotRemoveAnswersOrQuestionOrComplete() {
+            var claim = new Claim("testUserName2", _question2.AppUserId);
+            _identity.Setup(i => i.FindFirst(It.IsAny<string>())).Returns(claim);
+            _user.Setup(u => u.IsInRole(Constants.AdminRoleName)).Returns(false);
+
+            _unitOfWork.Setup(u => u.AnswerRepository.RemoveRange(It.IsAny<IEnumerable<Answer>>()));
+
+            var viewModel = GetExistingQuestionFormViewModel();
+
+            var result = _controller.Delete(viewModel);
+
+            _unitOfWork.Verify(u => u.AnswerRepository.RemoveRange(It.IsAny<IEnumerable<Answer>>()), Times.Never);
+            _unitOfWork.Verify(u => u.QuestionRepository.Remove(It.IsAny<Question>()), Times.Never);
+            _unitOfWork.Verify(u => u.Complete(), Times.Never);
+        }
 
         // Helper Methods
         private QuestionFormViewModel GetExistingQuestionFormViewModel() {
