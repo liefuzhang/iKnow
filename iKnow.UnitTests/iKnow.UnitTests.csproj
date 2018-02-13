@@ -117,6 +117,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Controllers\AnswerControllerTests.cs" />
     <Compile Include="Controllers\QuestionControllerTests.cs" />
     <Compile Include="Controllers\TopicControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

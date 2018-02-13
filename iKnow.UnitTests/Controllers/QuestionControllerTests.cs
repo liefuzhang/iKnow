@@ -593,13 +593,7 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void GetRelatedQuestions_WhenCalled_GetQuestions() {
-            _unitOfWork.Setup(u => u.QuestionRepository.Get(
-                It.IsAny<Expression<Func<Question, bool>>>(),
-                It.IsAny<Func<IQueryable<Question>, IOrderedQueryable<Question>>>(),
-                null,
-                null,
-                null))
-                .Returns(new[] { _question1 });
+            SetupQuestionRepositoryGetAndGetQuestionsWithAnswers();
 
             _controller.GetRelatedQuestions(_question2.Id);
 
@@ -608,33 +602,21 @@ namespace iKnow.UnitTests.Controllers {
                 It.IsAny<Func<IQueryable<Question>, IOrderedQueryable<Question>>>(),
                 null,
                 null,
-                null));
+                It.IsAny<int>()));
         }
 
         [Test]
         public void GetRelatedQuestions_WhenCalled_GetQuestionsWithAnswerCount() {
-            _unitOfWork.Setup(u => u.QuestionRepository.Get(
-                It.IsAny<Expression<Func<Question, bool>>>(),
-                It.IsAny<Func<IQueryable<Question>, IOrderedQueryable<Question>>>(),
-                null,
-                null,
-                null))
-                .Returns(new[] { _question1 });
+            SetupQuestionRepositoryGetAndGetQuestionsWithAnswers();
 
             _controller.GetRelatedQuestions(_question2.Id);
 
-            _unitOfWork.Verify(u => u.QuestionRepository.GetQuestionsWithAnswerCount(It.IsAny<IEnumerable<Question>>(), It.IsAny<int>()));
+            _unitOfWork.Verify(u => u.QuestionRepository.GetQuestionsWithAnswerCount(It.IsAny<IEnumerable<Question>>()));
         }
 
         [Test]
         public void GetRelatedQuestions_WhenCalled_ReturnPartialView() {
-            _unitOfWork.Setup(u => u.QuestionRepository.Get(
-                It.IsAny<Expression<Func<Question, bool>>>(),
-                It.IsAny<Func<IQueryable<Question>, IOrderedQueryable<Question>>>(),
-                null,
-                null,
-                null))
-                .Returns(new[] { _question1 });
+            SetupQuestionRepositoryGetAndGetQuestionsWithAnswers();
 
             var result = _controller.GetRelatedQuestions(_question2.Id);
 
@@ -724,5 +706,15 @@ namespace iKnow.UnitTests.Controllers {
             };
         }
 
+        private void SetupQuestionRepositoryGetAndGetQuestionsWithAnswers() {
+            _unitOfWork.Setup(u => u.QuestionRepository.Get(
+                It.IsAny<Expression<Func<Question, bool>>>(),
+                It.IsAny<Func<IQueryable<Question>, IOrderedQueryable<Question>>>(),
+                It.IsAny<string>(),
+                It.IsAny<int?>(),
+                It.IsAny<int?>()))
+                .Returns(new[] { _question1 });
+            _unitOfWork.Setup(u => u.QuestionRepository.GetQuestionsWithAnswerCount(It.IsAny<IEnumerable<Question>>()));
+        }
     }
 }

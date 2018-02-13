@@ -12,7 +12,7 @@ namespace iKnow.Persistence.Repositories {
             _iKnowContext = context;
         }
 
-        public IDictionary<Question, int> GetQuestionsWithAnswerCount(IEnumerable<Question> questions, int? maxNumber) {
+        public IDictionary<Question, int> GetQuestionsWithAnswerCount(IEnumerable<Question> questions) {
             var query = questions.GroupJoin(_iKnowContext.Answers,
                 q => q.Id,
                 a => a.QuestionId,
@@ -22,12 +22,18 @@ namespace iKnow.Persistence.Repositories {
                         AnswerCount = answers.Count()
                     }).OrderBy(a => Guid.NewGuid());
 
-            if (maxNumber.HasValue) {
-                return query.Take(maxNumber.Value).ToDictionary(a => a.Question, a => a.AnswerCount);
-            }
-
             return query.ToDictionary(a => a.Question, a => a.AnswerCount);
         }
 
+        public IEnumerable<Question> GetQuestionsOrdeyByDescending(Func<IQueryable<Question>, IOrderedQueryable<Question>> orderByDesc, int? skip, int? take) {
+            IQueryable<Question> query = _iKnowContext.Questions;
+            query = orderByDesc(query);
+
+            if (take.HasValue) {
+                return query.Skip(skip ?? 0).Take(take.Value).ToList();
+            }
+
+            return query.Skip(skip ?? 0).ToList();
+        }
     }
 }

@@ -7,6 +7,9 @@ using iKnow.Core.Models;
 
 namespace iKnow.Core.Repositories {
     public interface IQuestionRepository : IRepository<Question> {
-        IDictionary<Question, int> GetQuestionsWithAnswerCount(IEnumerable<Question> questions, int? maxNumber);
+        IDictionary<Question, int> GetQuestionsWithAnswerCount(IEnumerable<Question> questions);
+
+        IEnumerable<Question> GetQuestionsOrdeyByDescending(
+            Func<IQueryable<Question>, IOrderedQueryable<Question>> orderByDesc, int? skip, int? take);
     }
 }

@@ -184,7 +184,10 @@ namespace iKnow.Controllers {
         public PartialViewResult GetRelatedQuestions(int id) {
             var currentQuestion = _unitOfWork.QuestionRepository.Single(q => q.Id == id, "Topics");
             var topicIds = currentQuestion.Topics.Select(t => t.Id);
-            var relatedQuestions = _unitOfWork.QuestionRepository.Get(q => q.Id != id && q.Topics.Any(t => topicIds.Contains(t.Id)));
+            const int relatedQuestionMaxNumber = 5;
+            var relatedQuestions = _unitOfWork.QuestionRepository.Get(q => 
+                q.Id != id && q.Topics.Any(t => topicIds.Contains(t.Id)), 
+                take: relatedQuestionMaxNumber).ToList();
 
             if (!relatedQuestions.Any()) {
                 return null;
@@ -196,8 +199,7 @@ namespace iKnow.Controllers {
         }
 
         private QuestionAnswerCountViewModel ConstructQuestionAnswerCountViewModel(IEnumerable<Question> relatedQuestions) {
-            const int relatedQuestionMaxNumber = 5;
-            var questionsWithAnswerCount = _unitOfWork.QuestionRepository.GetQuestionsWithAnswerCount(relatedQuestions, relatedQuestionMaxNumber);
+            var questionsWithAnswerCount = _unitOfWork.QuestionRepository.GetQuestionsWithAnswerCount(relatedQuestions);
 
             var viewModel = new QuestionAnswerCountViewModel {
                 QuestionsWithAnswerCount = questionsWithAnswerCount

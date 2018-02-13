@@ -3,6 +3,7 @@ using System;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web.Mvc;
+using iKnow.Core;
 using iKnow.Core.Models;
 using Microsoft.AspNet.Identity;
 using Constants = iKnow.Core.Models.Constants;
@@ -10,14 +11,20 @@ using iKnow.Persistence;
 
 namespace iKnow.Controllers {
     public class AnswerController : Controller {
-        private readonly iKnowContext _context;
+        private iKnowContext _context = new iKnowContext();
+        private readonly IUnitOfWork _unitOfWork;
+
+        public AnswerController(IUnitOfWork unitOfWork) {
+            _unitOfWork = unitOfWork;
+        }
 
         public AnswerController() {
-            _context = new iKnowContext();
+            _unitOfWork = new UnitOfWork();
         }
 
         protected override void Dispose(bool disposing) {
-            _context.Dispose();
+            _unitOfWork.Dispose();
+            base.Dispose();
         }
 
         // GET: Answer
@@ -29,16 +36,9 @@ namespace iKnow.Controllers {
         }
 
         private QuestionAnswerCountViewModel ConstructAnswerIndexViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
-            var questionsWithAnswerCount = _context.Questions.OrderByDescending(q => q.Id).Skip(currentPage * pageSize).Take(pageSize).GroupJoin(_context.Answers,
-               q => q.Id,
-               a => a.QuestionId,
-               (question, answers) =>
-               new {
-                   Question = question,
-                   AnswerCount = answers.Count()
-               })
-               .OrderBy(a => Guid.NewGuid())
-               .ToDictionary(a => a.Question, a => a.AnswerCount);
+            var questions = _unitOfWork.QuestionRepository.GetQuestionsOrdeyByDescending(query =>
+                query.OrderByDescending(question => question.Id), currentPage*pageSize, pageSize);
+            var questionsWithAnswerCount = _unitOfWork.QuestionRepository.GetQuestionsWithAnswerCount(questions);
 
             return new QuestionAnswerCountViewModel {
                 QuestionsWithAnswerCount = questionsWithAnswerCount,
