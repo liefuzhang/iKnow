@@ -249,7 +249,6 @@ namespace iKnow.UnitTests.Controllers {
         [Test]
         public void Save_NewTopic_NameAndDescriptionAreTrimmedBeforeSave() {
             var viewModel = GetNewTopicFormViewModel();
-            _unitOfWork.Setup(u => u.TopicRepository.Add(_newTopic));
             _newTopic.Name = " test name  ";
             _newTopic.Description = " test description  ";
 
@@ -263,9 +262,11 @@ namespace iKnow.UnitTests.Controllers {
         public void Save_NewTopicNameIsNotUnique_ShouldNotSaveTopic() {
             var viewModel = GetNewTopicFormViewModel();
             _newTopic.Name = _topic1.Name;
+            _unitOfWork.Setup(u => u.TopicRepository.Add(_newTopic));
 
             _controller.Save(viewModel);
 
+            _unitOfWork.Verify(u => u.TopicRepository.Add(_newTopic), Times.Never);
             _unitOfWork.Verify(u => u.Complete(), Times.Never);
         }
 

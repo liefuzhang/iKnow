@@ -83,7 +83,9 @@ namespace iKnow.UnitTests.Controllers {
             SetupIdentity();
 
             var context = new Mock<HttpContextBase>();
-            context.SetupGet(x => x.Request).Returns(new Mock<HttpRequestBase>().Object);
+            var request = new Mock<HttpRequestBase>();
+            request.SetupGet(r => r.UrlReferrer).Returns(new Uri("http://test.com"));
+            context.SetupGet(x => x.Request).Returns(request.Object);
             context.SetupGet(x => x.User).Returns(_user.Object);
 
             _controller = new QuestionController(_unitOfWork.Object);
@@ -291,17 +293,26 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void Detail_WhenCalled_ReturnViewResult() {
+            var result = _controller.Detail(_question1.Id);
 
+            Assert.That(result, Is.TypeOf<ViewResult>());
         }
 
         [Test]
         public void Detail_WhenCalled_ReturnQuestionInViewModel() {
+            var result = _controller.Detail(_question1.Id);
 
+            Assert.That((result as ViewResult).Model, Is.TypeOf<QuestionDetailViewModel>());
+            Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).Question, Is.EqualTo(_question1));
         }
 
         [Test]
         public void Detail_QuestionNotFound_ReturnHttpNotFoundResult() {
+            _question1 = null;
 
+            var result = _controller.Detail(1);
+
+            Assert.That(result, Is.TypeOf<HttpNotFoundResult>());
         }
 
         [Test]
@@ -347,18 +358,243 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void Detail_CurrentUserHasExistingAnswer_ReturnExistingAnswerIdInViewModel() {
+            _unitOfWork.Setup(
+                u => u.AnswerRepository.SingleOrDefault(It.IsAny<Expression<Func<Answer, bool>>>(), It.IsAny<string>()))
+                .Returns(() => new Answer { Id = 1 });
+
+            var result = _controller.Detail(_question1.Id);
+
+            Assert.That((result as ViewResult).Model, Is.TypeOf<QuestionDetailViewModel>());
+            Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).UserAnswerId, Is.EqualTo(1));
         }
 
         [Test]
         public void Detail_CurrentUserHasExistingAnswer_UserCanDeleteAnswerPanelAnswer() {
+            _unitOfWork.Setup(
+                u => u.AnswerRepository.SingleOrDefault(It.IsAny<Expression<Func<Answer, bool>>>(), It.IsAny<string>()))
+                .Returns(() => new Answer { Id = 1 });
+
+            var result = _controller.Detail(_question1.Id);
+
+            Assert.That((result as ViewResult).Model, Is.TypeOf<QuestionDetailViewModel>());
+            Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).CanUserDeleteAnswerPanelAnswer, Is.True);
         }
 
         [Test]
         public void Detail_CurrentUserHasNoExistingAnswer_ReturnZeroAndUserAnswerIdInViewModel() {
+            var result = _controller.Detail(_question1.Id);
+
+            Assert.That((result as ViewResult).Model, Is.TypeOf<QuestionDetailViewModel>());
+            Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).UserAnswerId, Is.EqualTo(0));
         }
 
         [Test]
         public void Detail_CurrentUserHasExistingAnswer_UserCannotDeleteAnswerPanelAnswer() {
+            var result = _controller.Detail(_question1.Id);
+
+            Assert.That((result as ViewResult).Model, Is.TypeOf<QuestionDetailViewModel>());
+            Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).CanUserDeleteAnswerPanelAnswer, Is.False);
+        }
+
+        [Test]
+        public void Save_WhenCalled_ReturnRedirectToRouteResult() {
+            var viewModel = GetExistingQuestionFormViewModel();
+
+            var result = _controller.Save(viewModel);
+
+            Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
+        }
+
+        [Test]
+        public void Save_WhenCalled_ContainQuestionIdInRouteValue() {
+            var viewModel = GetExistingQuestionFormViewModel();
+
+            var result = _controller.Save(viewModel);
+
+            Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
+            Assert.That((result as RedirectToRouteResult).RouteValues["id"], Is.EqualTo(_question1.Id));
+        }
+
+        [Test]
+        public void Save_WhenCalled_SaveQuestion() {
+            var viewModel = GetExistingQuestionFormViewModel();
+            _unitOfWork.Setup(u => u.Complete());
+
+            _controller.Save(viewModel);
+
+            _unitOfWork.Verify(u => u.Complete());
+        }
+
+        [Test]
+        public void Save_NewQuestion_TitleAndDescriptionGetTrimmed() {
+            var viewModel = GetNewQuestionFormViewModel();
+            _newQuestion.Title = " test title";
+            _newQuestion.Description = " test description";
+
+            _controller.Save(viewModel);
+
+            Assert.That(_newQuestion.Title, Is.EqualTo("Test title?"));
+            Assert.That(_newQuestion.Description, Is.EqualTo("Test description"));
+        }
+
+        [Test]
+        public void Save_NewQuestion_CheckIfQuestionTitleIsUnique() {
+            var viewModel = GetNewQuestionFormViewModel();
+            _unitOfWork.Setup(u => u.QuestionRepository.Any(It.IsAny<Expression<Func<Question, bool>>>()));
+
+            _controller.Save(viewModel);
+
+            _unitOfWork.Verify(u => u.QuestionRepository.Any(It.IsAny<Expression<Func<Question, bool>>>()));
+        }
+
+        [Test]
+        public void Save_NewQuestion_AddQuestion() {
+            var viewModel = GetNewQuestionFormViewModel();
+            _unitOfWork.Setup(u => u.QuestionRepository.Add(It.IsAny<Question>()));
+
+            _controller.Save(viewModel);
+
+            _unitOfWork.Verify(u => u.QuestionRepository.Add(_newQuestion));
+        }
+
+        [Test]
+        public void Save_NewQuestionTitleIsNotUnique_ReturnRedirectResult() {
+            var viewModel = GetNewQuestionFormViewModel();
+            _unitOfWork.Setup(u => u.QuestionRepository.Any(It.IsAny<Expression<Func<Question, bool>>>())).Returns(true);
+
+            var result = _controller.Save(viewModel);
+
+            Assert.That(result, Is.TypeOf<RedirectResult>());
+        }
+
+        [Test]
+        public void Save_NewQuestionTitleIsNotUnique_ShouldNotSaveQuestion() {
+            var viewModel = GetNewQuestionFormViewModel();
+            _unitOfWork.Setup(u => u.QuestionRepository.Any(It.IsAny<Expression<Func<Question, bool>>>())).Returns(true);
+
+            _controller.Save(viewModel);
+
+            _unitOfWork.Verify(u => u.Complete(), Times.Never);
+        }
+
+        [Test]
+        public void Save_NewQuestionTitleIsNotUnique_AddErrorMessageInTempData() {
+            var viewModel = GetNewQuestionFormViewModel();
+            _unitOfWork.Setup(u => u.QuestionRepository.Any(It.IsAny<Expression<Func<Question, bool>>>())).Returns(true);
+
+            _controller.Save(viewModel);
+
+            Assert.That(_controller.TempData["pageError"], Is.Not.Null);
+        }
+
+        [Test]
+        public void Save_ExistingQuestion_GetQuestion() {
+            var viewModel = GetExistingQuestionFormViewModel();
+
+            _controller.Save(viewModel);
+
+            _unitOfWork.Verify(u => u.QuestionRepository
+                .Single(It.IsAny<Expression<Func<Question, bool>>>(), It.IsAny<string>()));
+        }
+
+        [Test]
+        public void Save_ExistingQuestion_UpdateExistingQuestion() {
+            var viewModel = GetExistingQuestionFormViewModel();
+
+            _controller.Save(viewModel);
+
+            Assert.That(_question1.Description, Is.EqualTo(_saveQuestion.Description));
+        }
+
+        [Test]
+        public void Save_ModelStateIsNotValid_ReturnRedirectResult() {
+            var viewModel = GetExistingQuestionFormViewModel();
+            _controller.ModelState.AddModelError("", "");
+
+            var result = _controller.Save(viewModel);
+
+            Assert.That(result, Is.TypeOf<RedirectResult>());
+        }
+
+        [Test]
+        public void Save_ModelStateIsNotValid_ShouldNotSaveQuestion() {
+            var viewModel = GetExistingQuestionFormViewModel();
+            _controller.ModelState.AddModelError("", "");
+
+            _controller.Save(viewModel);
+
+            _unitOfWork.Verify(u => u.Complete(), Times.Never);
+        }
+
+        [Test]
+        public void Save_ViewModelHasTopicIds_GetTopic() {
+            var viewModel = GetExistingQuestionFormViewModel();
+            viewModel.TopicIds = new[] { 1 };
+            _unitOfWork.Setup(u => u.TopicRepository.Get(It.IsAny<Expression<Func<Topic, bool>>>(),
+                It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
+                It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
+                .Returns(new [] {_topic1});
+
+            _controller.Save(viewModel);
+
+            _unitOfWork.Verify(u => u.TopicRepository.Get(It.IsAny<Expression<Func<Topic, bool>>>(),
+                It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
+                It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()));
+        }
+
+        [Test]
+        public void SaveQuestionTopics_WhenCalled_GetQuestion() {
+            var viewModel = GetExistingQuestionFormViewModel();
+
+            _controller.SaveQuestionTopics(viewModel);
+
+            _unitOfWork.Verify(u => u.QuestionRepository
+                .Single(It.IsAny<Expression<Func<Question, bool>>>(), It.IsAny<string>()));
+        }
+
+        [Test]
+        public void SaveQuestionTopics_WhenCalled_SaveQuestion() {
+
+        }
+
+        [Test]
+        public void SaveQuestionTopics_WhenCalled_ReturnRedirectToRouteResultWithQuestionIdInRouteValue() {
+
+        }
+
+        [Test]
+        public void SaveQuestionTopics_ViewModelHasTopicIds_GetTopic() {
+            var viewModel = GetExistingQuestionFormViewModel();
+            viewModel.TopicIds = new[] { 1 };
+            _unitOfWork.Setup(u => u.TopicRepository.Get(It.IsAny<Expression<Func<Topic, bool>>>(),
+                It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
+                It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
+                .Returns(new[] { _topic1 });
+
+            _controller.SaveQuestionTopics(viewModel);
+
+            _unitOfWork.Verify(u => u.TopicRepository.Get(It.IsAny<Expression<Func<Topic, bool>>>(),
+                It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
+                It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()));
+        }
+
+
+        // Helper Methods
+        private QuestionFormViewModel GetExistingQuestionFormViewModel() {
+            _saveQuestion = _question1;
+            _saveQuestion.Description = "Edited question";
+
+            return new QuestionFormViewModel {
+                Question = _saveQuestion
+            };
+        }
+
+        private QuestionFormViewModel GetNewQuestionFormViewModel() {
+            _saveQuestion = _newQuestion;
+
+            return new QuestionFormViewModel() {
+                Question = _newQuestion
+            };
         }
 
     }
