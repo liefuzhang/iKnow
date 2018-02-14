@@ -120,8 +120,8 @@ namespace iKnow.Controllers {
             try {
                 _unitOfWork.Complete();
             } catch (DbEntityValidationException ex) {
-                var error = ex.EntityValidationErrors.First().ValidationErrors.First();
-                ModelState.AddModelError("", error.ErrorMessage);
+                var error = ex.EntityValidationErrors?.FirstOrDefault()?.ValidationErrors?.FirstOrDefault();
+                ModelState.AddModelError("", error?.ErrorMessage);
                 return View("~/Views/Question/Detail.cshtml", viewModel);
             }
 
@@ -150,7 +150,6 @@ namespace iKnow.Controllers {
             var answer = _unitOfWork.AnswerRepository.Single(a => a.Id == viewModel.UserAnswerId);
             if (answer.AppUserId == currentUserId) {
                 _unitOfWork.AnswerRepository.Remove(answer);
-
                 _unitOfWork.Complete();
             }
 
