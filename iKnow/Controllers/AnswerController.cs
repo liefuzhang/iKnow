@@ -11,7 +11,6 @@ using iKnow.Persistence;
 
 namespace iKnow.Controllers {
     public class AnswerController : Controller {
-        private iKnowContext _context = new iKnowContext();
         private readonly IUnitOfWork _unitOfWork;
 
         public AnswerController(IUnitOfWork unitOfWork) {
@@ -24,7 +23,7 @@ namespace iKnow.Controllers {
 
         protected override void Dispose(bool disposing) {
             _unitOfWork.Dispose();
-            base.Dispose();
+            base.Dispose(disposing);
         }
 
         // GET: Answer
@@ -37,7 +36,7 @@ namespace iKnow.Controllers {
 
         private QuestionAnswerCountViewModel ConstructAnswerIndexViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
             var questions = _unitOfWork.QuestionRepository.GetQuestionsOrdeyByDescending(query =>
-                query.OrderByDescending(question => question.Id), currentPage*pageSize, pageSize);
+                query.OrderByDescending(question => question.Id), currentPage * pageSize, pageSize);
             var questionsWithAnswerCount = _unitOfWork.QuestionRepository.GetQuestionsWithAnswerCount(questions);
 
             return new QuestionAnswerCountViewModel {
@@ -45,11 +44,20 @@ namespace iKnow.Controllers {
                 Page = currentPage,
                 PageSize = pageSize
             };
+        }
 
+        [Route("Answer/LoadMore/{currentPage}")]
+        public PartialViewResult LoadMore(int currentPage) {
+            var viewModel = ConstructAnswerIndexViewModel(++currentPage);
+            if (viewModel.QuestionsWithAnswerCount == null || !viewModel.QuestionsWithAnswerCount.Any()) {
+                return null;
+            }
+
+            return PartialView("_AnswerQuestionListPartial", viewModel.QuestionsWithAnswerCount);
         }
 
         public ActionResult Detail(int id) {
-            var answer = _context.Answers.Include("Question").SingleOrDefault(a => a.Id == id);
+            var answer = _unitOfWork.AnswerRepository.SingleOrDefault(a => a.Id == id, "Questions");
             if (answer == null) {
                 return HttpNotFound();
             }
@@ -60,12 +68,12 @@ namespace iKnow.Controllers {
         }
 
         private AnswerDetailViewModel ConstructAnswerDetailViewModel(Answer answer) {
-            var question = _context.Questions.Include("Topics").Single(q => q.Id == answer.Question.Id);
-            var answerCount = _context.Answers.Count(a => a.QuestionId == question.Id);
+            var question = _unitOfWork.QuestionRepository.Single(q => q.Id == answer.Question.Id, "Topics");
+            var answerCount = _unitOfWork.AnswerRepository.Count(a => a.QuestionId == question.Id);
 
             // TODO: can we utilize ConstructQuestionDetailViewModel method in QuestionController?
             var currentUserId = User.Identity.GetUserId();
-            var existingAnswer = _context.Answers.SingleOrDefault(
+            var existingAnswer = _unitOfWork.AnswerRepository.SingleOrDefault(
                 a => a.QuestionId == question.Id && a.AppUserId == currentUserId);
 
             var questionDetailViewModel = new QuestionDetailViewModel {
@@ -86,17 +94,6 @@ namespace iKnow.Controllers {
             return viewModel;
         }
 
-
-        [Route("Answer/LoadMore/{currentPage}")]
-        public PartialViewResult LoadMore(int currentPage) {
-            var viewModel = ConstructAnswerIndexViewModel(++currentPage);
-            if (!viewModel.QuestionsWithAnswerCount.Any()) {
-                return null;
-            }
-
-            return PartialView("_AnswerQuestionListPartial", viewModel.QuestionsWithAnswerCount);
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -104,7 +101,7 @@ namespace iKnow.Controllers {
             var currentUserId = User.Identity.GetUserId();
             Answer answerToSave;
             var existingAnswer =
-                _context.Answers.SingleOrDefault(
+                _unitOfWork.AnswerRepository.SingleOrDefault(
                     a => a.QuestionId == viewModel.Question.Id && a.AppUserId == currentUserId);
             if (existingAnswer != null) {
                 existingAnswer.Content = viewModel.AnswerPanelContent;
@@ -117,11 +114,11 @@ namespace iKnow.Controllers {
                     AppUserId = User.Identity.GetUserId(),
                     CreatedDate = DateTime.Now
                 };
-                _context.Answers.Add(answerToSave);
+                _unitOfWork.AnswerRepository.Add(answerToSave);
             }
 
             try {
-                _context.SaveChanges();
+                _unitOfWork.Complete();
             } catch (DbEntityValidationException ex) {
                 var error = ex.EntityValidationErrors.First().ValidationErrors.First();
                 ModelState.AddModelError("", error.ErrorMessage);
@@ -132,7 +129,7 @@ namespace iKnow.Controllers {
         }
 
         public PartialViewResult EditIcon(int id) {
-            var answer = _context.Answers.Single(a => a.Id == id);
+            var answer = _unitOfWork.AnswerRepository.Single(a => a.Id == id);
             if (User.Identity.IsAuthenticated
                               && answer.AppUserId == User.Identity.GetUserId()) {
                 return PartialView("_AnswerEditIconPartial");
@@ -141,7 +138,7 @@ namespace iKnow.Controllers {
         }
 
         public PartialViewResult GetAnswerPanelHeader(string id) {
-            var user = _context.Users.Single(u => u.Id == id);
+            var user = _unitOfWork.UserRepository.Single(u => u.Id == id);
             return PartialView("_AnswerPanelHeaderPartial", user);
         }
 
@@ -150,11 +147,11 @@ namespace iKnow.Controllers {
         [Authorize]
         public ActionResult Delete(QuestionDetailViewModel viewModel) {
             var currentUserId = User.Identity.GetUserId();
-            var answer = _context.Answers.Single(a => a.Id == viewModel.UserAnswerId);
+            var answer = _unitOfWork.AnswerRepository.Single(a => a.Id == viewModel.UserAnswerId);
             if (answer.AppUserId == currentUserId) {
-                _context.Answers.Remove(answer);
+                _unitOfWork.AnswerRepository.Remove(answer);
 
-                _context.SaveChanges();
+                _unitOfWork.Complete();
             }
 
             return RedirectToAction("Detail", "Question", new { id = viewModel.Question.Id });

@@ -13,7 +13,7 @@ namespace iKnow.Persistence.Repositories {
         }
 
         public IDictionary<Question, int> GetQuestionsWithAnswerCount(IEnumerable<Question> questions) {
-            var query = questions.GroupJoin(_iKnowContext.Answers,
+            var query = questions?.GroupJoin(_iKnowContext.Answers,
                 q => q.Id,
                 a => a.QuestionId,
                 (question, answers) =>
@@ -22,7 +22,7 @@ namespace iKnow.Persistence.Repositories {
                         AnswerCount = answers.Count()
                     }).OrderBy(a => Guid.NewGuid());
 
-            return query.ToDictionary(a => a.Question, a => a.AnswerCount);
+            return query?.ToDictionary(a => a.Question, a => a.AnswerCount);
         }
 
         public IEnumerable<Question> GetQuestionsOrdeyByDescending(Func<IQueryable<Question>, IOrderedQueryable<Question>> orderByDesc, int? skip, int? take) {

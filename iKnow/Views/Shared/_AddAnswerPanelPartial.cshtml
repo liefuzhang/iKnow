@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNet.Identity
 @model iKnow.ViewModels.QuestionDetailViewModel
 
-@Html.Action("GetAnswerPanelHeader", "Answer", new { id = User.Identity.GetUserId() })
+@*@Html.Action("GetAnswerPanelHeader", "Answer", new { id = User.Identity.GetUserId() })*@
 @using (@Html.BeginForm("Save", "Answer")) {
     <div class="rich-editor">
         @Html.HiddenFor(m => m.AnswerPanelContent, new { @class = "answer-content-hidden" })

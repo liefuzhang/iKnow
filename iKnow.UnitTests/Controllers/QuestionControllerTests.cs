@@ -316,6 +316,21 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
+        public void Detail_QuestionNotFound_ShouldNotGetAnswer() {
+            _question1 = null;
+
+            var result = _controller.Detail(1);
+            
+            _unitOfWork.Verify(u => u.AnswerRepository.Get(
+                It.IsAny<Expression<Func<Answer, bool>>>(),
+                It.IsAny<Func<IQueryable<Answer>, IOrderedQueryable<Answer>>>(),
+                null,
+                null,
+                null), 
+                Times.Never);
+        }
+
+        [Test]
         public void Detail_UserNotAuthenticated_UserCannotEditQuestion() {
             _identity.Setup(i => i.IsAuthenticated).Returns(false);
 

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Security.Principal;
-using Microsoft.AspNet.Identity;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -16,7 +14,6 @@ using iKnow.Core.Repositories;
 using iKnow.ViewModels;
 using Moq;
 using NUnit.Framework;
-using Constants = iKnow.Core.Models.Constants;
 
 namespace iKnow.UnitTests.Controllers {
     [TestFixture]
@@ -78,6 +75,18 @@ namespace iKnow.UnitTests.Controllers {
             _unitOfWork.Setup(
                 u => u.AnswerRepository.Single(It.IsAny<Expression<Func<Answer, bool>>>(), It.IsAny<string>()))
                 .Returns(() => _answer1);
+
+            _unitOfWork.Setup(
+                u => u.QuestionRepository.SingleOrDefault(It.IsAny<Expression<Func<Question, bool>>>(), It.IsAny<string>()))
+                .Returns(() => _question1);
+
+            _unitOfWork.Setup(
+                u => u.QuestionRepository.Single(It.IsAny<Expression<Func<Question, bool>>>(), It.IsAny<string>()))
+                .Returns(() => _question1);
+
+            _unitOfWork.Setup(
+                u => u.QuestionRepository.GetQuestionsWithAnswerCount(It.IsAny<IEnumerable<Question>>()))
+                .Returns(new Dictionary<Question, int> { { _question1, 1 } });
         }
 
         private void SetupController() {
@@ -107,9 +116,111 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void Index_WhenCalled_ReturnViewResult() {
+            var result = _controller.Index();
 
+            Assert.That(result, Is.TypeOf<ViewResult>());
+        }
+
+        [Test]
+        public void Index_WhenCalled_GetQuestionsWithAnswerCount() {
+            _controller.Index();
+
+            _unitOfWork.Verify(u => u.QuestionRepository.GetQuestionsWithAnswerCount(It.IsAny<IEnumerable<Question>>()));
+        }
+
+        [Test]
+        public void Detail_WhenCalled_GetAnswer() {
+            _controller.Detail(_answer1.Id);
+
+            _unitOfWork.Verify(u => u.AnswerRepository.SingleOrDefault(It.IsAny<Expression<Func<Answer, bool>>>(),
+                        It.IsAny<string>()));
+        }
+
+        [Test]
+        public void Detail_WhenCalled_ReturnViewResult() {
+            var result = _controller.Detail(_answer1.Id);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+        }
+
+        [Test]
+        public void Detail_WhenCalled_ReturnAnswerAndAnswerCountInViewModel() {
+            _unitOfWork.Setup(
+                u => u.AnswerRepository.Count(It.IsAny<Expression<Func<Answer, bool>>>()))
+                .Returns(1);
+
+            var result = _controller.Detail(_answer1.Id);
+
+            Assert.That((result as ViewResult).Model, Is.TypeOf<AnswerDetailViewModel>());
+            Assert.That(((result as ViewResult).Model as AnswerDetailViewModel).Answer, Is.EqualTo(_answer1));
+            Assert.That(((result as ViewResult).Model as AnswerDetailViewModel).AnswerCount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void Detail_WhenCalled_GetQuestionAndAnswerCount() {
+            _controller.Detail(_answer1.Id);
+
+            _unitOfWork.Verify(u => u.QuestionRepository.Single(It.IsAny<Expression<Func<Question, bool>>>(),
+                        It.IsAny<string>()));
+            _unitOfWork.Verify(u => u.AnswerRepository.Count(It.IsAny<Expression<Func<Answer, bool>>>()));
+        }
+
+        [Test]
+        public void Detail_WhenCalled_GetExistingAnswer() {
+            _controller.Detail(_answer1.Id);
+
+            _unitOfWork.Verify(u => u.AnswerRepository.SingleOrDefault(It.IsAny<Expression<Func<Answer, bool>>>(),
+                        It.IsAny<string>()), Times.Exactly(2));
+        }
+
+        [Test]
+        public void Detail_AnswerDoesNotExist_ReturnHttpNotFoundResult() {
+            _answer1 = null;
+
+            var result = _controller.Detail(1);
+
+            Assert.That(result, Is.TypeOf<HttpNotFoundResult>());
+        }
+
+        [Test]
+        public void Detail_AnswerDoesNotExist_ShouldNotGetQuestion() {
+            _answer1 = null;
+
+            _controller.Detail(1);
+
+            _unitOfWork.Verify(u => u.QuestionRepository.Single(It.IsAny<Expression<Func<Question, bool>>>(),
+                     It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
+        public void LoadMore_WhenCalled_GetQuestionsWithAnswerCount() {
+            _controller.LoadMore(1);
+
+            _unitOfWork.Verify(u => u.QuestionRepository.GetQuestionsWithAnswerCount(It.IsAny<IEnumerable<Question>>()));
+        }
+
+        [Test]
+        public void LoadMore_WhenCalled_ReturnPartialViewResult() {
+            var result = _controller.LoadMore(1);
+
+            Assert.That(result, Is.TypeOf<PartialViewResult>());
         }
 
 
+        [Test]
+        public void LoadMore_NoMoreQuestions_ReturnHttpNotFoundResult() {
+            _unitOfWork.Setup(
+                u => u.QuestionRepository.GetQuestionsWithAnswerCount(It.IsAny<IEnumerable<Question>>()))
+                .Returns(new Dictionary<Question, int>());
+
+            var result = _controller.LoadMore(1);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void Save_WhenCalled_GetExistingAnswer() {
+
+        }
     }
 }
