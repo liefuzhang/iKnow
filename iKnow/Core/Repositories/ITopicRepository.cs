@@ -6,6 +6,7 @@ using System.Web;
 using iKnow.Core.Models;
 
 namespace iKnow.Core.Repositories {
-    public interface ITopicRepository: IRepository<Topic> {
+    public interface ITopicRepository : IRepository<Topic> {
+
     }
 }

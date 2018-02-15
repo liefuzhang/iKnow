@@ -9,7 +9,7 @@ namespace iKnow.Core.Repositories {
     public interface IQuestionRepository : IRepository<Question> {
         IDictionary<Question, int> GetQuestionsWithAnswerCount(IEnumerable<Question> questions);
 
-        IEnumerable<Question> GetQuestionsOrdeyByDescending(
-            Func<IQueryable<Question>, IOrderedQueryable<Question>> orderByDesc, int? skip, int? take);
+        IEnumerable<Question> GetQuestionsOrderByDescending(
+            Func<IQueryable<Question>, IOrderedQueryable<Question>> orderByDesc, string includeProperties = null, int? skip = null, int? take = null);
     }
 }

@@ -25,10 +25,18 @@ namespace iKnow.Persistence.Repositories {
             return query?.ToDictionary(a => a.Question, a => a.AnswerCount);
         }
 
-        public IEnumerable<Question> GetQuestionsOrdeyByDescending(Func<IQueryable<Question>, IOrderedQueryable<Question>> orderByDesc, int? skip, int? take) {
+        public IEnumerable<Question> GetQuestionsOrderByDescending(Func<IQueryable<Question>, IOrderedQueryable<Question>> orderByDesc,
+            string includeProperties = null, int? skip = null, int? take = null) {
+            includeProperties = includeProperties ?? "";
+
             IQueryable<Question> query = _iKnowContext.Questions;
             query = orderByDesc(query);
 
+            foreach (var includeProperty in includeProperties.Split
+                (new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
+                query = query.Include(includeProperty);
+            }
+            
             if (take.HasValue) {
                 return query.Skip(skip ?? 0).Take(take.Value).ToList();
             }
