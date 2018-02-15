@@ -15,6 +15,10 @@ namespace iKnow.Persistence.Repositories {
         
         //TODO should we have this in a provider class? As it's not returning Answer collection
         public IDictionary<Question, Answer> GetQuestionAnswerPairsForGivenQuestions(List<int> questionIds) {
+            if (questionIds == null) {
+                return null;
+            }
+
             var answers = _iKnowContext.Answers
                 .Where(a => questionIds.Contains(a.QuestionId))
                 .GroupBy(a => a.QuestionId, (qId, g) => new {

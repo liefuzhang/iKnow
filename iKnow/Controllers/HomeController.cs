@@ -30,12 +30,12 @@ namespace iKnow.Controllers {
         
         public ActionResult Index() {
             int page = 0, pageSize = Constants.DefaultPageSize;
-            var viewModel = ConstructAnswerIndexViewModel(page, pageSize);
+            var viewModel = ConstructHomeViewModel(page, pageSize);
 
             return View(viewModel);
         }
 
-        private HomeViewModel ConstructAnswerIndexViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
+        private HomeViewModel ConstructHomeViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
             var questions = _unitOfWork.QuestionRepository.GetQuestionsOrderByDescending(query =>
                 query.OrderByDescending(question => question.Id), "Topics", currentPage*pageSize, pageSize).ToList();
             var questionIds = questions.Select(q => q.Id).ToList();
@@ -51,7 +51,7 @@ namespace iKnow.Controllers {
 
         [Route("Home/LoadMore/{currentPage}")]
         public PartialViewResult LoadMore(int currentPage) {
-            var viewModel = ConstructAnswerIndexViewModel(++currentPage);
+            var viewModel = ConstructHomeViewModel(++currentPage);
             if (!viewModel.QuestionAnswers.Any()) {
                 return null;
             }
