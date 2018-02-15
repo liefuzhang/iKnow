@@ -21,5 +21,20 @@ namespace iKnow.Persistence {
                 resized.Save(iconFolder + fileName, ImageFormat.Png);
             }
         }
+
+        public void SaveUserIcon(HttpPostedFileBase postedPhoto, AppUser user) {
+            // save icon if it exists
+            if (postedPhoto != null && postedPhoto.ContentLength > 0) {
+                var bitmap = Bitmap.FromStream(postedPhoto.InputStream);
+                var scale = Math.Max(bitmap.Width / Constants.UserIconDefaultSize,
+                    bitmap.Height / Constants.UserIconDefaultSize);
+                var resized = new Bitmap(bitmap,
+                    new Size(Convert.ToInt32(bitmap.Width/scale), Convert.ToInt32(bitmap.Height/scale)));
+
+                var iconFolder = HostingEnvironment.MapPath(Constants.UserIconFolderPath);
+                var fileName = user.Id.ToLower().Replace(' ', '-') + ".png";
+                resized.Save(iconFolder + fileName, ImageFormat.Png);
+            }
+        }
     }
 }

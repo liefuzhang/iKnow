@@ -11,8 +11,10 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
+using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.Models.Identity;
+using iKnow.Helper;
 using iKnow.ViewModels;
 using iKnow.ViewModels.Account;
 using iKnow.Persistence;
@@ -25,15 +27,41 @@ namespace iKnow.Controllers {
     public class AccountController : Controller {
         private AppSignInManager _signInManager;
         private AppUserManager _userManager;
-        private readonly iKnowContext _context;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IEmailSender _emailSender;
+        private readonly IImageFileGenerator _imageFileGenerator;
+
+        public AccountController(IUnitOfWork unitOfWork, IEmailSender emailSender, IImageFileGenerator imageFileGenerator) {
+            _unitOfWork = unitOfWork;
+            _emailSender = emailSender;
+            _imageFileGenerator = imageFileGenerator;
+        }
 
         public AccountController() {
-            _context = new iKnowContext();
+            _unitOfWork = new UnitOfWork();
+            _emailSender = new EmailSender();
+            _imageFileGenerator = new ImageFileGenerator();
         }
 
         public AccountController(AppUserManager userManager, AppSignInManager signInManager) {
             UserManager = userManager;
             SignInManager = signInManager;
+        }
+
+        protected override void Dispose(bool disposing) {
+            if (disposing) {
+                if (_userManager != null) {
+                    _userManager.Dispose();
+                    _userManager = null;
+                }
+
+                if (_signInManager != null) {
+                    _signInManager.Dispose();
+                    _signInManager = null;
+                }
+            }
+            _unitOfWork.Dispose();
+            base.Dispose(disposing);
         }
 
         public AppSignInManager SignInManager {
@@ -135,8 +163,7 @@ namespace iKnow.Controllers {
 
         private string GetUserName(RegisterViewModel model) {
             var fullName = (model.FirstName.Trim() + model.LastName.Trim()).ToLower();
-            var userNames = _context.Users
-                .Where(u => u.UserName.StartsWith(fullName))
+            var userNames = _unitOfWork.UserRepository.Get(u => u.UserName.StartsWith(fullName))
                 .Select(u => u.UserName)
                 .ToList();
 
@@ -171,7 +198,7 @@ namespace iKnow.Controllers {
                 // Send an email with this link
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await SendForgotPasswordMailAsync(user.Id, callbackUrl);
+                await _emailSender.SendForgotPasswordMailAsync(user, callbackUrl);
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
@@ -183,42 +210,6 @@ namespace iKnow.Controllers {
         // GET: /Account/ForgotPasswordConfirmation
         public ActionResult ForgotPasswordConfirmation() {
             return View();
-        }
-
-        private async Task SendForgotPasswordMailAsync(string userId, string callbackUrl) {
-            var user = await UserManager.FindByIdAsync(userId);
-            var body = ConstructEmailBody(user, callbackUrl);
-
-            using (MailMessage mailMessage = new MailMessage(ConfigurationManager.AppSettings["GmailUserName"], user.Email)) {
-                mailMessage.Subject = "Reset Password - iKnow";
-                mailMessage.Body = body;
-                mailMessage.IsBodyHtml = true;
-                var smtp = new SmtpClient {
-                    Host = ConfigurationManager.AppSettings["GmailHost"],
-                    Port = Int32.Parse(ConfigurationManager.AppSettings["GmailPort"]),
-                    EnableSsl = Boolean.Parse(ConfigurationManager.AppSettings["GmailSsl"]),
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(ConfigurationManager.AppSettings["GmailUserName"], ConfigurationManager.AppSettings["GmailPassword"])
-                };
-                await smtp.SendMailAsync(mailMessage);
-            }
-        }
-
-        private static string ConstructEmailBody(AppUser user, string callbackUrl) {
-            var emailTemplate = HostingEnvironment.MapPath("~/App_Data/EmailTemplateForgotPassword.htm");
-            var logoUrl = HostingEnvironment.MapPath("~/Content/Images/logo.png");
-
-            var body = string.Empty;
-            if (!string.IsNullOrEmpty(emailTemplate)) {
-                using (StreamReader reader = new StreamReader(emailTemplate)) {
-                    body = reader.ReadToEnd();
-                }
-            }
-            body = body.Replace("{UserName}", HttpUtility.HtmlEncode(user.FullName));
-            body = body.Replace("{LogoUrl}", logoUrl);
-            body = body.Replace("{ResetUrl}", callbackUrl);
-            return body;
         }
 
         //
@@ -262,22 +253,6 @@ namespace iKnow.Controllers {
             return RedirectToAction("Index", "Home");
         }
 
-        protected override void Dispose(bool disposing) {
-            if (disposing) {
-                if (_userManager != null) {
-                    _userManager.Dispose();
-                    _userManager = null;
-                }
-
-                if (_signInManager != null) {
-                    _signInManager.Dispose();
-                    _signInManager = null;
-                }
-            }
-            _context.Dispose();
-            base.Dispose(disposing);
-        }
-
         [Authorize]
         [Route("Account/UserProfile/{userName?}")]
         public ActionResult UserProfile(string userName) {
@@ -318,7 +293,7 @@ namespace iKnow.Controllers {
                 SaveUserChanges(user);
 
                 var postedPhoto = viewModel.PostedPhoto;
-                SaveUserIcon(postedPhoto, user);
+                _imageFileGenerator.SaveUserIcon(postedPhoto, user);
 
                 return RedirectToAction("Index", "Home");
             } catch (DbEntityValidationException ex) {
@@ -328,28 +303,14 @@ namespace iKnow.Controllers {
             }
         }
 
-        private static void SaveUserIcon(HttpPostedFileBase postedPhoto, AppUser user) {
-            // save icon if it exists
-            if (postedPhoto != null && postedPhoto.ContentLength > 0) {
-                var bitmap = Bitmap.FromStream(postedPhoto.InputStream);
-                var scale = Math.Max(bitmap.Width / Constants.UserIconDefaultSize,
-                    bitmap.Height / Constants.UserIconDefaultSize);
-                var resized = new Bitmap(bitmap,
-                    new Size(Convert.ToInt32(bitmap.Width / scale), Convert.ToInt32(bitmap.Height / scale)));
-                var iconFolder = HostingEnvironment.MapPath(Constants.UserIconFolderPath);
-                var fileName = user.Id.ToLower().Replace(' ', '-') + ".png";
-                resized.Save(iconFolder + fileName, ImageFormat.Png);
-            }
-        }
-
         private void SaveUserChanges(AppUser user) {
-            var userInDb = _context.Users.Single(u => u.Id == user.Id);
+            var userInDb = _unitOfWork.UserRepository.Single(u => u.Id == user.Id);
 
             userInDb.Gender = user.Gender;
             userInDb.Intro = user.Intro?.Trim();
             userInDb.Location = user.Location?.Trim();
 
-            _context.SaveChanges();
+            _unitOfWork.Complete();
         }
 
         //
@@ -406,6 +367,5 @@ namespace iKnow.Controllers {
         }
 
         #endregion
-
     }
 }

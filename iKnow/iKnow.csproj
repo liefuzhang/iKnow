@@ -183,6 +183,7 @@
     <Compile Include="Core\Repositories\IAnswerRepository.cs" />
     <Compile Include="Core\Repositories\IUserRepository.cs" />
     <Compile Include="Core\Repositories\ITopicRepository.cs" />
+    <Compile Include="Helper\EmailSender.cs" />
     <Compile Include="Helper\MyHelper.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
