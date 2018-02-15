@@ -9,7 +9,7 @@ namespace iKnow.Core.Models.Identity {
         public AppUserManager(IUserStore<AppUser> store)
             : base(store) {
         }
-
+        
         public static AppUserManager Create(IdentityFactoryOptions<AppUserManager> options, IOwinContext context) {
             var manager = new AppUserManager(new UserStore<AppUser>(context.Get<iKnowContext>()));
             // Configure validation logic for usernames

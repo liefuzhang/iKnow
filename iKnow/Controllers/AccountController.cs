@@ -31,10 +31,13 @@ namespace iKnow.Controllers {
         private readonly IEmailSender _emailSender;
         private readonly IImageFileGenerator _imageFileGenerator;
 
-        public AccountController(IUnitOfWork unitOfWork, IEmailSender emailSender, IImageFileGenerator imageFileGenerator) {
+        public AccountController(IUnitOfWork unitOfWork, IEmailSender emailSender, IImageFileGenerator imageFileGenerator,
+            AppUserManager userManager, AppSignInManager signInManager) {
             _unitOfWork = unitOfWork;
             _emailSender = emailSender;
             _imageFileGenerator = imageFileGenerator;
+            UserManager = userManager;
+            SignInManager = signInManager;
         }
 
         public AccountController() {
@@ -42,12 +45,7 @@ namespace iKnow.Controllers {
             _emailSender = new EmailSender();
             _imageFileGenerator = new ImageFileGenerator();
         }
-
-        public AccountController(AppUserManager userManager, AppSignInManager signInManager) {
-            UserManager = userManager;
-            SignInManager = signInManager;
-        }
-
+        
         protected override void Dispose(bool disposing) {
             if (disposing) {
                 if (_userManager != null) {
