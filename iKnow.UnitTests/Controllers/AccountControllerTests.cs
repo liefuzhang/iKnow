@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -8,6 +9,7 @@ using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.Models.Identity;
 using iKnow.Helper;
+using iKnow.ViewModels.Account;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using Moq;
@@ -23,6 +25,10 @@ namespace iKnow.UnitTests.Controllers {
         private Mock<IPrincipal> _user;
         private AppUser _currentUser;
         private string _returnUrl;
+        private Mock<AppUserManager> _userManager;
+        private Mock<AppSignInManager> _signInManager;
+        private Mock<IEmailSender> _emailSender;
+        private Mock<IImageFileGenerator> _imageFileGenerator;
 
         [SetUp]
         public void Setup() {
@@ -37,21 +43,23 @@ namespace iKnow.UnitTests.Controllers {
             SetupIdentity();
 
             var userStore = new Mock<IUserStore<AppUser>>();
-            var userManager = new Mock<AppUserManager>(userStore.Object);
+            _userManager = new Mock<AppUserManager>(userStore.Object);
+            _userManager.Setup(u => u.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult(_currentUser));
             var authenticationManager = new Mock<IAuthenticationManager>();
-            var signInManager = new Mock<AppSignInManager>(userManager.Object, authenticationManager.Object);
-            
-            var emailSender = new Mock<IEmailSender>();
-            var imageFileGenerator = new Mock<IImageFileGenerator>();
+            _signInManager = new Mock<AppSignInManager>(_userManager.Object, authenticationManager.Object);
+
+            _emailSender = new Mock<IEmailSender>();
+            _imageFileGenerator = new Mock<IImageFileGenerator>();
 
             var context = new Mock<HttpContextBase>();
             context.SetupGet(x => x.User).Returns(_user.Object);
 
             _controller = new AccountController(_unitOfWork.Object,
-                emailSender.Object, imageFileGenerator.Object,
-                userManager.Object, signInManager.Object);
+                _emailSender.Object, _imageFileGenerator.Object,
+                _userManager.Object, _signInManager.Object);
             _controller.ControllerContext = new ControllerContext(
                 context.Object, new RouteData(), _controller);
+            _controller.Url = new UrlHelper(new RequestContext(context.Object, new RouteData()), new RouteCollection());
         }
 
         private void SetupIdentity() {
@@ -66,7 +74,7 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Login_WhenCalled_SetReturnUrlInViewBag() {
+        public void LoginGet_WhenCalled_SetReturnUrlInViewBag() {
             _controller.Login(_returnUrl);
 
             Assert.That(_controller.ViewBag.ReturnUrl, Is.EqualTo(_returnUrl));
@@ -81,7 +89,74 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void LoginGet_UserIsAuthenticated_ReturnRedirectToRouteResult() {
+            _user.Setup(u => u.Identity.IsAuthenticated).Returns(true);
+
+            var result = _controller.Login(_returnUrl);
+
+            Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
+        }
+
+        [Test]
+        public async Task LoginPost_WhenCalled_FindUserByEmail() {
+            var viewModel = GetLoginViewModel();
+
+            await _controller.Login(viewModel, _returnUrl);
+
+            _userManager.Verify(um => um.FindByEmailAsync(_currentUser.Email));
+        }
+
+        [Test]
+        public async Task LoginPost_WhenCalled_PasswordSignIn() {
+            var viewModel = GetLoginViewModel();
+
+            await _controller.Login(viewModel, _returnUrl);
+
+            _signInManager.Verify(s => s.PasswordSignInAsync(It.IsAny<string>(),
+                viewModel.Password, It.IsAny<bool>(), It.IsAny<bool>()));
+        }
+
+        [Test]
+        public void LoginPost_SignInSuceeded_ReturnRedirectToRouteResult() {
 
         }
+
+        [Test]
+        public void LoginPost_SignInSuceeded_ReturnRedirectResultWhenUrlIsLocal() {
+
+        }
+
+        [Test]
+        public void LoginPost_ModelStateNotValid_AddReturnUrlInViewBagAndReturnViewResult() {
+
+        }
+
+        [Test]
+        public void LoginPost__AddReturnUrlInViewBagAndReturnViewResult() {
+
+        }
+
+        [Test]
+        public void LoginPost_CouldNotFindUser_AddModelStateError() {
+
+        }
+
+        [Test]
+        public void LoginPost_CouldNotFindUser_AddReturnUrlInViewBagAndReturnViewResult() {
+
+        }
+
+        [Test]
+        public void LoginPost_SignInFailed_AddReturnUrlInViewBagAndReturnViewResult() {
+
+        }
+
+        // Helper methods
+        private LoginViewModel GetLoginViewModel() {
+            return new LoginViewModel {
+                Email = "userEmail",
+                Password = "userPassword"
+            };
+        }
+
     }
 }

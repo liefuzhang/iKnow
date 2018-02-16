@@ -96,7 +96,7 @@ namespace iKnow.Controllers {
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl) {
             if (ModelState.IsValid) {
-                var user = UserManager.FindByEmail(model.Email.Trim());
+                var user = await UserManager.FindByEmailAsync(model.Email.Trim());
                 if (user == null) {
                     ModelState.AddModelError("", "Invalid login attempt.");
                     ViewBag.ReturnUrl = returnUrl;
