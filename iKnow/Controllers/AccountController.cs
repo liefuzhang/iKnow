@@ -45,7 +45,7 @@ namespace iKnow.Controllers {
             _emailSender = new EmailSender();
             _imageFileGenerator = new ImageFileGenerator();
         }
-        
+
         protected override void Dispose(bool disposing) {
             if (disposing) {
                 if (_userManager != null) {
@@ -97,21 +97,19 @@ namespace iKnow.Controllers {
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl) {
             if (ModelState.IsValid) {
                 var user = await UserManager.FindByEmailAsync(model.Email.Trim());
-                if (user == null) {
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    ViewBag.ReturnUrl = returnUrl;
-                    return View(model);
+                if (user != null) {
+                    var userName = user.UserName;
+
+                    // This doesn't count login failures towards account lockout
+                    // To enable password failures to trigger account lockout, change to shouldLockout: true
+                    var result = await SignInManager.PasswordSignInAsync(userName, model.Password, isPersistent: true,
+                                shouldLockout: false);
+
+                    if (result == SignInStatus.Success) {
+                        return RedirectToLocal(returnUrl);
+                    }
                 }
 
-                var userName = user.UserName;
-
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, change to shouldLockout: true
-                var result = await SignInManager.PasswordSignInAsync(userName, model.Password, isPersistent: true, shouldLockout: false);
-
-                if (result == SignInStatus.Success) {
-                    return RedirectToLocal(returnUrl);
-                }
                 ModelState.AddModelError("", "Invalid login attempt.");
             }
 
