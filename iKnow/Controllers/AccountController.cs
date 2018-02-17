@@ -30,14 +30,16 @@ namespace iKnow.Controllers {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailSender _emailSender;
         private readonly IImageFileGenerator _imageFileGenerator;
+        private IAuthenticationManager _authenticationManager;
 
         public AccountController(IUnitOfWork unitOfWork, IEmailSender emailSender, IImageFileGenerator imageFileGenerator,
-            AppUserManager userManager, AppSignInManager signInManager) {
+            AppUserManager userManager, AppSignInManager signInManager, IAuthenticationManager authenticationManager) {
             _unitOfWork = unitOfWork;
             _emailSender = emailSender;
             _imageFileGenerator = imageFileGenerator;
             UserManager = userManager;
             SignInManager = signInManager;
+            _authenticationManager = authenticationManager;
         }
 
         public AccountController() {
@@ -79,6 +81,8 @@ namespace iKnow.Controllers {
                 _userManager = value;
             }
         }
+
+        public IAuthenticationManager AuthenticationManager => _authenticationManager ?? HttpContext.GetOwinContext().Authentication;
 
         //
         // GET: /Account/Login
@@ -133,12 +137,16 @@ namespace iKnow.Controllers {
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model) {
             if (ModelState.IsValid) {
+                model.FirstName = model.FirstName.Trim();
+                model.LastName = model.LastName.Trim();
+                model.Email = model.Email.Trim();
+
                 var userName = GetUserName(model);
 
                 var user = new AppUser {
-                    FirstName = model.FirstName.Trim(),
-                    LastName = model.LastName.Trim(),
-                    Email = model.Email.Trim(),
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email,
                     UserName = userName,
                     Gender = 0,
                     DefaultIconNumber = (byte)(new Random()).Next(10)
@@ -158,7 +166,7 @@ namespace iKnow.Controllers {
         }
 
         private string GetUserName(RegisterViewModel model) {
-            var fullName = (model.FirstName.Trim() + model.LastName.Trim()).ToLower();
+            var fullName = (model.FirstName + model.LastName).ToLower();
             var userNames = _unitOfWork.UserRepository.Get(u => u.UserName.StartsWith(fullName))
                 .Select(u => u.UserName)
                 .ToList();
@@ -195,17 +203,11 @@ namespace iKnow.Controllers {
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                 await _emailSender.SendForgotPasswordMailAsync(user, callbackUrl);
-                return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                return View("ForgotPasswordConfirmation");
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
-        }
-
-        //
-        // GET: /Account/ForgotPasswordConfirmation
-        public ActionResult ForgotPasswordConfirmation() {
-            return View();
         }
 
         //
@@ -222,22 +224,16 @@ namespace iKnow.Controllers {
             if (!ModelState.IsValid) {
                 return View(model);
             }
-            var user = await UserManager.FindByEmailAsync(model.Email);
+            var user = await UserManager.FindByEmailAsync(model.Email.Trim());
             if (user == null) {
                 // Don't reveal that the user does not exist
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
+                return View("ResetPasswordConfirmation");
             }
             var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
             if (result.Succeeded) {
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
+                return View("ResetPasswordConfirmation");
             }
             AddErrors(result);
-            return View();
-        }
-
-        //
-        // GET: /Account/ResetPasswordConfirmation
-        public ActionResult ResetPasswordConfirmation() {
             return View();
         }
 
@@ -253,27 +249,34 @@ namespace iKnow.Controllers {
         [Route("Account/UserProfile/{userName?}")]
         public ActionResult UserProfile(string userName) {
             if (userName == null) {
-                // View user's own profile
-                if (Request["Message"] != null) {
-                    TempData["statusMessage"] = Request["Message"];
-                }
-                var currentUserId = User.Identity.GetUserId();
-                var currentUser = UserManager.FindById(currentUserId);
-
-                var userProfileViewModel = new UserProfileViewModel {
-                    AppUser = currentUser
-                };
-                return View("UserProfile", userProfileViewModel);
-            } else {
-                var user = UserManager.FindByName(userName);
-                if (user == null) {
-                    return HttpNotFound();
-                }
-                var userProfileViewModel = new UserProfileViewModel {
-                    AppUser = user
-                };
-                return View("UserProfileReadOnly", userProfileViewModel);
+                return ViewOwnProfile();
             }
+
+            return ViewOthersProfile(userName);
+        }
+
+        private ActionResult ViewOwnProfile() {
+            if (Request["Message"] != null) {
+                TempData["statusMessage"] = Request["Message"];
+            }
+            var currentUserId = User.Identity.GetUserId();
+            var currentUser = UserManager.FindById(currentUserId);
+
+            var userProfileViewModel = new UserProfileViewModel {
+                AppUser = currentUser
+            };
+            return View("UserProfile", userProfileViewModel);
+        }
+
+        private ActionResult ViewOthersProfile(string userName) {
+            var user = UserManager.FindByName(userName);
+            if (user == null) {
+                return HttpNotFound();
+            }
+            var userProfileViewModel = new UserProfileViewModel {
+                AppUser = user
+            };
+            return View("UserProfileReadOnly", userProfileViewModel);
         }
 
         [HttpPost]
@@ -342,12 +345,6 @@ namespace iKnow.Controllers {
         }
 
         #region Helpers
-
-        private IAuthenticationManager AuthenticationManager {
-            get {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
 
         private void AddErrors(IdentityResult result) {
             foreach (var error in result.Errors) {

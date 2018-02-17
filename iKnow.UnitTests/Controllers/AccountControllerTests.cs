@@ -34,9 +34,12 @@ namespace iKnow.UnitTests.Controllers {
         private string _returnUrl;
         private Mock<AppUserManager> _userManager;
         private Mock<AppSignInManager> _signInManager;
+        private Mock<IAuthenticationManager> _authenticationManager;
         private Mock<IEmailSender> _emailSender;
         private Mock<IImageFileGenerator> _imageFileGenerator;
         private Mock<UrlHelper> _urlHelper;
+        private string _forgotPasswordConfirmationStr = "ForgotPasswordConfirmation";
+        private string _resetPasswordConfirmationStr = "ResetPasswordConfirmation";
 
         [SetUp]
         public void Setup() {
@@ -53,9 +56,9 @@ namespace iKnow.UnitTests.Controllers {
                 LastName = "Smith"
             };
             _newUser = new AppUser {
-                Email = " newEmail ",
-                FirstName = " newfirst ",
-                LastName = " newlast "
+                Email = " Newemail ",
+                FirstName = " Newfirst ",
+                LastName = " Newlast "
             };
             _unitOfWork = new Mock<IUnitOfWork>();
 
@@ -79,11 +82,15 @@ namespace iKnow.UnitTests.Controllers {
             _imageFileGenerator = new Mock<IImageFileGenerator>();
 
             var context = new Mock<HttpContextBase>();
+            var request = new Mock<HttpRequestBase>();
+            request.SetupGet(r => r.Url).Returns(new Uri("http://test.com"));
+            context.SetupGet(x => x.Request).Returns(request.Object);
             context.SetupGet(x => x.User).Returns(_user.Object);
 
             _controller = new AccountController(_unitOfWork.Object,
                 _emailSender.Object, _imageFileGenerator.Object,
-                _userManager.Object, _signInManager.Object);
+                _userManager.Object, _signInManager.Object,
+                _authenticationManager.Object);
             _controller.ControllerContext = new ControllerContext(
                 context.Object, new RouteData(), _controller);
 
@@ -109,11 +116,13 @@ namespace iKnow.UnitTests.Controllers {
             _userManager.Setup(u => u.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult(_currentUser));
             _userManager.Setup(u => u.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Success));
+            _userManager.Setup(u => u.ResetPasswordAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Success));
         }
 
         private void SetupSignInManager() {
-            var authenticationManager = new Mock<IAuthenticationManager>();
-            _signInManager = new Mock<AppSignInManager>(_userManager.Object, authenticationManager.Object);
+            _authenticationManager = new Mock<IAuthenticationManager>();
+            _signInManager = new Mock<AppSignInManager>(_userManager.Object, _authenticationManager.Object);
             _signInManager.Setup(s => s.PasswordSignInAsync(
                 It.IsAny<string>(),
                 It.IsAny<string>(),
@@ -192,6 +201,17 @@ namespace iKnow.UnitTests.Controllers {
 
             Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
         }
+
+        [Test]
+        public async Task LoginPost_ModelStateNotValid_ShouldNotFindUser() {
+            var viewModel = GetLoginViewModel();
+            _controller.ModelState.AddModelError("", "");
+
+            await _controller.Login(viewModel, _returnUrl);
+
+            _userManager.Verify(um => um.FindByEmailAsync(_currentUser.Email), Times.Never);
+        }
+
 
         [Test]
         public async Task LoginPost_ModelStateNotValid_AddReturnUrlInViewBagAndReturnViewResult() {
@@ -307,6 +327,17 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
+        public async Task RegisterPost_ModelStateNotValid_ShouldNotCreateUser() {
+            _controller.ModelState.AddModelError("", "");
+
+            var viewModel = GetRegisterViewModel();
+
+            await _controller.Register(viewModel);
+
+            _userManager.Verify(u => u.CreateAsync(It.IsAny<AppUser>(), viewModel.Password), Times.Never);
+        }
+
+        [Test]
         public async Task RegisterPost_ModelStateNotValid_AddReturnUrlInViewBagAndReturnViewResult() {
             _controller.ModelState.AddModelError("", "");
 
@@ -361,12 +392,12 @@ namespace iKnow.UnitTests.Controllers {
             _userManager.Verify(u => u.CreateAsync(
                 It.Is<AppUser>(a => a.FirstName == _newUser.FirstName.Trim()
                     && a.LastName == _newUser.LastName.Trim()
-                    && a.Email == _newUser.Email.Trim()),
+                    && a.Email == viewModel.Email.Trim()),
                 viewModel.Password));
         }
 
         [Test]
-        public async Task RegisterPost_NameIsUnique_UserNameEndsWith0() {
+        public async Task RegisterPost_NameIsUnique_UserNameIsLowerCasedAndEndsWith0() {
             var viewModel = GetRegisterViewModel();
 
             await _controller.Register(viewModel);
@@ -374,13 +405,13 @@ namespace iKnow.UnitTests.Controllers {
             _userManager.Verify(u => u.CreateAsync(
                 It.Is<AppUser>(a => a.FirstName == _newUser.FirstName.Trim()
                     && a.LastName == _newUser.LastName.Trim()
-                    && a.Email == _newUser.Email.Trim()
-                    && a.UserName == _newUser.FirstName.Trim() + _newUser.LastName.Trim() + "0"),
+                    && a.Email == viewModel.Email.Trim()
+                    && a.UserName == GetLowerCaseNewUserName() + "0"),
                 viewModel.Password));
         }
 
         [Test]
-        public async Task RegisterPost_NameIsNotUnique_UserNameEndsWithIncrementedNumber() {
+        public async Task RegisterPost_NameIsNotUnique_UserNameIsLowerCasedAndEndsWithIncrementedNumber() {
             var viewModel = GetRegisterViewModel();
 
             _unitOfWork.Setup(
@@ -389,7 +420,7 @@ namespace iKnow.UnitTests.Controllers {
                     It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
                 .Returns(new List<AppUser> {
                     new AppUser {
-                        UserName = _newUser.FirstName.Trim() + _newUser.LastName.Trim() + "0"
+                        UserName = GetLowerCaseNewUserName() + "0"
                     }
                 });
 
@@ -398,8 +429,8 @@ namespace iKnow.UnitTests.Controllers {
             _userManager.Verify(u => u.CreateAsync(
                 It.Is<AppUser>(a => a.FirstName == _newUser.FirstName.Trim()
                     && a.LastName == _newUser.LastName.Trim()
-                    && a.Email == _newUser.Email.Trim()
-                    && a.UserName == _newUser.FirstName.Trim() + _newUser.LastName.Trim() + "1"),
+                    && a.Email == viewModel.Email.Trim()
+                    && a.UserName == GetLowerCaseNewUserName() + "1"),
                 viewModel.Password));
         }
 
@@ -411,8 +442,202 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void ForgotPaaswordPost_WhenCalled_FindUserByEmail() {
+        public async Task ForgotPasswordPost_WhenCalled_FindUserByTrimmedEmail() {
+            var viewModel = GetForgotPasswordViewModel();
 
+            await _controller.ForgotPassword(viewModel);
+
+            _userManager.Verify(u => u.FindByEmailAsync((viewModel.Email.Trim())));
+        }
+
+        [Test]
+        public async Task ForgotPasswordPost_WhenCalled_GeneratePasswordResetToken() {
+            var viewModel = GetForgotPasswordViewModel();
+
+            await _controller.ForgotPassword(viewModel);
+
+            _userManager.Verify(u => u.GeneratePasswordResetTokenAsync(_currentUser.Id));
+        }
+
+        [Test]
+        public async Task ForgotPasswordPost_WhenCalled_SendForgotPasswordMail() {
+            var viewModel = GetForgotPasswordViewModel();
+
+            await _controller.ForgotPassword(viewModel);
+
+            _emailSender.Verify(e => e.SendForgotPasswordMailAsync(_currentUser, It.IsAny<string>()));
+        }
+
+        [Test]
+        public async Task ForgotPasswordPost_WhenCalled_ReturnForgotPasswordConfirmationView() {
+            var viewModel = GetForgotPasswordViewModel();
+
+            var result = await _controller.ForgotPassword(viewModel);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That((result as ViewResult).ViewName, Is.EqualTo(_forgotPasswordConfirmationStr));
+        }
+
+        [Test]
+        public async Task ForgotPasswordPost_ModelStateIsNotValid_ReturnViewResultWithViewModel() {
+            var viewModel = GetForgotPasswordViewModel();
+            _controller.ModelState.AddModelError("", "");
+
+            var result = await _controller.ForgotPassword(viewModel);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That((result as ViewResult).Model, Is.EqualTo(viewModel));
+        }
+
+        [Test]
+        public async Task ForgotPasswordPost_ModelStateIsNotValid_ShouldNotFindUser() {
+            var viewModel = GetForgotPasswordViewModel();
+            _controller.ModelState.AddModelError("", "");
+
+            var result = await _controller.ForgotPassword(viewModel);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            _userManager.Verify(u => u.FindByEmailAsync(viewModel.Email.Trim()), Times.Never);
+        }
+
+        [Test]
+        public async Task ForgotPasswordPost_CouldNotFindUser_ReturnForgotPasswordConfirmationView() {
+            _userManager.Setup(u => u.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult((AppUser)null));
+
+            var viewModel = GetForgotPasswordViewModel();
+
+            var result = await _controller.ForgotPassword(viewModel);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That((result as ViewResult).ViewName, Is.EqualTo(_forgotPasswordConfirmationStr));
+        }
+
+        [Test]
+        public async Task ForgotPasswordPost_CouldNotFindUser_ShouldNotSendForgotPasswordMail() {
+            _userManager.Setup(u => u.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult((AppUser)null));
+
+            var viewModel = GetForgotPasswordViewModel();
+
+            var result = await _controller.ForgotPassword(viewModel);
+
+            _emailSender.Verify(e => e.SendForgotPasswordMailAsync(_currentUser, It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
+        public void ResetPasswordGet_CodeIsNull_ReturnErrorView() {
+            var result = _controller.ResetPassword((string)null);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That((result as ViewResult).ViewName, Is.EqualTo("Error"));
+        }
+
+        [Test]
+        public void ResetPasswordGet_CodeIsString_ReturnView() {
+            var result = _controller.ResetPassword("code");
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That((result as ViewResult).ViewName, Is.Not.EqualTo("Error"));
+        }
+
+        [Test]
+        public async Task ResetPasswordPost_WhenCalled_FindUserByTrimmedEmail() {
+            var viewModel = GetResetPasswordViewModel();
+
+            await _controller.ResetPassword(viewModel);
+
+            _userManager.Verify(u => u.FindByEmailAsync(viewModel.Email.Trim()));
+        }
+
+        [Test]
+        public async Task ResetPasswordPost_WhenCalled_ResetPassword() {
+            var viewModel = GetResetPasswordViewModel();
+
+            await _controller.ResetPassword(viewModel);
+
+            _userManager.Verify(u => u.ResetPasswordAsync(_currentUser.Id, viewModel.Code, viewModel.Password));
+        }
+
+        [Test]
+        public async Task ResetPasswordPost_ResetSucceeded_ReturnResetPasswordConfirmationView() {
+            var viewModel = GetResetPasswordViewModel();
+
+            var result = await _controller.ResetPassword(viewModel);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That((result as ViewResult).ViewName, Is.EqualTo(_resetPasswordConfirmationStr));
+        }
+
+        [Test]
+        public async Task ResetPasswordPost_ModelStateIsNotValid_ReturnViewResultWithViewModel() {
+            var viewModel = GetResetPasswordViewModel();
+            _controller.ModelState.AddModelError("", "");
+
+            var result = await _controller.ResetPassword(viewModel);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That((result as ViewResult).Model, Is.EqualTo(viewModel));
+        }
+
+        [Test]
+        public async Task ResetPasswordPost_ModelStateIsNotValid_ShouldNotFindUserByEmail() {
+            var viewModel = GetResetPasswordViewModel();
+            _controller.ModelState.AddModelError("", "");
+
+            var result = await _controller.ResetPassword(viewModel);
+
+            _userManager.Verify(u => u.FindByEmailAsync(_currentUser.Email.Trim()), Times.Never);
+        }
+
+        [Test]
+        public async Task ResetPasswordPost_UserCouldNotBeFound_ReturnResetPasswordConfirmationView() {
+            _userManager.Setup(u => u.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult((AppUser)null));
+            var viewModel = GetResetPasswordViewModel();
+
+            var result = await _controller.ResetPassword(viewModel);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That((result as ViewResult).ViewName, Is.EqualTo(_resetPasswordConfirmationStr));
+        }
+
+        [Test]
+        public async Task ResetPasswordPost_UserCouldNotBeFound_ShouldNotResetPassword() {
+            _userManager.Setup(u => u.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult((AppUser)null));
+            var viewModel = GetResetPasswordViewModel();
+
+            var result = await _controller.ResetPassword(viewModel);
+
+            _userManager.Verify(u => u.ResetPasswordAsync(_currentUser.Id, viewModel.Code, viewModel.Password), Times.Never);
+        }
+
+        [Test]
+        public async Task ResetPasswordPost_ResetFailed_AddModelStateErrorAndReturnViewResult() {
+            _userManager.Setup(u => u.ResetPasswordAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Failed("error")));
+
+            var viewModel = GetResetPasswordViewModel();
+
+            var result = await _controller.ResetPassword(viewModel);
+
+            Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
+            Assert.That(result, Is.TypeOf<ViewResult>());
+        }
+
+        [Test]
+        public void LogOff_WhenCalled_SignOut() {
+            _controller.LogOff();
+
+            _authenticationManager.Verify(a=>a.SignOut(It.IsAny<string>()));
+        }
+
+        [Test]
+        public void LogOff_WhenCalled_ReturnRedirectToRouteResult() {
+            var result = _controller.LogOff();
+
+            Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
+        }
+
+        [Test]
+        public void UserProfile_UserNameIsNull_FindUserById() {
         }
 
         // Helper methods
@@ -433,9 +658,27 @@ namespace iKnow.UnitTests.Controllers {
             };
         }
 
+        private ForgotPasswordViewModel GetForgotPasswordViewModel() {
+            return new ForgotPasswordViewModel() {
+                Email = _newUser.Email
+            };
+        }
+
+        private ResetPasswordViewModel GetResetPasswordViewModel() {
+            return new ResetPasswordViewModel() {
+                Email = _newUser.Email,
+                Password = "userPassword",
+                Code = "resetCode"
+            };
+        }
+
         private void VerifyReturnUrlIsInViewBagAndReturnViewResult(ActionResult result) {
             Assert.That(_controller.ViewBag.ReturnUrl, Is.EqualTo(_returnUrl));
             Assert.That(result, Is.TypeOf<ViewResult>());
+        }
+
+        private string GetLowerCaseNewUserName() {
+            return (_newUser.FirstName.Trim() + _newUser.LastName.Trim()).ToLower();
         }
     }
 }
