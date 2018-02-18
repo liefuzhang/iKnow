@@ -222,11 +222,11 @@ namespace iKnow.UnitTests.Controllers {
         [Test]
         public void Save_WhenCalled_SaveTopicIcon() {
             var viewModel = GetExistingTopicFormViewModel();
-            _imageFileGenerator.Setup(ifg => ifg.SaveTopicIcon(null, _saveTopic));
+            _imageFileGenerator.Setup(ifg => ifg.SaveTopicIcon(null, _saveTopic.Name));
 
             _controller.Save(viewModel);
 
-            _imageFileGenerator.Verify(ifg => ifg.SaveTopicIcon(null, _saveTopic));
+            _imageFileGenerator.Verify(ifg => ifg.SaveTopicIcon(null, _saveTopic.Name));
         }
 
         [Test]

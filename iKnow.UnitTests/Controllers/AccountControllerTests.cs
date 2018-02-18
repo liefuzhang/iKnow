@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
@@ -14,6 +15,7 @@ using iKnow.Core.Models;
 using iKnow.Core.Models.Identity;
 using iKnow.Core.Repositories;
 using iKnow.Helper;
+using iKnow.ViewModels;
 using iKnow.ViewModels.Account;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -31,6 +33,7 @@ namespace iKnow.UnitTests.Controllers {
         private Mock<IPrincipal> _user;
         private AppUser _currentUser;
         private AppUser _newUser;
+        private AppUser _saveUser;
         private string _returnUrl;
         private Mock<AppUserManager> _userManager;
         private Mock<AppSignInManager> _signInManager;
@@ -40,6 +43,7 @@ namespace iKnow.UnitTests.Controllers {
         private Mock<UrlHelper> _urlHelper;
         private string _forgotPasswordConfirmationStr = "ForgotPasswordConfirmation";
         private string _resetPasswordConfirmationStr = "ResetPasswordConfirmation";
+        private Mock<HttpRequestBase> _request;
 
         [SetUp]
         public void Setup() {
@@ -60,6 +64,11 @@ namespace iKnow.UnitTests.Controllers {
                 FirstName = " Newfirst ",
                 LastName = " Newlast "
             };
+            _saveUser = new AppUser {
+                Email = " Saveemail ",
+                FirstName = " Savefirst ",
+                LastName = " Savelast "
+            };
             _unitOfWork = new Mock<IUnitOfWork>();
 
             var userRepository = new Mock<IUserRepository>();
@@ -69,6 +78,9 @@ namespace iKnow.UnitTests.Controllers {
                     It.IsAny<Func<IQueryable<AppUser>, IOrderedQueryable<AppUser>>>(),
                     It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
                 .Returns(new List<AppUser>());
+            _unitOfWork.Setup(u => u.UserRepository.Single(It.IsAny<Expression<Func<AppUser, bool>>>(),
+                It.IsAny<string>()))
+                .Returns(_currentUser);
         }
 
         private void SetupController() {
@@ -82,9 +94,9 @@ namespace iKnow.UnitTests.Controllers {
             _imageFileGenerator = new Mock<IImageFileGenerator>();
 
             var context = new Mock<HttpContextBase>();
-            var request = new Mock<HttpRequestBase>();
-            request.SetupGet(r => r.Url).Returns(new Uri("http://test.com"));
-            context.SetupGet(x => x.Request).Returns(request.Object);
+            _request = new Mock<HttpRequestBase>();
+            _request.SetupGet(r => r.Url).Returns(new Uri("http://test.com"));
+            context.SetupGet(x => x.Request).Returns(_request.Object);
             context.SetupGet(x => x.User).Returns(_user.Object);
 
             _controller = new AccountController(_unitOfWork.Object,
@@ -114,9 +126,13 @@ namespace iKnow.UnitTests.Controllers {
             var userStore = new Mock<IUserStore<AppUser>>();
             _userManager = new Mock<AppUserManager>(userStore.Object);
             _userManager.Setup(u => u.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult(_currentUser));
+            _userManager.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(_currentUser));
+            _userManager.Setup(u => u.FindByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(_currentUser));
             _userManager.Setup(u => u.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Success));
             _userManager.Setup(u => u.ResetPasswordAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Success));
+            _userManager.Setup(u => u.ChangePasswordAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Success));
         }
 
@@ -626,7 +642,7 @@ namespace iKnow.UnitTests.Controllers {
         public void LogOff_WhenCalled_SignOut() {
             _controller.LogOff();
 
-            _authenticationManager.Verify(a=>a.SignOut(It.IsAny<string>()));
+            _authenticationManager.Verify(a => a.SignOut(It.IsAny<string>()));
         }
 
         [Test]
@@ -637,7 +653,266 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void UserProfile_UserNameIsNull_FindUserById() {
+        public async Task UserProfile_UserNameIsNull_FindUserById() {
+            await _controller.UserProfile(null);
+
+            _userManager.Verify(u => u.FindByIdAsync(It.IsAny<string>()));
+        }
+
+        [Test]
+        public async Task UserProfile_UserNameIsNull_ReturnViewResultWithCurrentUserInViewModel() {
+            var result = await _controller.UserProfile(null);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That((result as ViewResult).Model, Is.TypeOf<UserProfileViewModel>());
+            Assert.That(((result as ViewResult).Model as UserProfileViewModel).AppUser, Is.EqualTo(_currentUser));
+        }
+
+        [Test]
+        public async Task UserProfile_UserNameIsNull_AddStatusMessageInTempDataWhenRequestMessageExists() {
+            _request.Setup(r => r["Message"]).Returns("test message");
+
+            await _controller.UserProfile(null);
+
+            Assert.That(_controller.TempData["statusMessage"], Is.EqualTo("test message"));
+        }
+
+        [Test]
+        public async Task UserProfile_UserNameIsNotNull_FindUserByName() {
+            var testUserName = "testUser";
+
+            await _controller.UserProfile(testUserName);
+
+            _userManager.Verify(u => u.FindByNameAsync(testUserName));
+        }
+
+        [Test]
+        public async Task UserProfile_UserNameIsNotNull_ReturnViewResultWithUserInViewModel() {
+            var testUserName = "testUser";
+
+            var result = await _controller.UserProfile(testUserName);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That((result as ViewResult).Model, Is.TypeOf<UserProfileViewModel>());
+            Assert.That(((result as ViewResult).Model as UserProfileViewModel).AppUser, Is.EqualTo(_currentUser));
+        }
+
+        [Test]
+        public async Task UserProfile_UserCouldNotBeFound_ReturnHttpNotFoundResult() {
+            var testUserName = "testUser";
+
+            _userManager.Setup(u => u.FindByNameAsync(It.IsAny<string>())).Returns(Task.FromResult((AppUser)null));
+
+            var result = await _controller.UserProfile(testUserName);
+
+            Assert.That(result, Is.TypeOf<HttpNotFoundResult>());
+        }
+
+        [Test]
+        public void SaveProfile_WhenCalled_GetUser() {
+            var viewModel = GetUserProfileViewModel();
+
+            _controller.SaveProfile(viewModel);
+
+            _unitOfWork.Verify(u => u.UserRepository.Single(It.IsAny<Expression<Func<AppUser, bool>>>(),
+                            It.IsAny<string>()));
+        }
+
+        [Test]
+        public void SaveProfile_WhenCalled_UpdateUserWithTrimmedValueAndSave() {
+            var viewModel = GetUserProfileViewModel();
+
+            _controller.SaveProfile(viewModel);
+
+            Assert.That(_currentUser.Gender, Is.EqualTo(_saveUser.Gender));
+            Assert.That(_currentUser.Intro, Is.EqualTo(_saveUser.Intro.Trim()));
+            Assert.That(_currentUser.Location, Is.EqualTo(_saveUser.Location.Trim()));
+            _unitOfWork.Verify(u => u.Complete());
+        }
+
+        [Test]
+        public void SaveProfile_UpdateOptionalValueIsNull_UpdateUserWithNullValueAndSave() {
+            var viewModel = GetUserProfileViewModel();
+            _saveUser.Location = null;
+            _saveUser.Intro = null;
+
+            _controller.SaveProfile(viewModel);
+
+            Assert.That(_currentUser.Gender, Is.EqualTo(_saveUser.Gender));
+            Assert.That(_currentUser.Intro, Is.EqualTo(null));
+            Assert.That(_currentUser.Location, Is.EqualTo(null));
+            _unitOfWork.Verify(u => u.Complete());
+        }
+
+        [Test]
+        public void SaveProfile_WhenCalled_SaveUserIcon() {
+            var viewModel = GetUserProfileViewModel();
+
+            _controller.SaveProfile(viewModel);
+
+            _imageFileGenerator.Verify(i => i.SaveUserIcon(It.IsAny<HttpPostedFileBase>(),
+                _saveUser.Id));
+        }
+
+        [Test]
+        public void SaveProfile_WhenCalled_ReturnRedirectToRouteResult() {
+            var viewModel = GetUserProfileViewModel();
+
+            var result = _controller.SaveProfile(viewModel);
+
+            Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
+        }
+
+        [Test]
+        public void SaveProfile_ModelStateNotValid_ReturnViewResultWithViewModel() {
+            var viewModel = GetUserProfileViewModel();
+            _controller.ModelState.AddModelError("", "");
+
+            var result = _controller.SaveProfile(viewModel);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That((result as ViewResult).Model, Is.EqualTo(viewModel));
+        }
+
+        [Test]
+        public void SaveProfile_ModelStateNotValid_ShouldNotGetUser() {
+            var viewModel = GetUserProfileViewModel();
+            _controller.ModelState.AddModelError("", "");
+
+            _controller.SaveProfile(viewModel);
+
+            _unitOfWork.Verify(u => u.UserRepository.Single(It.IsAny<Expression<Func<AppUser, bool>>>(),
+                            It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
+        public void SaveProfile_SaveUserThrowException_AddModelStateError() {
+            var viewModel = GetUserProfileViewModel();
+            _unitOfWork.Setup(u => u.Complete())
+                .Throws<DbEntityValidationException>();
+
+            _controller.SaveProfile(viewModel);
+
+            Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void SaveProfile_SaveUserThrowException_ReturnViewResultWithViewModel() {
+            var viewModel = GetUserProfileViewModel();
+            _unitOfWork.Setup(u => u.Complete())
+                .Throws<DbEntityValidationException>();
+
+            var result = _controller.SaveProfile(viewModel);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That((result as ViewResult).Model, Is.EqualTo(viewModel));
+        }
+
+        [Test]
+        public void SaveProfile_SaveUserThrowException_ShouldNotSaveUserIcon() {
+            var viewModel = GetUserProfileViewModel();
+            _unitOfWork.Setup(u => u.Complete())
+                .Throws<DbEntityValidationException>();
+
+            _controller.SaveProfile(viewModel);
+
+            _imageFileGenerator.Verify(i => i.SaveUserIcon(It.IsAny<HttpPostedFileBase>(),
+                    _saveUser.Id), Times.Never);
+        }
+
+        [Test]
+        public void ChangePasswordGet_WhenCalled_ReturnViewResult() {
+            var result = _controller.ChangePassword();
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+        }
+
+        [Test]
+        public async Task ChangePasswordPost_WhenCalled_ChangePassword() {
+            var viewModel = GetChangePasswordViewModel();
+
+            await _controller.ChangePassword(viewModel);
+
+            _userManager.Verify(u => u.ChangePasswordAsync(_currentUser.Id, viewModel.OldPassword, viewModel.NewPassword));
+        }
+
+        [Test]
+        public async Task ChangePasswordPost_ChangePasswordSucceeded_FindUserByIdAndSignIn() {
+            var viewModel = GetChangePasswordViewModel();
+
+            await _controller.ChangePassword(viewModel);
+
+            _userManager.Verify(u => u.FindByIdAsync(_currentUser.Id));
+            _signInManager.Verify(s => s.SignInAsync(
+                It.IsAny<AppUser>(),
+                It.IsAny<bool>(),
+                It.IsAny<bool>()));
+        }
+
+        [Test]
+        public async Task ChangePasswordPost_ChangePasswordSucceeded_ReturnRedirectToRouteResultWithMessageInRoute() {
+            var viewModel = GetChangePasswordViewModel();
+
+            var result = await _controller.ChangePassword(viewModel);
+
+            Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
+            Assert.That((result as RedirectToRouteResult).RouteValues["Message"], Does.Contain("password").IgnoreCase);
+        }
+
+        [Test]
+        public async Task ChangePasswordPost_ChangePasswordFailed_AddModelStateErrorAndReturnViewResultWithViewModel() {
+            var viewModel = GetChangePasswordViewModel();
+            _userManager.Setup(u => u.ChangePasswordAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Failed("error")));
+
+            var result = await _controller.ChangePassword(viewModel);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That((result as ViewResult).Model, Is.EqualTo(viewModel));
+            Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task ChangePasswordPost_ModelStateNotValid_ReturnViewResultWithViewModel() {
+            var viewModel = GetChangePasswordViewModel();
+            _controller.ModelState.AddModelError("", "");
+
+            var result = await _controller.ChangePassword(viewModel);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That((result as ViewResult).Model, Is.EqualTo(viewModel));
+        }
+
+        [Test]
+        public async Task ChangePasswordPost_ModelStateNotValid_ShouldNotChangePassword() {
+            var viewModel = GetChangePasswordViewModel();
+            _controller.ModelState.AddModelError("", "");
+
+            var result = await _controller.ChangePassword(viewModel);
+
+            _userManager.Verify(u => u.ChangePasswordAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
+        public async Task ChangePasswordPost_PasswordNotChanged_AddModelStateErrorAndReturnViewResultWithViewModel() {
+            var viewModel = GetChangePasswordViewModel();
+            viewModel.NewPassword = viewModel.OldPassword;
+
+            var result = await _controller.ChangePassword(viewModel);
+
+            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That((result as ViewResult).Model, Is.EqualTo(viewModel));
+            Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task ChangePasswordPost_PasswordNotChanged_ShouldNotChangePassword() {
+            var viewModel = GetChangePasswordViewModel();
+            viewModel.NewPassword = viewModel.OldPassword;
+
+            var result = await _controller.ChangePassword(viewModel);
+
+            _userManager.Verify(u => u.ChangePasswordAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
         // Helper methods
@@ -669,6 +944,24 @@ namespace iKnow.UnitTests.Controllers {
                 Email = _newUser.Email,
                 Password = "userPassword",
                 Code = "resetCode"
+            };
+        }
+
+        private UserProfileViewModel GetUserProfileViewModel() {
+            _saveUser.Gender = 1;
+            _saveUser.Intro = " new intro ";
+            _saveUser.Location = " new location ";
+            _saveUser.Id = _currentUser.Id;
+
+            return new UserProfileViewModel {
+                AppUser = _saveUser
+            };
+        }
+
+        private ChangePasswordViewModel GetChangePasswordViewModel() {
+            return new ChangePasswordViewModel() {
+                OldPassword = "oldpwd",
+                NewPassword = "newpwd"
             };
         }
 

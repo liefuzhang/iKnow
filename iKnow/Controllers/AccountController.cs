@@ -247,20 +247,20 @@ namespace iKnow.Controllers {
 
         [Authorize]
         [Route("Account/UserProfile/{userName?}")]
-        public ActionResult UserProfile(string userName) {
+        public async Task<ActionResult> UserProfile(string userName) {
             if (userName == null) {
-                return ViewOwnProfile();
+                return await ViewOwnProfile();
             }
 
-            return ViewOthersProfile(userName);
+            return await ViewOthersProfile(userName);
         }
 
-        private ActionResult ViewOwnProfile() {
+        private async Task<ActionResult> ViewOwnProfile() {
             if (Request["Message"] != null) {
                 TempData["statusMessage"] = Request["Message"];
             }
             var currentUserId = User.Identity.GetUserId();
-            var currentUser = UserManager.FindById(currentUserId);
+            var currentUser = await UserManager.FindByIdAsync(currentUserId);
 
             var userProfileViewModel = new UserProfileViewModel {
                 AppUser = currentUser
@@ -268,8 +268,8 @@ namespace iKnow.Controllers {
             return View("UserProfile", userProfileViewModel);
         }
 
-        private ActionResult ViewOthersProfile(string userName) {
-            var user = UserManager.FindByName(userName);
+        private async Task<ActionResult> ViewOthersProfile(string userName) {
+            var user = await UserManager.FindByNameAsync(userName);
             if (user == null) {
                 return HttpNotFound();
             }
@@ -292,12 +292,12 @@ namespace iKnow.Controllers {
                 SaveUserChanges(user);
 
                 var postedPhoto = viewModel.PostedPhoto;
-                _imageFileGenerator.SaveUserIcon(postedPhoto, user);
+                _imageFileGenerator.SaveUserIcon(postedPhoto, user.Id);
 
                 return RedirectToAction("Index", "Home");
             } catch (DbEntityValidationException ex) {
-                var error = ex.EntityValidationErrors.First().ValidationErrors.First();
-                ModelState.AddModelError(nameof(viewModel.AppUser) + "." + error.PropertyName, error.ErrorMessage);
+                var error = ex.EntityValidationErrors?.FirstOrDefault()?.ValidationErrors?.FirstOrDefault();
+                ModelState.AddModelError("", error?.ErrorMessage);
                 return View("UserProfile", viewModel);
             }
         }
@@ -328,16 +328,18 @@ namespace iKnow.Controllers {
             if (!ModelState.IsValid) {
                 return View(model);
             }
+
             if (model.OldPassword == model.NewPassword) {
                 ModelState.AddModelError("", "New password should differ from old password.");
                 return View(model);
             }
-            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+
+            var userId = User.Identity.GetUserId();
+            var result = await UserManager.ChangePasswordAsync(userId, model.OldPassword, model.NewPassword);
             if (result.Succeeded) {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                if (user != null) {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                }
+                var user = await UserManager.FindByIdAsync(userId);
+                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                 return RedirectToAction("UserProfile", new { Message = "Password changed successfully." });
             }
             AddErrors(result);

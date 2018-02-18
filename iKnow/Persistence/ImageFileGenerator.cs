@@ -8,7 +8,7 @@ using iKnow.Core.Models;
 
 namespace iKnow.Persistence {
     public class ImageFileGenerator : IImageFileGenerator {
-        public void SaveTopicIcon(HttpPostedFileBase postedFile, Topic topic) {
+        public void SaveTopicIcon(HttpPostedFileBase postedFile, string topicName) {
             if (postedFile != null && postedFile.ContentLength > 0) {
                 var bitmap = Image.FromStream(postedFile.InputStream);
                 var scale = Math.Max(bitmap.Width / Constants.TopicIconDefaultSize,
@@ -17,12 +17,12 @@ namespace iKnow.Persistence {
                     new Size(Convert.ToInt32(bitmap.Width / scale), Convert.ToInt32(bitmap.Height / scale)));
 
                 var iconFolder = HostingEnvironment.MapPath(Constants.TopicIconFolderPath);
-                var fileName = topic.Name.ToLower().Replace(' ', '-') + ".png";
+                var fileName = topicName.ToLower().Replace(' ', '-') + ".png";
                 resized.Save(iconFolder + fileName, ImageFormat.Png);
             }
         }
 
-        public void SaveUserIcon(HttpPostedFileBase postedPhoto, AppUser user) {
+        public void SaveUserIcon(HttpPostedFileBase postedPhoto, string userId) {
             // save icon if it exists
             if (postedPhoto != null && postedPhoto.ContentLength > 0) {
                 var bitmap = Bitmap.FromStream(postedPhoto.InputStream);
@@ -32,7 +32,7 @@ namespace iKnow.Persistence {
                     new Size(Convert.ToInt32(bitmap.Width/scale), Convert.ToInt32(bitmap.Height/scale)));
 
                 var iconFolder = HostingEnvironment.MapPath(Constants.UserIconFolderPath);
-                var fileName = user.Id.ToLower().Replace(' ', '-') + ".png";
+                var fileName = userId.ToLower().Replace(' ', '-') + ".png";
                 resized.Save(iconFolder + fileName, ImageFormat.Png);
             }
         }

@@ -119,7 +119,7 @@ namespace iKnow.Controllers {
             try {
                 SaveTopic(topic);
 
-                _imageFileGenerator.SaveTopicIcon(viewModel.PostedFile, topic);
+                _imageFileGenerator.SaveTopicIcon(viewModel.PostedFile, topic.Name);
 
                 return RedirectToAction("Index", new { selectedTopicId = topic.Id });
             } catch (DbEntityValidationException ex) {
