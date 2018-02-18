@@ -39,7 +39,7 @@ namespace iKnow.UnitTests.Controllers {
         private Mock<AppSignInManager> _signInManager;
         private Mock<IAuthenticationManager> _authenticationManager;
         private Mock<IEmailSender> _emailSender;
-        private Mock<IImageFileGenerator> _imageFileGenerator;
+        private Mock<IFileHelper> _imageFileGenerator;
         private Mock<UrlHelper> _urlHelper;
         private string _forgotPasswordConfirmationStr = "ForgotPasswordConfirmation";
         private string _resetPasswordConfirmationStr = "ResetPasswordConfirmation";
@@ -91,7 +91,7 @@ namespace iKnow.UnitTests.Controllers {
             SetupSignInManager();
 
             _emailSender = new Mock<IEmailSender>();
-            _imageFileGenerator = new Mock<IImageFileGenerator>();
+            _imageFileGenerator = new Mock<IFileHelper>();
 
             var context = new Mock<HttpContextBase>();
             _request = new Mock<HttpRequestBase>();

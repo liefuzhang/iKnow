@@ -18,15 +18,15 @@ using iKnow.Persistence.Repositories;
 namespace iKnow.Controllers {
     public class TopicController : Controller {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IImageFileGenerator _imageFileGenerator;
-        public TopicController(IUnitOfWork unitOfWork, IImageFileGenerator imageFileGenerator) {
+        private readonly IFileHelper _fileHelper;
+        public TopicController(IUnitOfWork unitOfWork, IFileHelper fileHelper) {
             _unitOfWork = unitOfWork;
-            _imageFileGenerator = imageFileGenerator;
+            _fileHelper = fileHelper;
         }
 
         public TopicController() {
             _unitOfWork = new UnitOfWork();
-            _imageFileGenerator = new ImageFileGenerator();
+            _fileHelper = new FileHelper();
         }
 
         protected override void Dispose(bool disposing) {
@@ -119,7 +119,7 @@ namespace iKnow.Controllers {
             try {
                 SaveTopic(topic);
 
-                _imageFileGenerator.SaveTopicIcon(viewModel.PostedFile, topic.Name);
+                _fileHelper.SaveTopicIcon(viewModel.PostedFile, topic.Name);
 
                 return RedirectToAction("Index", new { selectedTopicId = topic.Id });
             } catch (DbEntityValidationException ex) {

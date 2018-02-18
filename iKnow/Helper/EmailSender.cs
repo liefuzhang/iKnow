@@ -8,15 +8,12 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
+using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.Models.Identity;
 using Microsoft.Owin.Security;
 
 namespace iKnow.Helper {
-    public interface IEmailSender {
-        Task SendForgotPasswordMailAsync(AppUser user, string callbackUrl);
-    }
-
     public class EmailSender : IEmailSender {
         public async Task SendForgotPasswordMailAsync(AppUser user, string callbackUrl) {
             var body = ConstructEmailBody(user, callbackUrl);

@@ -23,13 +23,13 @@ namespace iKnow.UnitTests.Controllers {
         private Topic _topic2;
         private Topic _saveTopic;
         private Topic _newTopic;
-        private Mock<IImageFileGenerator> _imageFileGenerator;
+        private Mock<IFileHelper> _imageFileGenerator;
         private List<Topic> _existingTopics;
         private Mock<HttpRequestBase> _request;
 
         [SetUp]
         public void Setup() {
-            _imageFileGenerator = new Mock<IImageFileGenerator>();
+            _imageFileGenerator = new Mock<IFileHelper>();
 
             InitializeTopics();
 

@@ -26,7 +26,7 @@ namespace iKnow.Core.Models {
 
         public string ShortContentImageData {
             get {
-                var match = Regex.Match(Content, "<img src=\\\".*?\">");
+                var match = Regex.Match(Content, "<img src=\".*?\">");
                 return match.Success ? match.Value : null;
             }
         }

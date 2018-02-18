@@ -152,9 +152,16 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountControllerTests.cs" />
     <Compile Include="Controllers\AnswerControllerTests.cs" />
+    <Compile Include="Controllers\ErrorControllerTests.cs" />
     <Compile Include="Controllers\HomeControllerTests.cs" />
     <Compile Include="Controllers\QuestionControllerTests.cs" />
+    <Compile Include="Controllers\SearchControllerTests.cs" />
     <Compile Include="Controllers\TopicControllerTests.cs" />
+    <Compile Include="Core\Models\AnswerTests.cs" />
+    <Compile Include="Core\Models\AppUserTests.cs" />
+    <Compile Include="Core\Models\ImageFileTypesAttributeTests.cs" />
+    <Compile Include="Core\Models\QuestionTests.cs" />
+    <Compile Include="Core\Models\TopicTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

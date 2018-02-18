@@ -6,6 +6,18 @@ using System.Web.Hosting;
 
 namespace iKnow.Core.Models {
     public class Topic {
+        private IFileHelper _fileHelper;
+
+        public Topic() {
+            AppUsers = new HashSet<AppUser>();
+            Questions = new HashSet<Question>();
+            _fileHelper = new FileHelper();
+        }
+
+        public Topic(IFileHelper fileHelper) {
+            _fileHelper = fileHelper;
+        }
+
         public int Id { get; set; }
 
         [Required]
@@ -17,8 +29,8 @@ namespace iKnow.Core.Models {
                     return string.Empty;
                 }
 
-                var file = Constants.TopicIconFolderPath + (Name ?? String.Empty).ToLower().Replace(' ', '-') + ".png";
-                if (!File.Exists(HostingEnvironment.MapPath(file))) {
+                var file = Constants.TopicIconFolderPath + (Name ?? String.Empty).ToLower().Replace(' ', '-') + Constants.DefaultIconExtension;
+                if (!_fileHelper.DoesFileExist(HostingEnvironment.MapPath(file))) {
                     file = Constants.TopicDefaultIconPath;
                 }
                 return file;
@@ -26,10 +38,5 @@ namespace iKnow.Core.Models {
         }
         public ICollection<AppUser> AppUsers { get; set; }
         public ICollection<Question> Questions { get; set; }
-
-        public Topic() {
-            AppUsers = new HashSet<AppUser>();
-            Questions = new HashSet<Question>();
-        }
     }
 }

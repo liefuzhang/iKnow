@@ -1,13 +1,14 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Web;
 using System.Web.Hosting;
 using iKnow.Core;
 using iKnow.Core.Models;
 
-namespace iKnow.Persistence {
-    public class ImageFileGenerator : IImageFileGenerator {
+namespace iKnow {
+    public class FileHelper : IFileHelper {
         public void SaveTopicIcon(HttpPostedFileBase postedFile, string topicName) {
             if (postedFile != null && postedFile.ContentLength > 0) {
                 var bitmap = Image.FromStream(postedFile.InputStream);
@@ -17,7 +18,7 @@ namespace iKnow.Persistence {
                     new Size(Convert.ToInt32(bitmap.Width / scale), Convert.ToInt32(bitmap.Height / scale)));
 
                 var iconFolder = HostingEnvironment.MapPath(Constants.TopicIconFolderPath);
-                var fileName = topicName.ToLower().Replace(' ', '-') + ".png";
+                var fileName = topicName.ToLower().Replace(' ', '-') + Constants.DefaultIconExtension;
                 resized.Save(iconFolder + fileName, ImageFormat.Png);
             }
         }
@@ -32,9 +33,13 @@ namespace iKnow.Persistence {
                     new Size(Convert.ToInt32(bitmap.Width/scale), Convert.ToInt32(bitmap.Height/scale)));
 
                 var iconFolder = HostingEnvironment.MapPath(Constants.UserIconFolderPath);
-                var fileName = userId.ToLower().Replace(' ', '-') + ".png";
+                var fileName = userId.ToLower().Replace(' ', '-') + Constants.DefaultIconExtension;
                 resized.Save(iconFolder + fileName, ImageFormat.Png);
             }
+        }
+
+        public bool DoesFileExist(string path) {
+            return File.Exists(path);
         }
     }
 }

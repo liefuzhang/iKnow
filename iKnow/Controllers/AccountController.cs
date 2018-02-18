@@ -29,14 +29,14 @@ namespace iKnow.Controllers {
         private AppUserManager _userManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailSender _emailSender;
-        private readonly IImageFileGenerator _imageFileGenerator;
+        private readonly IFileHelper _fileHelper;
         private IAuthenticationManager _authenticationManager;
 
-        public AccountController(IUnitOfWork unitOfWork, IEmailSender emailSender, IImageFileGenerator imageFileGenerator,
+        public AccountController(IUnitOfWork unitOfWork, IEmailSender emailSender, IFileHelper fileHelper,
             AppUserManager userManager, AppSignInManager signInManager, IAuthenticationManager authenticationManager) {
             _unitOfWork = unitOfWork;
             _emailSender = emailSender;
-            _imageFileGenerator = imageFileGenerator;
+            _fileHelper = fileHelper;
             UserManager = userManager;
             SignInManager = signInManager;
             _authenticationManager = authenticationManager;
@@ -45,7 +45,7 @@ namespace iKnow.Controllers {
         public AccountController() {
             _unitOfWork = new UnitOfWork();
             _emailSender = new EmailSender();
-            _imageFileGenerator = new ImageFileGenerator();
+            _fileHelper = new FileHelper();
         }
 
         protected override void Dispose(bool disposing) {
@@ -292,7 +292,7 @@ namespace iKnow.Controllers {
                 SaveUserChanges(user);
 
                 var postedPhoto = viewModel.PostedPhoto;
-                _imageFileGenerator.SaveUserIcon(postedPhoto, user.Id);
+                _fileHelper.SaveUserIcon(postedPhoto, user.Id);
 
                 return RedirectToAction("Index", "Home");
             } catch (DbEntityValidationException ex) {

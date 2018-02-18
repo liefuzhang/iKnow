@@ -11,6 +11,22 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace iKnow.Core.Models {
     public class AppUser : IdentityUser {
+        private IFileHelper _fileHelper;
+        private HttpRequestBase _httpRequestBase;
+
+        public AppUser() {
+            Questions = new HashSet<Question>();
+            Topics = new HashSet<Topic>();
+            Answers = new HashSet<Answer>();
+            _fileHelper = new FileHelper();
+            _httpRequestBase = new HttpContextWrapper(HttpContext.Current).Request;
+        }
+
+        public AppUser(IFileHelper fileHelper, HttpRequestBase httpRequestBaseBase) {
+            _fileHelper = fileHelper;
+            _httpRequestBase = httpRequestBaseBase;
+        }
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string FullName => FirstName + " " + LastName;
@@ -26,9 +42,9 @@ namespace iKnow.Core.Models {
 
         public string IconPath {
             get {
-                var file = Constants.UserIconFolderPath + (Id ?? String.Empty).ToLower().Replace(' ', '-') + ".png";
-                if (!File.Exists(HostingEnvironment.MapPath(file))) {
-                    file = Constants.UserIconFolderPath + Constants.UserDefaultIconName + DefaultIconNumber + Constants.UserDefaultIconExtension;
+                var file = Constants.UserIconFolderPath + (Id ?? String.Empty).ToLower().Replace(' ', '-') + Constants.DefaultIconExtension;
+                if (!_fileHelper.DoesFileExist(HostingEnvironment.MapPath(file))) {
+                    file = Constants.UserIconFolderPath + Constants.UserDefaultIconName + DefaultIconNumber + Constants.DefaultIconExtension;
                 }
                 return file;
             }
@@ -37,7 +53,7 @@ namespace iKnow.Core.Models {
         public string ProfilePageUrl {
             get {
                 var url =
-                    $"http{((HttpContext.Current.Request.IsSecureConnection) ? "s" : "")}://{HttpContext.Current.Request.Url.Host}{"/Account/UserProfile/" + UserName}";
+                    $"http{((_httpRequestBase.IsSecureConnection) ? "s" : "")}://{_httpRequestBase.Url?.Host}{"/Account/UserProfile/" + UserName}";
 
                 return url;
             }
@@ -46,12 +62,6 @@ namespace iKnow.Core.Models {
         public ICollection<Question> Questions { get; private set; }
         public ICollection<Topic> Topics { get; private set; }
         public ICollection<Answer> Answers { get; private set; }
-
-        public AppUser() {
-            Questions = new HashSet<Question>();
-            Topics = new HashSet<Topic>();
-            Answers = new HashSet<Answer>();
-        }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<AppUser> manager) {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
