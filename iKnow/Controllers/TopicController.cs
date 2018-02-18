@@ -130,8 +130,8 @@ namespace iKnow.Controllers {
         }
 
         private static void TrimInput(Topic topic) {
-            topic.Name = MyHelper.UppercaseWords(topic.Name?.Trim());
-            topic.Description = MyHelper.CapitalizeWords(topic.Description?.Trim());
+            topic.Name = MyHelper.CapitalizeAllWords(topic.Name?.Trim());
+            topic.Description = MyHelper.CapitalizeFirstWord(topic.Description?.Trim());
         }
 
         private void SaveTopic(Topic topic) {

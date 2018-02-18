@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq.Expressions;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using iKnow.Controllers;
-using iKnow.Core;
+﻿using iKnow.Core;
 using iKnow.Core.Models;
-using iKnow.Core.Repositories;
-using iKnow.ViewModels;
 using Moq;
 using NUnit.Framework;
 

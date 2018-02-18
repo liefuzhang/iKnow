@@ -159,8 +159,8 @@ namespace iKnow.Controllers {
         }
 
         private static void TrimInput(Question question) {
-            question.Title = MyHelper.CapitalizeWords(question.Title?.Trim());
-            question.Description = MyHelper.CapitalizeWords(question.Description?.Trim());
+            question.Title = MyHelper.CapitalizeFirstWord(question.Title?.Trim());
+            question.Description = MyHelper.CapitalizeFirstWord(question.Description?.Trim());
 
             if (question.Title != null && !question.Title.EndsWith("?")) {
                 question.Title += "?";

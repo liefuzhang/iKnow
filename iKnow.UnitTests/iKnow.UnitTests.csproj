@@ -162,6 +162,7 @@
     <Compile Include="Core\Models\ImageFileTypesAttributeTests.cs" />
     <Compile Include="Core\Models\QuestionTests.cs" />
     <Compile Include="Core\Models\TopicTests.cs" />
+    <Compile Include="Helper\MyHelper\MyHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
