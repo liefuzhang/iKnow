@@ -57,7 +57,7 @@ namespace iKnow.Controllers {
         }
 
         public ActionResult Detail(int id) {
-            var answer = _unitOfWork.AnswerRepository.SingleOrDefault(a => a.Id == id, "Questions");
+            var answer = _unitOfWork.AnswerRepository.SingleOrDefault(a => a.Id == id, "Question");
             if (answer == null) {
                 return HttpNotFound();
             }

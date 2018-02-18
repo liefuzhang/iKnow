@@ -14,17 +14,19 @@ namespace iKnow.Core.Models {
         private IFileHelper _fileHelper;
         private HttpRequestBase _httpRequestBase;
 
+        public HttpRequestBase HttpRequestBase =>
+            _httpRequestBase ?? (_httpRequestBase = new HttpContextWrapper(HttpContext.Current).Request);
+
         public AppUser() {
             Questions = new HashSet<Question>();
             Topics = new HashSet<Topic>();
             Answers = new HashSet<Answer>();
             _fileHelper = new FileHelper();
-            _httpRequestBase = new HttpContextWrapper(HttpContext.Current).Request;
         }
 
-        public AppUser(IFileHelper fileHelper, HttpRequestBase httpRequestBaseBase) {
+        public AppUser(IFileHelper fileHelper, HttpRequestBase httpRequestBase) {
             _fileHelper = fileHelper;
-            _httpRequestBase = httpRequestBaseBase;
+            _httpRequestBase = httpRequestBase;
         }
 
         public string FirstName { get; set; }
@@ -53,7 +55,7 @@ namespace iKnow.Core.Models {
         public string ProfilePageUrl {
             get {
                 var url =
-                    $"http{((_httpRequestBase.IsSecureConnection) ? "s" : "")}://{_httpRequestBase.Url?.Host}{"/Account/UserProfile/" + UserName}";
+                    $"http{((HttpRequestBase.IsSecureConnection) ? "s" : "")}://{HttpRequestBase.Url?.Host}{"/Account/UserProfile/" + UserName}";
 
                 return url;
             }

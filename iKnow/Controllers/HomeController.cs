@@ -27,7 +27,7 @@ namespace iKnow.Controllers {
             _unitOfWork.Dispose();
             base.Dispose(disposing);
         }
-        
+
         public ActionResult Index() {
             int page = 0, pageSize = Constants.DefaultPageSize;
             var viewModel = ConstructHomeViewModel(page, pageSize);
@@ -37,11 +37,11 @@ namespace iKnow.Controllers {
 
         private HomeViewModel ConstructHomeViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
             var questions = _unitOfWork.QuestionRepository.GetQuestionsOrderByDescending(query =>
-                query.OrderByDescending(question => question.Id), "Topics", currentPage*pageSize, pageSize).ToList();
+                query.OrderByDescending(question => question.Id), "Topics", currentPage * pageSize, pageSize).ToList();
             var questionIds = questions.Select(q => q.Id).ToList();
 
             var questionAnswers = _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds);
-            
+
             return new HomeViewModel {
                 QuestionAnswers = questionAnswers,
                 Page = currentPage,
@@ -67,7 +67,7 @@ namespace iKnow.Controllers {
             }
             return PartialView("_UserProfilePartial");
         }
-        
+
         public ActionResult Contact() {
             return View();
         }
