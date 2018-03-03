@@ -128,8 +128,12 @@ namespace iKnow.Controllers {
 
         private Question SaveQuestion(QuestionFormViewModel formViewModel) {
             var questionToSave = formViewModel.Question;
+            var userId = User.Identity.GetUserId();
+
             if (formViewModel.Question.Id > 0) {
-                var questionInDb = _unitOfWork.QuestionRepository.Single(q => q.Id == formViewModel.Question.Id, "Topics");
+                var questionInDb = _unitOfWork.QuestionRepository.Single(
+                    q => q.Id == formViewModel.Question.Id && q.AppUserId == userId,
+                    "Topics");
                 questionInDb.Title = formViewModel.Question.Title;
                 questionInDb.Description = formViewModel.Question.Description;
                 questionToSave = questionInDb;
@@ -172,8 +176,11 @@ namespace iKnow.Controllers {
         [Authorize]
         public ActionResult SaveQuestionTopics(QuestionFormViewModel formViewModel) {
             var questionPosted = formViewModel.Question;
+            var userId = User.Identity.GetUserId();
 
-            var questionInDb = _unitOfWork.QuestionRepository.Single(q => q.Id == questionPosted.Id, "Topics");
+            var questionInDb = _unitOfWork.QuestionRepository.Single(
+                q => q.Id == questionPosted.Id && q.AppUserId == userId,
+                "Topics");
 
             UpdateQuestionTopics(questionInDb, formViewModel.TopicIds);
 

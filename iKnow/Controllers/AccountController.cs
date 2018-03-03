@@ -289,6 +289,12 @@ namespace iKnow.Controllers {
                 }
 
                 var user = viewModel.AppUser;
+                var currentUserId = User.Identity.GetUserId();
+
+                if (currentUserId != user.Id) {
+                    return View("UserProfile", viewModel);
+                }
+
                 SaveUserChanges(user);
 
                 var postedPhoto = viewModel.PostedPhoto;

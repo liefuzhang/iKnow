@@ -111,7 +111,7 @@ namespace iKnow.Controllers {
                 answerToSave = new Answer {
                     Content = viewModel.AnswerPanelContent,
                     QuestionId = viewModel.Question.Id,
-                    AppUserId = User.Identity.GetUserId(),
+                    AppUserId = currentUserId,
                     CreatedDate = DateTime.Now
                 };
                 _unitOfWork.AnswerRepository.Add(answerToSave);
