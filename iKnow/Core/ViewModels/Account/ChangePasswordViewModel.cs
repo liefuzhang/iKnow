@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace iKnow.ViewModels.Account {
+namespace iKnow.Core.ViewModels.Account {
     public class ChangePasswordViewModel {
         [Required]
         [DataType(DataType.Password)]

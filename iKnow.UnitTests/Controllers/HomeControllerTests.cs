@@ -12,7 +12,6 @@ using iKnow.Controllers;
 using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.Repositories;
-using iKnow.ViewModels;
 using Moq;
 using NUnit.Framework;
 

@@ -5,8 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using iKnow.Core;
 using iKnow.Core.Models;
+using iKnow.Core.ViewModels;
 using iKnow.Persistence;
-using iKnow.ViewModels;
 
 namespace iKnow.Controllers {
     public class SearchController : Controller {

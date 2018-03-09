@@ -1,24 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace iKnow.ViewModels.Account {
-    public class RegisterViewModel {
-        [Required]
-        [StringLength(50)]
-        [Display(Name = "First Name")]
-        public string FirstName { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        [Display(Name = "Last Name")]
-        public string LastName { get; set; }
-
+namespace iKnow.Core.ViewModels.Account {
+    public class ResetPasswordViewModel {
         [Required]
         [EmailAddress]
-        [StringLength(50)]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
@@ -33,6 +18,6 @@ namespace iKnow.ViewModels.Account {
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        public string ReturnUrl { get; set; }
+        public string Code { get; set; }
     }
 }

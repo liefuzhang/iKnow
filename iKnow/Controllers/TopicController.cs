@@ -1,5 +1,4 @@
-﻿using iKnow.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
@@ -11,6 +10,7 @@ using System.Web.Hosting;
 using System.Web.Mvc;
 using iKnow.Core;
 using iKnow.Core.Models;
+using iKnow.Core.ViewModels;
 using iKnow.Helper;
 using iKnow.Persistence;
 using iKnow.Persistence.Repositories;

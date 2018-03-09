@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using iKnow.Core.Models;
 
-namespace iKnow.ViewModels {
+namespace iKnow.Core.ViewModels {
     public class TopicIndexViewModel {
         public IEnumerable<Topic> Topics{ get; set; }
         public Topic SelectedTopic { get; set; }

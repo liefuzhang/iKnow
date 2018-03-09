@@ -1,10 +1,10 @@
-﻿using iKnow.ViewModels;
-using System;
+﻿using System;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web.Mvc;
 using iKnow.Core;
 using iKnow.Core.Models;
+using iKnow.Core.ViewModels;
 using Microsoft.AspNet.Identity;
 using Constants = iKnow.Core.Models.Constants;
 using iKnow.Persistence;

@@ -1,5 +1,4 @@
-﻿using iKnow.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using iKnow.Core;
 using iKnow.Core.Models;
+using iKnow.Core.ViewModels;
 using iKnow.Persistence;
 using Microsoft.AspNet.Identity;
 using Constants = iKnow.Core.Models.Constants;
