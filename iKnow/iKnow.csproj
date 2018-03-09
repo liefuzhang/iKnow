@@ -367,6 +367,8 @@
     <None Include="Properties\PublishProfiles\EC2-iknow.pubxml" />
     <None Include="Properties\PublishProfiles\test.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\controllers\topicsController.js" />
     <Content Include="Scripts\chosen.jquery.js" />
     <Content Include="Scripts\chosen.proto.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -376,7 +378,6 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\prototype.js" />
     <Content Include="Scripts\quill.min.js" />
-    <Content Include="Scripts\site.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

@@ -5,11 +5,14 @@ namespace iKnow {
     public class BundleConfig {
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles) {
-            bundles.Add(new ScriptBundle("~/bundles/js").Include(
-                        "~/Scripts/site.js",
+            bundles.Add(new ScriptBundle("~/bundles/app").Include(
+                        "~/Scripts/app/controllers/topicsController.js",
+                        "~/Scripts/app/app.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/lib").Include(
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/chosen*"));
-            
+
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 

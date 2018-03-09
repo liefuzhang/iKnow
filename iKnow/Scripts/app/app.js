@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-    $(".topic-list").on("click", "li", selectTopic);
     $(".topic-form-container .js-button-delete").on("click", deleteEntity);
     $(".modal-container").on("click", ".js-button-delete", deleteEntity);
     $(".add-answer-panel").on("click", ".js-button-delete", deleteEntity);
@@ -37,26 +36,6 @@
         showWarning(iknow.statusMessage);
     }
 });
-
-function selectTopic() {
-    var $this = $(this);
-    if ($this.hasClass("active")) {
-        return;
-    }
-
-    var topicId = $this.attr("data-topic-id");
-    $.ajax({
-        url: "/topic/about/" + topicId,
-        dataType: "html",
-        success: function (html) {
-            if (html) {
-                $this.siblings().removeClass("active");
-                $this.addClass("active");
-                $(".topic-body").html(html);
-            }
-        }
-    });
-}
 
 function deleteEntity(e) {
     var button = $(this);

@@ -46,7 +46,8 @@
         iknow.statusMessage = "@(TempData["statusMessage"] ?? "")";
     </script>
 
-    @Scripts.Render("~/bundles/js")
+    @Scripts.Render("~/bundles/lib")
+    @Scripts.Render("~/bundles/app")
     @RenderSection("scripts", required: false)
 
 </body>
