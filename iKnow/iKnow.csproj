@@ -208,76 +208,76 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201712251102544_InitialModels.cs" />
-    <Compile Include="Migrations\201712251102544_InitialModels.Designer.cs">
-      <DependentUpon>201712251102544_InitialModels.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201712252305033_AddMoreModelsAndRelationships.cs" />
-    <Compile Include="Migrations\201712252305033_AddMoreModelsAndRelationships.Designer.cs">
-      <DependentUpon>201712252305033_AddMoreModelsAndRelationships.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201712260708060_AddSomeTopicsToTopicsTable.cs" />
-    <Compile Include="Migrations\201712260708060_AddSomeTopicsToTopicsTable.Designer.cs">
-      <DependentUpon>201712260708060_AddSomeTopicsToTopicsTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801030700092_RenameUserToAppUser.cs" />
-    <Compile Include="Migrations\201801030700092_RenameUserToAppUser.Designer.cs">
-      <DependentUpon>201801030700092_RenameUserToAppUser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801030735349_AddUserInheritanceToIdentityUser.cs" />
-    <Compile Include="Migrations\201801030735349_AddUserInheritanceToIdentityUser.Designer.cs">
-      <DependentUpon>201801030735349_AddUserInheritanceToIdentityUser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801042244105_AddFirstNameAndLastNameToAppUser.cs" />
-    <Compile Include="Migrations\201801042244105_AddFirstNameAndLastNameToAppUser.Designer.cs">
-      <DependentUpon>201801042244105_AddFirstNameAndLastNameToAppUser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801050313086_SeedAdmin.cs" />
-    <Compile Include="Migrations\201801050313086_SeedAdmin.Designer.cs">
-      <DependentUpon>201801050313086_SeedAdmin.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801050646136_AddSeedTopic.cs" />
-    <Compile Include="Migrations\201801050646136_AddSeedTopic.Designer.cs">
-      <DependentUpon>201801050646136_AddSeedTopic.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801060316460_AddUpdatedDateToAnswer.cs" />
-    <Compile Include="Migrations\201801060316460_AddUpdatedDateToAnswer.Designer.cs">
-      <DependentUpon>201801060316460_AddUpdatedDateToAnswer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801062330581_AddSomePropertiesToAppUser.cs" />
-    <Compile Include="Migrations\201801062330581_AddSomePropertiesToAppUser.Designer.cs">
-      <DependentUpon>201801062330581_AddSomePropertiesToAppUser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801070104163_ModifySomePropertiesInAppUser.cs" />
-    <Compile Include="Migrations\201801070104163_ModifySomePropertiesInAppUser.Designer.cs">
-      <DependentUpon>201801070104163_ModifySomePropertiesInAppUser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801160735003_ChangeAdminAccount.cs" />
-    <Compile Include="Migrations\201801160735003_ChangeAdminAccount.Designer.cs">
-      <DependentUpon>201801160735003_ChangeAdminAccount.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801160827562_SeedTopics.cs" />
-    <Compile Include="Migrations\201801160827562_SeedTopics.Designer.cs">
-      <DependentUpon>201801160827562_SeedTopics.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801160922393_AddDefaultIconNumberToAppUser.cs" />
-    <Compile Include="Migrations\201801160922393_AddDefaultIconNumberToAppUser.Designer.cs">
-      <DependentUpon>201801160922393_AddDefaultIconNumberToAppUser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801170613376_AddFourSeedUsersQuestionsAnswers.cs" />
-    <Compile Include="Migrations\201801170613376_AddFourSeedUsersQuestionsAnswers.Designer.cs">
-      <DependentUpon>201801170613376_AddFourSeedUsersQuestionsAnswers.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801171056125_AddMoreSeedData.cs" />
-    <Compile Include="Migrations\201801171056125_AddMoreSeedData.Designer.cs">
-      <DependentUpon>201801171056125_AddMoreSeedData.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\AnswerConfiguration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\AppUserConfiguration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\QuestionConfiguration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\TopicConfiguration.cs" />
     <Compile Include="Persistence\iKnowContext.cs" />
+    <Compile Include="Persistence\Migrations\201712251102544_InitialModels.cs" />
+    <Compile Include="Persistence\Migrations\201712251102544_InitialModels.Designer.cs">
+      <DependentUpon>201712251102544_InitialModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201712252305033_AddMoreModelsAndRelationships.cs" />
+    <Compile Include="Persistence\Migrations\201712252305033_AddMoreModelsAndRelationships.Designer.cs">
+      <DependentUpon>201712252305033_AddMoreModelsAndRelationships.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201712260708060_AddSomeTopicsToTopicsTable.cs" />
+    <Compile Include="Persistence\Migrations\201712260708060_AddSomeTopicsToTopicsTable.Designer.cs">
+      <DependentUpon>201712260708060_AddSomeTopicsToTopicsTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201801030700092_RenameUserToAppUser.cs" />
+    <Compile Include="Persistence\Migrations\201801030700092_RenameUserToAppUser.Designer.cs">
+      <DependentUpon>201801030700092_RenameUserToAppUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201801030735349_AddUserInheritanceToIdentityUser.cs" />
+    <Compile Include="Persistence\Migrations\201801030735349_AddUserInheritanceToIdentityUser.Designer.cs">
+      <DependentUpon>201801030735349_AddUserInheritanceToIdentityUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201801042244105_AddFirstNameAndLastNameToAppUser.cs" />
+    <Compile Include="Persistence\Migrations\201801042244105_AddFirstNameAndLastNameToAppUser.Designer.cs">
+      <DependentUpon>201801042244105_AddFirstNameAndLastNameToAppUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201801050313086_SeedAdmin.cs" />
+    <Compile Include="Persistence\Migrations\201801050313086_SeedAdmin.Designer.cs">
+      <DependentUpon>201801050313086_SeedAdmin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201801050646136_AddSeedTopic.cs" />
+    <Compile Include="Persistence\Migrations\201801050646136_AddSeedTopic.Designer.cs">
+      <DependentUpon>201801050646136_AddSeedTopic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201801060316460_AddUpdatedDateToAnswer.cs" />
+    <Compile Include="Persistence\Migrations\201801060316460_AddUpdatedDateToAnswer.Designer.cs">
+      <DependentUpon>201801060316460_AddUpdatedDateToAnswer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201801062330581_AddSomePropertiesToAppUser.cs" />
+    <Compile Include="Persistence\Migrations\201801062330581_AddSomePropertiesToAppUser.Designer.cs">
+      <DependentUpon>201801062330581_AddSomePropertiesToAppUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201801070104163_ModifySomePropertiesInAppUser.cs" />
+    <Compile Include="Persistence\Migrations\201801070104163_ModifySomePropertiesInAppUser.Designer.cs">
+      <DependentUpon>201801070104163_ModifySomePropertiesInAppUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201801160735003_ChangeAdminAccount.cs" />
+    <Compile Include="Persistence\Migrations\201801160735003_ChangeAdminAccount.Designer.cs">
+      <DependentUpon>201801160735003_ChangeAdminAccount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201801160827562_SeedTopics.cs" />
+    <Compile Include="Persistence\Migrations\201801160827562_SeedTopics.Designer.cs">
+      <DependentUpon>201801160827562_SeedTopics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201801160922393_AddDefaultIconNumberToAppUser.cs" />
+    <Compile Include="Persistence\Migrations\201801160922393_AddDefaultIconNumberToAppUser.Designer.cs">
+      <DependentUpon>201801160922393_AddDefaultIconNumberToAppUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201801170613376_AddFourSeedUsersQuestionsAnswers.cs" />
+    <Compile Include="Persistence\Migrations\201801170613376_AddFourSeedUsersQuestionsAnswers.Designer.cs">
+      <DependentUpon>201801170613376_AddFourSeedUsersQuestionsAnswers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201801171056125_AddMoreSeedData.cs" />
+    <Compile Include="Persistence\Migrations\201801171056125_AddMoreSeedData.Designer.cs">
+      <DependentUpon>201801171056125_AddMoreSeedData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\Configuration.cs" />
     <Compile Include="Persistence\Repositories\QuestionRepository.cs" />
     <Compile Include="Persistence\Repositories\Repository.cs" />
     <Compile Include="Persistence\Repositories\AnswerRepository.cs" />
@@ -353,15 +353,15 @@
     <Content Include="Content\Images\UserProfile\eb5d625e-aa8f-4709-a296-f92b1df0dd3e.png" />
     <Content Include="Content\quill.snow.css" />
     <Content Include="favicon.png" />
-    <Content Include="fonts\fontawesome-webfont.svg" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="fonts\FontAwesome.otf" />
-    <Content Include="fonts\fontawesome-webfont.woff2" />
-    <Content Include="fonts\fontawesome-webfont.woff" />
-    <Content Include="fonts\fontawesome-webfont.ttf" />
-    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\fonts\FontAwesome.otf" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Content Include="AppSettings.config" />
     <None Include="Properties\PublishProfiles\EC2-iknow.pubxml" />
@@ -427,59 +427,59 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201712251102544_InitialModels.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201712251102544_InitialModels.resx">
       <DependentUpon>201712251102544_InitialModels.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712252305033_AddMoreModelsAndRelationships.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201712252305033_AddMoreModelsAndRelationships.resx">
       <DependentUpon>201712252305033_AddMoreModelsAndRelationships.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712260708060_AddSomeTopicsToTopicsTable.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201712260708060_AddSomeTopicsToTopicsTable.resx">
       <DependentUpon>201712260708060_AddSomeTopicsToTopicsTable.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801030700092_RenameUserToAppUser.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201801030700092_RenameUserToAppUser.resx">
       <DependentUpon>201801030700092_RenameUserToAppUser.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801030735349_AddUserInheritanceToIdentityUser.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201801030735349_AddUserInheritanceToIdentityUser.resx">
       <DependentUpon>201801030735349_AddUserInheritanceToIdentityUser.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801042244105_AddFirstNameAndLastNameToAppUser.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201801042244105_AddFirstNameAndLastNameToAppUser.resx">
       <DependentUpon>201801042244105_AddFirstNameAndLastNameToAppUser.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801050313086_SeedAdmin.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201801050313086_SeedAdmin.resx">
       <DependentUpon>201801050313086_SeedAdmin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801050646136_AddSeedTopic.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201801050646136_AddSeedTopic.resx">
       <DependentUpon>201801050646136_AddSeedTopic.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801060316460_AddUpdatedDateToAnswer.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201801060316460_AddUpdatedDateToAnswer.resx">
       <DependentUpon>201801060316460_AddUpdatedDateToAnswer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801062330581_AddSomePropertiesToAppUser.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201801062330581_AddSomePropertiesToAppUser.resx">
       <DependentUpon>201801062330581_AddSomePropertiesToAppUser.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801070104163_ModifySomePropertiesInAppUser.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201801070104163_ModifySomePropertiesInAppUser.resx">
       <DependentUpon>201801070104163_ModifySomePropertiesInAppUser.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801160735003_ChangeAdminAccount.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201801160735003_ChangeAdminAccount.resx">
       <DependentUpon>201801160735003_ChangeAdminAccount.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801160827562_SeedTopics.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201801160827562_SeedTopics.resx">
       <DependentUpon>201801160827562_SeedTopics.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801160922393_AddDefaultIconNumberToAppUser.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201801160922393_AddDefaultIconNumberToAppUser.resx">
       <DependentUpon>201801160922393_AddDefaultIconNumberToAppUser.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801170613376_AddFourSeedUsersQuestionsAnswers.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201801170613376_AddFourSeedUsersQuestionsAnswers.resx">
       <DependentUpon>201801170613376_AddFourSeedUsersQuestionsAnswers.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801171056125_AddMoreSeedData.resx">
+    <EmbeddedResource Include="Persistence\Migrations\201801171056125_AddMoreSeedData.resx">
       <DependentUpon>201801171056125_AddMoreSeedData.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
