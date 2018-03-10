@@ -42,4 +42,8 @@
 
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        photoUploadController.init(".js-topic-photo-upload", ".topic-form-container .img-container img");
+    </script>
 }

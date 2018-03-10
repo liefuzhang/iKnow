@@ -1,5 +1,7 @@
 ﻿var loadMoreController = (function () {
-    var loadMoreHandler = function (controllerName) {
+    var controllerName;
+
+    var loadMoreHandler = function () {
         var $this = $(this);
         $this.hide();
         $this.next().show();
@@ -22,9 +24,9 @@
         });
     }
 
-    
-    var init = function (controllerName) {
-        $(".to-load").on("click", function () { loadMoreHandler.call(this, controllerName); });
+    var init = function (controller) {
+        controllerName = controller;
+        $(".to-load").on("click", loadMoreHandler);
     };
 
     return {

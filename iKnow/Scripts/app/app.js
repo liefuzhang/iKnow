@@ -12,8 +12,7 @@
 
     $(".modal-container").on("input", "textarea", textareaAutoGrow);
     $(".user-profile-inner").on("click", showUserProfileDropDown);
-    $(".js-profile-photo-upload").on("change", function (e) { readURL(e, ".edit-profile-photo img") });
-    $(".js-topic-photo-upload").on("change", function (e) { readURL(e, ".topic-form-container .img-container img") });
+
     $(".mask-content").on("click", function () { $(".js-profile-photo-upload").click(); });
     $(".search").on("keyup", search);
     $(".search-container .btn").on("click", search);
@@ -163,17 +162,6 @@ function showUserProfileDropDown() {
 function pageClickHandler() {
     $(".user-profile-dropdown").hide();
     closeSearchResult(event);
-}
-
-function readURL(event, target) {
-    if (event.currentTarget.files && event.currentTarget.files[0]) {
-        var reader = new FileReader();
-
-        reader.onload = function (e) {
-            $(target).attr("src", e.currentTarget.result);
-        };
-        reader.readAsDataURL(event.currentTarget.files[0]);
-    }
 }
 
 function search(e) {

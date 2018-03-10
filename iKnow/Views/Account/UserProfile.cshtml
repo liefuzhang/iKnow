@@ -7,11 +7,11 @@
 <div class="user-profile-container">
     <h3 class="content-header">@ViewBag.Title</h3>
     <div class="user-profile-page-inner">
-        @using (Html.BeginForm("SaveProfile", "Account", null, FormMethod.Post, new {enctype = "multipart/form-data"})) {
+        @using (Html.BeginForm("SaveProfile", "Account", null, FormMethod.Post, new { enctype = "multipart/form-data" })) {
             @Html.AntiForgeryToken()
-            @Html.ValidationSummary("", new {@class = "error"})
+            @Html.ValidationSummary("", new { @class = "error" })
             <div class="edit-profile-photo img-container">
-                <img src="@Model.AppUser.IconPath"/>
+                <img src="@Model.AppUser.IconPath" />
                 <div class="mask">
                     <div class="mask-backdrop"></div>
                     <div class="mask-content">
@@ -19,7 +19,7 @@
                         Change Photo
                     </div>
                 </div>
-                @Html.TextBoxFor(m => m.PostedPhoto, new {type = "file", @class = "js-profile-photo-upload hide"})
+                @Html.TextBoxFor(m => m.PostedPhoto, new { type = "file", @class = "js-profile-photo-upload hide" })
             </div>
             <div class="user-profile-form-content">
                 <div class="form-group">
@@ -27,17 +27,17 @@
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.AppUser.Intro)
-                    @Html.TextBoxFor(m => m.AppUser.Intro, new {@class = "form-control", placeholder = "Self description"})
+                    @Html.TextBoxFor(m => m.AppUser.Intro, new { @class = "form-control", placeholder = "Self description" })
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.AppUser.Location)
-                    @Html.TextBoxFor(m => m.AppUser.Location, new {@class = "form-control", placeholder = "Location"})
+                    @Html.TextBoxFor(m => m.AppUser.Location, new { @class = "form-control", placeholder = "Location" })
                 </div>
                 <div class="form-group gender-setting">
                     @Html.LabelFor(m => m.AppUser.Gender)
-                    @Html.RadioButtonFor(m => m.AppUser.Gender, 0, new {@class = "form-control hide"})
-                    <span>Male:</span>@Html.RadioButtonFor(m => m.AppUser.Gender, 1, new {@class = "form-control"})
-                    <span>Female:</span>@Html.RadioButtonFor(m => m.AppUser.Gender, 2, new {@class = "form-control"})
+                    @Html.RadioButtonFor(m => m.AppUser.Gender, 0, new { @class = "form-control hide" })
+                    <span>Male:</span>@Html.RadioButtonFor(m => m.AppUser.Gender, 1, new { @class = "form-control" })
+                    <span>Female:</span>@Html.RadioButtonFor(m => m.AppUser.Gender, 2, new { @class = "form-control" })
                 </div>
                 <div class="form-group">
                     @Html.Label("Profile Page")
@@ -54,7 +54,7 @@
                 </div>
                 @Html.HiddenFor(m => m.AppUser.Id)
             </div>
-        }
+                        }
     </div>
 </div>
 
@@ -68,4 +68,9 @@
 
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        photoUploadController.init(".js-profile-photo-upload", ".edit-profile-photo img");
+    </script>
 }
+
