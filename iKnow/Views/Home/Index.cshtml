@@ -19,7 +19,7 @@
 
             @Html.Partial("_LoadMorePartial")
         </div>
-        
+
         <div class="sidebar question-sidebar">
             <div class="panel">
                 @Html.Action("GetRecommentedTopics", "Topic")
@@ -31,6 +31,10 @@
 
 @section scripts {
     <script>
-        $(".to-load").on("click", function () { loadMoreHandler.call(this, "home"); });
+        $(document)
+            .ready(function () {
+                answerController.init();
+                loadMoreController.init("home");
+            });
     </script>
 }

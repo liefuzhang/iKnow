@@ -7,6 +7,9 @@ namespace iKnow {
         public static void RegisterBundles(BundleCollection bundles) {
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
                         "~/Scripts/app/controllers/topicsController.js",
+                        "~/Scripts/app/controllers/questionController.js",
+                        "~/Scripts/app/controllers/loadMoreController.js",
+                        "~/Scripts/app/controllers/answerController.js",
                         "~/Scripts/app/app.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/lib").Include(

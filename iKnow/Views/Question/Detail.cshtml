@@ -74,4 +74,11 @@
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="/Scripts/quill.min.js"></script>
+
+    <script>
+        $(document)
+            .ready(function () {
+                questionController.init();
+            });
+    </script>
 }

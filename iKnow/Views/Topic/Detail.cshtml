@@ -19,8 +19,7 @@
         <div class="topic-detail-inner question-answer-container">
             @Html.Partial("_QuestionAnswerPairPartial", Model.QuestionAnswers)
         </div>
-    }
-    else {
+    } else {
         <div class="topic-empty-container">
             <i class="fa fa-frown-o fa-4x" aria-hidden="true"></i>
             No questions under this topic yet.
@@ -42,3 +41,13 @@
         @Html.Partial("_SideBarSiteInfoPartial")
     </div>
 </div>
+
+@section scripts {
+    <script>
+        $(document)
+            .ready(function () {
+                answerController.init();
+                topicsController.init();
+            });
+    </script>
+}
