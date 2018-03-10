@@ -28,8 +28,8 @@ namespace iKnow.Controllers {
 
         // GET: Answer
         public ActionResult Index() {
-            int page = 0, pageSize = Constants.DefaultPageSize;
-            var viewModel = ConstructAnswerIndexViewModel(page, pageSize);
+            int pageSize = Constants.DefaultPageSize;
+            var viewModel = ConstructAnswerIndexViewModel(0, pageSize);
 
             return View(viewModel);
         }
@@ -40,9 +40,7 @@ namespace iKnow.Controllers {
             var questionsWithAnswerCount = _unitOfWork.QuestionRepository.GetQuestionsWithAnswerCount(questions);
 
             return new QuestionAnswerCountViewModel {
-                QuestionsWithAnswerCount = questionsWithAnswerCount,
-                Page = currentPage,
-                PageSize = pageSize
+                QuestionsWithAnswerCount = questionsWithAnswerCount
             };
         }
 

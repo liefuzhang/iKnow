@@ -1,8 +1,8 @@
-﻿var questionController = (function () {
+﻿var QuestionController = (function () {
     var submitAnswer = function () {
         var $editor = $(".ql-editor");
         if ($editor.text().trim().length === 0 && $editor.find('img').length === 0) {
-            warningErrorController.showWarning("Content can not be empty.");
+            WarningErrorController.showWarning("Content can not be empty.");
             return false;
         }
         if ($(".ql-editor").html())
@@ -61,7 +61,7 @@
         if ($(".add-answer-panel").hasClass("hide")) {
             // if not already opened
             if (iknow.isUserAuthorized !== true) {
-                warningErrorController.showWarning("Please log in before you write question");
+                WarningErrorController.showWarning("Please log in before you write question");
                 return;
             }
 
@@ -108,7 +108,7 @@
             url: "/question/getform/" + questionId,
             dataType: "html",
             success: function (html) {
-                modalController.toggleModalCommonCallback(html);
+                ModalController.toggleModalCommonCallback(html);
                 var $textArea = $(".add-question-description textarea");
                 var scrollHeight = $(".add-question-description textarea").get(0).scrollHeight;
                 $textArea.css('height', scrollHeight + 'px');
@@ -123,7 +123,7 @@
         $.ajax({
             url: "/question/gettopic/" + questionId,
             dataType: "html",
-            success: modalController.toggleModalCommonCallback
+            success: ModalController.toggleModalCommonCallback
         });
     }
 

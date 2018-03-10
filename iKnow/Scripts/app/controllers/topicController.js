@@ -1,4 +1,4 @@
-﻿var topicsController = (function () {
+﻿var TopicController = (function () {
     var selectTopic = function () {
         var $this = $(this);
         if ($this.hasClass("active")) {

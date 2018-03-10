@@ -8,7 +8,7 @@
     <div class="content-header">
         <h3>Recommended Questions</h3>
     </div>
-    <div class="answer-body load-more-list" data-current-page=@Model.Page>
+    <div class="answer-body load-more-list">
         @Html.Partial("_AnswerQuestionListPartial", Model.QuestionsWithAnswerCount)
     </div>
     @Html.Partial("_LoadMorePartial")
@@ -25,6 +25,6 @@
 
 @section scripts {
     <script>
-        loadMoreController.init("answer");
+        LoadMoreController.init("answer");
     </script>
 }

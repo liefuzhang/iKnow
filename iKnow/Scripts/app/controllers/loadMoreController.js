@@ -1,36 +1,38 @@
-﻿var loadMoreController = (function () {
+﻿var LoadMoreController = (function (loadMoreService) {
     var controllerName;
+    var button;
+    var $questionList;
+    var currentPage;
+
+    var loadMoreSuccessHandler = function (html) {
+        if (html) {
+            $questionList.append(html);
+            button.show();
+            button.next().hide();
+            currentPage++;
+        } else {
+            button.parent().addClass("end-of-list");
+        }
+    }
 
     var loadMoreHandler = function () {
-        var $this = $(this);
-        $this.hide();
-        $this.next().show();
+        button = $(this);
+        button.hide();
+        button.next().show();
 
-        var $questionList = $(".load-more-list");
-        var currentPage = $questionList.attr("data-current-page");
-        $.ajax({
-            url: "/" + controllerName + "/loadmore/" + currentPage,
-            dataType: "html",
-            success: function (html) {
-                if (html) {
-                    $questionList.append(html);
-                    $this.show();
-                    $this.next().hide();
-                    $questionList.attr("data-current-page", currentPage + 1);
-                } else {
-                    $this.parent().addClass("end-of-list");
-                }
-            }
-        });
+        loadMoreService.loadMore(controllerName, currentPage, loadMoreSuccessHandler);
     }
 
     var init = function (controller) {
         controllerName = controller;
+        $questionList = $(".load-more-list");
+        currentPage = 0;
+
         $(".to-load").on("click", loadMoreHandler);
     };
 
     return {
         init: init
     }
-})();
+})(LoadMoreService);
 

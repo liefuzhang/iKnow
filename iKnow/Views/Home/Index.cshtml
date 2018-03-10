@@ -13,7 +13,7 @@
 <div class="question-container-inner">
     <div class="question-detail-container">
         <div class="main-content-container">
-            <div class="home-question-answer-container question-answer-container load-more-list" data-current-page=@Model.Page>
+            <div class="home-question-answer-container question-answer-container load-more-list">
                 @Html.Partial("_QuestionAnswerPairPartial", Model.QuestionAnswers)
             </div>
 
@@ -33,8 +33,8 @@
     <script>
         $(document)
             .ready(function () {
-                answerController.init();
-                loadMoreController.init("home");
+                AnswerController.init();
+                LoadMoreController.init("home");
             });
     </script>
 }

@@ -1,4 +1,4 @@
-﻿var photoUploadController = (function () {
+﻿var PhotoUploadController = (function () {
     var targetSelector;
 
     var readURL = function () {

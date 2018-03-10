@@ -1,4 +1,4 @@
-﻿var answerController = (function () {
+﻿var AnswerController = (function () {
     var toggleMoreAnswerUnderline = function (e) {
         $(e.currentTarget).find(".blue-link-color").toggleClass("underline");
     }
@@ -15,13 +15,13 @@
         var $author = $container.siblings(".question-author");
         var $window = $(window);
         var $outerContainer = $container.closest(".question-answer-inner");
-        var expandedAnswerBottom = $outerContainer.height() - $window.scrollTop();
+        var diff = $outerContainer.height() - $window.scrollTop();
 
         $container.addClass("hide");
         $container.prev().removeClass("hide");
 
         if ($window.scrollTop() > $author.offset().top) {
-            var scrollTo = $outerContainer.height() - expandedAnswerBottom;
+            var scrollTo = $outerContainer.height() - diff;
             $window.scrollTop(scrollTo);
         }
     }

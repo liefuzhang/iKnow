@@ -1,8 +1,8 @@
-﻿var headerController = (function () {
+﻿var HeaderController = (function (questionService, searchService) {
     var toggleModalAddQuestion = function () {
         var $modalContainer = $(".modal-container");
         if (iknow.isUserAuthorized !== true) {
-            warningErrorController.showWarning("Please log in before you add question");
+            WarningErrorController.showWarning("Please log in before you add question");
             return;
         }
         if ($modalContainer.hasClass("new-question-form-loaded")) {
@@ -12,13 +12,9 @@
             return;
         }
 
-        $.ajax({
-            url: "/question/getform",
-            dataType: "html",
-            success: function (html) {
-                modalController.toggleModalCommonCallback(html);
-                $modalContainer.addClass("new-question-form-loaded");
-            }
+        questionService.getForm(function (html) {
+            ModalController.toggleModalCommonCallback(html);
+            $modalContainer.addClass("new-question-form-loaded");
         });
     }
 
@@ -29,24 +25,33 @@
 
     var search = function (e) {
         var input = $(".search").val();
-        if (input === "" ||
-        ($(e.currentTarget).hasClass("search") && e.keyCode === 27)) {
+        if (input === "" || ($(e.currentTarget).hasClass("search") && e.keyCode === 27)) {
             $(".search-result-container").html("");
             return;
         }
 
         if ($(e.currentTarget).hasClass("search") && e.keyCode === 13 ||
             $(e.currentTarget).hasClass("btn")) {
-            $.ajax({
-                url: "/search/getresult?input=" + input,
-                dataType: "html",
-                success: function (html) {
+            searchService.search(input,
+                function (html) {
                     if (html) {
                         $(".search-result-container").html(html);
                     }
-                }
-            });
+                });
         }
+    }
+
+    var closeSearchResult = function (e) {
+        if ($(e.target).parents(".search-container").length > 0) {
+            return;
+        }
+
+        $(".search-result-container").html("");
+    }
+
+    var pageClickHandler = function () {
+        $(".user-profile-dropdown").hide();
+        closeSearchResult(event);
     }
 
     var init = function () {
@@ -54,10 +59,11 @@
         $(".user-profile-inner").on("click", showUserProfileDropDown);
         $(".search").on("keyup", search);
         $(".search-container .btn").on("click", search);
+        $(document).on("click", pageClickHandler);
     };
 
     return {
         init: init
     }
-})();
+})(QuestionService, SearchService);
 

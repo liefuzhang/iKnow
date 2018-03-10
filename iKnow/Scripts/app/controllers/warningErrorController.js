@@ -1,4 +1,4 @@
-﻿var warningErrorController = (function () {
+﻿var WarningErrorController = (function () {
    var hideError = function () {
         $(this).hide();
     }

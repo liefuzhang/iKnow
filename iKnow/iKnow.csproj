@@ -376,7 +376,10 @@
     <Content Include="Scripts\app\controllers\loadMoreController.js" />
     <Content Include="Scripts\app\controllers\answerController.js" />
     <Content Include="Scripts\app\controllers\questionController.js" />
-    <Content Include="Scripts\app\controllers\topicsController.js" />
+    <Content Include="Scripts\app\controllers\topicController.js" />
+    <Content Include="Scripts\app\services\loadMoreService.js" />
+    <Content Include="Scripts\app\services\searchService.js" />
+    <Content Include="Scripts\app\services\questionService.js" />
     <Content Include="Scripts\chosen.jquery.js" />
     <Content Include="Scripts\chosen.proto.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

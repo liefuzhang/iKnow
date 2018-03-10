@@ -1,4 +1,4 @@
-﻿var registerController = (function () {
+﻿var RegisterController = (function () {
     var toggleModalRegister = function () {
         var $modalContainer = $(".modal-container");
 
@@ -14,7 +14,7 @@
             url: "/account/register" + queryString,
             dataType: "html",
             success: function (html) {
-                modalController.toggleModalCommonCallback(html);
+                ModalController.toggleModalCommonCallback(html);
                 $modalContainer.addClass("register-form-loaded");
             }
         });

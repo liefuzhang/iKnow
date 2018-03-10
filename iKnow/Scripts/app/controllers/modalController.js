@@ -1,4 +1,4 @@
-﻿var modalController = (function () {
+﻿var ModalController = (function () {
     var toggleModalClose = function () {
         if (event.target !== event.currentTarget) {
             // click on the Modal form
@@ -33,7 +33,7 @@
         $(".modal-container").on("click", toggleModalClose);
         $(".modal-container").on("click", ".js-button-delete", appController.deleteEntity);
         $(".modal-container").on("input", "textarea", textareaAutoGrow);
-        $(".modal-container").on("click", ".error li", warningErrorController.hideError);
+        $(".modal-container").on("click", ".error li", WarningErrorController.hideError);
     };
 
     return {

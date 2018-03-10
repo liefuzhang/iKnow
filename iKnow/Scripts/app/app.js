@@ -4,21 +4,7 @@
         var message = button.attr("data-delete-message");
         return confirm(message);
     }
-
-
-    var pageClickHandler = function () {
-        $(".user-profile-dropdown").hide();
-        closeSearchResult(event);
-    }
-
-    var closeSearchResult = function (e) {
-        if ($(e.target).parents(".search-container").length > 0) {
-            return;
-        }
-
-        $(".search-result-container").html("");
-    }
-
+    
     var backToTopDetect= function () {
         if ($(this).scrollTop() > 500) {
             $(".back-top-container").fadeIn();
@@ -36,11 +22,10 @@
     }
 
     var init = function () {
-        modalController.init();
-        headerController.init();
-        warningErrorController.init();
+        ModalController.init();
+        HeaderController.init();
+        WarningErrorController.init();
 
-        $(document).on("click", pageClickHandler);
         $(window).scroll(backToTopDetect);
         $(".back-top").on("click", goToTop);
     };

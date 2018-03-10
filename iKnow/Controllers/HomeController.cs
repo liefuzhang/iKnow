@@ -29,8 +29,8 @@ namespace iKnow.Controllers {
         }
 
         public ActionResult Index() {
-            int page = 0, pageSize = Constants.DefaultPageSize;
-            var viewModel = ConstructHomeViewModel(page, pageSize);
+            int pageSize = Constants.DefaultPageSize;
+            var viewModel = ConstructHomeViewModel(0, pageSize);
 
             return View(viewModel);
         }
@@ -43,9 +43,7 @@ namespace iKnow.Controllers {
             var questionAnswers = _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds);
 
             return new HomeViewModel {
-                QuestionAnswers = questionAnswers,
-                Page = currentPage,
-                PageSize = pageSize
+                QuestionAnswers = questionAnswers
             };
         }
 
