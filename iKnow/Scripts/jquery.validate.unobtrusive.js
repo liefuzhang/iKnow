@@ -72,7 +72,7 @@
     function onErrors(event, validator) {  // 'this' is the form element
         var container = $(this).find("[data-valmsg-summary=true]"),
             list = container.find("ul");
-        cleanUpErrorAndWarning();
+        warningErrorController.cleanUpErrorAndWarning();
 
         if (list && list.length && validator.errorList.length) {
             list.empty();

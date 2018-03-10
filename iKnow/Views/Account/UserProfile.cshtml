@@ -70,6 +70,7 @@
     @Scripts.Render("~/bundles/jqueryval")
 
     <script>
+        $(".mask-content").on("click", function () { $(".js-profile-photo-upload").click(); });
         photoUploadController.init(".js-profile-photo-upload", ".edit-profile-photo img");
     </script>
 }

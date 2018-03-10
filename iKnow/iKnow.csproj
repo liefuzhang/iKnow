@@ -368,6 +368,10 @@
     <None Include="Properties\PublishProfiles\test.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\controllers\modalController.js" />
+    <Content Include="Scripts\app\controllers\headerController.js" />
+    <Content Include="Scripts\app\controllers\warningErrorController.js" />
+    <Content Include="Scripts\app\controllers\registerController.js" />
     <Content Include="Scripts\app\controllers\photoUploadController.js" />
     <Content Include="Scripts\app\controllers\loadMoreController.js" />
     <Content Include="Scripts\app\controllers\answerController.js" />

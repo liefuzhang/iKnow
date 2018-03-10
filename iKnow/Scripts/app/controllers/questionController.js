@@ -1,8 +1,8 @@
 ﻿var questionController = (function () {
-    var submitAnswer = function() {
+    var submitAnswer = function () {
         var $editor = $(".ql-editor");
         if ($editor.text().trim().length === 0 && $editor.find('img').length === 0) {
-            showWarning("Content can not be empty.");
+            warningErrorController.showWarning("Content can not be empty.");
             return false;
         }
         if ($(".ql-editor").html())
@@ -39,11 +39,29 @@
         });
     }
 
-    var showAddAnswerPanel = function(edit) {
+    var preventOuterScrolling = function (e) {
+        if (e.currentTarget.scrollHeight === e.currentTarget.offsetHeight) {
+            return;
+        }
+
+        var delta = 0;
+        if (e.originalEvent.wheelDelta) { // will work in most cases
+            delta = e.originalEvent.wheelDelta;
+        } else if (e.originalEvent.detail) { // fallback for Firefox
+            delta = -e.originalEvent.detail;
+        }
+        var scrollTop = $(e.currentTarget).scrollTop();
+        if (delta < 0 && scrollTop > e.currentTarget.scrollHeight - e.currentTarget.offsetHeight - 5 ||
+            delta > 0 && scrollTop < 5) {
+            e.preventDefault();
+        }
+    }
+
+    var showAddAnswerPanel = function (edit) {
         if ($(".add-answer-panel").hasClass("hide")) {
             // if not already opened
             if (iknow.isUserAuthorized !== true) {
-                showWarning("Please log in before you write question");
+                warningErrorController.showWarning("Please log in before you write question");
                 return;
             }
 
@@ -57,22 +75,22 @@
 
             $(".ql-editor")
                 .on("mousewheel DOMMouseScroll",
-                    function(e) {
+                    function (e) {
                         preventOuterScrolling(e);
                     });
 
             $(".full-screen")
                 .on("click",
-                    function(e) {
+                    function (e) {
                         $("body").toggleClass("modal-open editor-full-screen");
                     });
 
             $("html, body")
                 .animate({
-                        scrollTop: $(".main-content-container").offset().top - 100
-                    },
+                    scrollTop: $(".main-content-container").offset().top - 100
+                },
                     0,
-                    function() {
+                    function () {
                         $(".add-answer-panel.hide").slideDown(100).removeClass("hide");
                         $(".ql-editor").get(0).focus();
                     });
@@ -82,10 +100,40 @@
         }
     };
 
+    var toggleModalEditQuestion = function () {
+        var questionId = $(event.currentTarget).attr("data-question-id");
+        $(".modal-container").removeClass("new-question-form-loaded");
+
+        $.ajax({
+            url: "/question/getform/" + questionId,
+            dataType: "html",
+            success: function (html) {
+                modalController.toggleModalCommonCallback(html);
+                var $textArea = $(".add-question-description textarea");
+                var scrollHeight = $(".add-question-description textarea").get(0).scrollHeight;
+                $textArea.css('height', scrollHeight + 'px');
+            }
+        });
+    }
+
+    var toggleModalEditTopic = function () {
+        var questionId = $(event.currentTarget).attr("data-question-id");
+        $(".modal-container").removeClass("new-question-form-loaded");
+
+        $.ajax({
+            url: "/question/gettopic/" + questionId,
+            dataType: "html",
+            success: modalController.toggleModalCommonCallback
+        });
+    }
+
     var init = function () {
         $(".add-answer-panel").on("submit", "form", submitAnswer);
+        $(".add-answer-panel").on("click", ".js-button-delete", appController.deleteEntity);
         $(".write-answer").on("click", showAddAnswerPanel);
         $(".edit-answer").on("click", function () { showAddAnswerPanel(true); });
+        $(".question-header-panel .js-edit-question").on("click", toggleModalEditQuestion);
+        $(".question-header-panel .js-edit-topic").on("click", toggleModalEditTopic);
     };
 
     return {

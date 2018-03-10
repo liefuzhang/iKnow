@@ -37,18 +37,23 @@
         </a>
     </div>
 
+    @Scripts.Render("~/bundles/lib")
+    @Scripts.Render("~/bundles/app")
+    
     <script>
         // iknow global variable
         var iknow = {};
         iknow.isUserAuthorized = "@(HttpContext.Current.User.Identity.IsAuthenticated)" === "True" ? true : false;
-        iknow.userId = "@(HttpContext.Current.User?.Identity?.GetUserId()??"")";
+        iknow.userId = "@(HttpContext.Current.User?.Identity?.GetUserId() ?? "")";
         iknow.pageError = "@(TempData["pageError"] ?? "")";
         iknow.statusMessage = "@(TempData["statusMessage"] ?? "")";
+
+        $(document)
+            .ready(function () {
+                appController.init();
+            });
     </script>
 
-    @Scripts.Render("~/bundles/lib")
-    @Scripts.Render("~/bundles/app")
     @RenderSection("scripts", required: false)
-
 </body>
 </html>

@@ -11,6 +11,10 @@ namespace iKnow {
                         "~/Scripts/app/controllers/loadMoreController.js",
                         "~/Scripts/app/controllers/answerController.js",
                         "~/Scripts/app/controllers/photoUploadController.js",
+                        "~/Scripts/app/controllers/registerController.js",
+                        "~/Scripts/app/controllers/modalController.js",
+                        "~/Scripts/app/controllers/headerController.js",
+                        "~/Scripts/app/controllers/warningErrorController.js",
                         "~/Scripts/app/app.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/lib").Include(
