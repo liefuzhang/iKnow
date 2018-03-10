@@ -3,7 +3,10 @@
         $.ajax({
             url: "/" + controllerName + "/loadmore/" + currentPage,
             dataType: "html",
-            success: success
+            success: success,
+            fail: function () {
+                console.error("Something went wrong with LoadMoreService loadMore.");
+            }
         });
     };
 

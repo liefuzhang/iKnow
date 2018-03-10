@@ -1,4 +1,4 @@
-﻿var QuestionController = (function () {
+﻿var QuestionController = (function (questionService) {
     var submitAnswer = function () {
         var $editor = $(".ql-editor");
         if ($editor.text().trim().length === 0 && $editor.find('img').length === 0) {
@@ -9,7 +9,6 @@
             $(this).get(0).elements["AnswerPanelContent"].value = $(".ql-editor").html();
         return true;
     };
-
 
     var getEditor = function () {
         return new Quill(".rich-editor-inner", {
@@ -57,6 +56,25 @@
         }
     }
 
+    var setupClickHandlers = function () {
+        $(".ql-editor")
+                .on("mousewheel DOMMouseScroll",
+                    function (e) {
+                        preventOuterScrolling(e);
+                    });
+
+        $(".full-screen")
+            .on("click",
+                function (e) {
+                    $("body").toggleClass("modal-open editor-full-screen");
+                });
+    };
+
+    var scrollToAnswerPanel = function () {
+        $("html, body").scrollTop($(".main-content-container").offset().top - 100);
+        $(".ql-editor").get(0).focus();
+    };
+
     var showAddAnswerPanel = function (edit) {
         if ($(".add-answer-panel").hasClass("hide")) {
             // if not already opened
@@ -71,60 +89,34 @@
                 $(".rich-editor-inner").html(content);
             }
 
-            var quill = getEditor();
+            getEditor();
+            setupClickHandlers();
 
-            $(".ql-editor")
-                .on("mousewheel DOMMouseScroll",
-                    function (e) {
-                        preventOuterScrolling(e);
-                    });
-
-            $(".full-screen")
-                .on("click",
-                    function (e) {
-                        $("body").toggleClass("modal-open editor-full-screen");
-                    });
-
-            $("html, body")
-                .animate({
-                    scrollTop: $(".main-content-container").offset().top - 100
-                },
-                    0,
-                    function () {
-                        $(".add-answer-panel.hide").slideDown(100).removeClass("hide");
-                        $(".ql-editor").get(0).focus();
-                    });
-        } else {
-            $("html, body").scrollTop($(".main-content-container").offset().top - 100);
-            $(".ql-editor").get(0).focus();
+            $(".add-answer-panel.hide").slideDown(100).removeClass("hide");
         }
-    };
+
+        scrollToAnswerPanel();
+    }
 
     var toggleModalEditQuestion = function () {
         var questionId = $(event.currentTarget).attr("data-question-id");
         $(".modal-container").removeClass("new-question-form-loaded");
 
-        $.ajax({
-            url: "/question/getform/" + questionId,
-            dataType: "html",
-            success: function (html) {
-                ModalController.toggleModalCommonCallback(html);
-                var $textArea = $(".add-question-description textarea");
-                var scrollHeight = $(".add-question-description textarea").get(0).scrollHeight;
-                $textArea.css('height', scrollHeight + 'px');
-            }
-        });
+        var success = function (html) {
+            ModalController.toggleModalCommonCallback(html);
+            var $textArea = $(".add-question-description textarea");
+            var scrollHeight = $(".add-question-description textarea").get(0).scrollHeight;
+            $textArea.css('height', scrollHeight + 'px');
+        }
+
+        questionService.getForm(success, questionId);
     }
 
     var toggleModalEditTopic = function () {
         var questionId = $(event.currentTarget).attr("data-question-id");
         $(".modal-container").removeClass("new-question-form-loaded");
 
-        $.ajax({
-            url: "/question/gettopic/" + questionId,
-            dataType: "html",
-            success: ModalController.toggleModalCommonCallback
-        });
+        questionService.getTopic(ModalController.toggleModalCommonCallback, questionId);
     }
 
     var init = function () {
@@ -139,5 +131,5 @@
     return {
         init: init
     }
-})();
+})(QuestionService);
 

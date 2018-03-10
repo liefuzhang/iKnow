@@ -1,7 +1,7 @@
 ﻿var PhotoUploadController = (function () {
     var targetSelector;
 
-    var readURL = function () {
+    var readUrl = function () {
         if (event.currentTarget.files && event.currentTarget.files[0]) {
             var reader = new FileReader();
 
@@ -14,7 +14,7 @@
 
     var init = function (upload, target) {
         targetSelector = $(target);
-        $(upload).on("change", readURL);
+        $(upload).on("change", readUrl);
     };
     
     return {
