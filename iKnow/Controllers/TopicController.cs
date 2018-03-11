@@ -35,7 +35,7 @@ namespace iKnow.Controllers {
         }
 
         // GET: Topic
-        public ActionResult Index() {
+        public ViewResult Index() {
             var topics = _unitOfWork.TopicRepository.GetAll().ToList();
             Topic selectedTopic = null;
             if (topics.Any()) {

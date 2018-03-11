@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 using iKnow.Controllers;
 using iKnow.Core;
 using iKnow.Core.Models;
@@ -57,33 +52,6 @@ namespace iKnow.UnitTests.Controllers {
             _unitOfWork.Setup(
                 u => u.QuestionRepository.GetQuestionsWithAnswerCount(It.IsAny<IEnumerable<Question>>()))
                 .Returns(_questionsWithAnswerCount);
-        }
-
-        [Test]
-        public void GetResult_WhenCalled_GetTopics() {
-            _controller.GetResult(_input);
-
-            _unitOfWork.Verify(
-                u => u.TopicRepository.Get(It.IsAny<Expression<Func<Topic, bool>>>(),
-                    It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
-                    It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()));
-        }
-
-        [Test]
-        public void GetResult_WhenCalled_GetQuestions() {
-            _controller.GetResult(_input);
-
-            _unitOfWork.Verify(
-                u => u.QuestionRepository.Get(It.IsAny<Expression<Func<Question, bool>>>(),
-                    It.IsAny<Func<IQueryable<Question>, IOrderedQueryable<Question>>>(),
-                    It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()));
-        }
-
-        [Test]
-        public void GetResult_WhenCalled_GetQuestionsWithAnswerCount() {
-            _controller.GetResult(_input);
-
-            _unitOfWork.Verify(u => u.QuestionRepository.GetQuestionsWithAnswerCount(_questions));
         }
 
         [Test]

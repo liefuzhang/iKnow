@@ -82,15 +82,6 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Index_WhenCalled_GetAllTopics() {
-            _request.Setup(r => r["selectedTopicId"]).Returns(_topic1.Id.ToString());
-
-            _controller.Index();
-
-            _unitOfWork.Verify(u => u.TopicRepository.GetAll(null, null, null, null));
-        }
-
-        [Test]
         public void Index_WhenCalled_ReturnViewResult() {
             var result = _controller.Index();
 
@@ -103,8 +94,8 @@ namespace iKnow.UnitTests.Controllers {
 
             var result = _controller.Index();
 
-            Assert.That((result as ViewResult).Model, Is.TypeOf<TopicIndexViewModel>());
-            Assert.That(((result as ViewResult).Model as TopicIndexViewModel).SelectedTopic, Is.EqualTo(_topic2));
+            Assert.That(result.Model, Is.TypeOf<TopicIndexViewModel>());
+            Assert.That((result.Model as TopicIndexViewModel).SelectedTopic, Is.EqualTo(_topic2));
         }
 
         [Test]
@@ -113,22 +104,6 @@ namespace iKnow.UnitTests.Controllers {
 
             Assert.That((result as ViewResult).Model, Is.TypeOf<TopicIndexViewModel>());
             Assert.That(((result as ViewResult).Model as TopicIndexViewModel).SelectedTopic, Is.EqualTo(_topic1));
-        }
-
-        [Test]
-        public void Detail_WhenCalled_GetTopic() {
-            _controller.Detail(_topic1.Id);
-
-            _unitOfWork.Verify(u => u.TopicRepository.SingleOrDefault(It.IsAny<Expression<Func<Topic, bool>>>(), It.IsAny<string>()));
-        }
-
-        [Test]
-        public void Detail_WhenCalled_GetQuestionAnswerPairs() {
-            _unitOfWork.Setup(u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>()));
-
-            _controller.Detail(_topic1.Id);
-
-            _unitOfWork.Verify(u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>()));
         }
 
         [Test]
@@ -153,13 +128,6 @@ namespace iKnow.UnitTests.Controllers {
             var result = _controller.Detail(1);
 
             Assert.That(result, Is.TypeOf<HttpNotFoundResult>());
-        }
-
-        [Test]
-        public void About_WhenCalled_GetTopic() {
-            _controller.About(_topic1.Id);
-
-            _unitOfWork.Verify(u => u.TopicRepository.SingleOrDefault(It.IsAny<Expression<Func<Topic, bool>>>(), It.IsAny<string>()));
         }
 
         [Test]
@@ -210,45 +178,6 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Save_WhenCalled_SaveTopic() {
-            var viewModel = GetExistingTopicFormViewModel();
-            _unitOfWork.Setup(u => u.Complete());
-
-            _controller.Save(viewModel);
-
-            _unitOfWork.Verify(u => u.Complete());
-        }
-
-        [Test]
-        public void Save_WhenCalled_SaveTopicIcon() {
-            var viewModel = GetExistingTopicFormViewModel();
-            _imageFileGenerator.Setup(ifg => ifg.SaveTopicIcon(null, _saveTopic.Name));
-
-            _controller.Save(viewModel);
-
-            _imageFileGenerator.Verify(ifg => ifg.SaveTopicIcon(null, _saveTopic.Name));
-        }
-
-        [Test]
-        public void Save_NewTopic_CheckIfNameIsUnique() {
-            var viewModel = GetNewTopicFormViewModel();
-
-            _controller.Save(viewModel);
-
-            _unitOfWork.Verify(u => u.TopicRepository.Any(It.IsAny<Expression<Func<Topic, bool>>>()));
-        }
-
-        [Test]
-        public void Save_NewTopic_AddToTopicRepository() {
-            var viewModel = GetNewTopicFormViewModel();
-            _unitOfWork.Setup(u => u.TopicRepository.Add(_newTopic));
-
-            _controller.Save(viewModel);
-
-            _unitOfWork.Verify(u => u.TopicRepository.Add(_newTopic));
-        }
-
-        [Test]
         public void Save_NewTopic_NameAndDescriptionAreTrimmedBeforeSave() {
             var viewModel = GetNewTopicFormViewModel();
             _newTopic.Name = " test name  ";
@@ -258,18 +187,6 @@ namespace iKnow.UnitTests.Controllers {
 
             Assert.That(_newTopic.Name, Is.EqualTo("Test Name"));
             Assert.That(_newTopic.Description, Is.EqualTo("Test description"));
-        }
-
-        [Test]
-        public void Save_NewTopicNameIsNotUnique_ShouldNotSaveTopic() {
-            var viewModel = GetNewTopicFormViewModel();
-            _newTopic.Name = _topic1.Name;
-            _unitOfWork.Setup(u => u.TopicRepository.Add(_newTopic));
-
-            _controller.Save(viewModel);
-
-            _unitOfWork.Verify(u => u.TopicRepository.Add(_newTopic), Times.Never);
-            _unitOfWork.Verify(u => u.Complete(), Times.Never);
         }
 
         [Test]
@@ -293,31 +210,12 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Save_ExistingTopic_GetExistingTopic() {
-            var viewModel = GetExistingTopicFormViewModel();
-
-            _controller.Save(viewModel);
-
-            _unitOfWork.Verify(u => u.TopicRepository.Single(It.IsAny<Expression<Func<Topic, bool>>>(), It.IsAny<string>()));
-        }
-
-        [Test]
         public void Save_ExistingTopic_UpdateExistingTopic() {
             var viewModel = GetExistingTopicFormViewModel();
 
             _controller.Save(viewModel);
 
             Assert.That(_topic1.Description, Is.EqualTo(_saveTopic.Description));
-        }
-
-        [Test]
-        public void Save_ModelStateIsNotValid_ShouldNotSaveTopic() {
-            var viewModel = GetExistingTopicFormViewModel();
-            _controller.ModelState.AddModelError("", "");
-
-            _controller.Save(viewModel);
-
-            _unitOfWork.Verify(u => u.Complete(), Times.Never);
         }
 
         [Test]
@@ -354,13 +252,6 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Edit_WhenCalled_GetEditTopic() {
-            _controller.Edit(_topic1.Id);
-
-            _unitOfWork.Verify(u => u.TopicRepository.SingleOrDefault(It.IsAny<Expression<Func<Topic, bool>>>(), It.IsAny<string>()));
-        }
-
-        [Test]
         public void Edit_WhenCalled_ReturnViewResult() {
             var result = _controller.Edit(_topic1.Id);
 
@@ -381,24 +272,6 @@ namespace iKnow.UnitTests.Controllers {
             var result = _controller.Edit(1);
 
             Assert.That(result, Is.TypeOf<HttpNotFoundResult>());
-        }
-
-        [Test]
-        public void Delete_WhenCalled_RemoveTopicFromRepository() {
-            _unitOfWork.Setup(u => u.TopicRepository.Remove(It.IsAny<Topic>()));
-
-            _controller.Delete(_topic1);
-
-            _unitOfWork.Verify(u => u.TopicRepository.Remove(_topic1));
-        }
-
-        [Test]
-        public void Delete_WhenCalled_RemoveTopic() {
-            _unitOfWork.Setup(u => u.TopicRepository.Remove(It.IsAny<Topic>()));
-
-            _controller.Delete(_topic1);
-
-            _unitOfWork.Verify(u => u.Complete());
         }
 
         [Test]
@@ -428,34 +301,6 @@ namespace iKnow.UnitTests.Controllers {
             var result = _controller.GetRecommentedTopics(null);
 
             Assert.That(result.Model, Is.EqualTo(_existingTopics));
-        }
-
-        [Test]
-        public void GetRecommendedTopics_IdIsNull_GetAllTopics() {
-            _controller.GetRecommentedTopics(null);
-
-            _unitOfWork.Verify(u => u.TopicRepository.GetAll(It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
-                null, null, Constants.RecommendedTopicNumber));
-        }
-
-        [Test]
-        public void GetRecommendedTopics_IdIsNotNull_GetTopics() {
-            _unitOfWork.Setup(u => u.TopicRepository.Get(
-                It.IsAny<Expression<Func<Topic, bool>>>(),
-                It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
-                It.IsAny<string>(),
-                It.IsAny<int?>(),
-                It.IsAny<int?>()))
-                .Returns(_existingTopics);
-
-            _controller.GetRecommentedTopics(_topic1.Id);
-
-            _unitOfWork.Verify(u => u.TopicRepository.Get(
-                It.IsAny<Expression<Func<Topic, bool>>>(),
-                It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
-                null,
-                null,
-                Constants.RecommendedTopicNumber));
         }
 
         // Helper Methods
