@@ -190,7 +190,7 @@ namespace iKnow.Controllers {
         // POST: /Account/ForgotPassword
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model) {
+        public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel model) {
             if (ModelState.IsValid) {
                 var user = await UserManager.FindByEmailAsync(model.Email.Trim());
                 if (user == null) {
@@ -212,7 +212,7 @@ namespace iKnow.Controllers {
 
         //
         // GET: /Account/ResetPassword
-        public ActionResult ResetPassword(string code) {
+        public ViewResult ResetPassword(string code) {
             return code == null ? View("Error") : View();
         }
 
@@ -220,7 +220,7 @@ namespace iKnow.Controllers {
         // POST: /Account/ResetPassword
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model) {
+        public async Task<ViewResult> ResetPassword(ResetPasswordViewModel model) {
             if (!ModelState.IsValid) {
                 return View(model);
             }
