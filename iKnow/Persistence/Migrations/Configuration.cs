@@ -2,7 +2,7 @@ using System.Data.Entity.Migrations;
 
 namespace iKnow.Persistence.Migrations
 {
-    internal sealed class Configuration : DbMigrationsConfiguration<iKnowContext>
+    public sealed class Configuration : DbMigrationsConfiguration<iKnowContext>
     {
         public Configuration()
         {

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Principal;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 
 namespace iKnow.Core.Models {
     public class Question {
@@ -30,6 +32,12 @@ namespace iKnow.Core.Models {
 
         public void ClearTopics() {
             Topics.Clear();
-        }        
+        }
+
+        public bool CanUserEdit(IPrincipal user) {
+            return user.Identity.IsAuthenticated
+                   && (AppUserId == user.Identity.GetUserId()
+                   || user.IsInRole(Constants.AdminRoleName));
+        }
     }
 }

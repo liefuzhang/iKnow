@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Configuration;
 using System.Data.Entity.Validation;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Hosting;
 using System.Web.Mvc;
 using iKnow.Core;
 using iKnow.Core.Models;
@@ -21,7 +14,6 @@ using iKnow.Persistence;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Constants = iKnow.Core.Models.Constants;
 
 namespace iKnow.Controllers {
     public class AccountController : Controller {
