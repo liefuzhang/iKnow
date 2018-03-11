@@ -146,10 +146,12 @@ namespace iKnow.Controllers {
         public ActionResult Delete(QuestionDetailViewModel viewModel) {
             var currentUserId = User.Identity.GetUserId();
             var answer = _unitOfWork.AnswerRepository.Single(a => a.Id == viewModel.UserAnswerId);
-            if (answer.AppUserId == currentUserId) {
-                _unitOfWork.AnswerRepository.Remove(answer);
-                _unitOfWork.Complete();
+
+            if (answer.AppUserId != currentUserId) {
+                return new HttpUnauthorizedResult();
             }
+            _unitOfWork.AnswerRepository.Remove(answer);
+            _unitOfWork.Complete();
 
             return RedirectToAction("Detail", "Question", new { id = viewModel.Question.Id });
         }
