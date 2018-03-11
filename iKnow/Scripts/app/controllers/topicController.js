@@ -1,22 +1,19 @@
-﻿var TopicController = (function () {
+﻿var TopicController = (function (topicService) {
     var selectTopic = function () {
-        var $this = $(this);
-        if ($this.hasClass("active")) {
+        var $item = $(this);
+        if ($item.hasClass("active")) {
             return;
         }
 
-        var topicId = $this.attr("data-topic-id");
-        $.ajax({
-            url: "/topic/about/" + topicId,
-            dataType: "html",
-            success: function (html) {
+        var topicId = $item.attr("data-topic-id");
+        topicService.selectTopic(topicId,
+            function (html) {
                 if (html) {
-                    $this.siblings().removeClass("active");
-                    $this.addClass("active");
+                    $item.siblings().removeClass("active");
+                    $item.addClass("active");
                     $(".topic-body").html(html);
                 }
-            }
-        });
+            });
     };
 
     var init = function () {
@@ -26,5 +23,5 @@
     return {
         init: init
     }
-})();
+})(TopicService);
 

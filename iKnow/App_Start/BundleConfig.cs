@@ -10,6 +10,7 @@ namespace iKnow {
                         "~/Scripts/app/services/searchService.js",
                         "~/Scripts/app/services/loadMoreService.js",
                         "~/Scripts/app/services/registerService.js",
+                        "~/Scripts/app/services/topicService.js",
                         "~/Scripts/app/controllers/topicController.js",
                         "~/Scripts/app/controllers/questionController.js",
                         "~/Scripts/app/controllers/loadMoreController.js",
