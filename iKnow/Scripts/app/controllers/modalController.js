@@ -14,20 +14,24 @@
         }
     };
 
+    var open = function () {
+        $(".modal-container").addClass("open");
+        $(document.body).addClass("modal-open");
+    }
+
     var toggleModalCommonCallback = function (html) {
         if (html) {
             var $modalContainer = $(".modal-container");
             $modalContainer.html(html);
-            $modalContainer.addClass("open");
-            $(document.body).addClass("modal-open");
+            open();
             $(".topic-select").chosen({ width: "100%", max_selected_options: 5 });
         }
     }
 
-    var textareaAutoGrow = function () {
+    var textareaAutoGrow = function() {
         var scrollHeight = this.scrollHeight;
         $(this).css('height', scrollHeight + 'px');
-    }
+    };
 
     var init = function () {
         $(".modal-container").on("click", toggleModalClose);
@@ -38,7 +42,8 @@
 
     return {
         init: init,
-        toggleModalCommonCallback: toggleModalCommonCallback
+        toggleModalCommonCallback: toggleModalCommonCallback,
+        open: open
     }
 })();
 

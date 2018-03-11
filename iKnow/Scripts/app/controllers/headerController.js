@@ -6,9 +6,7 @@
             return;
         }
         if ($modalContainer.hasClass("new-question-form-loaded")) {
-            // already loaded
-            $modalContainer.addClass("open");
-            $(document.body).addClass("modal-open");
+            ModalController.open();
             return;
         }
 

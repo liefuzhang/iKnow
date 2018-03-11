@@ -1,23 +1,17 @@
-﻿var RegisterController = (function () {
+﻿var RegisterController = (function (registerService) {
     var toggleModalRegister = function () {
-        var $modalContainer = $(".modal-container");
-
-        if ($modalContainer.hasClass("register-form-loaded")) {
-            // already loaded
-            $modalContainer.addClass("open");
-            $(document.body).addClass("modal-open");
+        if ($(".modal-container").hasClass("register-form-loaded")) {
+            ModalController.open();
             return;
         }
 
-        var queryString = $(event.currentTarget).attr("data-return-url") ? "?returnUrl=" + $target.attr("data-return-url") : "";
-        $.ajax({
-            url: "/account/register" + queryString,
-            dataType: "html",
-            success: function (html) {
+        var queryString = $(event.currentTarget).attr("data-return-url") ? "?returnUrl=" + $(event.currentTarget).attr("data-return-url") : "";
+        registerService.getRegisterForm(
+            function (html) {
                 ModalController.toggleModalCommonCallback(html);
-                $modalContainer.addClass("register-form-loaded");
-            }
-        });
+                $(".modal-container").addClass("register-form-loaded");
+            },
+            queryString);
     };
 
     var init = function () {
@@ -27,5 +21,5 @@
     return {
         init: init
     }
-})();
+})(RegisterService);
 
