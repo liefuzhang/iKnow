@@ -14,6 +14,7 @@ using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.Repositories;
 using iKnow.Core.ViewModels;
+using iKnow.UnitTests.Extensions;
 using Moq;
 using NUnit.Framework;
 using Constants = iKnow.Core.Models.Constants;
@@ -58,12 +59,7 @@ namespace iKnow.UnitTests.Controllers {
 
         private void SetupUnitOfWork() {
             _unitOfWork = new Mock<IUnitOfWork>();
-            var questionRepository = new Mock<IQuestionRepository>();
-            var answerRepository = new Mock<IAnswerRepository>();
-            var topicRepository = new Mock<ITopicRepository>();
-            _unitOfWork.SetupGet(u => u.QuestionRepository).Returns(questionRepository.Object);
-            _unitOfWork.SetupGet(u => u.AnswerRepository).Returns(answerRepository.Object);
-            _unitOfWork.SetupGet(u => u.TopicRepository).Returns(topicRepository.Object);
+            _unitOfWork.MockRepositories();
 
             _unitOfWork.Setup(
                 u => u.QuestionRepository.GetAll(It.IsAny<Func<IQueryable<Question>, IOrderedQueryable<Question>>>(),
@@ -80,30 +76,14 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         private void SetupController() {
-            SetupIdentity();
-
-            var context = new Mock<HttpContextBase>();
             var request = new Mock<HttpRequestBase>();
-            request.SetupGet(r => r.UrlReferrer).Returns(new Uri("http://test.com"));
-            context.SetupGet(x => x.Request).Returns(request.Object);
-            context.SetupGet(x => x.User).Returns(_user.Object);
-
             _controller = new QuestionController(_unitOfWork.Object);
-            _controller.ControllerContext = new ControllerContext(
-                context.Object, new RouteData(), _controller);
-        }
-
-        private void SetupIdentity() {
-            var claim = new Claim("testUserName", _question1.AppUserId);
-            _identity = new Mock<ClaimsIdentity>();
-            _identity.Setup(i => i.FindFirst(It.IsAny<string>())).Returns(claim);
-            _identity.Setup(i => i.IsAuthenticated).Returns(true);
-
             _user = new Mock<IPrincipal>();
-            _user.Setup(u => u.IsInRole(Constants.AdminRoleName)).Returns(false);
-            _user.SetupGet(u => u.Identity).Returns(_identity.Object);
-        }
 
+            _controller.MockContext(request, _user);
+            _identity = _user.MockIdentity(_question1.AppUserId);
+        }
+        
         [Test]
         public void GetForm_WhenCalled_ReturnPartialViewResult() {
             var result = _controller.GetForm(_question1.Id);

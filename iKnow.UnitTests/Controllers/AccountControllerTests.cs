@@ -17,6 +17,7 @@ using iKnow.Core.Repositories;
 using iKnow.Core.ViewModels;
 using iKnow.Core.ViewModels.Account;
 using iKnow.Helper;
+using iKnow.UnitTests.Extensions;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -29,7 +30,6 @@ namespace iKnow.UnitTests.Controllers {
     public class AccountControllerTests {
         private Mock<IUnitOfWork> _unitOfWork;
         private AccountController _controller;
-        private Mock<ClaimsIdentity> _identity;
         private Mock<IPrincipal> _user;
         private AppUser _currentUser;
         private AppUser _newUser;
@@ -41,18 +41,20 @@ namespace iKnow.UnitTests.Controllers {
         private Mock<IEmailSender> _emailSender;
         private Mock<IFileHelper> _imageFileGenerator;
         private Mock<UrlHelper> _urlHelper;
-        private string _forgotPasswordConfirmationStr = "ForgotPasswordConfirmation";
-        private string _resetPasswordConfirmationStr = "ResetPasswordConfirmation";
+        private readonly string _forgotPasswordConfirmationStr = "ForgotPasswordConfirmation";
+        private readonly string _resetPasswordConfirmationStr = "ResetPasswordConfirmation";
         private Mock<HttpRequestBase> _request;
+        private Mock<ClaimsIdentity> _identity;
 
         [SetUp]
         public void Setup() {
             _returnUrl = "return/url";
+            InitializeUsers();
             SetupUnitOfWork();
             SetupController();
         }
 
-        private void SetupUnitOfWork() {
+        private void InitializeUsers() {
             _currentUser = new AppUser {
                 Id = "1",
                 Email = "testEmail",
@@ -69,59 +71,48 @@ namespace iKnow.UnitTests.Controllers {
                 FirstName = " Savefirst ",
                 LastName = " Savelast "
             };
+        }
+
+        private void SetupUnitOfWork() {
             _unitOfWork = new Mock<IUnitOfWork>();
 
-            var userRepository = new Mock<IUserRepository>();
-            _unitOfWork.SetupGet(u => u.UserRepository).Returns(userRepository.Object);
+            _unitOfWork.MockRepositories();
+
             _unitOfWork.Setup(
                 u => u.UserRepository.Get(It.IsAny<Expression<Func<AppUser, bool>>>(),
                     It.IsAny<Func<IQueryable<AppUser>, IOrderedQueryable<AppUser>>>(),
                     It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
                 .Returns(new List<AppUser>());
+
             _unitOfWork.Setup(u => u.UserRepository.Single(It.IsAny<Expression<Func<AppUser, bool>>>(),
                 It.IsAny<string>()))
                 .Returns(_currentUser);
         }
 
         private void SetupController() {
-            SetupIdentity();
-
             SetupUserManager();
 
             SetupSignInManager();
 
             _emailSender = new Mock<IEmailSender>();
             _imageFileGenerator = new Mock<IFileHelper>();
-
-            var context = new Mock<HttpContextBase>();
             _request = new Mock<HttpRequestBase>();
-            _request.SetupGet(r => r.Url).Returns(new Uri("http://test.com"));
-            context.SetupGet(x => x.Request).Returns(_request.Object);
-            context.SetupGet(x => x.User).Returns(_user.Object);
 
             _controller = new AccountController(_unitOfWork.Object,
                 _emailSender.Object, _imageFileGenerator.Object,
                 _userManager.Object, _signInManager.Object,
                 _authenticationManager.Object);
-            _controller.ControllerContext = new ControllerContext(
-                context.Object, new RouteData(), _controller);
+            _user = new Mock<IPrincipal>();
 
+            _controller.MockContext(_request, _user);
+            _identity = _user.MockIdentity(_currentUser.Id);
+            _identity.Setup(i => i.IsAuthenticated).Returns(false);
+            
             _urlHelper = new Mock<UrlHelper>();
             _controller.Url = _urlHelper.Object;
             _urlHelper.Setup(u => u.IsLocalUrl(It.IsAny<string>())).Returns(true);
+
         }
-
-        private void SetupIdentity() {
-            var claim = new Claim("testUserName", _currentUser.Id);
-            _identity = new Mock<ClaimsIdentity>();
-            _identity.Setup(i => i.FindFirst(It.IsAny<string>())).Returns(claim);
-            _identity.Setup(i => i.IsAuthenticated).Returns(false);
-
-            _user = new Mock<IPrincipal>();
-            _user.Setup(u => u.IsInRole(Constants.AdminRoleName)).Returns(false);
-            _user.SetupGet(u => u.Identity).Returns(_identity.Object);
-        }
-
         private void SetupUserManager() {
             var userStore = new Mock<IUserStore<AppUser>>();
             _userManager = new Mock<AppUserManager>(userStore.Object);
@@ -163,7 +154,7 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void LoginGet_UserIsAuthenticated_ReturnRedirectToRouteResult() {
-            _user.Setup(u => u.Identity.IsAuthenticated).Returns(true);
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             var result = _controller.Login(_returnUrl);
 
@@ -417,6 +408,8 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public async Task UserProfile_UserNameIsNull_ReturnViewResultWithCurrentUserInViewModel() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
+
             var result = await _controller.UserProfile(null);
 
             Assert.That(result, Is.TypeOf<ViewResult>());
@@ -426,6 +419,8 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public async Task UserProfile_UserNameIsNull_AddStatusMessageInTempDataWhenRequestMessageExists() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
+
             _request.Setup(r => r["Message"]).Returns("test message");
 
             await _controller.UserProfile(null);
@@ -435,6 +430,8 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public async Task UserProfile_UserNameIsNotNull_ReturnViewResultWithUserInViewModel() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
+
             var testUserName = "testUser";
 
             var result = await _controller.UserProfile(testUserName);
@@ -446,6 +443,8 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public async Task UserProfile_UserCouldNotBeFound_ReturnHttpNotFoundResult() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
+
             var testUserName = "testUser";
 
             _userManager.Setup(u => u.FindByNameAsync(It.IsAny<string>())).Returns(Task.FromResult((AppUser)null));
@@ -457,6 +456,8 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void SaveProfile_WhenCalled_UpdateUserWithTrimmedValue() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
+
             var viewModel = GetUserProfileViewModel();
 
             _controller.SaveProfile(viewModel);
@@ -468,6 +469,8 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void SaveProfile_UpdateOptionalValueIsNull_UpdateUserWithNullValue() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
+
             var viewModel = GetUserProfileViewModel();
             _saveUser.Location = null;
             _saveUser.Intro = null;
@@ -481,6 +484,8 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void SaveProfile_WhenCalled_ReturnRedirectToRouteResult() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
+
             var viewModel = GetUserProfileViewModel();
 
             var result = _controller.SaveProfile(viewModel);
@@ -490,6 +495,8 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void SaveProfile_ModelStateNotValid_ReturnViewResultWithViewModel() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
+
             var viewModel = GetUserProfileViewModel();
             _controller.ModelState.AddModelError("", "");
 
@@ -501,6 +508,8 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void SaveProfile_SaveUserThrowException_AddModelStateError() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
+
             var viewModel = GetUserProfileViewModel();
             _unitOfWork.Setup(u => u.Complete())
                 .Throws<DbEntityValidationException>();
@@ -512,6 +521,8 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void SaveProfile_SaveUserThrowException_ReturnViewResultWithViewModel() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
+
             var viewModel = GetUserProfileViewModel();
             _unitOfWork.Setup(u => u.Complete())
                 .Throws<DbEntityValidationException>();
@@ -524,6 +535,8 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void ChangePasswordGet_WhenCalled_ReturnViewResult() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
+
             var result = _controller.ChangePassword();
 
             Assert.That(result, Is.TypeOf<ViewResult>());
@@ -531,6 +544,8 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public async Task ChangePasswordPost_ChangePasswordSucceeded_ReturnRedirectToRouteResultWithMessageInRoute() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
+
             var viewModel = GetChangePasswordViewModel();
 
             var result = await _controller.ChangePassword(viewModel);
@@ -541,6 +556,8 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public async Task ChangePasswordPost_ChangePasswordFailed_AddModelStateErrorAndReturnViewResultWithViewModel() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
+
             var viewModel = GetChangePasswordViewModel();
             _userManager.Setup(u => u.ChangePasswordAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Failed("error")));
@@ -554,6 +571,8 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public async Task ChangePasswordPost_ModelStateNotValid_ReturnViewResultWithViewModel() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
+
             var viewModel = GetChangePasswordViewModel();
             _controller.ModelState.AddModelError("", "");
 
@@ -565,6 +584,8 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public async Task ChangePasswordPost_PasswordNotChanged_AddModelStateErrorAndReturnViewResultWithViewModel() {
+            _identity.Setup(i => i.IsAuthenticated).Returns(true);
+
             var viewModel = GetChangePasswordViewModel();
             viewModel.NewPassword = viewModel.OldPassword;
 

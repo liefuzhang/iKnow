@@ -12,6 +12,7 @@ using iKnow.Controllers;
 using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.Repositories;
+using iKnow.UnitTests.Extensions;
 using Moq;
 using NUnit.Framework;
 
@@ -34,39 +35,22 @@ namespace iKnow.UnitTests.Controllers {
         private void SetupUnitOfWork() {
             _currentUser = new AppUser { Id = "1" };
             _unitOfWork = new Mock<IUnitOfWork>();
-            var answerRepository = new Mock<IAnswerRepository>();
-            var questionRepository = new Mock<IQuestionRepository>();
-            var userRepository = new Mock<IUserRepository>();
-            _unitOfWork.SetupGet(u => u.AnswerRepository).Returns(answerRepository.Object);
-            _unitOfWork.SetupGet(u => u.QuestionRepository).Returns(questionRepository.Object);
+            _unitOfWork.MockRepositories();
+
             _unitOfWork.Setup(u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>()))
                 .Returns(new Dictionary<Question, Answer> { { new Question(), new Answer() } });
-            _unitOfWork.SetupGet(u => u.UserRepository).Returns(userRepository.Object);
             _unitOfWork.Setup(
                 u => u.UserRepository.Single(It.IsAny<Expression<Func<AppUser, bool>>>(), It.IsAny<string>()))
                 .Returns(() => _currentUser);
         }
 
         private void SetupController() {
-            SetupIdentity();
-
-            var context = new Mock<HttpContextBase>();
-            context.SetupGet(x => x.User).Returns(_user.Object);
-
+            var request = new Mock<HttpRequestBase>();
             _controller = new HomeController(_unitOfWork.Object);
-            _controller.ControllerContext = new ControllerContext(
-                context.Object, new RouteData(), _controller);
-        }
-
-        private void SetupIdentity() {
-            var claim = new Claim("testUserName", _currentUser.Id);
-            _identity = new Mock<ClaimsIdentity>();
-            _identity.Setup(i => i.FindFirst(It.IsAny<string>())).Returns(claim);
-            _identity.Setup(i => i.IsAuthenticated).Returns(true);
-
             _user = new Mock<IPrincipal>();
-            _user.Setup(u => u.IsInRole(Constants.AdminRoleName)).Returns(false);
-            _user.SetupGet(u => u.Identity).Returns(_identity.Object);
+
+            _controller.MockContext(request, _user);
+            _identity = _user.MockIdentity(_currentUser.Id);
         }
 
         [Test]

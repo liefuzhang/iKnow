@@ -162,6 +162,9 @@
     <Compile Include="Core\Models\ImageFileTypesAttributeTests.cs" />
     <Compile Include="Core\Models\QuestionTests.cs" />
     <Compile Include="Core\Models\TopicTests.cs" />
+    <Compile Include="Extensions\UnitOfWorkExtensions.cs" />
+    <Compile Include="Extensions\UserExtensions.cs" />
+    <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Helper\MyHelper\MyHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -175,6 +178,7 @@
       <Name>iKnow</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

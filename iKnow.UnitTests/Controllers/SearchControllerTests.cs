@@ -8,6 +8,7 @@ using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.Repositories;
 using iKnow.Core.ViewModels;
+using iKnow.UnitTests.Extensions;
 using Moq;
 using NUnit.Framework;
 
@@ -23,22 +24,24 @@ namespace iKnow.UnitTests.Controllers {
 
         [SetUp]
         public void Setup() {
+            InitializeTopicsAndQuestions();
+
             SetupUnitOfWork();
 
             _input = "test search";
             _controller = new SearchController(_unitOfWork.Object);
         }
 
-        private void SetupUnitOfWork() {
-            _unitOfWork = new Mock<IUnitOfWork>();
-            var topicRepository = new Mock<ITopicRepository>();
-            var questionRepository = new Mock<IQuestionRepository>();
-            _unitOfWork.SetupGet(u => u.TopicRepository).Returns(topicRepository.Object);
-            _unitOfWork.SetupGet(u => u.QuestionRepository).Returns(questionRepository.Object);
-
+        private void InitializeTopicsAndQuestions() {
             _topics = new List<Topic>();
             _questions = new List<Question>();
             _questionsWithAnswerCount = new Dictionary<Question, int>();
+        }
+
+        private void SetupUnitOfWork() {
+            _unitOfWork = new Mock<IUnitOfWork>();
+            _unitOfWork.MockRepositories();
+
             _unitOfWork.Setup(
                 u => u.TopicRepository.Get(It.IsAny<Expression<Func<Topic, bool>>>(),
                     It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),

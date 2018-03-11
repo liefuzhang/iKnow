@@ -11,6 +11,7 @@ using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.Repositories;
 using iKnow.Core.ViewModels;
+using iKnow.UnitTests.Extensions;
 using Moq;
 using NUnit.Framework;
 
@@ -51,10 +52,7 @@ namespace iKnow.UnitTests.Controllers {
 
         private void SetupUnitOfWork() {
             _unitOfWork = new Mock<IUnitOfWork>();
-            var topicRepository = new Mock<ITopicRepository>();
-            var answerRepository = new Mock<IAnswerRepository>();
-            _unitOfWork.SetupGet(u => u.TopicRepository).Returns(topicRepository.Object);
-            _unitOfWork.SetupGet(u => u.AnswerRepository).Returns(answerRepository.Object);
+            _unitOfWork.MockRepositories();
 
             _unitOfWork.Setup(u => u.TopicRepository.GetAll(It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
                 It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
@@ -63,22 +61,18 @@ namespace iKnow.UnitTests.Controllers {
             _unitOfWork.Setup(
                 u => u.TopicRepository.SingleOrDefault(It.IsAny<Expression<Func<Topic, bool>>>(), It.IsAny<string>()))
                 .Returns(() => _topic1);
+
             _unitOfWork.Setup(u => u.TopicRepository.Single(It.IsAny<Expression<Func<Topic, bool>>>(), It.IsAny<string>()))
                 .Returns(() => _topic1);
 
             _unitOfWork.Setup(u => u.TopicRepository.Any(It.IsAny<Expression<Func<Topic, bool>>>()))
-                .Returns(() =>
-                _saveTopic.Name == _topic1.Name);
+                .Returns(() => _saveTopic.Name == _topic1.Name);
         }
 
         private void SetupController() {
-            var context = new Mock<HttpContextBase>();
-            _request = new Mock<HttpRequestBase>();
-            context.SetupGet(x => x.Request).Returns(_request.Object);
-
             _controller = new TopicController(_unitOfWork.Object, _imageFileGenerator.Object);
-            _controller.ControllerContext = new ControllerContext(
-                context.Object, new RouteData(), _controller);
+            _request = new Mock<HttpRequestBase>();
+            _controller.MockContext(_request);
         }
 
         [Test]
