@@ -70,24 +70,10 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Index_WhenCalled_GetQuestionAnswerPair() {
-            _controller.Index();
-
-            _unitOfWork.Verify(u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>()));
-        }
-
-        [Test]
         public void Index_WhenCalled_ReturnViewResult() {
             var result = _controller.Index();
 
             Assert.That(result, Is.TypeOf<ViewResult>());
-        }
-
-        [Test]
-        public void LoadMore_WhenCalled_GetQuestionAnswerPair() {
-            _controller.LoadMore(1);
-
-            _unitOfWork.Verify(u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>()));
         }
 
         [Test]
@@ -110,13 +96,6 @@ namespace iKnow.UnitTests.Controllers {
             var result = _controller.LoadMore(1);
 
             Assert.That(result, Is.Null);
-        }
-
-        [Test]
-        public void GetUserProfile_UserIsAuthenticated_GetUser() {
-            _controller.GetUserProfile();
-
-            _unitOfWork.Verify(u => u.UserRepository.Single(It.IsAny<Expression<Func<AppUser, bool>>>(), It.IsAny<string>()));
         }
 
         [Test]

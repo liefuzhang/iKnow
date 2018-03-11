@@ -112,25 +112,6 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void GetForm_WhenCalled_GetAllTopics() {
-            _unitOfWork.Setup(
-                u => u.TopicRepository.GetAll(It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
-                    null, null, null)).Returns(new[] { new Topic() });
-
-            _controller.GetForm(_question1.Id);
-
-            _unitOfWork.Verify(u => u.TopicRepository.GetAll(It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
-                null, null, null));
-        }
-
-        [Test]
-        public void GetForm_IdIsNotNull_GetQuestion() {
-            _controller.GetForm(_question1.Id);
-
-            _unitOfWork.Verify(u => u.QuestionRepository.Single(It.IsAny<Expression<Func<Question, bool>>>(), It.IsAny<string>()));
-        }
-
-        [Test]
         public void GetForm_IdIsNotNull_ReturnQuestionInViewModel() {
             var result = _controller.GetForm(_question1.Id);
 
@@ -225,25 +206,6 @@ namespace iKnow.UnitTests.Controllers {
             Assert.That(result, Is.TypeOf<PartialViewResult>());
         }
 
-        [Test]
-        public void GetTopic_WhenCalled_GetQuestion() {
-            _controller.GetTopic(_question1.Id);
-
-            _unitOfWork.Verify(u => u.QuestionRepository.Single(It.IsAny<Expression<Func<Question, bool>>>(), It.IsAny<string>()));
-        }
-
-        [Test]
-        public void GetTopic_WhenCalled_GetAllTopics() {
-            _unitOfWork.Setup(
-                u => u.TopicRepository.GetAll(It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
-                    null, null, null)).Returns(new[] { new Topic() });
-
-            _controller.GetTopic(_question1.Id);
-
-            _unitOfWork.Verify(u => u.TopicRepository.GetAll(It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
-                null, null, null));
-        }
-
 
         [Test]
         public void GetTopic_WhenCalled_ReturnQuestionInViewModel() {
@@ -262,33 +224,6 @@ namespace iKnow.UnitTests.Controllers {
 
             Assert.That(result.Model, Is.TypeOf<QuestionFormViewModel>());
             Assert.That((result.Model as QuestionFormViewModel).TopicIds, Is.EquivalentTo(new[] { _topic1.Id, _topic2.Id }));
-        }
-
-        [Test]
-        public void Detail_WhenCalled_GetQuestion() {
-            _controller.Detail(_question1.Id);
-
-            _unitOfWork.Verify(u => u.QuestionRepository.SingleOrDefault(It.IsAny<Expression<Func<Question, bool>>>(),
-                        It.IsAny<string>()));
-        }
-
-        [Test]
-        public void Detail_WhenCalled_GetAnswer() {
-            _unitOfWork.Setup(u => u.AnswerRepository.Get(
-                It.IsAny<Expression<Func<Answer, bool>>>(),
-                It.IsAny<Func<IQueryable<Answer>, IOrderedQueryable<Answer>>>(),
-                null,
-                null,
-                null));
-
-            _controller.Detail(_question1.Id);
-
-            _unitOfWork.Verify(u => u.AnswerRepository.Get(
-                It.IsAny<Expression<Func<Answer, bool>>>(),
-                It.IsAny<Func<IQueryable<Answer>, IOrderedQueryable<Answer>>>(),
-                null,
-                null,
-                null));
         }
 
         [Test]
@@ -313,21 +248,6 @@ namespace iKnow.UnitTests.Controllers {
             var result = _controller.Detail(1);
 
             Assert.That(result, Is.TypeOf<HttpNotFoundResult>());
-        }
-
-        [Test]
-        public void Detail_QuestionNotFound_ShouldNotGetAnswer() {
-            _question1 = null;
-
-            var result = _controller.Detail(1);
-            
-            _unitOfWork.Verify(u => u.AnswerRepository.Get(
-                It.IsAny<Expression<Func<Answer, bool>>>(),
-                It.IsAny<Func<IQueryable<Answer>, IOrderedQueryable<Answer>>>(),
-                null,
-                null,
-                null), 
-                Times.Never);
         }
 
         [Test]
@@ -360,7 +280,7 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Detail_CurrentUserIsAdmin_UserCanDelete() {
+        public void Detail_CurrentUserIsAdmin_UserCanEditQuestion() {
             var claim = new Claim("testUserName2", _question2.AppUserId);
             _identity.Setup(i => i.FindFirst(It.IsAny<string>())).Returns(claim);
             _user.Setup(u => u.IsInRole(Constants.AdminRoleName)).Returns(true);
@@ -396,7 +316,7 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Detail_CurrentUserHasNoExistingAnswer_ReturnZeroAndUserAnswerIdInViewModel() {
+        public void Detail_CurrentUserHasNoExistingAnswer_ReturnZeroAsUserAnswerIdInViewModel() {
             var result = _controller.Detail(_question1.Id);
 
             Assert.That((result as ViewResult).Model, Is.TypeOf<QuestionDetailViewModel>());
@@ -431,15 +351,6 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Save_WhenCalled_SaveQuestion() {
-            var viewModel = GetExistingQuestionFormViewModel();
-
-            _controller.Save(viewModel);
-
-            _unitOfWork.Verify(u => u.Complete());
-        }
-
-        [Test]
         public void Save_NewQuestion_TitleAndDescriptionGetTrimmed() {
             var viewModel = GetNewQuestionFormViewModel();
             _newQuestion.Title = " test title";
@@ -449,24 +360,6 @@ namespace iKnow.UnitTests.Controllers {
 
             Assert.That(_newQuestion.Title, Is.EqualTo("Test title?"));
             Assert.That(_newQuestion.Description, Is.EqualTo("Test description"));
-        }
-
-        [Test]
-        public void Save_NewQuestion_CheckIfQuestionTitleIsUnique() {
-            var viewModel = GetNewQuestionFormViewModel();
-
-            _controller.Save(viewModel);
-
-            _unitOfWork.Verify(u => u.QuestionRepository.Any(It.IsAny<Expression<Func<Question, bool>>>()));
-        }
-
-        [Test]
-        public void Save_NewQuestion_AddQuestion() {
-            var viewModel = GetNewQuestionFormViewModel();
-
-            _controller.Save(viewModel);
-
-            _unitOfWork.Verify(u => u.QuestionRepository.Add(_newQuestion));
         }
 
         [Test]
@@ -480,16 +373,6 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Save_NewQuestionTitleIsNotUnique_ShouldNotSaveQuestion() {
-            var viewModel = GetNewQuestionFormViewModel();
-            _unitOfWork.Setup(u => u.QuestionRepository.Any(It.IsAny<Expression<Func<Question, bool>>>())).Returns(true);
-
-            _controller.Save(viewModel);
-
-            _unitOfWork.Verify(u => u.Complete(), Times.Never);
-        }
-
-        [Test]
         public void Save_NewQuestionTitleIsNotUnique_AddErrorMessageInTempData() {
             var viewModel = GetNewQuestionFormViewModel();
             _unitOfWork.Setup(u => u.QuestionRepository.Any(It.IsAny<Expression<Func<Question, bool>>>())).Returns(true);
@@ -497,16 +380,6 @@ namespace iKnow.UnitTests.Controllers {
             _controller.Save(viewModel);
 
             Assert.That(_controller.TempData["pageError"], Is.Not.Null);
-        }
-
-        [Test]
-        public void Save_ExistingQuestion_GetQuestion() {
-            var viewModel = GetExistingQuestionFormViewModel();
-
-            _controller.Save(viewModel);
-
-            _unitOfWork.Verify(u => u.QuestionRepository
-                .Single(It.IsAny<Expression<Func<Question, bool>>>(), It.IsAny<string>()));
         }
 
         [Test]
@@ -529,51 +402,6 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Save_ModelStateIsNotValid_ShouldNotSaveQuestion() {
-            var viewModel = GetExistingQuestionFormViewModel();
-            _controller.ModelState.AddModelError("", "");
-
-            _controller.Save(viewModel);
-
-            _unitOfWork.Verify(u => u.Complete(), Times.Never);
-        }
-
-        [Test]
-        public void Save_ViewModelHasTopicIds_GetTopic() {
-            var viewModel = GetExistingQuestionFormViewModel();
-            viewModel.TopicIds = new[] { 1 };
-            _unitOfWork.Setup(u => u.TopicRepository.Get(It.IsAny<Expression<Func<Topic, bool>>>(),
-                It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
-                It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
-                .Returns(new[] { _topic1 });
-
-            _controller.Save(viewModel);
-
-            _unitOfWork.Verify(u => u.TopicRepository.Get(It.IsAny<Expression<Func<Topic, bool>>>(),
-                It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
-                It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()));
-        }
-
-        [Test]
-        public void SaveQuestionTopics_WhenCalled_GetQuestion() {
-            var viewModel = GetExistingQuestionFormViewModel();
-
-            _controller.SaveQuestionTopics(viewModel);
-
-            _unitOfWork.Verify(u => u.QuestionRepository
-                .Single(It.IsAny<Expression<Func<Question, bool>>>(), It.IsAny<string>()));
-        }
-
-        [Test]
-        public void SaveQuestionTopics_WhenCalled_SaveQuestion() {
-            var viewModel = GetExistingQuestionFormViewModel();
-
-            _controller.SaveQuestionTopics(viewModel);
-
-            _unitOfWork.Verify(u => u.Complete());
-        }
-
-        [Test]
         public void SaveQuestionTopics_WhenCalled_ReturnRedirectToRouteResultWithQuestionIdInRouteValue() {
             var viewModel = GetExistingQuestionFormViewModel();
 
@@ -584,67 +412,20 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void SaveQuestionTopics_ViewModelHasTopicIds_GetTopic() {
-            var viewModel = GetExistingQuestionFormViewModel();
-            viewModel.TopicIds = new[] { 1 };
-            _unitOfWork.Setup(u => u.TopicRepository.Get(It.IsAny<Expression<Func<Topic, bool>>>(),
-                It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
-                It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
-                .Returns(new[] { _topic1 });
-
-            _controller.SaveQuestionTopics(viewModel);
-
-            _unitOfWork.Verify(u => u.TopicRepository.Get(It.IsAny<Expression<Func<Topic, bool>>>(),
-                It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
-                It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()));
-        }
-
-        [Test]
-        public void GetRelatedQuestions_WhenCalled_GetCurrentQuestion() {
-            _controller.GetRelatedQuestions(_question2.Id);
-
-            _unitOfWork.Verify(u => u.QuestionRepository.Single(It.IsAny<Expression<Func<Question, bool>>>(), It.IsAny<string>()));
-        }
-
-        [Test]
-        public void GetRelatedQuestions_WhenCalled_GetQuestions() {
-            SetupQuestionRepositoryGetAndGetQuestionsWithAnswers();
-
-            _controller.GetRelatedQuestions(_question2.Id);
-
-            _unitOfWork.Verify(u => u.QuestionRepository.Get(
+        public void GetRelatedQuestions_WhenCalled_ReturnPartialView() {
+            _unitOfWork.Setup(u => u.QuestionRepository.Get(
                 It.IsAny<Expression<Func<Question, bool>>>(),
                 It.IsAny<Func<IQueryable<Question>, IOrderedQueryable<Question>>>(),
-                null,
-                null,
-                It.IsAny<int>()));
-        }
+                It.IsAny<string>(),
+                It.IsAny<int?>(),
+                It.IsAny<int?>()))
+                .Returns(new[] { _question1 });
 
-        [Test]
-        public void GetRelatedQuestions_WhenCalled_GetQuestionsWithAnswerCount() {
-            SetupQuestionRepositoryGetAndGetQuestionsWithAnswers();
-
-            _controller.GetRelatedQuestions(_question2.Id);
-
-            _unitOfWork.Verify(u => u.QuestionRepository.GetQuestionsWithAnswerCount(It.IsAny<IEnumerable<Question>>()));
-        }
-
-        [Test]
-        public void GetRelatedQuestions_WhenCalled_ReturnPartialView() {
-            SetupQuestionRepositoryGetAndGetQuestionsWithAnswers();
+            _unitOfWork.Setup(u => u.QuestionRepository.GetQuestionsWithAnswerCount(It.IsAny<IEnumerable<Question>>()));
 
             var result = _controller.GetRelatedQuestions(_question2.Id);
 
             Assert.That(result, Is.TypeOf<PartialViewResult>());
-        }
-
-        [Test]
-        public void Delete_WhenCalled_GetQuestion() {
-            var viewModel = GetExistingQuestionFormViewModel();
-
-            _controller.Delete(viewModel);
-
-            _unitOfWork.Verify(u => u.QuestionRepository.Single(It.IsAny<Expression<Func<Question, bool>>>(), It.IsAny<string>()));
         }
 
         [Test]
@@ -654,53 +435,6 @@ namespace iKnow.UnitTests.Controllers {
             var result = _controller.Delete(viewModel);
 
             Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
-        }
-
-        [Test]
-        public void Delete_CurrentUserIsQuestionOwner_RemoveAnswersAndQuestionThenComplete() {
-            _unitOfWork.Setup(u => u.AnswerRepository.RemoveRange(It.IsAny<IEnumerable<Answer>>()));
-
-            var viewModel = GetExistingQuestionFormViewModel();
-
-            var result = _controller.Delete(viewModel);
-
-            _unitOfWork.Verify(u => u.AnswerRepository.RemoveRange(It.IsAny<IEnumerable<Answer>>()));
-            _unitOfWork.Verify(u => u.QuestionRepository.Remove(It.IsAny<Question>()));
-            _unitOfWork.Verify(u => u.Complete());
-        }
-
-        [Test]
-        public void Delete_CurrentUserIsAdminButNotQuestionOwner_RemoveAnswersAndQuestionThenComplete() {
-            var claim = new Claim("testUserName2", _question2.AppUserId);
-            _identity.Setup(i => i.FindFirst(It.IsAny<string>())).Returns(claim);
-            _user.Setup(u => u.IsInRole(Constants.AdminRoleName)).Returns(true);
-
-            _unitOfWork.Setup(u => u.AnswerRepository.RemoveRange(It.IsAny<IEnumerable<Answer>>()));
-
-            var viewModel = GetExistingQuestionFormViewModel();
-
-            var result = _controller.Delete(viewModel);
-
-            _unitOfWork.Verify(u => u.AnswerRepository.RemoveRange(It.IsAny<IEnumerable<Answer>>()));
-            _unitOfWork.Verify(u => u.QuestionRepository.Remove(It.IsAny<Question>()));
-            _unitOfWork.Verify(u => u.Complete());
-        }
-
-        [Test]
-        public void Delete_CurrentUserIsNotAdminOrQuestionOwner_ShouldNotRemoveAnswersOrQuestionOrComplete() {
-            var claim = new Claim("testUserName2", _question2.AppUserId);
-            _identity.Setup(i => i.FindFirst(It.IsAny<string>())).Returns(claim);
-            _user.Setup(u => u.IsInRole(Constants.AdminRoleName)).Returns(false);
-
-            _unitOfWork.Setup(u => u.AnswerRepository.RemoveRange(It.IsAny<IEnumerable<Answer>>()));
-
-            var viewModel = GetExistingQuestionFormViewModel();
-
-            var result = _controller.Delete(viewModel);
-
-            _unitOfWork.Verify(u => u.AnswerRepository.RemoveRange(It.IsAny<IEnumerable<Answer>>()), Times.Never);
-            _unitOfWork.Verify(u => u.QuestionRepository.Remove(It.IsAny<Question>()), Times.Never);
-            _unitOfWork.Verify(u => u.Complete(), Times.Never);
         }
 
         // Helper Methods
@@ -719,17 +453,6 @@ namespace iKnow.UnitTests.Controllers {
             return new QuestionFormViewModel() {
                 Question = _newQuestion
             };
-        }
-
-        private void SetupQuestionRepositoryGetAndGetQuestionsWithAnswers() {
-            _unitOfWork.Setup(u => u.QuestionRepository.Get(
-                It.IsAny<Expression<Func<Question, bool>>>(),
-                It.IsAny<Func<IQueryable<Question>, IOrderedQueryable<Question>>>(),
-                It.IsAny<string>(),
-                It.IsAny<int?>(),
-                It.IsAny<int?>()))
-                .Returns(new[] { _question1 });
-            _unitOfWork.Setup(u => u.QuestionRepository.GetQuestionsWithAnswerCount(It.IsAny<IEnumerable<Question>>()));
         }
     }
 }
