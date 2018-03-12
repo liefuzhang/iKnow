@@ -69,7 +69,7 @@ namespace iKnow.Controllers {
         private TopicDetailViewModel ConstructTopicDetailViewModel(Topic topic) {
             var questionIds = topic.Questions.Select(q => q.Id).ToList();
             var questionAnswers = _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds);
-            
+
             var viewModel = new TopicDetailViewModel {
                 Topic = topic,
                 QuestionAnswers = questionAnswers
@@ -108,7 +108,6 @@ namespace iKnow.Controllers {
             }
 
             var topic = viewModel.Topic;
-            TrimInput(topic);
 
             // check if topic name is unique 
             if (DoesTopicNameExist(topic)) {
@@ -129,23 +128,18 @@ namespace iKnow.Controllers {
             }
         }
 
-        private static void TrimInput(Topic topic) {
-            topic.Name = MyHelper.CapitalizeAllWords(topic.Name?.Trim());
-            topic.Description = MyHelper.CapitalizeFirstWord(topic.Description?.Trim());
-        }
-
         private void SaveTopic(Topic topic) {
             if (topic.Id == 0) {
+                topic.TrimNameAndDescription();
                 _unitOfWork.TopicRepository.Add(topic);
             } else {
                 var topicInDb = _unitOfWork.TopicRepository.Single(t => t.Id == topic.Id);
-                topicInDb.Name = topic.Name;
-                topicInDb.Description = topic.Description;
+                topicInDb.UpdateNameAndDescription(topic.Name, topic.Description);
             }
 
             _unitOfWork.Complete();
         }
-        
+
         private bool DoesTopicNameExist(Topic topic) {
             return topic.Id == 0 && _unitOfWork.TopicRepository.Any(q => q.Name == topic.Name);
         }

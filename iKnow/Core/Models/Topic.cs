@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Web.Hosting;
+using iKnow.Helper;
 
 namespace iKnow.Core.Models {
     public class Topic {
@@ -22,7 +23,9 @@ namespace iKnow.Core.Models {
 
         [Required]
         public string Name { get; set; }
+
         public string Description { get; set; }
+
         public string IconPath {
             get {
                 if (Id == 0) {
@@ -38,5 +41,16 @@ namespace iKnow.Core.Models {
         }
         public ICollection<AppUser> AppUsers { get; set; }
         public ICollection<Question> Questions { get; set; }
+
+        public void TrimNameAndDescription() {
+            Name = MyHelper.CapitalizeAllWords(Name?.Trim());
+            Description = MyHelper.CapitalizeFirstWord(Description?.Trim());
+        }
+
+        public void UpdateNameAndDescription(string name, string description) {
+            Name = name;
+            Description = description;
+            TrimNameAndDescription();
+        }
     }
 }

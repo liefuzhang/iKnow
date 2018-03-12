@@ -20,6 +20,36 @@ namespace iKnow.UnitTests.Core.Models {
         }
 
         [Test]
+        public void TrimNameAndDescription_WhenCalled_ShouldTrimNameAndDesciption() {
+            _topic.Name = " test topic ";
+            _topic.Description = " test description ";
+
+            _topic.TrimNameAndDescription();
+
+            Assert.That(_topic.Name, Is.EqualTo("Test Topic"));
+            Assert.That(_topic.Description, Is.EqualTo("Test description"));
+        }
+
+        [Test]
+        public void TrimNameAndDescription_InputIsNull_ShouldSetNull() {
+            _topic.Name = null;
+            _topic.Description = null;
+
+            _topic.TrimNameAndDescription();
+
+            Assert.That(_topic.Name, Is.Null);
+            Assert.That(_topic.Description, Is.Null);
+        }
+
+        [Test]
+        public void UpdateNameAndDescription_WhenCalled_ShouldUpdateNameAndDescription() {
+            _topic.UpdateNameAndDescription(" new name ", " new desc");
+
+            Assert.That(_topic.Name, Is.EqualTo("New Name"));
+            Assert.That(_topic.Description, Is.EqualTo("New desc"));
+        }
+
+        [Test]
         public void IconPath_FileExists_ReturnFilePath() {
             _fileHelper.Setup(f => f.DoesFileExist(It.IsAny<string>()))
                 .Returns(true);
