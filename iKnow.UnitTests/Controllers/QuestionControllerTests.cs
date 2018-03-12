@@ -304,7 +304,7 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Detail_CurrentUserHasExistingAnswer_UserCannotDeleteAnswerPanelAnswer() {
+        public void Detail_CurrentUserHasNoExistingAnswer_UserCannotDeleteAnswerPanelAnswer() {
             var result = _controller.Detail(_question1.Id);
 
             Assert.That((result as ViewResult).Model, Is.TypeOf<QuestionDetailViewModel>());

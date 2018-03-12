@@ -58,16 +58,12 @@ namespace iKnow.Controllers {
             }).ToList();
 
             var selectedTopicIds = question.Topics.Select(t => t.Id).ToArray();
-            var currentUserId = User.Identity.GetUserId();
 
             var viewModel = new QuestionFormViewModel {
                 Question = question,
                 Topics = new MultiSelectList(topics, "TopicId", "TopicName"),
                 TopicIds = selectedTopicIds,
-                CanUserDelete = User.Identity.IsAuthenticated
-                               && (question.AppUserId == currentUserId
-                                   || User.IsInRole(Constants.AdminRoleName)
-                               && question.Id > 0)
+                CanUserDelete = question.CanUserModify(User)
             };
 
             return viewModel;
@@ -88,17 +84,12 @@ namespace iKnow.Controllers {
         }
 
         private QuestionDetailViewModel ConstructQuestionDetailViewModel(Question question) {
-            var currentUserId = User.Identity.GetUserId();
-            bool canUserEditQuestion = User.Identity.IsAuthenticated
-                                       && (question.AppUserId == currentUserId
-                                           || User.IsInRole(Constants.AdminRoleName));
-
             var existingAnswer = _unitOfWork.AnswerRepository.SingleOrDefault(
-                a => a.QuestionId == question.Id && a.AppUserId == currentUserId);
+                a => a.QuestionId == question.Id && a.AppUserId == User.Identity.GetUserId());
 
             var viewModel = new QuestionDetailViewModel {
                 Question = question,
-                CanUserEditQuestion = canUserEditQuestion,
+                CanUserEditQuestion = question.CanUserModify(User),
                 UserAnswerId = existingAnswer?.Id ?? 0,
                 CanUserDeleteAnswerPanelAnswer = existingAnswer != null
             };

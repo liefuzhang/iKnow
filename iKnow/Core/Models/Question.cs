@@ -34,10 +34,10 @@ namespace iKnow.Core.Models {
             Topics.Clear();
         }
 
-        public bool CanUserEdit(IPrincipal user) {
+        public bool CanUserModify(IPrincipal user) {
             return user.Identity.IsAuthenticated
                    && (AppUserId == user.Identity.GetUserId()
-                   || user.IsInRole(Constants.AdminRoleName));
+                    || (user.IsInRole(Constants.AdminRoleName) && Id > 0));
         }
     }
 }

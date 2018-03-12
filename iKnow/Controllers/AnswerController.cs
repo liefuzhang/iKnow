@@ -75,7 +75,7 @@ namespace iKnow.Controllers {
 
             var questionDetailViewModel = new QuestionDetailViewModel {
                 Question = question,
-                CanUserEditQuestion = question.CanUserEdit(User),
+                CanUserEditQuestion = question.CanUserModify(User),
                 UserAnswerId = existingAnswer?.Id ?? 0,
                 CanUserDeleteAnswerPanelAnswer = existingAnswer != null
             };
