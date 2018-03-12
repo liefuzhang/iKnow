@@ -35,6 +35,7 @@ namespace iKnow.Core.Models {
 
         [StringLength(255)]
         public string Intro { get; set; }
+
         public byte Gender { get; set; }
 
         [StringLength(50)]
@@ -70,6 +71,12 @@ namespace iKnow.Core.Models {
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
             return userIdentity;
+        }
+
+        public void UpdateInfo(byte gender, string intro, string location) {
+            Gender = gender;
+            Intro = intro?.Trim();
+            Location = location?.Trim();
         }
     }
 }

@@ -77,5 +77,19 @@ namespace iKnow.UnitTests.Core.Models {
             Assert.That(result, Is.EqualTo($"https://tempuri.com/Account/UserProfile/{_appUser.UserName}"));
         }
 
+        [Test]
+        public void UpdateInfo_WhenCalled_UpdateTrimmedInfo() {
+            var user = new AppUser {
+                Gender = 0,
+                Intro = "1",
+                Location = "a"
+            };
+
+            user.UpdateInfo(1, " 2", " b");
+
+            Assert.That(user.Gender, Is.EqualTo(1));
+            Assert.That(user.Intro, Is.EqualTo("2"));
+            Assert.That(user.Location, Is.EqualTo("b"));
+        }
     }
 }

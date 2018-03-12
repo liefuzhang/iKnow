@@ -22,7 +22,7 @@ namespace iKnow.Controllers {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailSender _emailSender;
         private readonly IFileHelper _fileHelper;
-        private IAuthenticationManager _authenticationManager;
+        private readonly IAuthenticationManager _authenticationManager;
 
         public AccountController(IUnitOfWork unitOfWork, IEmailSender emailSender, IFileHelper fileHelper,
             AppUserManager userManager, AppSignInManager signInManager, IAuthenticationManager authenticationManager) {
@@ -302,10 +302,7 @@ namespace iKnow.Controllers {
 
         private void SaveUserChanges(AppUser user) {
             var userInDb = _unitOfWork.UserRepository.Single(u => u.Id == user.Id);
-
-            userInDb.Gender = user.Gender;
-            userInDb.Intro = user.Intro?.Trim();
-            userInDb.Location = user.Location?.Trim();
+            userInDb.UpdateInfo(user.Gender, user.Intro, user.Location);
 
             _unitOfWork.Complete();
         }

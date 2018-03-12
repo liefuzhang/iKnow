@@ -98,8 +98,7 @@ namespace iKnow.Controllers {
                 _unitOfWork.AnswerRepository.SingleOrDefault(
                     a => a.QuestionId == viewModel.Question.Id && a.AppUserId == currentUserId);
             if (existingAnswer != null) {
-                existingAnswer.Content = viewModel.AnswerPanelContent;
-                existingAnswer.UpdatedDate = DateTime.Now;
+                existingAnswer.UpdateContent(viewModel.AnswerPanelContent);
                 answerToSave = existingAnswer;
             } else {
                 answerToSave = new Answer {

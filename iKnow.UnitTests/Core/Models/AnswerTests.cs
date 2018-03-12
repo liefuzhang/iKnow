@@ -65,5 +65,17 @@ namespace iKnow.UnitTests.Core.Models {
 
             Assert.That(_answer.ShortContentImageData, Is.Null);
         }
+
+        [Test]
+        public void UpdateContent_WhenCalled_UpdateContentAndUpdatedDate() {
+            var answer = new Answer {
+                Content = "1"
+            };
+
+            answer.UpdateContent("2");
+
+            Assert.That(answer.Content, Is.EqualTo("2"));
+            Assert.That(answer.UpdatedDate.HasValue, Is.True);
+        }
     }
 }

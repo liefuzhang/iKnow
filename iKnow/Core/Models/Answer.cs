@@ -6,7 +6,7 @@ namespace iKnow.Core.Models {
         public int Id { get; set; }
         public string Content { get; set; }
         public DateTime CreatedDate { get; set; }
-        public DateTime? UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; private set; }
         public int QuestionId { get; set; }
         public Question Question { get; set; }
         public string AppUserId { get; set; }
@@ -29,6 +29,11 @@ namespace iKnow.Core.Models {
                 var match = Regex.Match(Content, "<img src=\".*?\">");
                 return match.Success ? match.Value : null;
             }
+        }
+
+        public void UpdateContent(string content) {
+            Content = content;
+            UpdatedDate = DateTime.Now;
         }
     }
 }
