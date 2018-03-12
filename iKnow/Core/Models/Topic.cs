@@ -48,9 +48,11 @@ namespace iKnow.Core.Models {
         }
 
         public void UpdateNameAndDescription(string name, string description) {
+            if (string.IsNullOrEmpty(Name))
+                return;
+
             Name = name;
             Description = description;
-            TrimNameAndDescription();
         }
     }
 }

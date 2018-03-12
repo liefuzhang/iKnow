@@ -48,9 +48,12 @@ namespace iKnow.UnitTests.Controllers {
         private void InitializeQuestionsAndAnswersAndTopics() {
             _topic1 = new Topic { Id = 1, Name = "tn1" };
             _topic2 = new Topic { Id = 2, Name = "tn2" };
-            _newQuestion = new Question { Id = 0, Title = null, Description = null, AppUserId = null };
-            _question1 = new Question { Id = 1, Title = "t1", Description = "d1", AppUserId = "1" };
-            _question2 = new Question { Id = 2, Title = "t2", Description = "d2", AppUserId = "2" };
+            _newQuestion = new Question { Id = 0, Title = null, Description = null };
+            _question1 = new Question { Id = 1, Title = "t1", Description = "d1" };
+            _question2 = new Question { Id = 2, Title = "t2", Description = "d2" };
+
+            _question1.SetUserId("1");
+            _question2.SetUserId("2");
 
             _existingQuestions = new List<Question> {
                 _question1
@@ -83,7 +86,7 @@ namespace iKnow.UnitTests.Controllers {
             _controller.MockContext(request, _user);
             _identity = _user.MockIdentity(_question1.AppUserId);
         }
-        
+
         [Test]
         public void GetForm_WhenCalled_ReturnPartialViewResult() {
             var result = _controller.GetForm(_question1.Id);
@@ -392,6 +395,49 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
+        public void SaveQuestionTopics_UserIsNotQuestionOwner_ShouldNotUpdateQuestionTopics() {
+            var viewModel = GetExistingQuestionFormViewModel();
+            viewModel.Question.SetUserId(_question1.AppUserId + "-");
+            viewModel.Question.AddTopic(new Topic());
+
+            _controller.SaveQuestionTopics(viewModel);
+
+            Assert.That(_question1.Topics.Count, Is.Zero);
+        }
+
+        [Test]
+        public void SaveQuestionTopics_UserIsNotQuestionOwnerButIsInAdminRole_ShouldUpdateQuestionTopics() {
+            var viewModel = GetExistingQuestionFormViewModel();
+            viewModel.Question.SetUserId(_question1.AppUserId + "-");
+            viewModel.Question.AddTopic(new Topic());
+
+            _user.Setup(u => u.IsInRole(Constants.AdminRoleName)).Returns(true);
+            _unitOfWork.Setup(
+                u => u.TopicRepository.Get(It.IsAny<Expression<Func<Topic, bool>>>(), It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
+                    It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
+                .Returns(new[] { new Topic() });
+
+            _controller.SaveQuestionTopics(viewModel);
+
+            Assert.That(_question1.Topics.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void SaveQuestionTopics_UserIsQuestionOwner_ShouldUpdateQuestionTopics() {
+            var viewModel = GetExistingQuestionFormViewModel();
+            viewModel.Question.AddTopic(new Topic());
+
+            _unitOfWork.Setup(
+                u => u.TopicRepository.Get(It.IsAny<Expression<Func<Topic, bool>>>(), It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
+                    It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
+                .Returns(new[] { new Topic() });
+
+            _controller.SaveQuestionTopics(viewModel);
+
+            Assert.That(_question1.Topics.Count, Is.EqualTo(1));
+        }
+
+        [Test]
         public void GetRelatedQuestions_WhenCalled_ReturnPartialView() {
             _unitOfWork.Setup(u => u.QuestionRepository.Get(
                 It.IsAny<Expression<Func<Question, bool>>>(),
@@ -419,8 +465,12 @@ namespace iKnow.UnitTests.Controllers {
 
         // Helper Methods
         private QuestionFormViewModel GetExistingQuestionFormViewModel() {
-            _saveQuestion = _question1;
-            _saveQuestion.Description = "Edited question";
+            _saveQuestion = new Question {
+                Id = _question1.Id,
+                Title = "Edited title?",
+                Description = "Edited question"
+            };
+            _saveQuestion.SetUserId(_question1.AppUserId);
 
             return new QuestionFormViewModel {
                 Question = _saveQuestion

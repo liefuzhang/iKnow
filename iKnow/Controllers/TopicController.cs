@@ -108,6 +108,7 @@ namespace iKnow.Controllers {
             }
 
             var topic = viewModel.Topic;
+            topic.TrimNameAndDescription();
 
             // check if topic name is unique 
             if (DoesTopicNameExist(topic)) {
@@ -130,7 +131,6 @@ namespace iKnow.Controllers {
 
         private void SaveTopic(Topic topic) {
             if (topic.Id == 0) {
-                topic.TrimNameAndDescription();
                 _unitOfWork.TopicRepository.Add(topic);
             } else {
                 var topicInDb = _unitOfWork.TopicRepository.Single(t => t.Id == topic.Id);

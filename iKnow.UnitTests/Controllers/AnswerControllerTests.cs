@@ -43,7 +43,8 @@ namespace iKnow.UnitTests.Controllers {
             _answer1 = new Answer { Id = 1, Content = "answer 1", QuestionId = 1, AppUserId = "1" };
             _answer2 = new Answer { Id = 2, Content = "answer 2", QuestionId = 1, AppUserId = "2" };
             _answerPanelContent = "answer content";
-            _question1 = new Question { Id = 2, Title = "Question?", Description = "Description", AppUserId = "1" };
+            _question1 = new Question { Id = 2, Title = "Question?", Description = "Description"};
+            _question1.SetUserId("1");
 
             _existingAnswers = new List<Answer> {
                 _answer1

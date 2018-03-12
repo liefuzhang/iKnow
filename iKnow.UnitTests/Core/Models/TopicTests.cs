@@ -43,7 +43,7 @@ namespace iKnow.UnitTests.Core.Models {
 
         [Test]
         public void UpdateNameAndDescription_WhenCalled_ShouldUpdateNameAndDescription() {
-            _topic.UpdateNameAndDescription(" new name ", " new desc");
+            _topic.UpdateNameAndDescription("New Name", "New desc");
 
             Assert.That(_topic.Name, Is.EqualTo("New Name"));
             Assert.That(_topic.Description, Is.EqualTo("New desc"));
