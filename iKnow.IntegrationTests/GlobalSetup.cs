@@ -23,8 +23,22 @@ namespace iKnow.IntegrationTests {
         public void Seed() {
             var context = new iKnowContext();
 
-            context.Users.Add(new AppUser { FirstName = "user1first", LastName = "user1last", UserName = "user1firstuser1last0", Email = "-", PasswordHash = "-" });
-            context.Users.Add(new AppUser { FirstName = "user2first", LastName = "user2last", UserName = "user2firstuser2last0", Email = "-", PasswordHash = "-" });
+            if (!context.Users.Any(u => u.FirstName == "user1first")) {
+                context.Users.Add(new AppUser {
+                    FirstName = "user1first",
+                    LastName = "user1last",
+                    UserName = "user1firstuser1last0",
+                    Email = "-",
+                    PasswordHash = "-"
+                });
+                context.Users.Add(new AppUser {
+                    FirstName = "user2first",
+                    LastName = "user2last",
+                    UserName = "user2firstuser2last0",
+                    Email = "-",
+                    PasswordHash = "-"
+                });
+            }
 
             context.SaveChanges();
         }
