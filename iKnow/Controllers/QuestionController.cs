@@ -75,9 +75,6 @@ namespace iKnow.Controllers {
                 return HttpNotFound();
             }
 
-            // Load question into context
-            _unitOfWork.AnswerRepository.Get(a => a.QuestionId == question.Id);
-
             var viewModel = ConstructQuestionDetailViewModel(question);
 
             return View(viewModel);
@@ -132,17 +129,20 @@ namespace iKnow.Controllers {
                 _unitOfWork.QuestionRepository.Add(questionToSave);
             }
 
-            if (questionToSave.CanUserModify(User)) {
-                var topics = _unitOfWork.TopicRepository.Get(t => formViewModel.TopicIds.Contains(t.Id)).ToList();
-                questionToSave.UpdateQuestionTopics(topics);
-
-                _unitOfWork.Complete();
-            }
+            UpdateQuestionTopicsAndSave(formViewModel, questionToSave);
 
             return questionToSave;
         }
 
+        private void UpdateQuestionTopicsAndSave(QuestionFormViewModel formViewModel, Question question) {
+            if (question.CanUserModify(User)) {
+                var topics = _unitOfWork.TopicRepository.Get(t => formViewModel.TopicIds.Contains(t.Id)).ToList();
+                question.UpdateQuestionTopics(topics);
 
+                _unitOfWork.Complete();
+            }
+        }
+        
         private bool DoesQuestionTitleExist(Question question) {
             return question.Id == 0 && _unitOfWork.QuestionRepository.Any(q => q.Title == question.Title);
         }
@@ -156,12 +156,7 @@ namespace iKnow.Controllers {
                 q => q.Id == questionPosted.Id,
                 "Topics");
 
-            if (questionInDb.CanUserModify(User)) {
-                var topics = _unitOfWork.TopicRepository.Get(t => formViewModel.TopicIds.Contains(t.Id)).ToList();
-                questionInDb.UpdateQuestionTopics(topics);
-
-                _unitOfWork.Complete();
-            }
+            UpdateQuestionTopicsAndSave(formViewModel, questionInDb);
 
             return RedirectToAction("Detail", new { id = questionInDb.Id });
         }
