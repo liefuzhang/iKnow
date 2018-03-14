@@ -75,6 +75,9 @@ namespace iKnow.Controllers {
                 return HttpNotFound();
             }
 
+            // Load question answers into context
+            _unitOfWork.AnswerRepository.Get(a => a.QuestionId == question.Id);
+
             var viewModel = ConstructQuestionDetailViewModel(question);
 
             return View(viewModel);

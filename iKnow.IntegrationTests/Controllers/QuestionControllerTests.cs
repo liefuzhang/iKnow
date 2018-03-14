@@ -148,9 +148,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
             var result = _controller.Save(viewModel);
 
-            var questionCount = _context.Questions.Count();
-
-            Assert.That(questionCount, Is.EqualTo(1));
+            Assert.That(_context.Questions.Count(), Is.EqualTo(1));
         }
 
         [Test, Isolated]
@@ -184,8 +182,61 @@ namespace iKnow.IntegrationTests.Controllers {
 
         [Test, Isolated]
         public void SaveQuestionTopics_WhenCalled_ShouldUpdateQuestionTopicsInDatabase() {
+            var topic = _context.AddTestTopicToDatabase();
+            var existingQuestion = _context.AddTestQuestionToDatabase();
 
+            var question = new Question {
+                Title = existingQuestion.Title,
+                Id = existingQuestion.Id,
+            };
+            question.SetUserId(existingQuestion.AppUserId);
+
+            var viewModel = new QuestionFormViewModel {
+                Question = question,
+                TopicIds = new[] { topic.Id }
+            };
+
+            var result = _controller.SaveQuestionTopics(viewModel);
+
+            var questionInDb = _context.Questions.Include(q => q.Topics).SingleOrDefault();
+
+            Assert.That(questionInDb.Topics.Count, Is.EqualTo(1));
         }
 
+        [Test, Isolated]
+        public void GetRelatedQuestions_WhenCalled_ShouldReturnRelatedQuestionsWithAnswerCount() {
+            var topic = _context.AddTestTopicToDatabase();
+            var question1 = _context.AddTestQuestionToDatabase("Question 1?");
+            var question2 = _context.AddTestQuestionToDatabase("Question 2?");
+
+            question2.AddTopic(topic);
+            _context.AddTestAnswerToDatabase(question2.Id);
+
+            var question3 = _context.AddTestQuestionToDatabase("Question 3?");
+            question3.AddTopic(topic);
+
+            _context.SaveChanges();
+
+            var result = _controller.GetRelatedQuestions(question3.Id);
+
+            Assert.That((result.Model as QuestionAnswerCountViewModel).QuestionsWithAnswerCount.Count, Is.EqualTo(1));
+            Assert.That((result.Model as QuestionAnswerCountViewModel).QuestionsWithAnswerCount.Keys.First().Id, Is.EqualTo(question2.Id));
+            Assert.That((result.Model as QuestionAnswerCountViewModel).QuestionsWithAnswerCount.Values.First(), Is.EqualTo(1));
+        }
+
+        [Test, Isolated]
+        public void Delete_WhenCalled_ShouldRemoveQuestionAndItsAnswersFromDatabase() {
+            var question = _context.AddTestQuestionToDatabase("Question 2?");
+            _context.AddTestAnswerToDatabase(question.Id);
+
+            var viewModel = new QuestionFormViewModel {
+                Question = question
+            };
+
+            var result = _controller.Delete(viewModel);
+
+            Assert.That(_context.Questions.Count(), Is.EqualTo(0));
+            Assert.That(_context.Answers.Count(), Is.EqualTo(0));
+        }
     }
 }

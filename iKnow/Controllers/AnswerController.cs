@@ -70,8 +70,9 @@ namespace iKnow.Controllers {
             var answerCount = _unitOfWork.AnswerRepository.Count(a => a.QuestionId == question.Id);
 
             // TODO: can we utilize ConstructQuestionDetailViewModel method in QuestionController?
+            var userId = User.Identity.GetUserId();
             var existingAnswer = _unitOfWork.AnswerRepository.SingleOrDefault(
-                a => a.QuestionId == question.Id && a.AppUserId == User.Identity.GetUserId());
+                a => a.QuestionId == question.Id && a.AppUserId == userId);
 
             var questionDetailViewModel = new QuestionDetailViewModel {
                 Question = question,

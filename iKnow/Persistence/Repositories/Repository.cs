@@ -10,12 +10,10 @@ namespace iKnow.Persistence.Repositories {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class {
         protected readonly DbContext Context;
         private readonly DbSet<TEntity> _dbSet;
-        private IQueryable<TEntity> _query;
 
         public Repository(DbContext context) {
             Context = context;
             _dbSet = Context.Set<TEntity>();
-            _query = _dbSet;
         }
 
         // refer to https://docs.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application
@@ -26,30 +24,32 @@ namespace iKnow.Persistence.Repositories {
             string includeProperties = null,
             int? skip = null,
             int? take = null) {
+
+            IQueryable<TEntity> query = _dbSet;
             includeProperties = includeProperties ?? "";
 
             if (filter != null) {
-                _query = _query.Where(filter);
+                query = query.Where(filter);
             }
 
             foreach (var includeProperty in includeProperties.Split
                 (new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
-                _query = _query.Include(includeProperty);
+                query = query.Include(includeProperty);
             }
 
             if (orderBy != null) {
-                _query = orderBy(_query);
+                query = orderBy(query);
             }
 
             if (skip.HasValue) {
-                _query = _query.Skip(skip.Value);
+                query = query.Skip(skip.Value);
             }
 
             if (take.HasValue) {
-                _query = _query.Take(take.Value);
+                query = query.Take(take.Value);
             }
 
-            return _query;
+            return query;
         }
 
         public IEnumerable<TEntity> Get(
@@ -106,7 +106,7 @@ namespace iKnow.Persistence.Repositories {
         }
 
         public bool All(Expression<Func<TEntity, bool>> filter) {
-            return _query.All(filter);
+            return _dbSet.All(filter);
         }
 
         public void Add(TEntity entity) {
