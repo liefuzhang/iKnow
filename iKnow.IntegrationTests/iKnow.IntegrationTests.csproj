@@ -119,8 +119,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Controllers\SearchControllerTests.cs" />
     <Compile Include="Controllers\TopicControllerTests.cs" />
     <Compile Include="Extensions\ControllerExtensions.cs" />
+    <Compile Include="Extensions\DbContextExtensions.cs" />
     <Compile Include="GlobalSetup.cs" />
     <Compile Include="Isolated.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

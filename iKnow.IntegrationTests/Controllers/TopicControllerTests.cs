@@ -32,7 +32,7 @@ namespace iKnow.IntegrationTests.Controllers {
         public void Index_WhenCalled_ShouldReturnTopicsInViewModel() {
             _controller.MockContext(new Mock<HttpRequestBase>());
 
-            AddTestTopicToDatabase();
+            _context.AddTestTopicToDatabase();
 
             var result = _controller.Index();
 
@@ -42,30 +42,12 @@ namespace iKnow.IntegrationTests.Controllers {
         [Test, Isolated]
         public void Detail_WhenCalled_ShouldReturnTopicWithQuestionAnswerPairsInViewModel() {
             _controller.MockContext(new Mock<HttpRequestBase>());
-            var user = _context.Users.First();
 
-            var topic = new Topic {
-                Name = "Test Topic"
-            };
-            var question = new Question {
-                Title = "Test Question?"
-            };
-            question.SetUserId(user.Id);
+            var topic = _context.AddTestTopicToDatabase();
+            var question = _context.AddTestQuestionToDatabase();
             question.AddTopic(topic);
-
-            _context.Questions.Add(question);
-            _context.SaveChanges();
-
-            _context.Entry(topic).Reload();
-            _context.Entry(question).Reload();
-
-            var answer = new Answer {
-                QuestionId = question.Id,
-                Content = "test answer",
-                AppUserId = user.Id,
-                CreatedDate = DateTime.Now
-            };
-            _context.Answers.Add(answer);
+            
+            var answer = _context.AddTestAnswerToDatabase(question.Id);
 
             _context.SaveChanges();
 
@@ -79,7 +61,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
         [Test, Isolated]
         public void About_WhenCalled_ShouldReturnTopicInViewModel() {
-            var topic = AddTestTopicToDatabase();
+            var topic = _context.AddTestTopicToDatabase();
 
             var result = _controller.About(topic.Id);
 
@@ -105,7 +87,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
         [Test, Isolated]
         public void Save_NewTopicWithExistingTopicName_ShouldNotAddToDatabase() {
-            var topic = AddTestTopicToDatabase();
+            var topic = _context.AddTestTopicToDatabase();
 
             var newTopic = new Topic {
                 Name = topic.Name,
@@ -125,7 +107,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
         [Test, Isolated]
         public void Save_ExistingTopic_ShouldUpdateTopicInDatabase() {
-            var topic = AddTestTopicToDatabase();
+            var topic = _context.AddTestTopicToDatabase();
 
             var viewModel = new TopicFormViewModel {
                 Topic = new Topic {
@@ -145,7 +127,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
         [Test, Isolated]
         public void Edit_WhenCalled_ReturnTopicInViewModel() {
-            var topic = AddTestTopicToDatabase();
+            var topic = _context.AddTestTopicToDatabase();
 
             var result = _controller.Edit(topic.Id);
 
@@ -154,7 +136,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
         [Test, Isolated]
         public void Delete_WhenCalled_RemoveGivenTopicFromDatabase() {
-            var topic = AddTestTopicToDatabase();
+            var topic = _context.AddTestTopicToDatabase();
 
             var postedTopic = new Topic {
                 Id = topic.Id,
@@ -170,7 +152,7 @@ namespace iKnow.IntegrationTests.Controllers {
         [Test, Isolated]
         public void GetRecommendedTopics_IdIsNull_ReturnRecommendedTopics() {
             for (int i = 0; i <= Constants.RecommendedTopicNumber; i++)
-                AddTestTopicToDatabase(i.ToString());
+                _context.AddTestTopicToDatabase(i.ToString());
 
             var result = _controller.GetRecommendedTopics(null);
 
@@ -179,28 +161,13 @@ namespace iKnow.IntegrationTests.Controllers {
 
         [Test, Isolated]
         public void GetRecommendedTopics_IdIsNotNull_ReturnRecommendedTopicsExcludingTopicWithGivenId() {
-            var topic1 = AddTestTopicToDatabase();
-            var topic2 = AddTestTopicToDatabase();
+            var topic1 = _context.AddTestTopicToDatabase();
+            var topic2 = _context.AddTestTopicToDatabase();
 
             var result = _controller.GetRecommendedTopics(topic1.Id);
 
             Assert.That((result.Model as IEnumerable<Topic>).Count(), Is.EqualTo(1));
             Assert.That((result.Model as IEnumerable<Topic>).First().Id, Is.EqualTo(topic2.Id));
         }
-
-
-        // Help methods
-        private Topic AddTestTopicToDatabase(string name = "Test Topic") {
-            var topic = new Topic {
-                Name = name
-            };
-
-            _context.Topics.Add(topic);
-            _context.SaveChanges();
-
-            _context.Entry(topic).Reload();
-            return topic;
-        }
-
     }
 }
