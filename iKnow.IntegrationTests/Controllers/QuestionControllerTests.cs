@@ -219,9 +219,10 @@ namespace iKnow.IntegrationTests.Controllers {
 
             var result = _controller.GetRelatedQuestions(question3.Id);
 
-            Assert.That((result.Model as QuestionAnswerCountViewModel).QuestionsWithAnswerCount.Count, Is.EqualTo(1));
-            Assert.That((result.Model as QuestionAnswerCountViewModel).QuestionsWithAnswerCount.Keys.First().Id, Is.EqualTo(question2.Id));
-            Assert.That((result.Model as QuestionAnswerCountViewModel).QuestionsWithAnswerCount.Values.First(), Is.EqualTo(1));
+            var questionAnswerCountViewModel = result.Model as QuestionAnswerCountViewModel;
+            Assert.That(questionAnswerCountViewModel.QuestionsWithAnswerCount.Count, Is.EqualTo(1));
+            Assert.That(questionAnswerCountViewModel.QuestionsWithAnswerCount.Keys.First().Id, Is.EqualTo(question2.Id));
+            Assert.That(questionAnswerCountViewModel.QuestionsWithAnswerCount.Values.First(), Is.EqualTo(1));
         }
 
         [Test, Isolated]

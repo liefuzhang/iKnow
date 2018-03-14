@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
 using iKnow.Core;
-using iKnow.Core.Models;
 using iKnow.Core.ViewModels;
 using iKnow.Persistence;
 using Microsoft.AspNet.Identity;
