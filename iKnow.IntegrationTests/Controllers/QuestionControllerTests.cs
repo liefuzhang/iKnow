@@ -17,18 +17,18 @@ namespace iKnow.IntegrationTests.Controllers {
     public class QuestionControllerTests {
         private QuestionController _controller;
         private iKnowContext _context;
-        private Mock<IPrincipal> _user;
+        private Mock<IPrincipal> _currentUser;
 
         [SetUp]
         public void Setup() {
             _context = new iKnowContext();
             _controller = new QuestionController(new UnitOfWork(_context));
 
-            _user = new Mock<IPrincipal>();
-            _controller.MockContext(new Mock<HttpRequestBase>(), _user);
+            _currentUser = new Mock<IPrincipal>();
+            _controller.MockContext(new Mock<HttpRequestBase>(), _currentUser);
 
             var user1 = _context.Users.First();
-            _user.MockIdentity(user1.Id);
+            _currentUser.MockIdentity(user1.Id);
         }
 
         [TearDown]
@@ -104,6 +104,12 @@ namespace iKnow.IntegrationTests.Controllers {
         [Test, Isolated]
         public void Detail_UserHasNotExistingAnswer_ShouldReturnZeroAsUserAnswerIdAndUserCannotDeleteAnswer() {
             var question = _context.AddTestQuestionToDatabase();
+            var answer = _context.AddTestAnswerToDatabase(question.Id);
+            var user2 = _context.Users.ToList().Last();
+
+            answer.AppUserId = user2.Id;
+
+            _context.SaveChanges();
 
             var result = _controller.Detail(question.Id);
 
@@ -117,6 +123,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
             var question = new Question {
                 Title = "New Question?",
+                Description = "New desc"
             };
 
             var viewModel = new QuestionFormViewModel {
@@ -129,6 +136,8 @@ namespace iKnow.IntegrationTests.Controllers {
             var questionInDb = _context.Questions.Include(q => q.Topics).SingleOrDefault();
 
             Assert.That(questionInDb, Is.Not.Null);
+            Assert.That(questionInDb.Title, Is.EqualTo(questionInDb.Title));
+            Assert.That(questionInDb.Description, Is.EqualTo(questionInDb.Description));
             Assert.That(questionInDb.Topics.Count, Is.EqualTo(1));
         }
 

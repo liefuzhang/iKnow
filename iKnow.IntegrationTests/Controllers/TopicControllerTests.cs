@@ -71,7 +71,8 @@ namespace iKnow.IntegrationTests.Controllers {
         [Test, Isolated]
         public void Save_NewTopic_ShouldAddToDatabase() {
             var topic = new Topic {
-                Name = "Test Topic"
+                Name = "Test Topic",
+                Description = "Test desc"
             };
 
             var viewModel = new TopicFormViewModel {
@@ -83,6 +84,8 @@ namespace iKnow.IntegrationTests.Controllers {
             var topicFromDb = _context.Topics.SingleOrDefault(t => t.Name == topic.Name);
 
             Assert.That(topicFromDb.Id, Is.Not.Null);
+            Assert.That(topicFromDb.Name, Is.EqualTo(topic.Name));
+            Assert.That(topicFromDb.Description, Is.EqualTo(topic.Description));
         }
 
         [Test, Isolated]

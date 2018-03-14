@@ -16,18 +16,18 @@ namespace iKnow.IntegrationTests.Controllers {
     public class HomeControllerTests {
         private HomeController _controller;
         private iKnowContext _context;
-        private Mock<IPrincipal> _user;
+        private Mock<IPrincipal> _currentUser;
 
         [SetUp]
         public void Setup() {
             _context = new iKnowContext();
             _controller = new HomeController(new UnitOfWork(_context));
 
-            _user = new Mock<IPrincipal>();
-            _controller.MockContext(new Mock<HttpRequestBase>(), _user);
+            _currentUser = new Mock<IPrincipal>();
+            _controller.MockContext(new Mock<HttpRequestBase>(), _currentUser);
 
             var user1 = _context.Users.First();
-            _user.MockIdentity(user1.Id);
+            _currentUser.MockIdentity(user1.Id);
         }
 
         [TearDown]
