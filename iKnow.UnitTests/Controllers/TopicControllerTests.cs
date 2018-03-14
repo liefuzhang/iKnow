@@ -213,6 +213,19 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
+        public void Save_ExistingTopic_NameAndDescriptionAreTrimmedBeforeSave() {
+            var viewModel = GetExistingTopicFormViewModel();
+            _saveTopic.Name = " test name  ";
+            _saveTopic.Description = " test description  ";
+
+            _controller.Save(viewModel);
+
+            Assert.That(_saveTopic.Name, Is.EqualTo("Test Name"));
+            Assert.That(_saveTopic.Description, Is.EqualTo("Test description"));
+        }
+
+
+        [Test]
         public void Save_ModelStateIsNotValid_ReturnViewResult() {
             var viewModel = GetExistingTopicFormViewModel();
             _controller.ModelState.AddModelError("", "");
@@ -285,14 +298,14 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public void GetRecommendedTopics_WhenCalled_ReturnPartialViewResult() {
-            var result = _controller.GetRecommentedTopics(null);
+            var result = _controller.GetRecommendedTopics(null);
 
             Assert.That(result, Is.TypeOf<PartialViewResult>());
         }
 
         [Test]
         public void GetRecommendedTopics_WhenCalled_ReturnTopicsAsViewModel() {
-            var result = _controller.GetRecommentedTopics(null);
+            var result = _controller.GetRecommendedTopics(null);
 
             Assert.That(result.Model, Is.EqualTo(_existingTopics));
         }

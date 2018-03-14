@@ -159,7 +159,6 @@ namespace iKnow.Controllers {
             return View("TopicForm", viewModel);
         }
 
-        // POST: Topic/Delete/2
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Constants.AdminRoleName)]
@@ -175,7 +174,7 @@ namespace iKnow.Controllers {
             return RedirectToAction("Index");
         }
 
-        public PartialViewResult GetRecommentedTopics(int? id) {
+        public PartialViewResult GetRecommendedTopics(int? id) {
             IEnumerable<Topic> topics = id == null
                 ? _unitOfWork.TopicRepository.GetAll(q => q.OrderBy(t => Guid.NewGuid()), null, null,
                     Constants.RecommendedTopicNumber).ToList()
