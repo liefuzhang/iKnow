@@ -34,6 +34,12 @@ namespace iKnow.Controllers {
             _authenticationManager = authenticationManager;
         }
 
+        public AccountController(IUnitOfWork unitOfWork, IEmailSender emailSender, IFileHelper fileHelper) {
+            _unitOfWork = unitOfWork;
+            _emailSender = emailSender;
+            _fileHelper = fileHelper;
+        }
+
         public AccountController() {
             _unitOfWork = new UnitOfWork();
             _emailSender = new EmailSender();

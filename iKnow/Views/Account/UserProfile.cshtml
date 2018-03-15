@@ -1,4 +1,5 @@
-﻿@model iKnow.Core.ViewModels.UserProfileViewModel
+﻿@using iKnow.Core.Models
+@model iKnow.Core.ViewModels.UserProfileViewModel
 @{
     ViewBag.Title = "My Profile";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -36,8 +37,8 @@
                 <div class="form-group gender-setting">
                     @Html.LabelFor(m => m.AppUser.Gender)
                     @Html.RadioButtonFor(m => m.AppUser.Gender, 0, new { @class = "form-control hide" })
-                    <span>Male:</span>@Html.RadioButtonFor(m => m.AppUser.Gender, 1, new { @class = "form-control" })
-                    <span>Female:</span>@Html.RadioButtonFor(m => m.AppUser.Gender, 2, new { @class = "form-control" })
+                    <span>Male:</span>@Html.RadioButtonFor(m => m.AppUser.Gender, Gender.Male, new { @class = "form-control" })
+                    <span>Female:</span>@Html.RadioButtonFor(m => m.AppUser.Gender, Gender.Female, new { @class = "form-control" })
                 </div>
                 <div class="form-group">
                     @Html.Label("Profile Page")
