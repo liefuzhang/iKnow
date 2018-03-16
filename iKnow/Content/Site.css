@@ -179,6 +179,24 @@ a.btn, button.btn, input.btn {
         -webkit-box-shadow: inset 0px 0px 10px #502920;
     }
 
+    .btn.btn-grey {
+    background-color: #aaa;
+}
+
+    .btn.btn-grey:hover {
+        background: #bbb;
+        box-shadow: 0px 0px 2px #bbb;
+        -moz-box-shadow: 0px 0px 2px #bbb;
+        -webkit-box-shadow: 0px 0px 2px #bbb;
+    }
+
+    .btn.btn-grey:active {
+        background-color: #a0a0a0;
+        box-shadow: inset 0px 0px 10px #808080;
+        -moz-box-shadow: inset 0px 0px 10px #808080;
+        -webkit-box-shadow: inset 0px 0px 10px #808080; 
+    }
+
 .btn-func {
     margin-top: 20px;
     margin-bottom: 10px;

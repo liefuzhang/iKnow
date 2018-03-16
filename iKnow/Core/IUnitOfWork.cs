@@ -7,6 +7,7 @@ namespace iKnow.Core {
         IAnswerRepository AnswerRepository { get; set; }
         IQuestionRepository QuestionRepository { get; set; }
         ITopicRepository TopicRepository { get; set; }
+        ITopicFollowingRepository TopicFollowingRepository { get; set; }
         int Complete();
     }
 }

@@ -16,8 +16,21 @@
             });
     };
 
+    var followTopic = function() {
+        var $button = $(this);
+        var topicId = $button.attr("data-topic-id");
+        topicService.follow(topicId,
+            function() {
+                $button.addClass("btn-grey");
+            },
+            function() {
+                console.error("Something went wrong with TopicService followTopic.");
+            });
+    };
+
     var init = function () {
         $(".topic-list").on("click", "li", selectTopic);
+        $(".js-button-follow").on("click", followTopic);
     };
 
     return {

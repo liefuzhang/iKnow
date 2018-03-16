@@ -96,12 +96,24 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -164,8 +176,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AnswerController.cs" />
+    <Compile Include="Controllers\Api\TopicFollowingController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Core\IEmailSender.cs" />
@@ -174,7 +188,7 @@
     <Compile Include="Core\Models\Answer.cs" />
     <Compile Include="Core\Models\AppUser.cs" />
     <Compile Include="Core\Models\Constants.cs" />
-    <Compile Include="Core\Models\Following.cs" />
+    <Compile Include="Core\Models\TopicFollowing.cs" />
     <Compile Include="Core\Models\Gender.cs" />
     <Compile Include="Core\Models\Identity\AppSignInManager.cs" />
     <Compile Include="Core\Models\Identity\AppUserManager.cs" />
@@ -184,6 +198,7 @@
     <Compile Include="Core\Repositories\IQuestionRepository.cs" />
     <Compile Include="Core\Repositories\IRepository.cs" />
     <Compile Include="Core\Repositories\IAnswerRepository.cs" />
+    <Compile Include="Core\Repositories\ITopicFollowingRepository.cs" />
     <Compile Include="Core\Repositories\IUserRepository.cs" />
     <Compile Include="Core\Repositories\ITopicRepository.cs" />
     <Compile Include="Core\ViewModels\Account\ChangePasswordViewModel.cs" />
@@ -213,7 +228,7 @@
     <Compile Include="Persistence\EntityTypeConfigurations\AnswerConfiguration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\AppUserConfiguration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\QuestionConfiguration.cs" />
-    <Compile Include="Persistence\EntityTypeConfigurations\FollowingConfiguration.cs" />
+    <Compile Include="Persistence\EntityTypeConfigurations\TopicFollowingConfiguration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\TopicConfiguration.cs" />
     <Compile Include="Persistence\iKnowContext.cs" />
     <Compile Include="Persistence\Migrations\201712251102544_InitialModels.cs" />
@@ -284,7 +299,12 @@
     <Compile Include="Persistence\Migrations\201803162129428_AddFollowingsTable.Designer.cs">
       <DependentUpon>201803162129428_AddFollowingsTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Persistence\Migrations\201803162301056_RenameFollowingTableToTopicFollowing.cs" />
+    <Compile Include="Persistence\Migrations\201803162301056_RenameFollowingTableToTopicFollowing.Designer.cs">
+      <DependentUpon>201803162301056_RenameFollowingTableToTopicFollowing.cs</DependentUpon>
+    </Compile>
     <Compile Include="Persistence\Migrations\Configuration.cs" />
+    <Compile Include="Persistence\Repositories\TopicFollowingRepository.cs" />
     <Compile Include="Persistence\Repositories\QuestionRepository.cs" />
     <Compile Include="Persistence\Repositories\Repository.cs" />
     <Compile Include="Persistence\Repositories\AnswerRepository.cs" />
@@ -505,6 +525,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Persistence\Migrations\201803162129428_AddFollowingsTable.resx">
       <DependentUpon>201803162129428_AddFollowingsTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Persistence\Migrations\201803162301056_RenameFollowingTableToTopicFollowing.resx">
+      <DependentUpon>201803162301056_RenameFollowingTableToTopicFollowing.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

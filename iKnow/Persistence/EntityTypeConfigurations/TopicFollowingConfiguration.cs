@@ -2,8 +2,8 @@
 using iKnow.Core.Models;
 
 namespace iKnow.Persistence.EntityTypeConfigurations {
-    internal class FollowingConfiguration : EntityTypeConfiguration<Following> {
-        public FollowingConfiguration() {
+    internal class TopicFollowingConfiguration : EntityTypeConfiguration<TopicFollowing> {
+        public TopicFollowingConfiguration() {
             HasKey(f => new {f.UserId, f.TopicId});
         }
     }

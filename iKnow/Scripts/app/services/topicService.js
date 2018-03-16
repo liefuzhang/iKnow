@@ -1,5 +1,5 @@
 ﻿var TopicService = (function () {
-    var selectTopic = function(topicId, success) {
+    var selectTopic = function (topicId, success) {
         $.ajax({
             url: "/topic/about/" + topicId,
             dataType: "html",
@@ -10,7 +10,14 @@
         });
     };
 
+    var followTopic = function (topicId, done, fail) {
+        $.post("/api/topicfollowing", { "": topicId })
+            .done(done)
+            .fail(fail);
+    }
+
     return {
-        selectTopic: selectTopic
+        selectTopic: selectTopic,
+        follow: followTopic
     }
 })();

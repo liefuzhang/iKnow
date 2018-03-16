@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 
 namespace iKnow.Core.Models {
-    public class Following {
+    public class TopicFollowing {
         public AppUser User { get; set; }
 
         public Topic Topic { get; set; }
@@ -15,7 +15,7 @@ namespace iKnow.Core.Models {
 
         public int TopicId { get; set; }
 
-        public Following(string userId, int topicId) {
+        public TopicFollowing(string userId, int topicId) {
             if (userId == null) {
                 throw new ArgumentNullException(nameof(UserId));
             }
@@ -28,6 +28,6 @@ namespace iKnow.Core.Models {
             TopicId = topicId;
         }
 
-        protected Following() { }
+        protected TopicFollowing() { }
     }
 }

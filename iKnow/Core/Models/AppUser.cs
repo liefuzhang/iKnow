@@ -21,7 +21,7 @@ namespace iKnow.Core.Models {
             Questions = new HashSet<Question>();
             Topics = new HashSet<Topic>();
             Answers = new HashSet<Answer>();
-            Followings = new HashSet<Following>();
+            Followings = new HashSet<TopicFollowing>();
             _fileHelper = new FileHelper();
         }
 
@@ -66,7 +66,7 @@ namespace iKnow.Core.Models {
         public ICollection<Question> Questions { get; private set; }
         public ICollection<Topic> Topics { get; private set; }
         public ICollection<Answer> Answers { get; private set; }
-        public ICollection<Following> Followings { get; private set; }
+        public ICollection<TopicFollowing> Followings { get; private set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<AppUser> manager) {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
