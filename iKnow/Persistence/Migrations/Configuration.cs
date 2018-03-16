@@ -8,6 +8,7 @@ namespace iKnow.Persistence.Migrations
         {
             AutomaticMigrationsEnabled = false;
             MigrationsDirectory = @"Persistence\Migrations";
+            ContextKey = "iKnow.Persistence.Migrations.Configuration";
         }
 
         protected override void Seed(iKnowContext context)

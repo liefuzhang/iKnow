@@ -11,12 +11,14 @@ namespace iKnow.Persistence {
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Topic> Topics { get; set; }
+        public DbSet<Following> Followings { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder) {
             modelBuilder.Configurations.Add(new AppUserConfiguration());
             modelBuilder.Configurations.Add(new QuestionConfiguration());
             modelBuilder.Configurations.Add(new AnswerConfiguration());
             modelBuilder.Configurations.Add(new TopicConfiguration());
+            modelBuilder.Configurations.Add(new FollowingConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

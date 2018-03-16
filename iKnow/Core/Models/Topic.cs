@@ -12,6 +12,7 @@ namespace iKnow.Core.Models {
         public Topic() {
             AppUsers = new HashSet<AppUser>();
             Questions = new HashSet<Question>();
+            Followings = new HashSet<Following>();
             _fileHelper = new FileHelper();
         }
 
@@ -41,6 +42,7 @@ namespace iKnow.Core.Models {
         }
         public ICollection<AppUser> AppUsers { get; set; }
         public ICollection<Question> Questions { get; set; }
+        public ICollection<Following> Followings { get; set; }
 
         public void TrimNameAndDescription() {
             Name = MyHelper.CapitalizeAllWords(Name?.Trim());
