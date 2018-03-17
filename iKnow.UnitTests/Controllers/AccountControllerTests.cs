@@ -407,10 +407,10 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task UserProfile_UserNameIsNull_ReturnViewResultWithCurrentUserInViewModel() {
+        public async Task EditProfile_WhenCalled_ReturnViewResultWithCurrentUserInViewModel() {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
-            var result = await _controller.UserProfile(null);
+            var result = await _controller.EditProfile();
 
             Assert.That(result, Is.TypeOf<ViewResult>());
             Assert.That((result as ViewResult).Model, Is.TypeOf<UserProfileViewModel>());
@@ -418,18 +418,18 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task UserProfile_UserNameIsNull_AddStatusMessageInTempDataWhenRequestMessageExists() {
+        public async Task EditProfile_RequestMessageExists_AddStatusMessageInTempData() {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             _request.Setup(r => r["Message"]).Returns("test message");
 
-            await _controller.UserProfile(null);
+            await _controller.EditProfile();
 
             Assert.That(_controller.TempData["statusMessage"], Is.EqualTo("test message"));
         }
 
         [Test]
-        public async Task UserProfile_UserNameIsNotNull_ReturnViewResultWithUserInViewModel() {
+        public async Task UserProfile_WhenCalled_ReturnViewResultWithUserInViewModel() {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             var testUserName = "testUser";
