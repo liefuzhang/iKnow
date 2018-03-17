@@ -11,10 +11,6 @@ namespace iKnow.Persistence.EntityTypeConfigurations {
             Property(q => q.Description)
                 .HasMaxLength(1000);
 
-            HasMany(q => q.Answers)
-                .WithRequired(a => a.Question)
-                .HasForeignKey(a => a.QuestionId);
-
             HasMany(q => q.Topics)
                 .WithMany(t => t.Questions)
                 .Map(m => {

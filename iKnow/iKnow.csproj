@@ -185,6 +185,8 @@
     <Compile Include="Core\IEmailSender.cs" />
     <Compile Include="Core\IFileHelper.cs" />
     <Compile Include="Core\IUnitOfWork.cs" />
+    <Compile Include="Core\Models\Activity.cs" />
+    <Compile Include="Core\Models\ActivityType.cs" />
     <Compile Include="Core\Models\Answer.cs" />
     <Compile Include="Core\Models\AppUser.cs" />
     <Compile Include="Core\Models\Constants.cs" />
@@ -228,6 +230,7 @@
     <Compile Include="Persistence\EntityTypeConfigurations\AnswerConfiguration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\AppUserConfiguration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\QuestionConfiguration.cs" />
+    <Compile Include="Persistence\EntityTypeConfigurations\ActivityConfiguration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\TopicFollowingConfiguration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\TopicConfiguration.cs" />
     <Compile Include="Persistence\iKnowContext.cs" />
@@ -302,6 +305,10 @@
     <Compile Include="Persistence\Migrations\201803162301056_RenameFollowingTableToTopicFollowing.cs" />
     <Compile Include="Persistence\Migrations\201803162301056_RenameFollowingTableToTopicFollowing.Designer.cs">
       <DependentUpon>201803162301056_RenameFollowingTableToTopicFollowing.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201803172252185_AddActivitiesTable.cs" />
+    <Compile Include="Persistence\Migrations\201803172252185_AddActivitiesTable.Designer.cs">
+      <DependentUpon>201803172252185_AddActivitiesTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Persistence\Migrations\Configuration.cs" />
     <Compile Include="Persistence\Repositories\TopicFollowingRepository.cs" />
@@ -528,6 +535,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Persistence\Migrations\201803162301056_RenameFollowingTableToTopicFollowing.resx">
       <DependentUpon>201803162301056_RenameFollowingTableToTopicFollowing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Persistence\Migrations\201803172252185_AddActivitiesTable.resx">
+      <DependentUpon>201803172252185_AddActivitiesTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
