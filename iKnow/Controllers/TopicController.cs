@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.Entity.Validation;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
-using System.Web;
-using System.Web.Hosting;
 using System.Web.Mvc;
 using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.ViewModels;
-using iKnow.Helper;
 using iKnow.Persistence;
-using iKnow.Persistence.Repositories;
+using Microsoft.AspNet.Identity;
+using Constants = iKnow.Core.Models.Constants;
 
 namespace iKnow.Controllers {
     public class TopicController : Controller {
@@ -68,11 +63,15 @@ namespace iKnow.Controllers {
 
         private TopicDetailViewModel ConstructTopicDetailViewModel(Topic topic) {
             var questionIds = topic.Questions.Select(q => q.Id).ToList();
-            var questionAnswers = _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds);
+            var questionAnswers = _unitOfWork.AnswerRepository
+                                    .GetQuestionAnswerPairsForGivenQuestions(questionIds);
 
+            var userId = User.Identity.GetUserId();
             var viewModel = new TopicDetailViewModel {
                 Topic = topic,
-                QuestionAnswers = questionAnswers
+                QuestionAnswers = questionAnswers,
+                IsFollowing = _unitOfWork.TopicFollowingRepository
+                                .Any(f => f.TopicId == topic.Id && f.UserId == userId)
             };
             return viewModel;
         }

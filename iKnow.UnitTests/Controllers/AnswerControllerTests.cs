@@ -64,6 +64,7 @@ namespace iKnow.UnitTests.Controllers {
                 u => u.AnswerRepository.SingleOrDefault(It.IsAny<Expression<Func<Answer, bool>>>(),
                         It.IsAny<string>()))
                 .Returns(() => _answer1);
+
             _unitOfWork.Setup(
                 u => u.AnswerRepository.Single(It.IsAny<Expression<Func<Answer, bool>>>(), It.IsAny<string>()))
                 .Returns(() => _answer1);

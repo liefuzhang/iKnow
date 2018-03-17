@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+﻿using System.Web.Http;
 using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Persistence;
@@ -26,7 +21,7 @@ namespace iKnow.Controllers.Api {
             _unitOfWork.Dispose();
             base.Dispose(disposing);
         }
-        
+
         [HttpPost]
         public IHttpActionResult Follow([FromBody]int topicId) {
             var userId = User.Identity.GetUserId();
@@ -37,6 +32,22 @@ namespace iKnow.Controllers.Api {
             var following = new TopicFollowing(userId, topicId);
 
             _unitOfWork.TopicFollowingRepository.Add(following);
+            _unitOfWork.Complete();
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IHttpActionResult Unfollow(int id) {
+            var userId = User.Identity.GetUserId();
+            var following = _unitOfWork.TopicFollowingRepository
+                    .SingleOrDefault(f => f.UserId == userId && f.TopicId == id);
+
+            if (following == null) {
+                return BadRequest("User is not following this topic.");
+            }
+            
+            _unitOfWork.TopicFollowingRepository.Remove(following);
             _unitOfWork.Complete();
 
             return Ok();

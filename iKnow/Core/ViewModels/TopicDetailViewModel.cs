@@ -5,5 +5,6 @@ namespace iKnow.Core.ViewModels {
     public class TopicDetailViewModel {
         public Topic Topic { get; set; }
         public IDictionary<Question, Answer> QuestionAnswers { get; set; }
+        public bool IsFollowing { get; set; }
     }
 }

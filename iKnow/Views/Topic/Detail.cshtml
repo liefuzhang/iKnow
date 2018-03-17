@@ -12,9 +12,11 @@
         <h2>
             @Model.Topic.Name
         </h2>
-        <button data-topic-id="@Model.Topic.Id" class="align-right btn js-button-follow">Follow</button>
+        <button data-topic-id="@Model.Topic.Id" class="align-right btn js-topic-toggle @(Model.IsFollowing ? "btn-grey":"")">
+            @(Model.IsFollowing ? "Following" : "Follow")
+        </button>
     </div>
-    
+
     @if (Model.QuestionAnswers.Any()) {
         <div class="topic-detail-inner question-answer-container">
             @Html.Partial("_QuestionAnswerPairPartial", Model.QuestionAnswers)

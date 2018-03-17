@@ -16,8 +16,18 @@
             .fail(fail);
     }
 
+    var unfollowTopic = function (topicId, done, fail) {
+        $.ajax({
+            url: "/api/topicfollowing/" + topicId,
+            method: "DELETE"
+        })
+            .done(done)
+            .fail(fail);
+    }
+
     return {
         selectTopic: selectTopic,
-        follow: followTopic
+        follow: followTopic,
+        unfollow: unfollowTopic
     }
 })();
