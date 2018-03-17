@@ -50,5 +50,16 @@ namespace iKnow.IntegrationTests.Extensions {
             context.Entry(answer).Reload();
             return answer;
         }
+
+        public static TopicFollowing AddTestTopicFollowingToDatabase(this iKnowContext context, int topicId) {
+            var userId = context.Users.First().Id;
+            var topicFollowing = new TopicFollowing(userId, topicId);
+
+            context.TopicFollowings.Add(topicFollowing);
+            context.SaveChanges();
+
+            context.Entry(topicFollowing).Reload();
+            return topicFollowing;
+        }
     }
 }

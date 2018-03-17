@@ -24,6 +24,7 @@ namespace iKnow.IntegrationTests {
             context.Database.ExecuteSqlCommand("DELETE FROM TopicUsers");
             context.Database.ExecuteSqlCommand("DELETE FROM Topics");
             context.Database.ExecuteSqlCommand("DELETE FROM AspNetUsers");
+            context.Database.ExecuteSqlCommand("DELETE FROM TopicFollowings");
             context.Database.ExecuteSqlCommand("INSERT INTO AspNetUsers (Id, FirstName, LastName, UserName, Email, PasswordHash) VALUES ('1', 'user1first', 'user1last', 'user1firstuser1last0', '-', '-')");
             context.Database.ExecuteSqlCommand("INSERT INTO AspNetUsers (Id, FirstName, LastName, UserName, Email, PasswordHash) VALUES ('2', 'user2first', 'user2last', 'user2firstuser2last0', '-', '-')");
         }

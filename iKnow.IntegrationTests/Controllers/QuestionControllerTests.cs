@@ -83,40 +83,15 @@ namespace iKnow.IntegrationTests.Controllers {
         [Test, Isolated]
         public void Detail_WhenCalled_ShouldReturnQuestionWithGivenId() {
             var question = _context.AddTestQuestionToDatabase();
+            var answer = _context.AddTestAnswerToDatabase(question.Id);
 
             var result = _controller.Detail(question.Id);
 
             Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).Question.Id, Is.EqualTo(question.Id));
-        }
-
-
-        [Test, Isolated]
-        public void Detail_UserHasExistingAnswer_ShouldReturnUserAnswerIdAndUserCanDeleteAnswer() {
-            var question = _context.AddTestQuestionToDatabase();
-            var answer = _context.AddTestAnswerToDatabase(question.Id);
-
-            var result = _controller.Detail(question.Id);
-
             Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).CanUserDeleteAnswerPanelAnswer, Is.True);
             Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).UserAnswerId, Is.EqualTo(answer.Id));
         }
-
-        [Test, Isolated]
-        public void Detail_UserHasNotExistingAnswer_ShouldReturnZeroAsUserAnswerIdAndUserCannotDeleteAnswer() {
-            var question = _context.AddTestQuestionToDatabase();
-            var answer = _context.AddTestAnswerToDatabase(question.Id);
-            var user2 = _context.Users.ToList().Last();
-
-            answer.AppUserId = user2.Id;
-
-            _context.SaveChanges();
-
-            var result = _controller.Detail(question.Id);
-
-            Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).CanUserDeleteAnswerPanelAnswer, Is.False);
-            Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).UserAnswerId, Is.EqualTo(0));
-        }
-
+        
         [Test, Isolated]
         public void Save_NewQuestion_ShouldSaveQuestionAndItsTopicsToDatabase() {
             var topic = _context.AddTestTopicToDatabase();
@@ -139,25 +114,6 @@ namespace iKnow.IntegrationTests.Controllers {
             Assert.That(questionInDb.Title, Is.EqualTo(questionInDb.Title));
             Assert.That(questionInDb.Description, Is.EqualTo(questionInDb.Description));
             Assert.That(questionInDb.Topics.Count, Is.EqualTo(1));
-        }
-
-        [Test, Isolated]
-        public void Save_NewQuestionWithExistingTitle_ShouldNotSaveQuestion() {
-            var topic = _context.AddTestTopicToDatabase();
-            var existingQuestion = _context.AddTestQuestionToDatabase();
-
-            var question = new Question {
-                Title = existingQuestion.Title,
-            };
-
-            var viewModel = new QuestionFormViewModel {
-                Question = question,
-                TopicIds = new[] { topic.Id }
-            };
-
-            var result = _controller.Save(viewModel);
-
-            Assert.That(_context.Questions.Count(), Is.EqualTo(1));
         }
 
         [Test, Isolated]

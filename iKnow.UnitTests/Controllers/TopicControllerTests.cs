@@ -124,7 +124,7 @@ namespace iKnow.UnitTests.Controllers {
             Assert.That(result, Is.TypeOf<HttpNotFoundResult>());
         }
 
-        [Test]
+       [Test]
         public void About_WhenCalled_ReturnPartialViewResult() {
             var result = _controller.About(_topic1.Id);
 

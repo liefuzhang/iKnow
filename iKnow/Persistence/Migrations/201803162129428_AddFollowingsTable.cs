@@ -8,7 +8,7 @@ namespace iKnow.Persistence.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.TopicFollowings",
+                "dbo.Followings",
                 c => new
                     {
                         UserId = c.String(nullable: false, maxLength: 128),
@@ -24,11 +24,11 @@ namespace iKnow.Persistence.Migrations
         
         public override void Down()
         {
-            DropForeignKey("dbo.TopicFollowings", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.TopicFollowings", "TopicId", "dbo.Topics");
-            DropIndex("dbo.TopicFollowings", new[] { "TopicId" });
-            DropIndex("dbo.TopicFollowings", new[] { "UserId" });
-            DropTable("dbo.TopicFollowings");
+            DropForeignKey("dbo.Followings", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Followings", "TopicId", "dbo.Topics");
+            DropIndex("dbo.Followings", new[] { "TopicId" });
+            DropIndex("dbo.Followings", new[] { "UserId" });
+            DropTable("dbo.Followings");
         }
     }
 }

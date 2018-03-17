@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
 using iKnow.Controllers;
@@ -16,11 +17,19 @@ namespace iKnow.IntegrationTests.Controllers {
     public class TopicControllerTests {
         private TopicController _controller;
         private iKnowContext _context;
+        private Mock<IPrincipal> _currentUser;
+        private AppUser _firstUserInDb;
 
         [SetUp]
         public void Setup() {
             _context = new iKnowContext();
             _controller = new TopicController(new UnitOfWork(_context), new FileHelper());
+
+            _currentUser = new Mock<IPrincipal>();
+            _controller.MockContext(new Mock<HttpRequestBase>(), _currentUser);
+
+            _firstUserInDb = _context.Users.First();
+            _currentUser.MockIdentity(_firstUserInDb.Id);
         }
 
         [TearDown]
@@ -30,8 +39,6 @@ namespace iKnow.IntegrationTests.Controllers {
 
         [Test, Isolated]
         public void Index_WhenCalled_ShouldReturnTopicsInViewModel() {
-            _controller.MockContext(new Mock<HttpRequestBase>());
-
             _context.AddTestTopicToDatabase();
 
             var result = _controller.Index();
@@ -41,9 +48,9 @@ namespace iKnow.IntegrationTests.Controllers {
 
         [Test, Isolated]
         public void Detail_WhenCalled_ShouldReturnTopicWithQuestionAnswerPairsInViewModel() {
-            _controller.MockContext(new Mock<HttpRequestBase>());
-
             var topic = _context.AddTestTopicToDatabase();
+            _context.AddTestTopicFollowingToDatabase(topic.Id);
+
             var question = _context.AddTestQuestionToDatabase();
             question.AddTopic(topic);
             
@@ -53,10 +60,12 @@ namespace iKnow.IntegrationTests.Controllers {
 
             var result = _controller.Detail(topic.Id);
 
-            Assert.That(((result as ViewResult).Model as TopicDetailViewModel).Topic.Id, Is.EqualTo(topic.Id));
-            Assert.That(((result as ViewResult).Model as TopicDetailViewModel).QuestionAnswers.Count, Is.EqualTo(1));
-            Assert.That(((result as ViewResult).Model as TopicDetailViewModel).QuestionAnswers.Keys.First().Id, Is.EqualTo(question.Id));
-            Assert.That(((result as ViewResult).Model as TopicDetailViewModel).QuestionAnswers.Values.First().Id, Is.EqualTo(answer.Id));
+            var topicDetailViewModel = (result as ViewResult).Model as TopicDetailViewModel;
+            Assert.That(topicDetailViewModel.Topic.Id, Is.EqualTo(topic.Id));
+            Assert.That(topicDetailViewModel.QuestionAnswers.Count, Is.EqualTo(1));
+            Assert.That(topicDetailViewModel.QuestionAnswers.Keys.First().Id, Is.EqualTo(question.Id));
+            Assert.That(topicDetailViewModel.QuestionAnswers.Values.First().Id, Is.EqualTo(answer.Id));
+            Assert.That(topicDetailViewModel.IsFollowing, Is.True);
         }
 
         [Test, Isolated]

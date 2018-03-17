@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Security.Principal;
-using System.Web;
 using System.Web.Http.Results;
-using iKnow.Controllers;
 using iKnow.Controllers.Api;
 using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.Repositories;
-using iKnow.Persistence;
-using iKnow.Persistence.Repositories;
 using iKnow.UnitTests.Extensions;
-using Microsoft.AspNet.Identity;
 using Moq;
 using NUnit.Framework;
 
@@ -58,7 +51,6 @@ namespace iKnow.UnitTests.Controllers.Api {
         }
 
         private void SetupController() {
-            var request = new Mock<HttpRequestBase>();
             _controller = new TopicFollowingController(_unitOfWork.Object);
             _user = new Mock<IPrincipal>();
 

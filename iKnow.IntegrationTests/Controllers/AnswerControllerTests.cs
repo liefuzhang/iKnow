@@ -81,37 +81,8 @@ namespace iKnow.IntegrationTests.Controllers {
             Assert.That(answerDetailViewModel.Answer.Id, Is.EqualTo(answer.Id));
             Assert.That(answerDetailViewModel.AnswerCount, Is.EqualTo(1));
             Assert.That(questionDetailViewModel.Question.Id, Is.EqualTo(question.Id));
-        }
-
-        [Test, Isolated]
-        public void Detail_UserHasExistingAnswer_ShouldReturnUserAnswerIdAndUserCanDeleteAnswer() {
-            var question = _context.AddTestQuestionToDatabase();
-            var answer = _context.AddTestAnswerToDatabase(question.Id);
-
-            var result = _controller.Detail(answer.Id);
-
-            var questionDetailViewModel = ((result as ViewResult).Model as AnswerDetailViewModel).QuestionDetailViewModel;
-
             Assert.That(questionDetailViewModel.UserAnswerId, Is.EqualTo(answer.Id));
             Assert.That(questionDetailViewModel.CanUserDeleteAnswerPanelAnswer, Is.True);
-        }
-
-        [Test, Isolated]
-        public void Detail_UserHasNotExistingAnswer_ShouldReturnZeroAsUserAnswerIdAndUserCannotDeleteAnswer() {
-            var question = _context.AddTestQuestionToDatabase();
-            var answer = _context.AddTestAnswerToDatabase(question.Id);
-            var user2 = _context.Users.ToList().Last();
-            
-            answer.AppUserId = user2.Id;
-
-            _context.SaveChanges();
-
-            var result = _controller.Detail(answer.Id);
-
-            var questionDetailViewModel = ((result as ViewResult).Model as AnswerDetailViewModel).QuestionDetailViewModel;
-
-            Assert.That(questionDetailViewModel.UserAnswerId, Is.EqualTo(0));
-            Assert.That(questionDetailViewModel.CanUserDeleteAnswerPanelAnswer, Is.False);
         }
 
         [Test, Isolated]
@@ -157,7 +128,7 @@ namespace iKnow.IntegrationTests.Controllers {
         public void EditIcon_UserIsAnswerOwner_ShouldReturnPartialViewResult() {
             var question = _context.AddTestQuestionToDatabase();
             var answer = _context.AddTestAnswerToDatabase(question.Id);
-            
+
             var result = _controller.EditIcon(answer.Id);
 
             Assert.That(result, Is.TypeOf<PartialViewResult>());
