@@ -6,7 +6,7 @@
 
 <div class="topic-form-container">
     <h3 class="content-header">@(Model.Topic.Id == 0 ? "Add Topic" : "Edit Topic")</h3>
-    <pre class="return-topic">@Html.ActionLink("Return to Topics  >  ", "Index", "Topic")</pre>
+    <pre class="return-link">@Html.ActionLink("Return to Topics  >  ", "Index", "Topic")</pre>
 
     @using (@Html.BeginForm("Save", "Topic", null, FormMethod.Post, new { enctype = "multipart/form-data" })) {
         @Html.ValidationSummary("", new { @class = "error" })

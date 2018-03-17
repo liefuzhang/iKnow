@@ -1,78 +1,80 @@
-﻿@using iKnow.Core.Models
+﻿@using Microsoft.AspNet.Identity
+@using Constants = iKnow.Core.Models.Constants
 @model iKnow.Core.ViewModels.UserProfileViewModel
 @{
-    ViewBag.Title = "My Profile";
+    ViewBag.Title = Model.AppUser.FullName + "'s Profile";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    body {
+        background-color: #f3f3f3;
+    }
+</style>
+
 <div class="user-profile-container">
-    <h3 class="content-header">@ViewBag.Title</h3>
-    <div class="user-profile-page-inner">
-        @using (Html.BeginForm("SaveProfile", "Account", null, FormMethod.Post, new { enctype = "multipart/form-data" })) {
-            @Html.AntiForgeryToken()
-            @Html.ValidationSummary("", new { @class = "error" })
-            <div class="edit-profile-photo img-container">
-                <img src="@Model.AppUser.IconPath" />
-                <div class="mask">
-                    <div class="mask-backdrop"></div>
-                    <div class="mask-content">
-                        <i class="fa fa-camera" aria-hidden="true"></i>
-                        Change Photo
-                    </div>
-                </div>
-                @Html.TextBoxFor(m => m.PostedPhoto, new { type = "file", @class = "js-profile-photo-upload hide" })
+    <div class="user-profile-header head-panel panel">
+        <div class="edit-profile-photo img-container">
+            <img src="@Model.AppUser.IconPath" />
+        </div>
+        <div class="user-profile-form-content">
+            <div class="form-group">
+                <h2>@Model.AppUser.FullName</h2>
             </div>
-            <div class="user-profile-form-content">
-                <div class="form-group">
-                    <h2>@Model.AppUser.FullName</h2>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.AppUser.Intro)
-                    @Html.TextBoxFor(m => m.AppUser.Intro, new { @class = "form-control", placeholder = "Self description" })
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.AppUser.Location)
-                    @Html.TextBoxFor(m => m.AppUser.Location, new { @class = "form-control", placeholder = "Location" })
-                </div>
-                <div class="form-group gender-setting">
-                    @Html.LabelFor(m => m.AppUser.Gender)
-                    @Html.RadioButtonFor(m => m.AppUser.Gender, 0, new { @class = "form-control hide" })
-                    <span>Male:</span>@Html.RadioButtonFor(m => m.AppUser.Gender, Gender.Male, new { @class = "form-control" })
-                    <span>Female:</span>@Html.RadioButtonFor(m => m.AppUser.Gender, Gender.Female, new { @class = "form-control" })
-                </div>
-                <div class="form-group">
-                    @Html.Label("Profile Page")
-                    @{
-                        <a href="@Model.AppUser.ProfilePageUrl">@Model.AppUser.ProfilePageUrl</a>
+            <div class="form-group">
+                @Html.LabelFor(m => m.AppUser.Intro)
+                <span>
+                    @if (!string.IsNullOrEmpty(Model.AppUser.Intro)) {
+                    @(Model.AppUser.Intro)
                     }
-                </div>
-                <div class="form-group">
-                    @Html.Label("Password")
-                    @Html.ActionLink("Change Password", "ChangePassword", "Account")
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn">Save</button>
-                </div>
-                @Html.HiddenFor(m => m.AppUser.Id)
+                    else {
+                    @Html.Raw("<i>Not set</i>")
+                    }
+                </span>
             </div>
-                        }
+            <div class="form-group">
+                @Html.LabelFor(m => m.AppUser.Location)
+                <span>
+                    @if (!string.IsNullOrEmpty(Model.AppUser.Location)) {
+                    @(Model.AppUser.Location)
+                    }
+                    else {
+                    @Html.Raw("<i>Not set</i>")
+                    }
+                </span>
+            </div>
+            <div class="form-group gender-setting">
+                @Html.LabelFor(m => m.AppUser.Gender)
+                @{
+                    switch (Model.AppUser.Gender) {
+                        case Constants.GenderMale:
+                <span>Male</span>
+                            break;
+                        case Constants.GenderFemale:
+                <span>Female</span>
+                            break;
+                        default:
+                <span><i>Not Set</i></span>
+                            break;
+                    }
+                }
+            </div>
+        </div>
+        @Html.ActionLink("Edit Profile", "EditProfile", "Account", null, new { @class = "btn align-right" })
+    </div>
+
+    <div class="user-profile-detail-container">
+        <div class="main-content-container">
+            <div class="all-activity-panel panel">
+
+            </div>
+        </div>
+
+        <div class="sidebar question-sidebar">
+            <div class="panel">
+                Sidebar
+            </div>
+            @Html.Partial("_SideBarSiteInfoPartial")
+        </div>
     </div>
 </div>
-
-@section footer {
-    <div class="footer content-container">
-        &copy;&nbsp;@(DateTime.Now.Year + " iKnow")
-        &middot;
-        <span>@Html.ActionLink("Contact us", "Contact", "Home", null, new { @class = "text-link" })</span>
-    </div>
-}
-
-@section scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-
-    <script>
-        $(".mask-content").on("click", function () { $(".js-profile-photo-upload").click(); });
-        PhotoUploadController.init(".js-profile-photo-upload", ".edit-profile-photo img");
-    </script>
-}
-

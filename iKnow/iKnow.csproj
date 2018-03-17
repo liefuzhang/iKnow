@@ -456,9 +456,9 @@
     <Content Include="Views\Shared\_UserProfilePartial.cshtml" />
     <Content Include="Views\Answer\_AnswerEditIconPartial.cshtml" />
     <Content Include="Views\Shared\_AddAnswerPanelPartial.cshtml" />
-    <Content Include="Views\Account\UserProfile.cshtml" />
+    <Content Include="Views\Account\EditProfile.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
-    <Content Include="Views\Account\UserProfileReadOnly.cshtml" />
+    <Content Include="Views\Account\UserProfile.cshtml" />
     <Content Include="Views\Shared\_SideBarRecommendedTopicsPartial.cshtml" />
     <Content Include="Views\Shared\_SideBarSiteInfoPartial.cshtml" />
     <Content Include="Views\Search\_SearchResultPartial.cshtml" />

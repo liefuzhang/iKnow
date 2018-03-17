@@ -1,5 +1,5 @@
 ﻿@model iKnow.Core.ViewModels.QuestionDetailViewModel
-<div class="question-header-panel panel">
+<div class="question-header-panel head-panel panel">
     <ul>
         @foreach (var topic in Model.Question.Topics) {
             <li>@Html.ActionLink(@topic.Name, "Detail", "Topic", new { id = @topic.Id }, null)</li>

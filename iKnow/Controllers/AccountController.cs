@@ -243,17 +243,19 @@ namespace iKnow.Controllers {
             return RedirectToAction("Index", "Home");
         }
 
-        [Authorize]
-        [Route("Account/UserProfile/{userName?}")]
+        [Route("Account/UserProfile/{userName}")]
         public async Task<ActionResult> UserProfile(string userName) {
-            if (userName == null) {
-                return await ViewOwnProfile();
+            var user = await UserManager.FindByNameAsync(userName);
+            if (user == null) {
+                return HttpNotFound();
             }
-
-            return await ViewOthersProfile(userName);
+            var userProfileViewModel = new UserProfileViewModel {
+                AppUser = user
+            };
+            return View("UserProfile", userProfileViewModel);
         }
 
-        private async Task<ActionResult> ViewOwnProfile() {
+        public async Task<ActionResult> EditProfile() {
             if (Request["Message"] != null) {
                 TempData["statusMessage"] = Request["Message"];
             }
@@ -263,18 +265,7 @@ namespace iKnow.Controllers {
             var userProfileViewModel = new UserProfileViewModel {
                 AppUser = currentUser
             };
-            return View("UserProfile", userProfileViewModel);
-        }
-
-        private async Task<ActionResult> ViewOthersProfile(string userName) {
-            var user = await UserManager.FindByNameAsync(userName);
-            if (user == null) {
-                return HttpNotFound();
-            }
-            var userProfileViewModel = new UserProfileViewModel {
-                AppUser = user
-            };
-            return View("UserProfileReadOnly", userProfileViewModel);
+            return View("EditProfile", userProfileViewModel);
         }
 
         [HttpPost]
@@ -283,14 +274,14 @@ namespace iKnow.Controllers {
         public ActionResult SaveProfile(UserProfileViewModel viewModel) {
             try {
                 if (!ModelState.IsValid) {
-                    return View("UserProfile", viewModel);
+                    return View("EditProfile", viewModel);
                 }
 
                 var user = viewModel.AppUser;
                 var currentUserId = User.Identity.GetUserId();
 
                 if (currentUserId != user.Id) {
-                    return View("UserProfile", viewModel);
+                    return View("EditProfile", viewModel);
                 }
 
                 SaveUserChanges(user);
@@ -298,11 +289,11 @@ namespace iKnow.Controllers {
                 var postedPhoto = viewModel.PostedPhoto;
                 _fileHelper.SaveUserIcon(postedPhoto, user.Id);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("UserProfile", "Account", new { userName = user.UserName });
             } catch (DbEntityValidationException ex) {
                 var error = ex.EntityValidationErrors?.FirstOrDefault()?.ValidationErrors?.FirstOrDefault();
                 ModelState.AddModelError("", error?.ErrorMessage);
-                return View("UserProfile", viewModel);
+                return View("EditProfile", viewModel);
             }
         }
 
@@ -341,7 +332,7 @@ namespace iKnow.Controllers {
                 var user = await UserManager.FindByIdAsync(userId);
                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-                return RedirectToAction("UserProfile", new { Message = "Password changed successfully." });
+                return RedirectToAction("EditProfile", new { Message = "Password changed successfully." });
             }
             AddErrors(result);
             return View(model);

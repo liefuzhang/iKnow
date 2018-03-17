@@ -179,7 +179,7 @@ a.btn, button.btn, input.btn {
         -webkit-box-shadow: inset 0px 0px 10px #502920;
     }
 
-    .btn.btn-grey {
+.btn.btn-grey {
     background-color: #aaa;
 }
 
@@ -194,7 +194,7 @@ a.btn, button.btn, input.btn {
         background-color: #a0a0a0;
         box-shadow: inset 0px 0px 10px #808080;
         -moz-box-shadow: inset 0px 0px 10px #808080;
-        -webkit-box-shadow: inset 0px 0px 10px #808080; 
+        -webkit-box-shadow: inset 0px 0px 10px #808080;
     }
 
 .btn-func {
@@ -257,6 +257,11 @@ textarea:focus {
     overflow: hidden;
     border-radius: 2px;
     box-shadow: 0 1px 3px rgba(0,0,0,.1);
+}
+
+.head-panel {
+    padding: 16px;
+    margin-top: -25px;
 }
 
 .footer {
@@ -441,6 +446,15 @@ ul.navbar-nav li {
     order: 2;
 }
 
+.return-link {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 14px;
+    color: #259;
+    line-height: 1.75rem;
+}
+
 /*#region topic */
 
 .main-content-container {
@@ -522,15 +536,6 @@ ul.navbar-nav li {
     width: 60px;
     min-width: 60px;
     height: 60px;
-}
-
-.topic-form-container .return-topic {
-    position: absolute;
-    top: 0;
-    right: 0;
-    font-size: 14px;
-    color: #259;
-    line-height: 1.75rem;
 }
 
 .topic-form-container .img-container {
@@ -784,10 +789,8 @@ a.collapse-answer:hover {
     }
 
 .question-header-panel {
-    padding: 16px;
     padding-right: 180px;
     background-color: white;
-    margin-top: -25px;
 }
 
     .question-header-panel p {
@@ -1397,9 +1400,19 @@ h3.question-answer-name > a,
             }
 
 .user-profile-container form,
-.user-profile-container .user-profile-readonly {
+.user-profile-container .user-profile-header {
     display: flex;
 }
+
+.user-profile-container .user-profile-header {
+    padding-top: 30px;
+}
+
+    .user-profile-container .user-profile-header .btn {
+        align-self: flex-end;
+        margin-bottom: 20px;
+        margin-right: 20px;
+    }
 
 .user-profile-container .edit-profile-photo {
     width: 160px;
@@ -1418,7 +1431,7 @@ h3.question-answer-name > a,
     margin-right: 30px;
 }
 
-.user-profile-container a {
+.user-profile-container .user-profile-form-content a {
     font-size: 14px;
     color: #259;
 }
@@ -1428,7 +1441,7 @@ h3.question-answer-name > a,
 }
 
 
-.user-profile-container .user-profile-readonly span {
+.user-profile-container .user-profile-header span {
     font-size: 14px;
 }
 
@@ -1651,10 +1664,10 @@ h3.question-answer-name > a,
         margin-right: auto;
     }
 
-    .contact-note {
-        font-size: 15px;
-        margin-top: 10px;
-    }
+.contact-note {
+    font-size: 15px;
+    margin-top: 10px;
+}
 
 /*#endregion contact */
 
