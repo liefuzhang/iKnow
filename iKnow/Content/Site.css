@@ -1483,6 +1483,38 @@ h3.question-answer-name > a,
 
 /*#endregion User Profile*/
 
+/*#region Activity */
+
+.activity-header {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.activity-content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+    .activity-content .activity-topic-text {
+        overflow-x: hidden;
+    }
+
+        .activity-content .activity-topic-text .activity-topic-description {
+            white-space: nowrap;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+        }
+
+    .activity-content .img-container {
+        width: 60px;
+        height: 60px;
+        flex: 0 0 auto;
+    }
+
+/*#endregion */
+
+
 /*#region sidebar */
 
 .panel .related-question-list {

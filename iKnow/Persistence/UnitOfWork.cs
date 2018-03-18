@@ -15,6 +15,7 @@ namespace iKnow.Persistence {
         public IQuestionRepository QuestionRepository { get; set; }
         public ITopicRepository TopicRepository { get; set; }
         public ITopicFollowingRepository TopicFollowingRepository { get; set; }
+        public IActivityRepository ActivityRepository { get; set; }
 
         public UnitOfWork(iKnowContext context = null) {
             _context = context ?? new iKnowContext();
@@ -23,6 +24,7 @@ namespace iKnow.Persistence {
             AnswerRepository = new AnswerRepository(_context);
             QuestionRepository = new QuestionRepository(_context);
             TopicFollowingRepository = new TopicFollowingRepository(_context);
+            ActivityRepository = new ActivityRepository(_context);
         }
 
         public int Complete() {

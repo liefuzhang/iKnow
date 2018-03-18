@@ -250,7 +250,8 @@ namespace iKnow.Controllers {
                 return HttpNotFound();
             }
             var userProfileViewModel = new UserProfileViewModel {
-                AppUser = user
+                AppUser = user,
+                Activities = _unitOfWork.ActivityRepository.Get(a => a.AppUserId == user.Id, q => q.OrderBy(a => a.DateTime))
             };
             return View("UserProfile", userProfileViewModel);
         }

@@ -50,8 +50,7 @@ namespace iKnow.Core.Models {
                 Title += "?";
             }
         }
-
-
+        
         public void UpdateTitleAndDescription(string title, string description) {
             if (string.IsNullOrWhiteSpace(title))
                 return;

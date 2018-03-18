@@ -178,6 +178,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ActivityController.cs" />
     <Compile Include="Controllers\AnswerController.cs" />
     <Compile Include="Controllers\Api\TopicFollowingController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="Core\Repositories\IQuestionRepository.cs" />
     <Compile Include="Core\Repositories\IRepository.cs" />
     <Compile Include="Core\Repositories\IAnswerRepository.cs" />
+    <Compile Include="Core\Repositories\IActivityRepository.cs" />
     <Compile Include="Core\Repositories\ITopicFollowingRepository.cs" />
     <Compile Include="Core\Repositories\IUserRepository.cs" />
     <Compile Include="Core\Repositories\ITopicRepository.cs" />
@@ -208,6 +210,7 @@
     <Compile Include="Core\ViewModels\Account\LoginViewModel.cs" />
     <Compile Include="Core\ViewModels\Account\RegisterViewModel.cs" />
     <Compile Include="Core\ViewModels\Account\ResetPasswordViewModel.cs" />
+    <Compile Include="Core\ViewModels\ActivityViewModel.cs" />
     <Compile Include="Core\ViewModels\AnswerDetailViewModel.cs" />
     <Compile Include="Core\ViewModels\HomeViewModel.cs" />
     <Compile Include="Core\ViewModels\QuestionAnswerCountViewModel.cs" />
@@ -311,6 +314,7 @@
       <DependentUpon>201803172252185_AddActivitiesTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Persistence\Migrations\Configuration.cs" />
+    <Compile Include="Persistence\Repositories\ActivityRepository.cs" />
     <Compile Include="Persistence\Repositories\TopicFollowingRepository.cs" />
     <Compile Include="Persistence\Repositories\QuestionRepository.cs" />
     <Compile Include="Persistence\Repositories\Repository.cs" />
@@ -472,6 +476,7 @@
     <Content Include="Views\Shared\_NavbarPartial.cshtml" />
     <Content Include="Views\Shared\404.cshtml" />
     <Content Include="Views\Shared\_SideBarRelatedQuestionsPartial.cshtml" />
+    <Content Include="Views\Activity\_ActivityFollowTopicPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

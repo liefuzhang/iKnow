@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Web.Http;
 using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Persistence;
@@ -29,9 +30,10 @@ namespace iKnow.Controllers.Api {
                 return BadRequest("User has already followed this topic.");
             }
 
-            var following = new TopicFollowing(userId, topicId);
+            _unitOfWork.TopicFollowingRepository.Add(new TopicFollowing(userId, topicId));
 
-            _unitOfWork.TopicFollowingRepository.Add(following);
+            _unitOfWork.ActivityRepository.Add(Activity.ActivityFollowTopic(userId, topicId));
+
             _unitOfWork.Complete();
 
             return Ok();

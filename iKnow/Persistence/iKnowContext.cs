@@ -12,6 +12,7 @@ namespace iKnow.Persistence {
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Topic> Topics { get; set; }
         public DbSet<TopicFollowing> TopicFollowings { get; set; }
+        public DbSet<Activity> Activities { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder) {
             modelBuilder.Configurations.Add(new AppUserConfiguration());
@@ -19,6 +20,7 @@ namespace iKnow.Persistence {
             modelBuilder.Configurations.Add(new AnswerConfiguration());
             modelBuilder.Configurations.Add(new TopicConfiguration());
             modelBuilder.Configurations.Add(new TopicFollowingConfiguration());
+            modelBuilder.Configurations.Add(new ActivityConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
