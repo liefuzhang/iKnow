@@ -47,7 +47,7 @@ namespace iKnow.Controllers {
             return PartialView("_ActivityAnswerQuestionPartial", viewModel);
         }
 
-        public ActionResult GetAddQuestion(int id) {
+        public PartialViewResult GetAddQuestion(int id) {
             var activity = _unitOfWork.ActivityRepository.Single(a => a.Id == id);
             var question = _unitOfWork.QuestionRepository.Single(q => q.Id == activity.QuestionId);
 

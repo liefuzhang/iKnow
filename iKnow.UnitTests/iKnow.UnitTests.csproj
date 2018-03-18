@@ -158,6 +158,7 @@
     <Compile Include="Controllers\AnswerControllerTests.cs" />
     <Compile Include="Controllers\Api\TopicFollowingControllerTests.cs" />
     <Compile Include="Controllers\ErrorControllerTests.cs" />
+    <Compile Include="Controllers\ActivityControllerTests.cs" />
     <Compile Include="Controllers\HomeControllerTests.cs" />
     <Compile Include="Controllers\QuestionControllerTests.cs" />
     <Compile Include="Controllers\SearchControllerTests.cs" />

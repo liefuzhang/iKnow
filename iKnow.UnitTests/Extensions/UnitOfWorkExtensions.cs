@@ -21,11 +21,12 @@ namespace iKnow.UnitTests.Extensions {
             var answerRepository = new Mock<IAnswerRepository>();
             var topicRepository = new Mock<ITopicRepository>();
             var userRepository = new Mock<IUserRepository>();
+            var activityRepository = new Mock<IActivityRepository>();
             uow.SetupGet(u => u.QuestionRepository).Returns(questionRepository.Object);
             uow.SetupGet(u => u.AnswerRepository).Returns(answerRepository.Object);
             uow.SetupGet(u => u.TopicRepository).Returns(topicRepository.Object);
             uow.SetupGet(u => u.UserRepository).Returns(userRepository.Object);
-
+            uow.SetupGet(u => u.ActivityRepository).Returns(activityRepository.Object);
         }
     }
 }
