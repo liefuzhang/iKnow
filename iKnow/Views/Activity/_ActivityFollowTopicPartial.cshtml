@@ -1,15 +1,23 @@
 ﻿@model iKnow.Core.ViewModels.ActivityViewModel
 
-<div class="activity-header">
-    <div class="activity-type">Followed Topic</div>
-    <div class="activity-datatime align-right">@Model.DateTime</div>
-</div>
-<div class="activity-content">
-    <div class="img-container">
-        <img src="@Model.Topic.IconPath" class="topic-icon" />
+<div class="activity-topic-inner">
+    <div class="activity-header">
+        <div class="activity-type">Followed Topic</div>
+        <div class="activity-datatime align-right">@Model.DateTime.ToString("MMM d, yyyy")</div>
     </div>
-    <div class="activity-topic-text">
-        <h2>@Model.Topic.Name</h2>
-        <div class="activity-topic-description">@Model.Topic.Description</div>
+    <div class="activity-content">
+        <div class="img-container">
+            <a href="@Url.Action("Detail", "Topic", new { id = Model.Topic.Id })">
+                <img src="@Model.Topic.IconPath" class="topic-icon" />
+            </a>
+        </div>
+        <div class="activity-topic-text">
+            <h2>
+                <a href="@Url.Action("Detail", "Topic", new {id = Model.Topic.Id})">
+                    @Model.Topic.Name
+                </a>
+            </h2>
+            <div class="activity-topic-description">@Model.Topic.Description</div>
+        </div>
     </div>
 </div>

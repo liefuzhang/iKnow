@@ -35,7 +35,7 @@ namespace iKnow.Controllers {
         }
 
         private QuestionAnswerCountViewModel ConstructAnswerIndexViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
-            var questions = _unitOfWork.QuestionRepository.GetQuestionsOrderByDescending(query =>
+            var questions = _unitOfWork.QuestionRepository.GetAll(query =>
                 query.OrderByDescending(question => question.Id), skip: currentPage * pageSize, take: pageSize);
             var questionsWithAnswerCount = _unitOfWork.QuestionRepository.GetQuestionsWithAnswerCount(questions);
 

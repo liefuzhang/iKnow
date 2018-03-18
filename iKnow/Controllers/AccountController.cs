@@ -251,7 +251,7 @@ namespace iKnow.Controllers {
             }
             var userProfileViewModel = new UserProfileViewModel {
                 AppUser = user,
-                Activities = _unitOfWork.ActivityRepository.Get(a => a.AppUserId == user.Id, q => q.OrderBy(a => a.DateTime))
+                Activities = _unitOfWork.ActivityRepository.Get(a => a.AppUserId == user.Id, q => q.OrderByDescending(a => a.DateTime))
             };
             return View("UserProfile", userProfileViewModel);
         }

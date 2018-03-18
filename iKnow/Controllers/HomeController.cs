@@ -31,7 +31,7 @@ namespace iKnow.Controllers {
         }
 
         private HomeViewModel ConstructHomeViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
-            var questions = _unitOfWork.QuestionRepository.GetQuestionsOrderByDescending(query =>
+            var questions = _unitOfWork.QuestionRepository.GetAll(query =>
                 query.OrderByDescending(question => question.Id), "Topics", currentPage * pageSize, pageSize).ToList();
             var questionIds = questions.Select(q => q.Id).ToList();
 
