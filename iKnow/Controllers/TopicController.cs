@@ -51,7 +51,7 @@ namespace iKnow.Controllers {
 
         // GET: Topic/Detail/1
         public ActionResult Detail(int id) {
-            var topic = _unitOfWork.TopicRepository.SingleOrDefault(t => t.Id == id, "Questions");
+            var topic = _unitOfWork.TopicRepository.SingleOrDefault(t => t.Id == id, nameof(Topic.Questions));
             if (topic == null) {
                 return HttpNotFound();
             }

@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using iKnow.Core;
+using iKnow.Core.Models;
 using iKnow.Core.ViewModels;
 using iKnow.Persistence;
 
@@ -30,6 +31,20 @@ namespace iKnow.Controllers {
             };
 
             return PartialView("_ActivityFollowTopicPartial", viewModel);
+        }
+
+        public PartialViewResult GetAnswerQuestion(int id) {
+            var activity = _unitOfWork.ActivityRepository.Single(a => a.Id == id);
+            var question = _unitOfWork.QuestionRepository.Single(q=> q.Id == activity.QuestionId);
+            var answer = _unitOfWork.AnswerRepository.Single(a=> a.Id == activity.AnswerId, nameof(Answer.AppUser));
+
+            var viewModel = new ActivityViewModel {
+                DateTime = activity.DateTime,
+                Question = question,
+                Answer = answer
+            };
+
+            return PartialView("_ActivityAnswerQuestionPartial", viewModel);
         }
     }
 }

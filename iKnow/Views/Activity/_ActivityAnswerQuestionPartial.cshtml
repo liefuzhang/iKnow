@@ -1,0 +1,12 @@
+﻿@using iKnow.Core.Models
+@model iKnow.Core.ViewModels.ActivityViewModel
+
+<div class="activity-answer-question-inner">
+    <div class="activity-header">
+        <div class="activity-type">Answered question</div>
+        <div class="activity-datatime align-right">@Model.DateTime.ToString("MMM d, yyyy")</div>
+    </div>
+    <div class="activity-content">
+        @Html.Partial("_QuestionAnswerPairPartial", new Dictionary<Question, Answer> { { Model.Question, Model.Answer } })
+    </div>
+</div>

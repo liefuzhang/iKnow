@@ -28,5 +28,12 @@ namespace iKnow.Core.Models {
                 TopicId = topicId
             };
         }
+
+        public static Activity ActivityAnswerQuestion(string userId, int questionId, int answerId) {
+            return new Activity(userId, ActivityType.AnswerQuestion) {
+                QuestionId = questionId,
+                AnswerId = answerId
+            };
+        }
     }
 }

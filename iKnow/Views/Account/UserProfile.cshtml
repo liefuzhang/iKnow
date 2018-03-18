@@ -73,6 +73,9 @@
                             case ActivityType.FollowTopic:
                                 @Html.Action("GetFollowTopic", "Activity", new { id = activity.Id })
                                 break;
+                            case ActivityType.AnswerQuestion:
+                                @Html.Action("GetAnswerQuestion", "Activity", new { id = activity.Id })
+                                break;
                         }
                     </div>
                 }
@@ -87,3 +90,12 @@
         </div>
     </div>
 </div>
+
+@section scripts {
+    <script>
+        $(document)
+            .ready(function () {
+                AnswerController.init();
+            });
+    </script>
+}

@@ -250,6 +250,10 @@ textarea:focus {
     text-decoration: underline;
 }
 
+.question-answer-inner {
+    width: 100%;
+}
+
 .panel,
 .question-container-inner .question-answer-inner {
     margin-bottom: 10px;
@@ -1054,7 +1058,11 @@ h3.question-answer-name > a,
     }
 
 .answer-container-inner .answer-panel {
-    padding: 0 20px;
+    padding: 16px 20px 0;
+}
+
+.answer-container-inner .answer-detail-container .answer-footer {
+    margin-bottom: 16px;
 }
 
 .answer-panel-container > div {
@@ -1453,6 +1461,9 @@ h3.question-answer-name > a,
     display: flex;
 }
 
+.user-profile-detail-container .whole-panel .divided-section {
+    padding-bottom: 20px;
+}
 .edit-profile-photo .mask {
     position: absolute;
     top: 0;
@@ -1522,7 +1533,6 @@ h3.question-answer-name > a,
     height: 60px;
     flex: 0 0 auto;
     margin-right: 15px;
-    margin-bottom: 5px;
 }
 
 /*#endregion */

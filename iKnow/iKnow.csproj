@@ -477,6 +477,7 @@
     <Content Include="Views\Shared\404.cshtml" />
     <Content Include="Views\Shared\_SideBarRelatedQuestionsPartial.cshtml" />
     <Content Include="Views\Activity\_ActivityFollowTopicPartial.cshtml" />
+    <Content Include="Views\Activity\_ActivityAnswerQuestionPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

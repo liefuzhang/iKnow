@@ -66,7 +66,7 @@ namespace iKnow.Controllers {
         }
 
         private AnswerDetailViewModel ConstructAnswerDetailViewModel(Answer answer) {
-            var question = _unitOfWork.QuestionRepository.Single(q => q.Id == answer.Question.Id, "Topics");
+            var question = _unitOfWork.QuestionRepository.Single(q => q.Id == answer.Question.Id, nameof(Question.Topics));
             var answerCount = _unitOfWork.AnswerRepository.Count(a => a.QuestionId == question.Id);
 
             // TODO: can we utilize ConstructQuestionDetailViewModel method in QuestionController?
@@ -80,7 +80,7 @@ namespace iKnow.Controllers {
                 UserAnswerId = existingAnswer?.Id ?? 0,
                 CanUserDeleteAnswerPanelAnswer = existingAnswer != null
             };
-            
+
             var viewModel = new AnswerDetailViewModel {
                 Answer = answer,
                 QuestionDetailViewModel = questionDetailViewModel,
@@ -95,6 +95,8 @@ namespace iKnow.Controllers {
         public ActionResult Save(QuestionDetailViewModel viewModel) {
             var currentUserId = User.Identity.GetUserId();
             Answer answerToSave;
+            var isNewAnswer = false;
+
             var existingAnswer =
                 _unitOfWork.AnswerRepository.SingleOrDefault(
                     a => a.QuestionId == viewModel.Question.Id && a.AppUserId == currentUserId);
@@ -102,6 +104,7 @@ namespace iKnow.Controllers {
                 existingAnswer.UpdateContent(viewModel.AnswerPanelContent);
                 answerToSave = existingAnswer;
             } else {
+                isNewAnswer = true;
                 answerToSave = new Answer {
                     Content = viewModel.AnswerPanelContent,
                     QuestionId = viewModel.Question.Id,
@@ -113,6 +116,12 @@ namespace iKnow.Controllers {
 
             try {
                 _unitOfWork.Complete();
+
+                if (isNewAnswer) {
+                    _unitOfWork.ActivityRepository.Add(
+                        Activity.ActivityAnswerQuestion(currentUserId, viewModel.Question.Id, answerToSave.Id));
+                    _unitOfWork.Complete();
+                }
             } catch (DbEntityValidationException ex) {
                 var error = ex.EntityValidationErrors?.FirstOrDefault()?.ValidationErrors?.FirstOrDefault();
                 ModelState.AddModelError("", error?.ErrorMessage);
@@ -125,9 +134,10 @@ namespace iKnow.Controllers {
         public PartialViewResult EditIcon(int id) {
             var answer = _unitOfWork.AnswerRepository.Single(a => a.Id == id);
             if (User.Identity.IsAuthenticated
-                              && answer.AppUserId == User.Identity.GetUserId()) {
+                && answer.AppUserId == User.Identity.GetUserId()) {
                 return PartialView("_AnswerEditIconPartial");
             }
+
             return null;
         }
 

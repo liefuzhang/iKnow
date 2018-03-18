@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using iKnow.Core;
+using iKnow.Core.Models;
 using iKnow.Core.ViewModels;
 using iKnow.Persistence;
 using Microsoft.AspNet.Identity;
@@ -32,7 +33,7 @@ namespace iKnow.Controllers {
 
         private HomeViewModel ConstructHomeViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
             var questions = _unitOfWork.QuestionRepository.GetAll(query =>
-                query.OrderByDescending(question => question.Id), "Topics", currentPage * pageSize, pageSize).ToList();
+                query.OrderByDescending(question => question.Id), nameof(Question.Topics), currentPage * pageSize, pageSize).ToList();
             var questionIds = questions.Select(q => q.Id).ToList();
 
             var questionAnswers = _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds);
