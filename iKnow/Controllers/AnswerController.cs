@@ -93,33 +93,20 @@ namespace iKnow.Controllers {
         [ValidateAntiForgeryToken]
         [Authorize]
         public ActionResult Save(QuestionDetailViewModel viewModel) {
-            var currentUserId = User.Identity.GetUserId();
-            Answer answerToSave;
-            var isNewAnswer = false;
-
+            var userId = User.Identity.GetUserId();
             var existingAnswer =
                 _unitOfWork.AnswerRepository.SingleOrDefault(
-                    a => a.QuestionId == viewModel.Question.Id && a.AppUserId == currentUserId);
-            if (existingAnswer != null) {
-                existingAnswer.UpdateContent(viewModel.AnswerPanelContent);
-                answerToSave = existingAnswer;
-            } else {
-                isNewAnswer = true;
-                answerToSave = new Answer {
-                    Content = viewModel.AnswerPanelContent,
-                    QuestionId = viewModel.Question.Id,
-                    AppUserId = currentUserId,
-                    CreatedDate = DateTime.Now
-                };
-                _unitOfWork.AnswerRepository.Add(answerToSave);
-            }
+                    a => a.QuestionId == viewModel.Question.Id && a.AppUserId == userId);
+            var isNewAnswer = existingAnswer == null;
+
+            var answerToSave = UpdateOrAddAnswer(viewModel, existingAnswer);
 
             try {
                 _unitOfWork.Complete();
 
                 if (isNewAnswer) {
                     _unitOfWork.ActivityRepository.Add(
-                        Activity.ActivityAnswerQuestion(currentUserId, viewModel.Question.Id, answerToSave.Id));
+                        Activity.ActivityAnswerQuestion(userId, viewModel.Question.Id, answerToSave.Id));
                     _unitOfWork.Complete();
                 }
             } catch (DbEntityValidationException ex) {
@@ -129,6 +116,33 @@ namespace iKnow.Controllers {
             }
 
             return RedirectToAction("Detail", "Answer", new { id = answerToSave.Id });
+        }
+
+        private Answer UpdateOrAddAnswer(QuestionDetailViewModel viewModel, Answer existingAnswer) {
+            Answer answerToSave;
+            if (existingAnswer != null) {
+                answerToSave = UpdateAnswer(viewModel.AnswerPanelContent, existingAnswer);
+            }
+            else {
+                answerToSave = AddAnswer(viewModel);
+            }
+            return answerToSave;
+        }
+
+        private Answer AddAnswer(QuestionDetailViewModel viewModel) {
+            var answer = new Answer {
+                Content = viewModel.AnswerPanelContent,
+                QuestionId = viewModel.Question.Id,
+                AppUserId = User.Identity.GetUserId(),
+                CreatedDate = DateTime.Now
+            };
+            _unitOfWork.AnswerRepository.Add(answer);
+            return answer;
+        }
+
+        private static Answer UpdateAnswer(string content, Answer existingAnswer) {
+            existingAnswer.UpdateContent(content);
+            return existingAnswer;
         }
 
         public PartialViewResult EditIcon(int id) {

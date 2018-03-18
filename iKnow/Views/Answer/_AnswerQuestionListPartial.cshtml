@@ -2,7 +2,7 @@
 
 @foreach (var questionWithCount in Model) {
     <div class="divided-section">
-        <h3>@Html.ActionLink(questionWithCount.Key.Title, "Detail", "Question", new { id = questionWithCount.Key.Id }, new { target = "_blank" }) </h3>
+        <h3 class = "question-title">@Html.ActionLink(questionWithCount.Key.Title, "Detail", "Question", new { id = questionWithCount.Key.Id }, new { target = "_blank"}) </h3>
         <div class="answer-item-footer">@Html.ActionLink(questionWithCount.Value + " answer(s)", "Detail", "Question", new { id = questionWithCount.Key.Id }, new { target = "_blank" })</div>
     </div>
 }

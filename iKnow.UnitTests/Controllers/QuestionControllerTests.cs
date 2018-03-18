@@ -410,6 +410,7 @@ namespace iKnow.UnitTests.Controllers {
             var viewModel = GetExistingQuestionFormViewModel();
             viewModel.Question.SetUserId(_question1.AppUserId + "-");
             viewModel.Question.AddTopic(new Topic());
+            viewModel.TopicIds = new[] {1};
 
             _user.Setup(u => u.IsInRole(Constants.AdminRoleName)).Returns(true);
             _unitOfWork.Setup(
@@ -426,6 +427,7 @@ namespace iKnow.UnitTests.Controllers {
         public void SaveQuestionTopics_UserIsQuestionOwner_ShouldUpdateQuestionTopics() {
             var viewModel = GetExistingQuestionFormViewModel();
             viewModel.Question.AddTopic(new Topic());
+            viewModel.TopicIds = new[] { 1 };
 
             _unitOfWork.Setup(
                 u => u.TopicRepository.Get(It.IsAny<Expression<Func<Topic, bool>>>(), It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),

@@ -7,13 +7,13 @@
     </div>
     <div class="activity-content">
         <div class="img-container">
-            <a href="@Url.Action("Detail", "Topic", new { id = Model.Topic.Id })">
+            <a target="_blank" href="@Url.Action("Detail", "Topic", new { id = Model.Topic.Id })">
                 <img src="@Model.Topic.IconPath" class="topic-icon" />
             </a>
         </div>
         <div class="activity-topic-text">
             <h2>
-                <a href="@Url.Action("Detail", "Topic", new {id = Model.Topic.Id})">
+                <a target="_blank" href="@Url.Action("Detail", "Topic", new {id = Model.Topic.Id})">
                     @Model.Topic.Name
                 </a>
             </h2>

@@ -46,5 +46,17 @@ namespace iKnow.Controllers {
 
             return PartialView("_ActivityAnswerQuestionPartial", viewModel);
         }
+
+        public ActionResult GetAddQuestion(int id) {
+            var activity = _unitOfWork.ActivityRepository.Single(a => a.Id == id);
+            var question = _unitOfWork.QuestionRepository.Single(q => q.Id == activity.QuestionId);
+
+            var viewModel = new ActivityViewModel {
+                DateTime = activity.DateTime,
+                Question = question
+            };
+
+            return PartialView("_ActivityAddQuestionPartial", viewModel);
+        }
     }
 }

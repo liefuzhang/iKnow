@@ -1,0 +1,14 @@
+﻿@using iKnow.Core.Models
+@model iKnow.Core.ViewModels.ActivityViewModel
+
+<div class="activity-add-question-inner">
+    <div class="activity-header">
+        <div class="activity-type">Added question</div>
+        <div class="activity-datatime align-right">@Model.DateTime.ToString("MMM d, yyyy")</div>
+    </div>
+    <div class="activity-content">
+        <h3 class="question-title">
+            @Html.ActionLink(Model.Question.Title, "Detail", "Question", new { id = Model.Question.Id }, new { target = "_blank" })
+        </h3>
+    </div>
+</div>

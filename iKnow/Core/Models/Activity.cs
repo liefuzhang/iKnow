@@ -35,5 +35,11 @@ namespace iKnow.Core.Models {
                 AnswerId = answerId
             };
         }
+
+        public static Activity ActivityAddQuestion(string userId, int questionId) {
+            return new Activity(userId, ActivityType.AddQuestion) {
+                QuestionId = questionId
+            };
+        }
     }
 }

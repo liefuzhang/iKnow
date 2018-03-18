@@ -120,33 +120,62 @@ namespace iKnow.Controllers {
 
         private Question SaveQuestion(QuestionFormViewModel formViewModel) {
             var questionToSave = formViewModel.Question;
+            var isQuestionNew = questionToSave.Id == 0;
 
-            if (formViewModel.Question.Id > 0) {
-                var questionInDb = _unitOfWork.QuestionRepository.Single(
-                    q => q.Id == formViewModel.Question.Id, nameof(Question.Topics));
-                questionInDb.UpdateTitleAndDescription(questionToSave.Title, questionToSave.Description);
-                questionToSave = questionInDb;
-            } else {
-                questionToSave.SetUserId(User.Identity.GetUserId());
-                _unitOfWork.QuestionRepository.Add(questionToSave);
+            questionToSave = UpdateOrAddQuestion(questionToSave);
+
+            if (questionToSave.CanUserModify(User)) {
+                UpdateQuestionTopics(formViewModel.TopicIds, questionToSave);
+                _unitOfWork.Complete();
+
+                if (isQuestionNew)
+                    AddAddQuestionActivity(User.Identity.GetUserId(), questionToSave.Id);
             }
-
-            UpdateQuestionTopicsAndSave(formViewModel, questionToSave);
 
             return questionToSave;
         }
 
-        private void UpdateQuestionTopicsAndSave(QuestionFormViewModel formViewModel, Question question) {
-            if (question.CanUserModify(User)) {
-                var topics = _unitOfWork.TopicRepository.Get(t => formViewModel.TopicIds.Contains(t.Id)).ToList();
-                question.UpdateQuestionTopics(topics);
-
-                _unitOfWork.Complete();
+        private Question UpdateOrAddQuestion(Question question) {
+            if (question.Id > 0) {
+                question = UpdateQuestion(question);
+            } else {
+                AddQuestion(question);
             }
+            return question;
+        }
+
+        private void AddQuestion(Question question) {
+            question.SetUserId(User.Identity.GetUserId());
+            _unitOfWork.QuestionRepository.Add(question);
+        }
+
+        private Question UpdateQuestion(Question question) {
+            var questionInDb = _unitOfWork.QuestionRepository.Single(
+                q => q.Id == question.Id, nameof(Question.Topics));
+            questionInDb.UpdateTitleAndDescription(question.Title, question.Description);
+
+            return questionInDb;
+        }
+
+        private void UpdateQuestionTopics(int[] topicIds, Question question) {
+            if (topicIds == null || topicIds.Length == 0)
+                return;
+
+            if (!question.CanUserModify(User))
+                return;
+
+            var topics = _unitOfWork.TopicRepository.Get(t => topicIds.Contains(t.Id)).ToList();
+            question.UpdateQuestionTopics(topics);
         }
 
         private bool DoesQuestionTitleExist(Question question) {
             return question.Id == 0 && _unitOfWork.QuestionRepository.Any(q => q.Title == question.Title);
+        }
+
+        private void AddAddQuestionActivity(string userId, int questionId) {
+            _unitOfWork.ActivityRepository.Add(
+                Activity.ActivityAddQuestion(userId, questionId));
+            _unitOfWork.Complete();
         }
 
         [HttpPost]
@@ -158,7 +187,7 @@ namespace iKnow.Controllers {
                 q => q.Id == questionPosted.Id,
                 nameof(Question.Topics));
 
-            UpdateQuestionTopicsAndSave(formViewModel, questionInDb);
+            UpdateQuestionTopics(formViewModel.TopicIds, questionInDb);
 
             return RedirectToAction("Detail", new { id = questionInDb.Id });
         }

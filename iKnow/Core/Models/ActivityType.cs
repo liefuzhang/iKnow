@@ -2,7 +2,7 @@
     public enum ActivityType {
         FollowTopic = 1,
         AnswerQuestion = 2,
-        AskQuestion = 3,
+        AddQuestion = 3,
         LikeAnswer = 4
     }
 }

@@ -76,6 +76,9 @@
                             case ActivityType.AnswerQuestion:
                                 @Html.Action("GetAnswerQuestion", "Activity", new { id = activity.Id })
                                 break;
+                            case ActivityType.AddQuestion:
+                                @Html.Action("GetAddQuestion", "Activity", new { id = activity.Id })
+                                break;
                         }
                     </div>
                 }
