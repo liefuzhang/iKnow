@@ -167,6 +167,7 @@
     <Compile Include="Core\Models\AppUserTests.cs" />
     <Compile Include="Core\Models\ImageFileTypesAttributeTests.cs" />
     <Compile Include="Core\Models\QuestionTests.cs" />
+    <Compile Include="Core\Models\ActivityTests.cs" />
     <Compile Include="Core\Models\TopicTests.cs" />
     <Compile Include="Extensions\UnitOfWorkExtensions.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />

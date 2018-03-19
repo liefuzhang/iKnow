@@ -25,7 +25,7 @@ namespace iKnow.Core.Models {
 
         public static Activity ActivityFollowTopic(string userId, int topicId) {
             if (topicId <= 0) {
-                throw new ArgumentNullException(nameof(topicId));
+                throw new ArgumentException(nameof(topicId));
             }
 
             return new Activity(userId, ActivityType.FollowTopic) {
@@ -35,11 +35,11 @@ namespace iKnow.Core.Models {
 
         public static Activity ActivityAnswerQuestion(string userId, int questionId, int answerId) {
             if (questionId <= 0) {
-                throw new ArgumentNullException(nameof(questionId));
+                throw new ArgumentException(nameof(questionId));
             }
 
             if (answerId <= 0) {
-                throw new ArgumentNullException(nameof(answerId));
+                throw new ArgumentException(nameof(answerId));
             }
 
             return new Activity(userId, ActivityType.AnswerQuestion) {
@@ -50,7 +50,7 @@ namespace iKnow.Core.Models {
 
         public static Activity ActivityAddQuestion(string userId, int questionId) {
             if (questionId <= 0) {
-                throw new ArgumentNullException(nameof(questionId));
+                throw new ArgumentException(nameof(questionId));
             }
 
             return new Activity(userId, ActivityType.AddQuestion) {
