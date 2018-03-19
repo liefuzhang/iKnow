@@ -21,12 +21,10 @@ namespace iKnow.IntegrationTests.Extensions {
         }
 
         public static Question AddTestQuestionToDatabase(this iKnowContext context, string title = "Test question?") {
-            var userId = context.Users.First().Id;
-
             var question = new Question {
                 Title =  title,
             };
-            question.SetUserId(userId);
+            question.SetUserId(context.Users.First().Id);
 
             context.Questions.Add(question);
             context.SaveChanges();
@@ -36,10 +34,9 @@ namespace iKnow.IntegrationTests.Extensions {
         }
 
         public static Answer AddTestAnswerToDatabase(this iKnowContext context, int questionId, string content = "Test answer") {
-            var userId = context.Users.First().Id;
             var answer   = new Answer() {
                 Content = content,
-                AppUserId = userId,
+                AppUserId = context.Users.First().Id,
                 QuestionId = questionId,
                 CreatedDate = DateTime.Now
             };
@@ -52,14 +49,39 @@ namespace iKnow.IntegrationTests.Extensions {
         }
 
         public static TopicFollowing AddTestTopicFollowingToDatabase(this iKnowContext context, int topicId) {
-            var userId = context.Users.First().Id;
-            var topicFollowing = new TopicFollowing(userId, topicId);
+            var topicFollowing = new TopicFollowing(context.Users.First().Id, topicId);
 
             context.TopicFollowings.Add(topicFollowing);
             context.SaveChanges();
 
             context.Entry(topicFollowing).Reload();
             return topicFollowing;
+        }
+
+        public static Activity AddTestActivityTopicFollowingToDatabase(this iKnowContext context, int topicId) {
+            var activity = Activity.ActivityFollowTopic(context.Users.First().Id, topicId);
+
+            return AddActivity(context, activity);
+        }
+
+        public static Activity AddTestActivityAnswerQuestionToDatabase(this iKnowContext context, int questionId, int answerId) {
+            var activity = Activity.ActivityAnswerQuestion(context.Users.First().Id, questionId, answerId);
+
+            return AddActivity(context, activity);
+        }
+
+        public static Activity AddTestActivityAddQuestionToDatabase(this iKnowContext context, int questionId) {
+            var activity = Activity.ActivityAddQuestion(context.Users.First().Id, questionId);
+
+            return AddActivity(context, activity);
+        }
+
+        private static Activity AddActivity(iKnowContext context, Activity activity) {
+            context.Activities.Add(activity);
+            context.SaveChanges();
+
+            context.Entry(activity).Reload();
+            return activity;
         }
     }
 }

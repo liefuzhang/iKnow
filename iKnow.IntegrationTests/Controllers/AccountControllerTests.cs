@@ -7,13 +7,16 @@ using System.Web;
 using System.Web.Mvc;
 using iKnow.Controllers;
 using iKnow.Core.Models;
+using iKnow.Core.Models.Identity;
 using iKnow.Core.ViewModels;
 using iKnow.Core.ViewModels.Account;
 using iKnow.Helper;
 using iKnow.IntegrationTests.Extensions;
 using iKnow.Persistence;
+using Microsoft.AspNet.Identity;
 using Moq;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace iKnow.IntegrationTests.Controllers {
     [TestFixture]
@@ -22,22 +25,38 @@ namespace iKnow.IntegrationTests.Controllers {
         private iKnowContext _context;
         private Mock<IPrincipal> _currentUser;
         private AppUser _firstUserInDb;
+        private Mock<AppUserManager> _userManager;
 
         [SetUp]
         public void Setup() {
             _context = new iKnowContext();
-            _controller = new AccountController(new UnitOfWork(_context), new EmailSender(), new FileHelper());
-
             _currentUser = new Mock<IPrincipal>();
-            _controller.MockContext(new Mock<HttpRequestBase>(), _currentUser);
-
             _firstUserInDb = _context.Users.First();
             _currentUser.MockIdentity(_firstUserInDb.Id);
+
+            var userStore = new Mock<IUserStore<AppUser>>();
+            _userManager = new Mock<AppUserManager>(userStore.Object);
+            _userManager.Setup(u => u.FindByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(_firstUserInDb));
+
+            _controller = new AccountController(new UnitOfWork(_context), new EmailSender(), new FileHelper(),
+                _userManager.Object, null, null);
+
+            _controller.MockContext(new Mock<HttpRequestBase>(), _currentUser);
         }
 
         [TearDown]
         public void TearDown() {
             _context.Dispose();
+        }
+
+        [Test, Isolated]
+        public async Task UserProfile_WhenCalled_ShouldReturnActivitiesInViewModel() {
+           var topic = _context.AddTestTopicToDatabase();
+            _context.AddTestActivityTopicFollowingToDatabase(topic.Id);
+
+            var result = await _controller.UserProfile(_firstUserInDb.UserName);
+
+            Assert.That(((result as ViewResult).Model as UserProfileViewModel).Activities.Count(), Is.EqualTo(1));
         }
 
         [Test, Isolated]
