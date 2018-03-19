@@ -17,13 +17,15 @@ namespace iKnow.IntegrationTests.Controllers {
     public class TopicControllerTests {
         private TopicController _controller;
         private iKnowContext _context;
+        private iKnowContext _contextAfterAction;
         private Mock<IPrincipal> _currentUser;
         private AppUser _firstUserInDb;
 
         [SetUp]
         public void Setup() {
             _context = new iKnowContext();
-            _controller = new TopicController(new UnitOfWork(_context), new FileHelper());
+            _contextAfterAction = new iKnowContext();
+            _controller = new TopicController(new UnitOfWork(new iKnowContext()), new FileHelper());
 
             _currentUser = new Mock<IPrincipal>();
             _controller.MockContext(new Mock<HttpRequestBase>(), _currentUser);
@@ -35,6 +37,7 @@ namespace iKnow.IntegrationTests.Controllers {
         [TearDown]
         public void TearDown() {
             _context.Dispose();
+            _contextAfterAction.Dispose();
         }
 
         [Test, Isolated]
@@ -90,7 +93,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
             _controller.Save(viewModel);
 
-            var topicFromDb = _context.Topics.SingleOrDefault(t => t.Name == topic.Name);
+            var topicFromDb = _contextAfterAction.Topics.SingleOrDefault(t => t.Name == topic.Name);
 
             Assert.That(topicFromDb.Id, Is.Not.Null);
             Assert.That(topicFromDb.Name, Is.EqualTo(topic.Name));
@@ -112,7 +115,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
             _controller.Save(viewModel);
 
-            var topicFromDb = _context.Topics.Where(t => t.Name == topic.Name);
+            var topicFromDb = _contextAfterAction.Topics.Where(t => t.Name == topic.Name);
 
             Assert.That(topicFromDb.Count(), Is.EqualTo(1));
         }
@@ -131,7 +134,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
             _controller.Save(viewModel);
 
-            var topicFromDb = _context.Topics.Find(topic.Id);
+            var topicFromDb = _contextAfterAction.Topics.Find(topic.Id);
 
             Assert.That(topicFromDb.Name, Is.EqualTo("Test Topic"));
             Assert.That(topicFromDb.Description, Is.EqualTo("Test desc"));
@@ -157,7 +160,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
             _controller.Delete(postedTopic);
 
-            var topicInDb = _context.Topics.Find(topic.Id);
+            var topicInDb = _contextAfterAction.Topics.Find(topic.Id);
             Assert.That(topicInDb, Is.Null);
         }
 

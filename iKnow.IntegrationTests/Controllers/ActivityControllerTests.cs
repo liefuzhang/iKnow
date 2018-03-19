@@ -16,16 +16,19 @@ namespace iKnow.IntegrationTests.Controllers {
     public class ActivityControllerTests {
         private ActivityController _controller;
         private iKnowContext _context;
+        private iKnowContext _contextAfterAction;
 
         [SetUp]
         public void Setup() {
             _context = new iKnowContext();
-            _controller = new ActivityController(new UnitOfWork(_context));
+            _contextAfterAction = new iKnowContext();
+            _controller = new ActivityController(new UnitOfWork(new iKnowContext()));
         }
 
         [TearDown]
         public void TearDown() {
             _context.Dispose();
+            _contextAfterAction.Dispose();
         }
 
         [Test, Isolated]

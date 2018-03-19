@@ -16,12 +16,14 @@ namespace iKnow.IntegrationTests.Controllers {
     public class HomeControllerTests {
         private HomeController _controller;
         private iKnowContext _context;
+        private iKnowContext _contextAfterAction;
         private Mock<IPrincipal> _currentUser;
 
         [SetUp]
         public void Setup() {
             _context = new iKnowContext();
-            _controller = new HomeController(new UnitOfWork(_context));
+            _contextAfterAction = new iKnowContext();
+            _controller = new HomeController(new UnitOfWork(new iKnowContext()));
 
             _currentUser = new Mock<IPrincipal>();
             _controller.MockContext(new Mock<HttpRequestBase>(), _currentUser);
@@ -33,6 +35,7 @@ namespace iKnow.IntegrationTests.Controllers {
         [TearDown]
         public void TearDown() {
             _context.Dispose();
+            _contextAfterAction.Dispose();
         }
 
         [Test, Isolated]
@@ -55,8 +58,6 @@ namespace iKnow.IntegrationTests.Controllers {
 
             for (var i = 0; i < Constants.DefaultPageSize; i++)
                 _context.AddTestQuestionToDatabase("First Page Questions" + i);
-
-            var x = _context.Questions.Count();
 
             var result = _controller.LoadMore(0);
 

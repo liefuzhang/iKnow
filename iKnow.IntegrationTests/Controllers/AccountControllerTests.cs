@@ -24,6 +24,7 @@ namespace iKnow.IntegrationTests.Controllers {
     public class AccountControllerTests {
         private AccountController _controller;
         private iKnowContext _context;
+        private iKnowContext _contextAfterAction;
         private Mock<IPrincipal> _currentUser;
         private AppUser _firstUserInDb;
         private Mock<AppUserManager> _userManager;
@@ -31,6 +32,7 @@ namespace iKnow.IntegrationTests.Controllers {
         [SetUp]
         public void Setup() {
             _context = new iKnowContext();
+            _contextAfterAction = new iKnowContext();
             _currentUser = new Mock<IPrincipal>();
             _firstUserInDb = _context.Users.First();
             _currentUser.MockIdentity(_firstUserInDb.Id);
@@ -39,7 +41,7 @@ namespace iKnow.IntegrationTests.Controllers {
             _userManager = new Mock<AppUserManager>(userStore.Object);
             _userManager.Setup(u => u.FindByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(_firstUserInDb));
 
-            _controller = new AccountController(new UnitOfWork(_context), new EmailSender(), new FileHelper(),
+            _controller = new AccountController(new UnitOfWork(new iKnowContext()), new EmailSender(), new FileHelper(),
                 _userManager.Object, null, null);
 
             _controller.MockContext(new Mock<HttpRequestBase>(), _currentUser);
@@ -48,6 +50,7 @@ namespace iKnow.IntegrationTests.Controllers {
         [TearDown]
         public void TearDown() {
             _context.Dispose();
+            _contextAfterAction.Dispose();
         }
 
         [Test, Isolated]

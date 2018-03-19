@@ -17,13 +17,15 @@ namespace iKnow.IntegrationTests.Controllers {
     public class AnswerControllerTests {
         private AnswerController _controller;
         private iKnowContext _context;
+        private iKnowContext _contextAfterAction;
         private Mock<IPrincipal> _currentUser;
         private AppUser _firstUserInDb;
 
         [SetUp]
         public void Setup() {
             _context = new iKnowContext();
-            _controller = new AnswerController(new UnitOfWork(_context));
+            _contextAfterAction = new iKnowContext();
+            _controller = new AnswerController(new UnitOfWork(new iKnowContext()));
 
             _currentUser = new Mock<IPrincipal>();
             _controller.MockContext(new Mock<HttpRequestBase>(), _currentUser);
@@ -35,6 +37,7 @@ namespace iKnow.IntegrationTests.Controllers {
         [TearDown]
         public void TearDown() {
             _context.Dispose();
+            _contextAfterAction.Dispose();
         }
 
         [Test, Isolated]
@@ -97,7 +100,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
             _controller.Save(viewModel);
 
-            var answers = _context.Answers.ToList();
+            var answers = _contextAfterAction.Answers.ToList();
 
             Assert.That(answers.Count, Is.EqualTo(1));
             Assert.That(answers.First().Content, Is.EqualTo(viewModel.AnswerPanelContent));
@@ -115,7 +118,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
             _controller.Save(viewModel);
 
-            var answers = _context.Answers.ToList();
+            var answers = _contextAfterAction.Answers.ToList();
 
             Assert.That(answers.Count, Is.EqualTo(1));
             Assert.That(answers.First().Content, Is.EqualTo(viewModel.AnswerPanelContent));
@@ -135,8 +138,8 @@ namespace iKnow.IntegrationTests.Controllers {
 
             _controller.Save(viewModel);
 
-            var activity = _context.Activities.Single();
-            var answers = _context.Answers.Single();
+            var activity = _contextAfterAction.Activities.Single();
+            var answers = _contextAfterAction.Answers.Single();
 
             Assert.That(activity.Type, Is.EqualTo(ActivityType.AnswerQuestion));
             Assert.That(activity.QuestionId, Is.EqualTo(question.Id));
@@ -172,7 +175,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
             _controller.Delete(viewModel);
 
-            Assert.That(_context.Answers.Count(), Is.EqualTo(0));
+            Assert.That(_contextAfterAction.Answers.Count(), Is.EqualTo(0));
         }
     }
 }

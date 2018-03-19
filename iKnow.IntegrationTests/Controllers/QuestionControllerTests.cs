@@ -17,12 +17,14 @@ namespace iKnow.IntegrationTests.Controllers {
     public class QuestionControllerTests {
         private QuestionController _controller;
         private iKnowContext _context;
+        private iKnowContext _contextAfterAction;
         private Mock<IPrincipal> _currentUser;
 
         [SetUp]
         public void Setup() {
             _context = new iKnowContext();
-            _controller = new QuestionController(new UnitOfWork(_context));
+            _contextAfterAction = new iKnowContext();
+            _controller = new QuestionController(new UnitOfWork(new iKnowContext()));
 
             _currentUser = new Mock<IPrincipal>();
             _controller.MockContext(new Mock<HttpRequestBase>(), _currentUser);
@@ -34,6 +36,7 @@ namespace iKnow.IntegrationTests.Controllers {
         [TearDown]
         public void TearDown() {
             _context.Dispose();
+            _contextAfterAction.Dispose();
         }
 
         [Test, Isolated]
@@ -47,9 +50,10 @@ namespace iKnow.IntegrationTests.Controllers {
 
             var result = _controller.GetForm(question.Id);
 
-            Assert.That((result.Model as QuestionFormViewModel).Question.Id, Is.EqualTo(question.Id));
-            Assert.That((result.Model as QuestionFormViewModel).Question.Topics.First().Id, Is.EqualTo(topic1.Id));
-            Assert.That(((result.Model as QuestionFormViewModel).Topics.Items as ICollection).Count, Is.EqualTo(2));
+            var questionFormViewModel = result.Model as QuestionFormViewModel;
+            Assert.That(questionFormViewModel.Question.Id, Is.EqualTo(question.Id));
+            Assert.That(questionFormViewModel.Question.Topics.First().Id, Is.EqualTo(topic1.Id));
+            Assert.That((questionFormViewModel.Topics.Items as ICollection).Count, Is.EqualTo(2));
         }
 
         [Test, Isolated]
@@ -59,9 +63,10 @@ namespace iKnow.IntegrationTests.Controllers {
 
             var result = _controller.GetForm(null);
 
-            Assert.That((result.Model as QuestionFormViewModel).Question, Is.Not.Null);
-            Assert.That((result.Model as QuestionFormViewModel).Question.Topics.Count, Is.EqualTo(0));
-            Assert.That(((result.Model as QuestionFormViewModel).Topics.Items as ICollection).Count, Is.EqualTo(2));
+            var questionFormViewModel = result.Model as QuestionFormViewModel;
+            Assert.That(questionFormViewModel.Question, Is.Not.Null);
+            Assert.That(questionFormViewModel.Question.Topics.Count, Is.EqualTo(0));
+            Assert.That((questionFormViewModel.Topics.Items as ICollection).Count, Is.EqualTo(2));
         }
 
         [Test, Isolated]
@@ -75,9 +80,10 @@ namespace iKnow.IntegrationTests.Controllers {
 
             var result = _controller.GetTopic(question.Id);
 
-            Assert.That((result.Model as QuestionFormViewModel).Question.Id, Is.EqualTo(question.Id));
-            Assert.That((result.Model as QuestionFormViewModel).Question.Topics.First().Id, Is.EqualTo(topic1.Id));
-            Assert.That(((result.Model as QuestionFormViewModel).Topics.Items as ICollection).Count, Is.EqualTo(2));
+            var questionFormViewModel = result.Model as QuestionFormViewModel;
+            Assert.That(questionFormViewModel.Question.Id, Is.EqualTo(question.Id));
+            Assert.That(questionFormViewModel.Question.Topics.First().Id, Is.EqualTo(topic1.Id));
+            Assert.That((questionFormViewModel.Topics.Items as ICollection).Count, Is.EqualTo(2));
         }
 
         [Test, Isolated]
@@ -87,9 +93,10 @@ namespace iKnow.IntegrationTests.Controllers {
 
             var result = _controller.Detail(question.Id);
 
-            Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).Question.Id, Is.EqualTo(question.Id));
-            Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).CanUserDeleteAnswerPanelAnswer, Is.True);
-            Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).UserAnswerId, Is.EqualTo(answer.Id));
+            var questionDetailViewModel = (result as ViewResult).Model as QuestionDetailViewModel;
+            Assert.That(questionDetailViewModel.Question.Id, Is.EqualTo(question.Id));
+            Assert.That(questionDetailViewModel.CanUserDeleteAnswerPanelAnswer, Is.True);
+            Assert.That(questionDetailViewModel.UserAnswerId, Is.EqualTo(answer.Id));
         }
 
         [Test, Isolated]
@@ -108,7 +115,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
             var result = _controller.Save(viewModel);
 
-            var questionInDb = _context.Questions.Include(q => q.Topics).SingleOrDefault();
+            var questionInDb = _contextAfterAction.Questions.Include(q => q.Topics).SingleOrDefault();
 
             Assert.That(questionInDb, Is.Not.Null);
             Assert.That(questionInDb.Title, Is.EqualTo(questionInDb.Title));
@@ -129,7 +136,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
             var result = _controller.Save(viewModel);
 
-            var activity = _context.Activities.Single();
+            var activity = _contextAfterAction.Activities.Single();
 
             Assert.That(activity.Type, Is.EqualTo(ActivityType.AddQuestion));
             Assert.That(activity.QuestionId, Is.EqualTo(question.Id));
@@ -157,7 +164,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
             var result = _controller.Save(viewModel);
 
-            var questionInDb = _context.Questions.Include(q => q.Topics).SingleOrDefault();
+            var questionInDb = _contextAfterAction.Questions.Include(q => q.Topics).SingleOrDefault();
 
             Assert.That(questionInDb.Title, Is.EqualTo(title + "?"));
             Assert.That(questionInDb.Description, Is.EqualTo(description + "-"));
@@ -182,7 +189,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
             var result = _controller.SaveQuestionTopics(viewModel);
 
-            var questionInDb = _context.Questions.Include(q => q.Topics).SingleOrDefault();
+            var questionInDb = _contextAfterAction.Questions.Include(q => q.Topics).SingleOrDefault();
 
             Assert.That(questionInDb.Topics.Count, Is.EqualTo(1));
         }
@@ -220,8 +227,8 @@ namespace iKnow.IntegrationTests.Controllers {
 
             var result = _controller.Delete(viewModel);
 
-            Assert.That(_context.Questions.Count(), Is.EqualTo(0));
-            Assert.That(_context.Answers.Count(), Is.EqualTo(0));
+            Assert.That(_contextAfterAction.Questions.Count(), Is.EqualTo(0));
+            Assert.That(_contextAfterAction.Answers.Count(), Is.EqualTo(0));
         }
     }
 }

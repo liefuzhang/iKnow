@@ -18,6 +18,7 @@ namespace iKnow.IntegrationTests {
             var context = new iKnowContext();
             context.Database.Initialize(true);
 
+            context.Database.ExecuteSqlCommand("DELETE FROM Activities");
             context.Database.ExecuteSqlCommand("DELETE FROM Answers");
             context.Database.ExecuteSqlCommand("DELETE FROM TopicQuestions");
             context.Database.ExecuteSqlCommand("DELETE FROM Questions");

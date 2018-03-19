@@ -188,6 +188,7 @@ namespace iKnow.Controllers {
                 nameof(Question.Topics));
 
             UpdateQuestionTopics(formViewModel.TopicIds, questionInDb);
+            _unitOfWork.Complete();
 
             return RedirectToAction("Detail", new { id = questionInDb.Id });
         }

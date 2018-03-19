@@ -16,16 +16,19 @@ namespace iKnow.IntegrationTests.Controllers {
     public class SearchControllerTests {
         private SearchController _controller;
         private iKnowContext _context;
+        private iKnowContext _contextAfterAction;
 
         [SetUp]
         public void Setup() {
             _context = new iKnowContext();
-            _controller = new SearchController(new UnitOfWork(_context));
+            _contextAfterAction = new iKnowContext();
+            _controller = new SearchController(new UnitOfWork(new iKnowContext()));
         }
 
         [TearDown]
         public void TearDown() {
             _context.Dispose();
+            _contextAfterAction.Dispose();
         }
 
         [Test, Isolated]
@@ -40,8 +43,6 @@ namespace iKnow.IntegrationTests.Controllers {
             var topic2 = _context.AddTestTopicToDatabase("Another Topic");
             var question1 = _context.AddTestQuestionToDatabase("Test search keyword question?");
             var question2 = _context.AddTestQuestionToDatabase("Another test search keyword question?");
-
-            var answer = _context.AddTestAnswerToDatabase(question1.Id);
 
             _context.SaveChanges();
 
