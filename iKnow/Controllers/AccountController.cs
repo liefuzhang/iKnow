@@ -14,6 +14,7 @@ using iKnow.Persistence;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Constants = iKnow.Core.Models.Constants;
 
 namespace iKnow.Controllers {
     public class AccountController : Controller {
@@ -249,12 +250,34 @@ namespace iKnow.Controllers {
             if (user == null) {
                 return HttpNotFound();
             }
+            var userProfileViewModel = ConstructUserProfileViewModel(user, 0);
+            return View("UserProfile", userProfileViewModel);
+        }
+
+        private UserProfileViewModel ConstructUserProfileViewModel(AppUser user, int currentPage, int pageSize = Constants.DefaultPageSize) {
             var userProfileViewModel = new UserProfileViewModel {
                 AppUser = user,
                 Activities = _unitOfWork.ActivityRepository
-                    .Get(a => a.AppUserId == user.Id, q => q.OrderByDescending(a => a.DateTime))
+                    .Get(a => a.AppUserId == user.Id, q => q.OrderByDescending(a => a.DateTime),
+                        null, currentPage * pageSize, pageSize)
             };
-            return View("UserProfile", userProfileViewModel);
+
+            return userProfileViewModel;
+        }
+
+        [Route("Account/LoadMore/{currentPage}")]
+        public async Task<PartialViewResult> LoadMore(int currentPage, string userName) {
+            var user = await UserManager.FindByNameAsync(userName);
+            if (user == null) {
+                return null;
+            }
+
+            var viewModel = ConstructUserProfileViewModel(user, ++currentPage);
+            if (!viewModel.Activities.Any()) {
+                return null;
+            }
+
+            return PartialView("_ActivityPartial", viewModel.Activities);
         }
 
         public async Task<ActionResult> EditProfile() {

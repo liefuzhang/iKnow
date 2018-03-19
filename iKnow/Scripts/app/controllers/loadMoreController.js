@@ -3,6 +3,7 @@
     var button;
     var $questionList;
     var currentPage;
+    var queryString;
 
     var loadMoreSuccessHandler = function (html) {
         if (html) {
@@ -20,13 +21,14 @@
         button.hide();
         button.next().show();
 
-        loadMoreService.loadMore(controllerName, currentPage, loadMoreSuccessHandler);
+        loadMoreService.loadMore(controllerName, currentPage, loadMoreSuccessHandler, queryString);
     }
 
-    var init = function (controller) {
+    var init = function (controller, query) {
         controllerName = controller;
         $questionList = $(".load-more-list");
         currentPage = 0;
+        queryString = query;
 
         $(".to-load").on("click", loadMoreHandler);
     };

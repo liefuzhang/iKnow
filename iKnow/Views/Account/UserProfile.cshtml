@@ -66,23 +66,11 @@
 
     <div class="user-profile-detail-container">
         <div class="main-content-container">
-            <div class="whole-panel panel">
-                @foreach (var activity in Model.Activities) {
-                    <div class="activity-panel divided-section">
-                        @switch (activity.Type) {
-                            case ActivityType.FollowTopic:
-                                @Html.Action("GetFollowTopic", "Activity", new { id = activity.Id })
-                                break;
-                            case ActivityType.AnswerQuestion:
-                                @Html.Action("GetAnswerQuestion", "Activity", new { id = activity.Id })
-                                break;
-                            case ActivityType.AddQuestion:
-                                @Html.Action("GetAddQuestion", "Activity", new { id = activity.Id })
-                                break;
-                        }
-                    </div>
-                }
+            <div class="whole-panel panel load-more-list">
+                @Html.Partial("_ActivityPartial", Model.Activities)
             </div>
+
+            @Html.Partial("_LoadMorePartial")
         </div>
 
         <div class="sidebar question-sidebar">
@@ -99,6 +87,7 @@
         $(document)
             .ready(function () {
                 AnswerController.init();
+                LoadMoreController.init("account", "?userName=" + "@(Model.AppUser.UserName)");
             });
     </script>
 }

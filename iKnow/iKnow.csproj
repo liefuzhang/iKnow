@@ -479,6 +479,7 @@
     <Content Include="Views\Activity\_ActivityFollowTopicPartial.cshtml" />
     <Content Include="Views\Activity\_ActivityAnswerQuestionPartial.cshtml" />
     <Content Include="Views\Activity\_ActivityAddQuestionPartial.cshtml" />
+    <Content Include="Views\Account\_ActivityPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
