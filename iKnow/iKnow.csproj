@@ -313,6 +313,14 @@
     <Compile Include="Persistence\Migrations\201803172252185_AddActivitiesTable.Designer.cs">
       <DependentUpon>201803172252185_AddActivitiesTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Persistence\Migrations\201803190932054_AddSeedActivitiesForSeedQuestionsAndAnswers.cs" />
+    <Compile Include="Persistence\Migrations\201803190932054_AddSeedActivitiesForSeedQuestionsAndAnswers.Designer.cs">
+      <DependentUpon>201803190932054_AddSeedActivitiesForSeedQuestionsAndAnswers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201803190957172_AddFollowTopicSeedData.cs" />
+    <Compile Include="Persistence\Migrations\201803190957172_AddFollowTopicSeedData.Designer.cs">
+      <DependentUpon>201803190957172_AddFollowTopicSeedData.cs</DependentUpon>
+    </Compile>
     <Compile Include="Persistence\Migrations\Configuration.cs" />
     <Compile Include="Persistence\Repositories\ActivityRepository.cs" />
     <Compile Include="Persistence\Repositories\TopicFollowingRepository.cs" />
@@ -546,6 +554,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Persistence\Migrations\201803172252185_AddActivitiesTable.resx">
       <DependentUpon>201803172252185_AddActivitiesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Persistence\Migrations\201803190932054_AddSeedActivitiesForSeedQuestionsAndAnswers.resx">
+      <DependentUpon>201803190932054_AddSeedActivitiesForSeedQuestionsAndAnswers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Persistence\Migrations\201803190957172_AddFollowTopicSeedData.resx">
+      <DependentUpon>201803190957172_AddFollowTopicSeedData.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

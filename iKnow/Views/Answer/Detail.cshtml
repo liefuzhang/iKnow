@@ -27,13 +27,11 @@
             </div>
         </div>
 
-        <div class="sidebar answer-sidebar">
-            <div class="sidebar question-sidebar">
-                <div class="panel">
-                    @Html.Action("GetRelatedQuestions", "Question", new { id = Model.QuestionDetailViewModel.Question.Id })
-                </div>
-                @Html.Partial("_SideBarSiteInfoPartial")
+        <div class="sidebar panel-sidebar">
+            <div class="panel">
+                @Html.Action("GetRelatedQuestions", "Question", new { id = Model.QuestionDetailViewModel.Question.Id })
             </div>
+            @Html.Partial("_SideBarSiteInfoPartial")
         </div>
     </div>
 </div>
