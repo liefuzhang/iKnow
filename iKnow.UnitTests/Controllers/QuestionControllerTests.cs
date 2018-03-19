@@ -339,6 +339,7 @@ namespace iKnow.UnitTests.Controllers {
             _newQuestion.Title = " test title";
             _newQuestion.Description = " test description";
 
+            _unitOfWork.Setup(u => u.Complete()).Callback(() => _newQuestion.Id = 1);
             _controller.Save(viewModel);
 
             Assert.That(_newQuestion.Title, Is.EqualTo("Test title?"));
@@ -410,7 +411,7 @@ namespace iKnow.UnitTests.Controllers {
             var viewModel = GetExistingQuestionFormViewModel();
             viewModel.Question.SetUserId(_question1.AppUserId + "-");
             viewModel.Question.AddTopic(new Topic());
-            viewModel.TopicIds = new[] {1};
+            viewModel.TopicIds = new[] { 1 };
 
             _user.Setup(u => u.IsInRole(Constants.AdminRoleName)).Returns(true);
             _unitOfWork.Setup(

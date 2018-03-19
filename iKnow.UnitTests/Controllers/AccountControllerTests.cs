@@ -430,8 +430,6 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public async Task UserProfile_WhenCalled_ReturnViewResultWithUserInViewModel() {
-            _identity.Setup(i => i.IsAuthenticated).Returns(true);
-
             var testUserName = "testUser";
 
             var result = await _controller.UserProfile(testUserName);
@@ -443,8 +441,6 @@ namespace iKnow.UnitTests.Controllers {
 
         [Test]
         public async Task UserProfile_UserCouldNotBeFound_ReturnHttpNotFoundResult() {
-            _identity.Setup(i => i.IsAuthenticated).Returns(true);
-
             var testUserName = "testUser";
 
             _userManager.Setup(u => u.FindByNameAsync(It.IsAny<string>())).Returns(Task.FromResult((AppUser)null));
@@ -452,6 +448,26 @@ namespace iKnow.UnitTests.Controllers {
             var result = await _controller.UserProfile(testUserName);
 
             Assert.That(result, Is.TypeOf<HttpNotFoundResult>());
+        }
+
+        [Test]
+        public async Task LoadMore_UserCouldNotBeFound_ShouldReturnNull() {
+            var testUserName = "testUser";
+
+            _userManager.Setup(u => u.FindByNameAsync(It.IsAny<string>())).Returns(Task.FromResult((AppUser)null));
+
+            var result = await _controller.LoadMore(0, testUserName);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task LoadMore_NoMoreActivity_ShouldReturnNull() {
+            var testUserName = "testUser";
+
+            var result = await _controller.LoadMore(0, testUserName);
+
+            Assert.That(result, Is.Null);
         }
 
         [Test]

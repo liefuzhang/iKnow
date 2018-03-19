@@ -17,6 +17,7 @@ using Microsoft.AspNet.Identity;
 using Moq;
 using NUnit.Framework;
 using System.Threading.Tasks;
+using Constants = iKnow.Core.Models.Constants;
 
 namespace iKnow.IntegrationTests.Controllers {
     [TestFixture]
@@ -51,12 +52,29 @@ namespace iKnow.IntegrationTests.Controllers {
 
         [Test, Isolated]
         public async Task UserProfile_WhenCalled_ShouldReturnActivitiesInViewModel() {
-           var topic = _context.AddTestTopicToDatabase();
+            var topic = _context.AddTestTopicToDatabase();
             _context.AddTestActivityTopicFollowingToDatabase(topic.Id);
 
             var result = await _controller.UserProfile(_firstUserInDb.UserName);
 
             Assert.That(((result as ViewResult).Model as UserProfileViewModel).Activities.Count(), Is.EqualTo(1));
+        }
+
+        [Test, Isolated]
+        public async Task LoadMore_WhenCalled_ShouldReturnActivitiesInViewModel() {
+            var topic = _context.AddTestTopicToDatabase();
+            var activity = _context.AddTestActivityTopicFollowingToDatabase(topic.Id);
+
+            for (var i = 0; i < Constants.DefaultPageSize; i++) {
+                var moreTopic = _context.AddTestTopicToDatabase();
+                _context.AddTestActivityTopicFollowingToDatabase(moreTopic.Id);
+            }
+
+            var result = await _controller.LoadMore(0, _firstUserInDb.UserName);
+
+            var activities = result.Model as IEnumerable<Activity>;
+            Assert.That(activities.Count(), Is.EqualTo(1));
+            Assert.That(activities.ToArray()[0].Id, Is.EqualTo(activity.Id));
         }
 
         [Test, Isolated]
