@@ -66,11 +66,19 @@
 
     <div class="user-profile-detail-container">
         <div class="main-content-container">
-            <div class="whole-panel panel load-more-list">
-                @Html.Partial("_ActivityPartial", Model.Activities)
-            </div>
-
-            @Html.Partial("_LoadMorePartial")
+            @if (Model.Activities.Any()) {
+                <div class="whole-panel panel load-more-list">
+                    @Html.Partial("_ActivityPartial", Model.Activities)
+                </div>
+                @Html.Partial("_LoadMorePartial")
+            } else {
+                <div class="empty-content-panel panel">
+                    <i class="fa fa-clipboard fa-4x" aria-hidden="true"></i>
+                    <div>
+                        No activities yet. 
+                    </div>
+                </div>
+            }
         </div>
 
         <div class="sidebar question-sidebar">
