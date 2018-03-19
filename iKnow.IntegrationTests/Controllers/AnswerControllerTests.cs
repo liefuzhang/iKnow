@@ -125,6 +125,25 @@ namespace iKnow.IntegrationTests.Controllers {
         }
 
         [Test, Isolated]
+        public void Save_NewAnswer_ShouldSaveAnswerQuestionActivityToDatabase() {
+            var question = _context.AddTestQuestionToDatabase();
+
+            var viewModel = new QuestionDetailViewModel {
+                Question = question,
+                AnswerPanelContent = "new answer"
+            };
+
+            _controller.Save(viewModel);
+
+            var activity = _context.Activities.Single();
+            var answers = _context.Answers.Single();
+
+            Assert.That(activity.Type, Is.EqualTo(ActivityType.AnswerQuestion));
+            Assert.That(activity.QuestionId, Is.EqualTo(question.Id));
+            Assert.That(activity.AnswerId, Is.EqualTo(answers.Id));
+        }
+
+        [Test, Isolated]
         public void EditIcon_UserIsAnswerOwner_ShouldReturnPartialViewResult() {
             var question = _context.AddTestQuestionToDatabase();
             var answer = _context.AddTestAnswerToDatabase(question.Id);

@@ -49,6 +49,18 @@ namespace iKnow.IntegrationTests.Controllers.Api {
         }
 
         [Test, Isolated]
+        public void Follow_WhenCalled_ShouldSaveFollowTopicActivityToDatabase() {
+            var topic = _context.AddTestTopicToDatabase();
+
+            var result = _controller.Follow(topic.Id);
+
+            var activity = _context.Activities.Single();
+
+            Assert.That(activity.Type, Is.EqualTo(ActivityType.FollowTopic));
+            Assert.That(activity.TopicId, Is.EqualTo(topic.Id));
+        }
+
+        [Test, Isolated]
         public void Unfollow_WhenCalled_ShouldRemoveFollowingFromDatabase() {
             var topic = _context.AddTestTopicToDatabase();
             var following = _context.AddTestTopicFollowingToDatabase(topic.Id);

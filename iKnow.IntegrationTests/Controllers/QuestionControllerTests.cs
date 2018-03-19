@@ -91,7 +91,7 @@ namespace iKnow.IntegrationTests.Controllers {
             Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).CanUserDeleteAnswerPanelAnswer, Is.True);
             Assert.That(((result as ViewResult).Model as QuestionDetailViewModel).UserAnswerId, Is.EqualTo(answer.Id));
         }
-        
+
         [Test, Isolated]
         public void Save_NewQuestion_ShouldSaveQuestionAndItsTopicsToDatabase() {
             var topic = _context.AddTestTopicToDatabase();
@@ -114,6 +114,25 @@ namespace iKnow.IntegrationTests.Controllers {
             Assert.That(questionInDb.Title, Is.EqualTo(questionInDb.Title));
             Assert.That(questionInDb.Description, Is.EqualTo(questionInDb.Description));
             Assert.That(questionInDb.Topics.Count, Is.EqualTo(1));
+        }
+
+        [Test, Isolated]
+        public void Save_NewQuestion_ShouldSaveAddQuestionActivityToDatabase() {
+            var question = new Question {
+                Title = "New Question?",
+                Description = "New desc"
+            };
+
+            var viewModel = new QuestionFormViewModel {
+                Question = question
+            };
+
+            var result = _controller.Save(viewModel);
+
+            var activity = _context.Activities.Single();
+
+            Assert.That(activity.Type, Is.EqualTo(ActivityType.AddQuestion));
+            Assert.That(activity.QuestionId, Is.EqualTo(question.Id));
         }
 
         [Test, Isolated]
