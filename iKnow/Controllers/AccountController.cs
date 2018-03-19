@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
@@ -250,19 +251,18 @@ namespace iKnow.Controllers {
             if (user == null) {
                 return HttpNotFound();
             }
-            var userProfileViewModel = ConstructUserProfileViewModel(user, 0);
+            var userProfileViewModel1 = new UserProfileViewModel {
+                AppUser = user,
+                Activities = GetActivities(user, 0)
+            };
+            var userProfileViewModel = userProfileViewModel1;
             return View("UserProfile", userProfileViewModel);
         }
 
-        private UserProfileViewModel ConstructUserProfileViewModel(AppUser user, int currentPage, int pageSize = Constants.DefaultPageSize) {
-            var userProfileViewModel = new UserProfileViewModel {
-                AppUser = user,
-                Activities = _unitOfWork.ActivityRepository
-                    .Get(a => a.AppUserId == user.Id, q => q.OrderByDescending(a => a.DateTime),
-                        null, currentPage * pageSize, pageSize)
-            };
-
-            return userProfileViewModel;
+        private IEnumerable<Activity> GetActivities(AppUser user, int currentPage, int pageSize = Constants.DefaultPageSize) {
+            return _unitOfWork.ActivityRepository
+                .Get(a => a.AppUserId == user.Id, q => q.OrderByDescending(a => a.DateTime),
+                    null, currentPage * pageSize, pageSize);
         }
 
         [Route("Account/LoadMore/{currentPage}")]
@@ -272,12 +272,12 @@ namespace iKnow.Controllers {
                 return null;
             }
 
-            var viewModel = ConstructUserProfileViewModel(user, ++currentPage);
-            if (!viewModel.Activities.Any()) {
+            var activities = GetActivities(user, ++currentPage);
+            if (!activities.Any()) {
                 return null;
             }
 
-            return PartialView("_ActivityPartial", viewModel.Activities);
+            return PartialView("_ActivityPartial", activities);
         }
 
         public async Task<ActionResult> EditProfile() {

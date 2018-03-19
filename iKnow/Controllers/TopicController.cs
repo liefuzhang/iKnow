@@ -56,24 +56,23 @@ namespace iKnow.Controllers {
                 return HttpNotFound();
             }
 
-            var viewModel = ConstructTopicDetailViewModel(topic);
+            var userId = User.Identity.GetUserId();
+            var viewModel1 = new TopicDetailViewModel {
+                Topic = topic,
+                QuestionAnswers = GetQuestionAnswerPairs(topic, 0),
+                IsFollowing = _unitOfWork.TopicFollowingRepository
+                    .Any(f => f.TopicId == topic.Id && f.UserId == userId)
+            };
+            var viewModel = viewModel1;
 
             return View(viewModel);
         }
 
-        private TopicDetailViewModel ConstructTopicDetailViewModel(Topic topic) {
-            var questionIds = topic.Questions.Select(q => q.Id).ToList();
+        private IDictionary<Question, Answer> GetQuestionAnswerPairs(Topic topic, int currentPage, int pageSize = Constants.DefaultPageSize) {
+            var questionIds = topic.Questions.Skip(currentPage * pageSize).Take(pageSize).Select(q => q.Id).ToList();
             var questionAnswers = _unitOfWork.AnswerRepository
-                                    .GetQuestionAnswerPairsForGivenQuestions(questionIds);
-
-            var userId = User.Identity.GetUserId();
-            var viewModel = new TopicDetailViewModel {
-                Topic = topic,
-                QuestionAnswers = questionAnswers,
-                IsFollowing = _unitOfWork.TopicFollowingRepository
-                                .Any(f => f.TopicId == topic.Id && f.UserId == userId)
-            };
-            return viewModel;
+                .GetQuestionAnswerPairsForGivenQuestions(questionIds);
+            return questionAnswers;
         }
 
         // GET: Topic/About/1

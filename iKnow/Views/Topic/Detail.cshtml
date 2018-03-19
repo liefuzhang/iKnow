@@ -20,9 +20,10 @@
     </div>
 
     @if (Model.QuestionAnswers.Any()) {
-        <div class="topic-detail-inner question-answer-container">
+        <div class="topic-detail-inner question-answer-container load-more-list">
             @Html.Partial("_QuestionAnswerPairPartial", Model.QuestionAnswers)
         </div>
+        @Html.Partial("_LoadMorePartial")
     } else {
         <div class="topic-empty-container">
             <i class="fa fa-frown-o fa-4x" aria-hidden="true"></i>
@@ -52,6 +53,7 @@
             .ready(function () {
                 AnswerController.init();
                 TopicController.init();
+                LoadMoreController.init("home");
             });
     </script>
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web.Mvc;
@@ -28,30 +29,29 @@ namespace iKnow.Controllers {
 
         // GET: Answer
         public ActionResult Index() {
-            int pageSize = Constants.DefaultPageSize;
-            var viewModel = ConstructAnswerIndexViewModel(0, pageSize);
+            var viewModel = new QuestionAnswerCountViewModel {
+                QuestionsWithAnswerCount = GetQuestionsWithAnswerCount(0)
+            };
 
             return View(viewModel);
         }
 
-        private QuestionAnswerCountViewModel ConstructAnswerIndexViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
+        private IDictionary<Question, int> GetQuestionsWithAnswerCount(int currentPage, int pageSize = Constants.DefaultPageSize) {
             var questions = _unitOfWork.QuestionRepository.GetAll(query =>
                 query.OrderByDescending(question => question.Id), skip: currentPage * pageSize, take: pageSize);
             var questionsWithAnswerCount = _unitOfWork.QuestionRepository.GetQuestionsWithAnswerCount(questions);
 
-            return new QuestionAnswerCountViewModel {
-                QuestionsWithAnswerCount = questionsWithAnswerCount
-            };
+            return questionsWithAnswerCount;
         }
 
         [Route("Answer/LoadMore/{currentPage}")]
         public PartialViewResult LoadMore(int currentPage) {
-            var viewModel = ConstructAnswerIndexViewModel(++currentPage);
-            if (viewModel.QuestionsWithAnswerCount == null || !viewModel.QuestionsWithAnswerCount.Any()) {
+            var questionsWithAnswerCount = GetQuestionsWithAnswerCount(++currentPage);
+            if (questionsWithAnswerCount == null || !questionsWithAnswerCount.Any()) {
                 return null;
             }
 
-            return PartialView("_AnswerQuestionListPartial", viewModel.QuestionsWithAnswerCount);
+            return PartialView("_AnswerQuestionListPartial", questionsWithAnswerCount);
         }
 
         public ActionResult Detail(int id) {
@@ -122,8 +122,7 @@ namespace iKnow.Controllers {
             Answer answerToSave;
             if (existingAnswer != null) {
                 answerToSave = UpdateAnswer(viewModel.AnswerPanelContent, existingAnswer);
-            }
-            else {
+            } else {
                 answerToSave = AddAnswer(viewModel);
             }
             return answerToSave;

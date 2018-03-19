@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using iKnow.Core;
 using iKnow.Core.Models;
@@ -26,31 +27,31 @@ namespace iKnow.Controllers {
 
         public ActionResult Index() {
             int pageSize = Constants.DefaultPageSize;
-            var viewModel = ConstructHomeViewModel(0, pageSize);
+            var viewModel = new HomeViewModel {
+                QuestionAnswers = GetQuestionAnswerPairs(0, pageSize)
+            };
 
             return View(viewModel);
         }
 
-        private HomeViewModel ConstructHomeViewModel(int currentPage, int pageSize = Constants.DefaultPageSize) {
+        private IDictionary<Question, Answer> GetQuestionAnswerPairs(int currentPage, int pageSize = Constants.DefaultPageSize) {
             var questions = _unitOfWork.QuestionRepository.GetAll(query =>
                 query.OrderByDescending(question => question.Id), nameof(Question.Topics), currentPage * pageSize, pageSize).ToList();
             var questionIds = questions.Select(q => q.Id).ToList();
 
             var questionAnswers = _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds);
 
-            return new HomeViewModel {
-                QuestionAnswers = questionAnswers
-            };
+            return questionAnswers;
         }
 
         [Route("Home/LoadMore/{currentPage}")]
         public PartialViewResult LoadMore(int currentPage) {
-            var viewModel = ConstructHomeViewModel(++currentPage);
-            if (!viewModel.QuestionAnswers.Any()) {
+            var pairs = GetQuestionAnswerPairs(++currentPage);
+            if (pairs == null || !pairs.Any()) {
                 return null;
             }
 
-            return PartialView("_QuestionAnswerPairPartial", viewModel.QuestionAnswers);
+            return PartialView("_QuestionAnswerPairPartial", pairs);
         }
 
         public PartialViewResult GetUserProfile() {
