@@ -489,6 +489,7 @@
     <Content Include="Views\Activity\_ActivityAddQuestionPartial.cshtml" />
     <Content Include="Views\Account\_ActivityPartial.cshtml" />
     <Content Include="Views\Question\_QuestionAllAnswerPartial.cshtml" />
+    <Content Include="Views\Shared\_AnswerFooterPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
