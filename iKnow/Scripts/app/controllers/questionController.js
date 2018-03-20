@@ -127,6 +127,12 @@
         }
     }
 
+    var toggleCollapse = function() {
+        event.stopPropagation();
+        var $answerContainer = $(this).closest(".answer-panel-content-container");
+        $answerContainer.toggleClass("is-collapsed");
+    }
+
     var init = function () {
         $(".add-answer-panel").on("submit", "form", submitAnswer);
         $(".add-answer-panel").on("click", ".js-button-delete", appController.deleteEntity);
@@ -134,6 +140,8 @@
         $(".edit-answer").on("click", function () { showAddAnswerPanel(true); });
         $(".question-header-panel .js-edit-question").on("click", toggleModalEditQuestion);
         $(".question-header-panel .js-edit-topic").on("click", toggleModalEditTopic);
+        $(".answer-footer").on("click", ".collapse-answer", toggleCollapse);
+        $(".whole-panel").on("click", ".answer-panel-content-container.is-collapsed", toggleCollapse);
     };
 
     return {

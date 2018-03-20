@@ -1,14 +1,13 @@
 ﻿@model iKnow.Core.Models.Answer
 
 @Html.Action("GetAnswerPanelHeader", "Answer", new { id = Model.AppUserId })
-<div class="answer-panel-content">
-    <div class="answer-panel-content-inner">@Html.Raw(Model.Content)</div>
-    <div class="answer-footer">
-        @if (Model.UpdatedDate == null) {
-            <span>Answered @Model.CreatedDate.ToString("MMM d, yyyy")</span>
-        } else {
-            <span>Updated @Model.UpdatedDate.Value.ToString("MMM d, yyyy")</span>
-        }
+<div class="answer-panel-content-container">
+    <div class="answer-panel-content">
+        <div class="answer-panel-content-inner">@Html.Raw(Model.Content)</div>
+        @Html.Partial("_AnswerFooterPartial", Model)
+        @Html.Action("EditIcon", "Answer", new {id = Model.Id})
     </div>
-    @Html.Action("EditIcon", "Answer", new { id = Model.Id })
+    <a class="expand-answer">
+        Read More <i class="fa fa-angle-double-down" aria-hidden="true"></i>
+    </a>
 </div>

@@ -1,0 +1,14 @@
+﻿@model iKnow.Core.Models.Answer
+
+<div class="answer-footer">
+    @if (Model.UpdatedDate == null) {
+        <span>Answered @Model.CreatedDate.ToString("MMM d, yyyy")</span>
+    } else {
+        <span>Updated @Model.UpdatedDate.Value.ToString("MMM d, yyyy")</span>
+    }
+    <a class="collapse-answer">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+        Collapse
+    </a>
+</div>
+

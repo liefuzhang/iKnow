@@ -868,9 +868,9 @@ a.collapse-answer:hover {
     display: flex;
 }
 
-.question-detail-container .load-more.end-of-list {
-    display: none;
-}
+    .question-detail-container .load-more.end-of-list {
+        display: none;
+    }
 
 .add-answer-panel {
     overflow: visible;
@@ -1117,6 +1117,45 @@ h3.question-title > a {
     font-size: 16px;
     line-height: 1.6;
 }
+
+.answer-panel-content-container.is-collapsed .answer-panel-content {
+    height: 400px;
+    cursor: pointer;
+    -webkit-mask-image: linear-gradient(blue calc(100% - 8rem),transparent calc(100% - 2.8rem));
+    mask-image: linear-gradient(blue calc(100% - 8rem),transparent calc(100% - 2.8rem));
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+    .answer-panel-content-container.is-collapsed .answer-panel-content:hover {
+        color: #666;
+    }
+
+.answer-panel-content-container {
+    position: relative;
+}
+
+    .answer-panel-content-container .expand-answer {
+        display: none;
+    }
+
+    .answer-panel-content-container .expand-answer i {
+        font-size: 16px;
+    }
+
+    .answer-panel-content-container.is-collapsed .expand-answer {
+        position: absolute;
+        display: block;
+        bottom: 35px;
+        width: 100%;
+        text-align: center;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+        .answer-panel-content-container.is-collapsed .expand-answer:hover {
+            text-decoration: none !important;
+        }
 
 .answer-footer {
     font-size: 14px;

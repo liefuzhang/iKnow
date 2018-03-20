@@ -45,17 +45,7 @@
                     <div class="question-answer-content-text">
                         @Html.Raw(questionAnswer.Value.Content)
                     </div>
-                    <div class="answer-footer">
-                        @if (questionAnswer.Value.UpdatedDate == null) {
-                            <span>Answered @questionAnswer.Value.CreatedDate.ToString("MMM d, yyyy")</span>
-                        } else {
-                            <span>Updated @questionAnswer.Value.UpdatedDate.Value.ToString("MMM d, yyyy")</span>
-                        }
-                        <a class="collapse-answer">
-                            <i class="fa fa-angle-double-up" aria-hidden="true"></i>
-                            Collapse
-                        </a>
-                    </div>
+                    @Html.Partial("_AnswerFooterPartial", questionAnswer.Value)
                 </div>
             </div>
         </div>
