@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -27,7 +29,8 @@ namespace iKnow.UnitTests.Controllers {
         private Mock<IFileHelper> _imageFileGenerator;
         private List<Topic> _existingTopics;
         private Mock<HttpRequestBase> _request;
-
+        private Mock<ClaimsIdentity> _identity;
+        private Mock<IPrincipal> _user;
         [SetUp]
         public void Setup() {
             _imageFileGenerator = new Mock<IFileHelper>();
@@ -53,6 +56,8 @@ namespace iKnow.UnitTests.Controllers {
         private void SetupUnitOfWork() {
             _unitOfWork = new Mock<IUnitOfWork>();
             _unitOfWork.MockRepositories();
+            var topicFollowing = new Mock<ITopicFollowingRepository>();
+            _unitOfWork.SetupGet(u => u.TopicFollowingRepository).Returns(topicFollowing.Object);
 
             _unitOfWork.Setup(u => u.TopicRepository.GetAll(It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
                 It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
@@ -72,7 +77,10 @@ namespace iKnow.UnitTests.Controllers {
         private void SetupController() {
             _controller = new TopicController(_unitOfWork.Object, _imageFileGenerator.Object);
             _request = new Mock<HttpRequestBase>();
-            _controller.MockContext(_request);
+            _user = new Mock<IPrincipal>();
+
+            _controller.MockContext(_request, _user);
+            _identity = _user.MockIdentity("1");
         }
 
         [Test]
@@ -124,7 +132,36 @@ namespace iKnow.UnitTests.Controllers {
             Assert.That(result, Is.TypeOf<HttpNotFoundResult>());
         }
 
-       [Test]
+        [Test]
+        public void LoadMore_TopicDoesNotExist_ReturnNull() {
+            _topic1 = null;
+
+            var result = _controller.LoadMore(0, 1);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void LoadMore_QuestionAnswerPairIsNull_ReturnNull() {
+            var result = _controller.LoadMore(0, 1);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void LoadMore_QuestionAnswerPairIsEmpty_ReturnNull() {
+            _topic1.Questions = new List<Question>();
+
+            _unitOfWork.Setup(
+                u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>()))
+                .Returns(new Dictionary<Question, Answer>());
+
+            var result = _controller.LoadMore(0, 1);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
         public void About_WhenCalled_ReturnPartialViewResult() {
             var result = _controller.About(_topic1.Id);
 

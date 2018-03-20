@@ -52,11 +52,10 @@ namespace iKnow.IntegrationTests.Controllers {
         [Test, Isolated]
         public void Detail_WhenCalled_ShouldReturnTopicWithQuestionAnswerPairsInViewModel() {
             var topic = _context.AddTestTopicToDatabase();
-            _context.AddTestTopicFollowingToDatabase(topic.Id);
 
             var question = _context.AddTestQuestionToDatabase();
             question.AddTopic(topic);
-            
+
             var answer = _context.AddTestAnswerToDatabase(question.Id);
 
             _context.SaveChanges();
@@ -69,6 +68,31 @@ namespace iKnow.IntegrationTests.Controllers {
             Assert.That(topicDetailViewModel.QuestionAnswers.Keys.First().Id, Is.EqualTo(question.Id));
             Assert.That(topicDetailViewModel.QuestionAnswers.Values.First().Id, Is.EqualTo(answer.Id));
             Assert.That(topicDetailViewModel.IsFollowing, Is.True);
+        }
+
+        [Test, Isolated]
+        public void LoadMore_WhenCalled_ShouldReturnTopicWithQuestionAnswerPairsInViewModel() {
+            var topic = _context.AddTestTopicToDatabase();
+
+            var question = _context.AddTestQuestionToDatabase();
+            question.AddTopic(topic);
+
+            var answer = _context.AddTestAnswerToDatabase(question.Id);
+
+            for (var i = 0; i < Constants.DefaultPageSize; i++) {
+                var moreQuestion = _context.AddTestQuestionToDatabase();
+                moreQuestion.AddTopic(topic);
+                _context.AddTestAnswerToDatabase(moreQuestion.Id);
+            }
+
+            _context.SaveChanges();
+
+            var result = _controller.LoadMore(0, topic.Id);
+
+            var pairs = result.Model as IDictionary<Question, Answer>;
+            Assert.That(pairs.Count, Is.EqualTo(1));
+            Assert.That(pairs.Keys.First().Id, Is.EqualTo(question.Id));
+            Assert.That(pairs.Values.First().Id, Is.EqualTo(answer.Id));
         }
 
         [Test, Isolated]

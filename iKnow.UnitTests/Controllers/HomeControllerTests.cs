@@ -83,6 +83,17 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
+        public void LoadMore_QuestionAnswerPairIsNull_ReturnNull() {
+            _unitOfWork.Setup(
+                u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>()))
+                .Returns((IDictionary<Question, Answer>) null);
+
+            var result = _controller.LoadMore(1);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
         public void GetUserProfile_UserIsAuthenticated_ReturnCurrentUserInResult() {
             var result = _controller.GetUserProfile();
 
