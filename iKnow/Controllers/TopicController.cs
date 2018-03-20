@@ -59,7 +59,7 @@ namespace iKnow.Controllers {
             var userId = User.Identity.GetUserId();
             var viewModel1 = new TopicDetailViewModel {
                 Topic = topic,
-                QuestionAnswers = GetQuestionAnswerPairs(topic, 0),
+                QuestionAnswers = GetQuestionAnswerPairs(topic.Questions, 0),
                 IsFollowing = _unitOfWork.TopicFollowingRepository
                     .Any(f => f.TopicId == topic.Id && f.UserId == userId)
             };
@@ -68,12 +68,28 @@ namespace iKnow.Controllers {
             return View(viewModel);
         }
 
-        private IDictionary<Question, Answer> GetQuestionAnswerPairs(Topic topic, int currentPage, int pageSize = Constants.DefaultPageSize) {
-            var questionIds = topic.Questions.Skip(currentPage * pageSize).Take(pageSize).Select(q => q.Id).ToList();
+        private IDictionary<Question, Answer> GetQuestionAnswerPairs(IEnumerable<Question> questions, int currentPage, int pageSize = Constants.DefaultPageSize) {
+            var questionIds = questions.Skip(currentPage * pageSize).Take(pageSize).Select(q => q.Id).ToList();
             var questionAnswers = _unitOfWork.AnswerRepository
                 .GetQuestionAnswerPairsForGivenQuestions(questionIds);
             return questionAnswers;
         }
+
+        [Route("Topic/LoadMore/{currentPage}")]
+        public PartialViewResult LoadMore(int currentPage, int topicId) {
+            var topic = _unitOfWork.TopicRepository.SingleOrDefault(t => t.Id == topicId, nameof(Topic.Questions));
+            if (topic == null) {
+                return null;
+            }
+
+            var pairs = GetQuestionAnswerPairs(topic.Questions, ++currentPage);
+            if (pairs == null || !pairs.Any()) {
+                return null;
+            }
+
+            return PartialView("_QuestionAnswerPairPartial", pairs);
+        }
+
 
         // GET: Topic/About/1
         public PartialViewResult About(int id) {

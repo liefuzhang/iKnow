@@ -53,7 +53,7 @@
             .ready(function () {
                 AnswerController.init();
                 TopicController.init();
-                LoadMoreController.init("home");
+                LoadMoreController.init("topic", "?topicId=" + "@(Model.Topic.Id)");
             });
     </script>
 }
