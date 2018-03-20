@@ -315,6 +315,18 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
+        public void LoadMore_QuestionAnswersIsEmpty_ReturnNull() {
+            _unitOfWork.Setup(
+                u => u.AnswerRepository.Get(It.IsAny<Expression<Func<Answer, bool>>>() ,It.IsAny<Func<IQueryable<Answer>, 
+                IOrderedQueryable<Answer>>>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
+                .Returns(new List<Answer>());
+
+            var result = _controller.LoadMore(0, _question1.Id);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
         public void Save_WhenCalled_ReturnRedirectToRouteResult() {
             var viewModel = GetExistingQuestionFormViewModel();
 

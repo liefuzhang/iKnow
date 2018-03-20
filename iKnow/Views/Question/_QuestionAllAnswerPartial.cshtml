@@ -1,0 +1,7 @@
+﻿@model IEnumerable<iKnow.Core.Models.Answer>
+
+@foreach (var answer in Model) {
+    <div class="answer-panel answer-content divided-section">
+        @Html.Partial("_AnswerPanelPartial", answer)
+    </div>
+}

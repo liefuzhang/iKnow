@@ -22,13 +22,12 @@
             @if (Model.Question.Answers.Any()) {
                 <div class="whole-panel panel">
                     <div class="panel-title answer-panel">
-                        @(Model.Question.Answers.Count() + " Answer(s)")
+                        @(Model.AnswerCount + " Answer(s)")
                     </div>
-                    @foreach (var answer in Model.Question.Answers) {
-                        <div class="answer-panel answer-content divided-section">
-                            @Html.Partial("_AnswerPanelPartial", answer)
-                        </div>
-                    }
+                    <div class="load-more-list">
+                        @Html.Partial("_QuestionAllAnswerPartial", Model.Question.Answers)
+                    </div>
+                    @Html.Partial("_LoadMorePartial")
                 </div>
                 if (Model.UserAnswerId > 0) {
                     <div class="question-content-footer panel">
@@ -79,6 +78,7 @@
         $(document)
             .ready(function () {
                 QuestionController.init();
+                LoadMoreController.init("question", "?questionId=" + "@(Model.Question.Id)");
             });
     </script>
 }

@@ -11,5 +11,6 @@ namespace iKnow.Core.ViewModels {
         public bool CanUserDeleteAnswerPanelAnswer { get; set; }
         public bool CanUserEditQuestion { get; set; }
         public int UserAnswerId { get; set; }
+        public int AnswerCount { get; set; }
     }
 }

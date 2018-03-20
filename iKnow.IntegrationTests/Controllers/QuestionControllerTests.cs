@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Web;
@@ -97,6 +98,35 @@ namespace iKnow.IntegrationTests.Controllers {
             Assert.That(questionDetailViewModel.Question.Id, Is.EqualTo(question.Id));
             Assert.That(questionDetailViewModel.CanUserDeleteAnswerPanelAnswer, Is.True);
             Assert.That(questionDetailViewModel.UserAnswerId, Is.EqualTo(answer.Id));
+        }
+
+        [Test, Isolated]
+        public void Detail_WhenCalled_ShouldLoadAnswersForQuestionAndReturnAnswerCount() {
+            var question = _context.AddTestQuestionToDatabase();
+            var answer = _context.AddTestAnswerToDatabase(question.Id);
+
+            var result = _controller.Detail(question.Id);
+
+            var questionDetailViewModel = (result as ViewResult).Model as QuestionDetailViewModel;
+            Assert.That(questionDetailViewModel.Question.Answers.Count, Is.EqualTo(1));
+            Assert.That(questionDetailViewModel.Question.Answers.First().Id, Is.EqualTo(answer.Id));
+            Assert.That(questionDetailViewModel.AnswerCount, Is.EqualTo(1));
+        }
+
+        [Test, Isolated]
+        public void LoadMore_WhenCalled_ShouldLoadAnswersForQuestion() {
+            var question = _context.AddTestQuestionToDatabase();
+            var answer = _context.AddTestAnswerToDatabase(question.Id);
+
+            for (var i = 0; i < Constants.DefaultPageSize/2; i ++) {
+                _context.AddTestAnswerToDatabase(question.Id);
+            }
+
+            var result = _controller.LoadMore(0, question.Id);
+
+            var answers = (result.Model as IEnumerable<Answer>);
+            Assert.That(answers.Count, Is.EqualTo(1));
+            Assert.That(answers.First().Id, Is.EqualTo(answer.Id));
         }
 
         [Test, Isolated]

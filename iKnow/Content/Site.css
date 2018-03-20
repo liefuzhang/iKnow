@@ -868,6 +868,10 @@ a.collapse-answer:hover {
     display: flex;
 }
 
+.question-detail-container .load-more.end-of-list {
+    display: none;
+}
+
 .add-answer-panel {
     overflow: visible;
 }

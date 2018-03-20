@@ -76,7 +76,7 @@ namespace iKnow.Controllers {
             }
 
             // Load question answers into context
-            _unitOfWork.AnswerRepository.Get(a => a.QuestionId == question.Id);
+            GetQuestionAnswers(question.Id, 0);
 
             var viewModel = ConstructQuestionDetailViewModel(question);
 
@@ -92,9 +92,27 @@ namespace iKnow.Controllers {
                 Question = question,
                 CanUserEditQuestion = question.CanUserModify(User),
                 UserAnswerId = existingAnswer?.Id ?? 0,
-                CanUserDeleteAnswerPanelAnswer = existingAnswer != null
+                CanUserDeleteAnswerPanelAnswer = existingAnswer != null,
+                AnswerCount = _unitOfWork.AnswerRepository.Count(a => a.QuestionId == question.Id)
             };
             return viewModel;
+        }
+
+        private IEnumerable<Answer> GetQuestionAnswers(int questionId, int currentPage, int pageSize = Constants.DefaultPageSize / 2) {
+            var answers = _unitOfWork.AnswerRepository.Get(a => a.QuestionId == questionId,
+                q => q.OrderByDescending(a => a.CreatedDate), null, currentPage * pageSize, pageSize);
+
+            return answers;
+        }
+
+        [Route("Question/LoadMore/{currentPage}")]
+        public PartialViewResult LoadMore(int currentPage, int questionId) {
+            var answers = GetQuestionAnswers(questionId, ++currentPage);
+            if (!answers.Any()) {
+                return null;
+            }
+
+            return PartialView("_QuestionAllAnswerPartial", answers);
         }
 
         [HttpPost]
