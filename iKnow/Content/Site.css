@@ -1096,12 +1096,9 @@ h3.question-title > a {
     }
 
 .answer-container-inner .answer-panel {
-    padding: 16px 20px 0;
+    padding: 16px 20px;
 }
 
-.answer-container-inner .answer-detail-container .answer-footer {
-    margin-bottom: 16px;
-}
 
 .answer-panel-container > div {
     background-color: white;
@@ -1134,7 +1131,7 @@ h3.question-title > a {
     cursor: pointer;
     display: inline-block;
     position: relative;
-    top: -10px;
+    top: 6px;
 }
 
     .answer-edit-icon i {

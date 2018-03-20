@@ -119,6 +119,14 @@
         questionService.getTopic(ModalController.toggleModalCommonCallback, questionId);
     }
 
+    var hideLoadMoreWhenAllAnswersDisplayed = function() {
+        var $list = $(".load-more-list");
+        var answerCount = $list.attr("data-answer-count");
+        if ($list.find(".answer-panel").length == answerCount) {
+            $(".load-more").addClass("end-of-list");
+        }
+    }
+
     var init = function () {
         $(".add-answer-panel").on("submit", "form", submitAnswer);
         $(".add-answer-panel").on("click", ".js-button-delete", appController.deleteEntity);
@@ -129,7 +137,8 @@
     };
 
     return {
-        init: init
+        init: init,
+        hideLoadMoreWhenAllAnswersDisplayed: hideLoadMoreWhenAllAnswersDisplayed
     }
 })(QuestionService);
 

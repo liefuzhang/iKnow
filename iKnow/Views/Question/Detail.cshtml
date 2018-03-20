@@ -24,7 +24,7 @@
                     <div class="panel-title answer-panel">
                         @(Model.AnswerCount + " Answer(s)")
                     </div>
-                    <div class="load-more-list">
+                    <div class="load-more-list" data-answer-count ="@Model.AnswerCount">
                         @Html.Partial("_QuestionAllAnswerPartial", Model.Question.Answers)
                     </div>
                     @Html.Partial("_LoadMorePartial")
@@ -79,6 +79,7 @@
             .ready(function () {
                 QuestionController.init();
                 LoadMoreController.init("question", "?questionId=" + "@(Model.Question.Id)");
+                QuestionController.hideLoadMoreWhenAllAnswersDisplayed();
             });
     </script>
 }
