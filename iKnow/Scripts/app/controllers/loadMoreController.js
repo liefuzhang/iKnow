@@ -4,6 +4,7 @@
     var $questionList;
     var currentPage;
     var queryString;
+    var successCallBack;
 
     var loadMoreSuccessHandler = function (html) {
         if (html) {
@@ -14,6 +15,9 @@
         } else {
             button.parent().addClass("end-of-list");
         }
+
+        if (successCallBack)
+            successCallBack();
     }
 
     var loadMoreHandler = function () {
@@ -24,11 +28,12 @@
         loadMoreService.loadMore(controllerName, currentPage, loadMoreSuccessHandler, queryString);
     }
 
-    var init = function (controller, query) {
+    var init = function (controller, query, success) {
         controllerName = controller;
         $questionList = $(".load-more-list");
         currentPage = 0;
         queryString = query;
+        successCallBack = success;
 
         $(".to-load").on("click", loadMoreHandler);
     };

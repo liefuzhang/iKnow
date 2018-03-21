@@ -29,8 +29,8 @@
     var init = function () {
         $(".question-answer-container").on("mouseenter", ".short-answer-container", toggleMoreAnswerUnderline);
         $(".question-answer-container").on("mouseleave", ".short-answer-container", toggleMoreAnswerUnderline);
-        $(".question-answer-inner").on("click", ".short-answer-container", showMoreAnswer);
-        $(".question-answer-inner").on("click", ".collapse-answer", hideMoreAnswer);
+        $(".question-answer-container").on("click", ".short-answer-container", showMoreAnswer);
+        $(".question-answer-container").on("click", ".collapse-answer", hideMoreAnswer);
     };
 
     return {
