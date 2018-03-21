@@ -135,27 +135,21 @@
         $answerContainer.toggleClass("is-collapsed");
     }
 
-    var hideCollapseAnswerForShortAnswer = function ($selector) {
-        var $answers;
-        if ($selector)
-            $answers = $selector.closest(".answer-panel-content-container");
-        else
-            $answers = $(".whole-panel").find(".answer-panel-content-container");
+    var hideCollapseAnswerForShortAnswerInner = function ($selector) {
+        var $answers = $selector.closest(".answer-panel-content-container");
 
-        $answers.each(function () {
-            if ($(this).outerHeight() < 800) {
-                $(this).find(".collapse-answer").addClass("hide");
-            }
-        });
+        if ($answers.outerHeight() < 800) {
+            $answers.find(".collapse-answer").addClass("hide");
+        }
     }
 
-    var hideCollapseAnswer = function ($answer) {
+    var hideCollapseAnswerForShortAnswer = function ($answer) {
         var $images = $answer.find("img");
         if ($images.length == 0)
-            hideCollapseAnswerForShortAnswer($answer);
+            hideCollapseAnswerForShortAnswerInner($answer);
         else {
             $images.on("load", function () {
-                hideCollapseAnswerForShortAnswer($answer);
+                hideCollapseAnswerForShortAnswerInner($answer);
             });
         }
     }
@@ -168,7 +162,7 @@
             $answers = $(".whole-panel").find(".answer-panel-content");
 
         $.each($answers, function (index) {
-            hideCollapseAnswer($(this));
+            hideCollapseAnswerForShortAnswer($(this));
 
             if (index === $answers.length - 1)
                 $lastDisplayedAnswer = $(this).closest(".answer-panel");
@@ -195,8 +189,6 @@
 
     return {
         init: init,
-        hideLoadMoreWhenAllAnswersDisplayed: hideLoadMoreWhenAllAnswersDisplayed,
-        hideCollapseAnswerForShortAnswers: hideCollapseAnswerForShortAnswer,
         loadAnswerCallBack: loadAnswerCallBack
     }
 })(QuestionService);
