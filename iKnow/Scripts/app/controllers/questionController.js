@@ -132,7 +132,16 @@
     var toggleCollapse = function () {
         event.stopPropagation();
         var $answerContainer = $(this).closest(".answer-panel-content-container");
+        var diff;
+        if (!$answerContainer.hasClass("is-collapsed")) {
+            diff = $answerContainer.height() - $(window).scrollTop();
+        }
+
         $answerContainer.toggleClass("is-collapsed");
+
+        if (diff) {
+            $(window).scrollTop($answerContainer.height() - diff);
+        }
     }
 
     var hideCollapseAnswerForShortAnswerInner = function ($selector) {
@@ -145,7 +154,7 @@
 
     var hideCollapseAnswerForShortAnswer = function ($answer) {
         var $images = $answer.find("img");
-        if ($images.length == 0)
+        if ($images.length === 0)
             hideCollapseAnswerForShortAnswerInner($answer);
         else {
             $images.on("load", function () {
@@ -154,7 +163,7 @@
         }
     }
 
-    var hideCollapseAnswerForShortAnswers = function() {
+    var hideCollapseAnswerForShortAnswers = function () {
         var $answers;
         if ($lastDisplayedAnswer)
             $answers = $lastDisplayedAnswer.nextAll().find(".answer-panel-content");
