@@ -1095,10 +1095,46 @@ h3.question-title > a {
         text-decoration: underline !important;
     }
 
-.answer-container-inner .answer-panel {
+.answer-container-inner .current-answer-panel {
     padding: 16px 20px;
 }
 
+.answer-container-inner .more-answer-panel {
+    padding: 0 20px;
+}
+
+    .answer-container-inner .more-answer-panel .divided-section {
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
+
+.more-answer-panel .more-answer-header {
+    position: relative;
+    text-align: center;
+    color: #8590a6;
+    height: 40px;
+    margin-bottom: 5px;
+}
+
+.more-answer-panel .more-answer-header:after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 30px;
+    display: block;
+    border-bottom: 1px solid #eee;
+    content: "";
+}
+
+.more-answer-panel .more-answer-header-text {
+    top: 18px;
+    position: relative;
+    z-index: 1;
+    background: #fff;
+    display: inline-block;
+    padding: 0 20px;
+    font-size: 16px;
+}
 
 .answer-panel-container > div {
     background-color: white;
@@ -1139,9 +1175,9 @@ h3.question-title > a {
         display: none;
     }
 
-    .answer-panel-content-container .expand-answer i {
-        font-size: 16px;
-    }
+        .answer-panel-content-container .expand-answer i {
+            font-size: 16px;
+        }
 
     .answer-panel-content-container.is-collapsed .expand-answer {
         position: absolute;

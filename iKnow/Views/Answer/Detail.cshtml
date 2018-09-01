@@ -10,7 +10,8 @@
 </style>
 
 <div class="answer-container-inner">
-    @if (User.Identity.IsAuthenticated) {
+    @if (User.Identity.IsAuthenticated)
+    {
         @Html.Partial("_QuestionHeaderPartial", Model.QuestionDetailViewModel)
     }
     <div class="answer-detail-container">
@@ -20,9 +21,23 @@
             </div>
             <div class="answer-panel-container">
                 <div class="view-all-answers panel">@Html.ActionLink("View all " + Model.AnswerCount + " answer(s)", "Detail", "Question", new { id = Model.QuestionDetailViewModel.Question.Id }, new { @class = "text-link" })</div>
-                <div class="answer-panel answer-content panel">
+                <div class="current-answer-panel answer-panel answer-content panel">
                     @Html.Partial("_AnswerPanelPartial", Model.Answer)
                 </div>
+                @if (Model.MoreAnswers.Any())
+                {
+                    <div class="more-answer-panel">
+                        <div class="more-answer-header">
+                            <div class="more-answer-header-text">More Answers</div>
+                        </div>
+                        @foreach (var answer in Model.MoreAnswers)
+                        {
+                            <div class="answer-panel answer-content divided-section">
+                                @Html.Partial("_AnswerPanelPartial", answer)
+                            </div>
+                        }
+                    </div>
+                }
                 <div class="view-all-answers panel">@Html.ActionLink("View all " + Model.AnswerCount + " answer(s)", "Detail", "Question", new { id = Model.QuestionDetailViewModel.Question.Id }, new { @class = "text-link" })</div>
             </div>
         </div>
@@ -49,6 +64,7 @@
         $(document)
             .ready(function () {
                 QuestionController.init();
+                QuestionController.collapseAnswersInMoreAnswersPanel();
             });
     </script>
 }

@@ -106,16 +106,25 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Detail_WhenCalled_ReturnAnswerAndAnswerCountInViewModel() {
+        public void Detail_WhenCalled_ReturnAnswerAndAnswerCountAndMoreAnswersInViewModel() {
             _unitOfWork.Setup(
                 u => u.AnswerRepository.Count(It.IsAny<Expression<Func<Answer, bool>>>()))
-                .Returns(1);
+                .Returns(2);
+
+            _unitOfWork.Setup(
+                    u => u.AnswerRepository.Get(It.IsAny<Expression<Func<Answer, bool>>>(), 
+                        It.IsAny<Func<IQueryable<Answer>, IOrderedQueryable<Answer>>>(),
+                        It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
+                .Returns(new List<Answer> {
+                    _answer2
+                });
 
             var result = _controller.Detail(_answer1.Id);
 
             Assert.That((result as ViewResult).Model, Is.TypeOf<AnswerDetailViewModel>());
             Assert.That(((result as ViewResult).Model as AnswerDetailViewModel).Answer, Is.EqualTo(_answer1));
-            Assert.That(((result as ViewResult).Model as AnswerDetailViewModel).AnswerCount, Is.EqualTo(1));
+            Assert.That(((result as ViewResult).Model as AnswerDetailViewModel).MoreAnswers.First(), Is.EqualTo(_answer2));
+            Assert.That(((result as ViewResult).Model as AnswerDetailViewModel).AnswerCount, Is.EqualTo(2));
         }
 
         [Test]

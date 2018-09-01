@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 using iKnow.Core.Models;
 using iKnow.Persistence;
 
-namespace iKnow.IntegrationTests.Extensions {
-    public static class DbContextExtensions {
-        public static Topic AddTestTopicToDatabase(this iKnowContext context, string name = "Test Topic") {
-            var topic = new Topic {
+namespace iKnow.IntegrationTests.Extensions
+{
+    public static class DbContextExtensions
+    {
+        public static Topic AddTestTopicToDatabase(this iKnowContext context, string name = "Test Topic")
+        {
+            var topic = new Topic
+            {
                 Name = name
             };
 
@@ -20,9 +24,11 @@ namespace iKnow.IntegrationTests.Extensions {
             return topic;
         }
 
-        public static Question AddTestQuestionToDatabase(this iKnowContext context, string title = "Test question?") {
-            var question = new Question {
-                Title =  title,
+        public static Question AddTestQuestionToDatabase(this iKnowContext context, string title = "Test question?")
+        {
+            var question = new Question
+            {
+                Title = title,
             };
             question.SetUserId(context.Users.First().Id);
 
@@ -33,10 +39,13 @@ namespace iKnow.IntegrationTests.Extensions {
             return question;
         }
 
-        public static Answer AddTestAnswerToDatabase(this iKnowContext context, int questionId, string content = "Test answer") {
-            var answer   = new Answer() {
+        public static Answer AddTestAnswerToDatabase(this iKnowContext context, int questionId, string content = "Test answer",
+            string userId = null)
+        {
+            var answer = new Answer()
+            {
                 Content = content,
-                AppUserId = context.Users.First().Id,
+                AppUserId = userId ?? context.Users.First().Id,
                 QuestionId = questionId,
                 CreatedDate = DateTime.Now
             };
@@ -48,7 +57,8 @@ namespace iKnow.IntegrationTests.Extensions {
             return answer;
         }
 
-        public static TopicFollowing AddTestTopicFollowingToDatabase(this iKnowContext context, int topicId) {
+        public static TopicFollowing AddTestTopicFollowingToDatabase(this iKnowContext context, int topicId)
+        {
             var topicFollowing = new TopicFollowing(context.Users.First().Id, topicId);
 
             context.TopicFollowings.Add(topicFollowing);
@@ -58,25 +68,29 @@ namespace iKnow.IntegrationTests.Extensions {
             return topicFollowing;
         }
 
-        public static Activity AddTestActivityTopicFollowingToDatabase(this iKnowContext context, int topicId) {
+        public static Activity AddTestActivityTopicFollowingToDatabase(this iKnowContext context, int topicId)
+        {
             var activity = Activity.ActivityFollowTopic(context.Users.First().Id, topicId);
 
             return AddActivity(context, activity);
         }
 
-        public static Activity AddTestActivityAnswerQuestionToDatabase(this iKnowContext context, int questionId, int answerId) {
+        public static Activity AddTestActivityAnswerQuestionToDatabase(this iKnowContext context, int questionId, int answerId)
+        {
             var activity = Activity.ActivityAnswerQuestion(context.Users.First().Id, questionId, answerId);
 
             return AddActivity(context, activity);
         }
 
-        public static Activity AddTestActivityAddQuestionToDatabase(this iKnowContext context, int questionId) {
+        public static Activity AddTestActivityAddQuestionToDatabase(this iKnowContext context, int questionId)
+        {
             var activity = Activity.ActivityAddQuestion(context.Users.First().Id, questionId);
 
             return AddActivity(context, activity);
         }
 
-        private static Activity AddActivity(iKnowContext context, Activity activity) {
+        private static Activity AddActivity(iKnowContext context, Activity activity)
+        {
             context.Activities.Add(activity);
             context.SaveChanges();
 

@@ -17,21 +17,21 @@
             placeholder: "Write your answer here...",
             modules: {
                 toolbar: [['bold', 'italic'],
-                            [{ 'header': 2 }, 'blockquote'],
-                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                            ['link', 'image'],
-                            ['clean']]
+                [{ 'header': 2 }, 'blockquote'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                ['link', 'image'],
+                ['clean']]
             },
             theme: "snow",
             formats: [
-              'bold',
-              'italic',
-              'link',
-              'header',
-              'list',
-              'blockquote',
-              'image',
-              'indent'
+                'bold',
+                'italic',
+                'link',
+                'header',
+                'list',
+                'blockquote',
+                'image',
+                'indent'
             ],
             clipboard: {
                 matchVisual: false
@@ -60,10 +60,10 @@
 
     var setupClickHandlers = function () {
         $(".ql-editor")
-                .on("mousewheel DOMMouseScroll",
-                    function (e) {
-                        preventOuterScrolling(e);
-                    });
+            .on("mousewheel DOMMouseScroll",
+                function (e) {
+                    preventOuterScrolling(e);
+                });
 
         $(".full-screen")
             .on("click",
@@ -183,6 +183,10 @@
         hideCollapseAnswerForShortAnswers();
     }
 
+    var collapseAnswersInMoreAnswersPanel = function () {
+        $(".more-answer-panel .answer-panel-content-container").addClass("is-collapsed");
+    }
+
     var init = function () {
         $(".add-answer-panel").on("submit", "form", submitAnswer);
         $(".add-answer-panel").on("click", ".js-button-delete", appController.deleteEntity);
@@ -190,15 +194,16 @@
         $(".edit-answer").on("click", function () { showAddAnswerPanel(true); });
         $(".question-header-panel .js-edit-question").on("click", toggleModalEditQuestion);
         $(".question-header-panel .js-edit-topic").on("click", toggleModalEditTopic);
-        $(".whole-panel").on("click", ".collapse-answer", toggleCollapse);
-        $(".whole-panel").on("click", ".answer-panel-content-container.is-collapsed", toggleCollapse);
+        $(".whole-panel, .answer-panel-container").on("click", ".collapse-answer", toggleCollapse);
+        $(".whole-panel, .answer-panel-container").on("click", ".answer-panel-content-container.is-collapsed", toggleCollapse);
 
         loadAnswerCallBack();
     };
 
     return {
         init: init,
-        loadAnswerCallBack: loadAnswerCallBack
+        loadAnswerCallBack: loadAnswerCallBack,
+        collapseAnswersInMoreAnswersPanel: collapseAnswersInMoreAnswersPanel
     }
 })(QuestionService);
 

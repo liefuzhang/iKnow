@@ -72,9 +72,11 @@ namespace iKnow.IntegrationTests.Controllers {
         }
 
         [Test, Isolated]
-        public void Detail_WhenCalled_ShouldReturnAnswerAndAnswerCountAndQuestionInViewModel() {
+        public void Detail_WhenCalled_ShouldReturnAnswerAndAnswerCountAndMoreAnswersAndQuestionInViewModel() {
             var question = _context.AddTestQuestionToDatabase();
             var answer = _context.AddTestAnswerToDatabase(question.Id);
+            var secondUserIdInDb = "2";
+            var answer2 = _context.AddTestAnswerToDatabase(question.Id, userId: secondUserIdInDb);
 
             var result = _controller.Detail(answer.Id);
 
@@ -82,7 +84,8 @@ namespace iKnow.IntegrationTests.Controllers {
             var questionDetailViewModel = answerDetailViewModel.QuestionDetailViewModel;
 
             Assert.That(answerDetailViewModel.Answer.Id, Is.EqualTo(answer.Id));
-            Assert.That(answerDetailViewModel.AnswerCount, Is.EqualTo(1));
+            Assert.That(answerDetailViewModel.MoreAnswers.First().Id, Is.EqualTo(answer2.Id));
+            Assert.That(answerDetailViewModel.AnswerCount, Is.EqualTo(2));
             Assert.That(questionDetailViewModel.Question.Id, Is.EqualTo(question.Id));
             Assert.That(questionDetailViewModel.UserAnswerId, Is.EqualTo(answer.Id));
             Assert.That(questionDetailViewModel.CanUserDeleteAnswerPanelAnswer, Is.True);
