@@ -27,10 +27,11 @@
     }
 
     var init = function () {
-        $(".question-answer-container").on("mouseenter", ".short-answer-container", toggleMoreAnswerUnderline);
-        $(".question-answer-container").on("mouseleave", ".short-answer-container", toggleMoreAnswerUnderline);
-        $(".question-answer-container").on("click", ".short-answer-container", showMoreAnswer);
-        $(".question-answer-container").on("click", ".collapse-answer", hideMoreAnswer);
+        var container = $(".question-answer-container, .activity-answer-question-inner");
+        container.on("mouseenter", ".short-answer-container", toggleMoreAnswerUnderline);
+        container.on("mouseleave", ".short-answer-container", toggleMoreAnswerUnderline);
+        container.on("click", ".short-answer-container", showMoreAnswer);
+        container.on("click", ".collapse-answer", hideMoreAnswer);
     };
 
     return {
