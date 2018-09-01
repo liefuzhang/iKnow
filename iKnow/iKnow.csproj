@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -423,6 +424,7 @@
     <Content Include="Scripts\app\controllers\answerController.js" />
     <Content Include="Scripts\app\controllers\questionController.js" />
     <Content Include="Scripts\app\controllers\topicController.js" />
+    <Content Include="Scripts\app\services\photoUploadService.js" />
     <Content Include="Scripts\app\services\topicService.js" />
     <Content Include="Scripts\app\services\registerService.js" />
     <Content Include="Scripts\app\services\loadMoreService.js" />
@@ -490,6 +492,7 @@
     <Content Include="Views\Account\_ActivityPartial.cshtml" />
     <Content Include="Views\Question\_QuestionAllAnswerPartial.cshtml" />
     <Content Include="Views\Shared\_AnswerFooterPartial.cshtml" />
+    <Content Include="Views\Account\_ChangeProfilePhotoModalPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -1,5 +1,12 @@
-﻿var PhotoUploadController = (function () {
+﻿var PhotoUploadController = (function (questionService, photoUploadService) {
     var targetSelector;
+
+    var toggleModalEditProfilePhoto = function () {
+        var userId = targetSelector.attr("data-user-id");
+        $(".modal-container").removeClass("new-question-form-loaded");
+
+        photoUploadService.getForm(ModalController.toggleModalCommonCallback, userId);
+    }
 
     var readUrl = function () {
         if (event.currentTarget.files && event.currentTarget.files[0]) {
@@ -14,11 +21,11 @@
 
     var init = function (upload, target) {
         targetSelector = $(target);
-        $(upload).on("change", readUrl);
+        $(upload).on("change", toggleModalEditProfilePhoto);
     };
     
     return {
         init: init
     }
-})();
+})(QuestionService, PhotoUploadService);
 

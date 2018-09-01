@@ -330,6 +330,26 @@ namespace iKnow.Controllers {
         }
 
         //
+        // GET: /Account/EditProfilePhoto
+        public async Task<PartialViewResult> EditProfilePhoto(string userId)
+        {
+            var user = await UserManager.FindByIdAsync(userId);
+            var viewModel = new UserProfileViewModel
+            {
+                AppUser = user
+            };
+            return PartialView("_ChangeProfilePhotoModalPartial", viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult SaveProfilePhoto(UserProfileViewModel viewModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        //
         // GET: /Manage/ChangePassword
         [Authorize]
         public ActionResult ChangePassword() {
