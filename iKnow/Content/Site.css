@@ -1116,15 +1116,15 @@ h3.question-title > a {
     margin-bottom: 5px;
 }
 
-.more-answer-panel .more-answer-header:after {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 30px;
-    display: block;
-    border-bottom: 1px solid #eee;
-    content: "";
-}
+    .more-answer-panel .more-answer-header:after {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 30px;
+        display: block;
+        border-bottom: 1px solid #eee;
+        content: "";
+    }
 
 .more-answer-panel .more-answer-header-text {
     top: 18px;
@@ -1569,6 +1569,32 @@ h3.question-title > a {
     .mask-content i {
         font-size: 28px;
         margin-bottom: 10px;
+    }
+
+.photo-canvas-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#photo-canvas {
+    cursor: grab;
+}
+
+.photo-resizer input {
+    width: 220px;
+    height: 6px;
+    padding: 0;
+    margin: 30px 10px 15px;
+    vertical-align: middle;
+    background: #f6f6f6;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+    .photo-resizer input:focus {
+        outline: none;
     }
 
 /*#endregion User Profile*/
