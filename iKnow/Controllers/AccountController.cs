@@ -4,6 +4,7 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
 using iKnow.Core;
 using iKnow.Core.Models;
@@ -23,29 +24,25 @@ namespace iKnow.Controllers {
         private AppUserManager _userManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailSender _emailSender;
-        private readonly IFileHelper _fileHelper;
         private readonly IAuthenticationManager _authenticationManager;
 
-        public AccountController(IUnitOfWork unitOfWork, IEmailSender emailSender, IFileHelper fileHelper,
+        public AccountController(IUnitOfWork unitOfWork, IEmailSender emailSender, 
             AppUserManager userManager, AppSignInManager signInManager, IAuthenticationManager authenticationManager) {
             _unitOfWork = unitOfWork;
             _emailSender = emailSender;
-            _fileHelper = fileHelper;
             UserManager = userManager;
             SignInManager = signInManager;
             _authenticationManager = authenticationManager;
         }
 
-        public AccountController(IUnitOfWork unitOfWork, IEmailSender emailSender, IFileHelper fileHelper) {
+        public AccountController(IUnitOfWork unitOfWork, IEmailSender emailSender) {
             _unitOfWork = unitOfWork;
             _emailSender = emailSender;
-            _fileHelper = fileHelper;
         }
 
         public AccountController() {
             _unitOfWork = new UnitOfWork();
             _emailSender = new EmailSender();
-            _fileHelper = new FileHelper();
         }
 
         protected override void Dispose(bool disposing) {
@@ -96,7 +93,7 @@ namespace iKnow.Controllers {
 
         //
         // POST: /Account/Login
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl) {
             if (ModelState.IsValid) {
@@ -133,7 +130,7 @@ namespace iKnow.Controllers {
 
         //
         // POST: /Account/Register
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model) {
             if (ModelState.IsValid) {
@@ -188,7 +185,7 @@ namespace iKnow.Controllers {
 
         //
         // POST: /Account/ForgotPassword
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel model) {
             if (ModelState.IsValid) {
@@ -218,7 +215,7 @@ namespace iKnow.Controllers {
 
         //
         // POST: /Account/ResetPassword
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ViewResult> ResetPassword(ResetPasswordViewModel model) {
             if (!ModelState.IsValid) {
@@ -239,13 +236,13 @@ namespace iKnow.Controllers {
 
         //
         // POST: /Account/LogOff
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public ActionResult LogOff() {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
 
-        [Route("Account/UserProfile/{userName}")]
+        [System.Web.Mvc.Route("Account/UserProfile/{userName}")]
         public async Task<ActionResult> UserProfile(string userName) {
             var user = await UserManager.FindByNameAsync(userName);
             if (user == null) {
@@ -265,7 +262,7 @@ namespace iKnow.Controllers {
                     null, currentPage * pageSize, pageSize);
         }
 
-        [Route("Account/LoadMore/{currentPage}")]
+        [System.Web.Mvc.Route("Account/LoadMore/{currentPage}")]
         public async Task<PartialViewResult> LoadMore(int currentPage, string userName) {
             var user = await UserManager.FindByNameAsync(userName);
             if (user == null) {
@@ -293,8 +290,8 @@ namespace iKnow.Controllers {
             return View("EditProfile", userProfileViewModel);
         }
 
-        [HttpPost]
-        [Authorize]
+        [System.Web.Mvc.HttpPost]
+        [System.Web.Mvc.Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult SaveProfile(UserProfileViewModel viewModel) {
             try {
@@ -310,9 +307,6 @@ namespace iKnow.Controllers {
                 }
 
                 SaveUserChanges(user);
-
-                var postedPhoto = viewModel.PostedPhoto;
-                _fileHelper.SaveUserIcon(postedPhoto, user.Id);
 
                 return RedirectToAction("UserProfile", "Account", new { userName = user.UserName });
             } catch (DbEntityValidationException ex) {
@@ -341,26 +335,18 @@ namespace iKnow.Controllers {
             return PartialView("_ChangeProfilePhotoModalPartial", viewModel);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public ActionResult SaveProfilePhoto(UserProfileViewModel viewModel)
-        {
-            throw new NotImplementedException();
-        }
-
         //
         // GET: /Manage/ChangePassword
-        [Authorize]
+        [System.Web.Mvc.Authorize]
         public ActionResult ChangePassword() {
             return View();
         }
 
         //
         // POST: /Manage/ChangePassword
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [System.Web.Mvc.Authorize]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model) {
             if (!ModelState.IsValid) {
                 return View(model);

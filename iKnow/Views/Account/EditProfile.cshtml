@@ -14,8 +14,8 @@
         @using (Html.BeginForm("SaveProfile", "Account", null, FormMethod.Post, new { enctype = "multipart/form-data" })) {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary("", new { @class = "error" })
-            <div class="edit-profile-photo img-container" data-user-id="@Model.AppUser.Id">
-                <img src="@Model.AppUser.IconPath" />
+            <div class="edit-profile-photo img-container">
+                <img src="@Model.AppUser.IconPath" data-user-id="@Model.AppUser.Id"/>
                 <div class="mask">
                     <div class="mask-backdrop"></div>
                     <div class="mask-content">

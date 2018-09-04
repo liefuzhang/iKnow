@@ -181,6 +181,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ActivityController.cs" />
     <Compile Include="Controllers\AnswerController.cs" />
+    <Compile Include="Controllers\Api\AccountController.cs" />
     <Compile Include="Controllers\Api\TopicFollowingController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -217,6 +218,7 @@
     <Compile Include="Core\ViewModels\QuestionAnswerCountViewModel.cs" />
     <Compile Include="Core\ViewModels\QuestionDetailViewModel.cs" />
     <Compile Include="Core\ViewModels\QuestionFormViewModel.cs" />
+    <Compile Include="Core\ViewModels\SaveProfilePhotoViewModel.cs" />
     <Compile Include="Core\ViewModels\SearchResultViewModel.cs" />
     <Compile Include="Core\ViewModels\TopicDetailViewModel.cs" />
     <Compile Include="Core\ViewModels\TopicFormViewModel.cs" />

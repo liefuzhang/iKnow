@@ -19,6 +19,11 @@
         $(document.body).addClass("modal-open");
     }
 
+    var close = function () {
+        $(".modal-container").removeClass("open");
+        $(document.body).removeClass("modal-open");
+    }
+
     var toggleModalCommonCallback = function (html) {
         if (html) {
             var $modalContainer = $(".modal-container");
@@ -43,7 +48,8 @@
     return {
         init: init,
         toggleModalCommonCallback: toggleModalCommonCallback,
-        open: open
+        open: open,
+        close: close
     }
 })();
 

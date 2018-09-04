@@ -1,28 +1,31 @@
 ﻿var PhotoUploadController = (function (questionService, photoUploadService) {
     var targetSelector;
-    var canvas, ctx, image;
 
     var toggleModalEditProfilePhoto = function (event) {
+        var canvas, ctx, image, startX, startY, endX, endY, imageSize = 160, scale;
         var userId = targetSelector.attr("data-user-id");
         $(".modal-container").removeClass("new-question-form-loaded");
         var eventState = {};
 
-        var redrawImage = function (offsetX, offsetY) {
-            var imageSize = 160;
-            var startX = (canvas.width - imageSize) / 2;
-            var startY = (canvas.height - imageSize) / 2;
-            var endX = imageSize + startX;
-            var endY = imageSize + startY;
+        var initImageParams = function () {
+            startX = (canvas.width - imageSize) / 2;
+            startY = (canvas.height - imageSize) / 2;
+            endX = imageSize + startX;
+            endY = imageSize + startY;
             if (!eventState.currentX) eventState.currentX = startX;
             if (!eventState.currentY) eventState.currentY = startY;
             if (!eventState.currentWidth) eventState.currentWidth = imageSize;
             if (!eventState.currentHeight) eventState.currentHeight = imageSize;
-            var scale = $('.photo-resizer input').val();
+            scale = $('.photo-resizer input').val();
+        }
 
+        var drawBackground = function () {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "#f6f6f6";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
 
+        var drawImage = function (offsetX, offsetY) {
             var newWidth = image.width * scale;
             var newHeight = image.height * scale;
             var newX = eventState.currentX - (newWidth - eventState.currentWidth) / 2 + (offsetX ? offsetX : 0);
@@ -37,13 +40,22 @@
             eventState.currentY = newY;
             eventState.currentWidth = newWidth;
             eventState.currentHeight = newHeight;
+        }
 
+        var drawImageViewSurrounding = function () {
             ctx.globalAlpha = 0.5;
             ctx.fillRect(startX, 0, imageSize, startY);
             ctx.fillRect(0, 0, startX, canvas.height);
             ctx.fillRect(startX, endY, imageSize, canvas.height - endY);
             ctx.fillRect(endX, 0, canvas.width - endX, canvas.height);
             ctx.globalAlpha = 1.0;
+        }
+
+        var redrawImage = function (offsetX, offsetY) {
+            initImageParams();
+            drawBackground();
+            drawImage(offsetX, offsetY);
+            drawImageViewSurrounding();
         }
 
         var moving = function (e) {
@@ -75,38 +87,62 @@
             $(document).off('mousemove touchmove', moving);
         };
 
+        var fileReaderOnload = function (e) {
+            $('#photo-canvas').off('mousedown touchstart', startMoving);
+            canvas = $('#photo-canvas')[0];
+            ctx = canvas.getContext("2d");
+
+            image = new Image();
+            image.src = e.currentTarget.result;
+            image.onload = function () { redrawImage() };
+
+            var range = $('.photo-resizer input');
+            range.on('input change', function () {
+                redrawImage();
+            });
+            range.val(1);
+
+            $('#photo-canvas').on('mousedown touchstart', startMoving);
+        };
+
+        var savePhotoHandler = function () {
+            var cropCanvas = document.createElement('canvas');
+            cropCanvas.width = imageSize;
+            cropCanvas.height = imageSize;
+
+            cropCanvas.getContext('2d').drawImage(canvas, startX, startY, imageSize, imageSize,
+                0, 0, imageSize, imageSize);
+            var dataURL = cropCanvas.toDataURL("image/png");
+            photoUploadService.savePhoto(userId, dataURL, function () {
+                targetSelector.attr("src", dataURL);
+                $('.profile-photo').attr("src", dataURL);
+                ModalController.close();
+            });
+        }
+
         var success = function (html) {
             if (event.currentTarget.files && event.currentTarget.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#photo-canvas').off('mousedown touchstart', startMoving);
-                    canvas = $('#photo-canvas')[0];
-                    ctx = canvas.getContext("2d");
-
-                    image = new Image();
-                    image.src = e.currentTarget.result;
-                    image.onload = function () { redrawImage() };
-
-                    var range = $('.photo-resizer input');
-                    range.on('input change', function () {
-                        redrawImage();
-                    });
-                    range.val(1);
-
-                    $('#photo-canvas').on('mousedown touchstart', startMoving);
-                };
-                reader.readAsDataURL(event.currentTarget.files[0]);
                 ModalController.toggleModalCommonCallback(html);
+
+                var reader = new FileReader();
+                reader.onload = fileReaderOnload;
+                reader.readAsDataURL(event.currentTarget.files[0]);
+
+                $('.save-photo').click(savePhotoHandler);
             }
         }
 
         photoUploadService.getForm(success, userId);
     }
 
+    var clearUpload = function () {
+        $(this).val('');
+    }
+
     var init = function (upload, target) {
         targetSelector = $(target);
         $(upload).on("change", toggleModalEditProfilePhoto);
+        $(upload).on("click", clearUpload);
     };
 
     return {

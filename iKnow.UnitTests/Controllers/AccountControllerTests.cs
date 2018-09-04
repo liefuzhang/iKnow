@@ -25,9 +25,11 @@ using Moq;
 using NUnit.Framework;
 using Constants = iKnow.Core.Models.Constants;
 
-namespace iKnow.UnitTests.Controllers {
+namespace iKnow.UnitTests.Controllers
+{
     [TestFixture]
-    public class AccountControllerTests {
+    public class AccountControllerTests
+    {
         private Mock<IUnitOfWork> _unitOfWork;
         private AccountController _controller;
         private Mock<IPrincipal> _user;
@@ -39,7 +41,6 @@ namespace iKnow.UnitTests.Controllers {
         private Mock<AppSignInManager> _signInManager;
         private Mock<IAuthenticationManager> _authenticationManager;
         private Mock<IEmailSender> _emailSender;
-        private Mock<IFileHelper> _imageFileGenerator;
         private Mock<UrlHelper> _urlHelper;
         private readonly string _forgotPasswordConfirmationStr = "ForgotPasswordConfirmation";
         private readonly string _resetPasswordConfirmationStr = "ResetPasswordConfirmation";
@@ -47,33 +48,39 @@ namespace iKnow.UnitTests.Controllers {
         private Mock<ClaimsIdentity> _identity;
 
         [SetUp]
-        public void Setup() {
+        public void Setup()
+        {
             _returnUrl = "return/url";
             InitializeUsers();
             SetupUnitOfWork();
             SetupController();
         }
 
-        private void InitializeUsers() {
-            _currentUser = new AppUser {
+        private void InitializeUsers()
+        {
+            _currentUser = new AppUser
+            {
                 Id = "1",
                 Email = "testEmail",
                 FirstName = "Tester",
                 LastName = "Smith"
             };
-            _newUser = new AppUser {
+            _newUser = new AppUser
+            {
                 Email = " Newemail ",
                 FirstName = " Newfirst ",
                 LastName = " Newlast "
             };
-            _saveUser = new AppUser {
+            _saveUser = new AppUser
+            {
                 Email = " Saveemail ",
                 FirstName = " Savefirst ",
                 LastName = " Savelast "
             };
         }
 
-        private void SetupUnitOfWork() {
+        private void SetupUnitOfWork()
+        {
             _unitOfWork = new Mock<IUnitOfWork>();
 
             _unitOfWork.MockRepositories();
@@ -89,31 +96,31 @@ namespace iKnow.UnitTests.Controllers {
                 .Returns(_currentUser);
         }
 
-        private void SetupController() {
+        private void SetupController()
+        {
             SetupUserManager();
 
             SetupSignInManager();
 
             _emailSender = new Mock<IEmailSender>();
-            _imageFileGenerator = new Mock<IFileHelper>();
             _request = new Mock<HttpRequestBase>();
 
             _controller = new AccountController(_unitOfWork.Object,
-                _emailSender.Object, _imageFileGenerator.Object,
-                _userManager.Object, _signInManager.Object,
+                _emailSender.Object, _userManager.Object, _signInManager.Object,
                 _authenticationManager.Object);
             _user = new Mock<IPrincipal>();
 
             _controller.MockContext(_request, _user);
             _identity = _user.MockIdentity(_currentUser.Id);
             _identity.Setup(i => i.IsAuthenticated).Returns(false);
-            
+
             _urlHelper = new Mock<UrlHelper>();
             _controller.Url = _urlHelper.Object;
             _urlHelper.Setup(u => u.IsLocalUrl(It.IsAny<string>())).Returns(true);
 
         }
-        private void SetupUserManager() {
+        private void SetupUserManager()
+        {
             var userStore = new Mock<IUserStore<AppUser>>();
             _userManager = new Mock<AppUserManager>(userStore.Object);
             _userManager.Setup(u => u.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult(_currentUser));
@@ -127,7 +134,8 @@ namespace iKnow.UnitTests.Controllers {
                 .Returns(Task.FromResult(IdentityResult.Success));
         }
 
-        private void SetupSignInManager() {
+        private void SetupSignInManager()
+        {
             _authenticationManager = new Mock<IAuthenticationManager>();
             _signInManager = new Mock<AppSignInManager>(_userManager.Object, _authenticationManager.Object);
             _signInManager.Setup(s => s.PasswordSignInAsync(
@@ -139,21 +147,24 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void LoginGet_WhenCalled_SetReturnUrlInViewBag() {
+        public void LoginGet_WhenCalled_SetReturnUrlInViewBag()
+        {
             _controller.Login(_returnUrl);
 
             Assert.That(_controller.ViewBag.ReturnUrl, Is.EqualTo(_returnUrl));
         }
 
         [Test]
-        public void LoginGet_WhenCalled_ReturnViewResult() {
+        public void LoginGet_WhenCalled_ReturnViewResult()
+        {
             var result = _controller.Login(_returnUrl);
 
             Assert.That(result, Is.TypeOf<ViewResult>());
         }
 
         [Test]
-        public void LoginGet_UserIsAuthenticated_ReturnRedirectToRouteResult() {
+        public void LoginGet_UserIsAuthenticated_ReturnRedirectToRouteResult()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             var result = _controller.Login(_returnUrl);
@@ -162,7 +173,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task LoginPost_SignInSuceeded_ReturnRedirectResultWhenUrlIsLocal() {
+        public async Task LoginPost_SignInSuceeded_ReturnRedirectResultWhenUrlIsLocal()
+        {
             var viewModel = GetLoginViewModel();
 
             var result = await _controller.Login(viewModel, _returnUrl);
@@ -171,7 +183,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task LoginPost_SignInSuceeded_ReturnRedirectToRouteResultWhenUrlIsNotLocal() {
+        public async Task LoginPost_SignInSuceeded_ReturnRedirectToRouteResultWhenUrlIsNotLocal()
+        {
             _urlHelper.Setup(u => u.IsLocalUrl(It.IsAny<string>())).Returns(false);
             var viewModel = GetLoginViewModel();
 
@@ -181,7 +194,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task LoginPost_ModelStateNotValid_AddReturnUrlInViewBagAndReturnViewResult() {
+        public async Task LoginPost_ModelStateNotValid_AddReturnUrlInViewBagAndReturnViewResult()
+        {
             var viewModel = GetLoginViewModel();
             _controller.ModelState.AddModelError("", "");
 
@@ -191,7 +205,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task LoginPost_CouldNotFindUser_AddModelStateError() {
+        public async Task LoginPost_CouldNotFindUser_AddModelStateError()
+        {
             _userManager.Setup(u => u.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult((AppUser)null));
 
             var viewModel = GetLoginViewModel();
@@ -202,7 +217,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task LoginPost_CouldNotFindUser_AddReturnUrlInViewBagAndReturnViewResult() {
+        public async Task LoginPost_CouldNotFindUser_AddReturnUrlInViewBagAndReturnViewResult()
+        {
             _userManager.Setup(u => u.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult((AppUser)null));
 
             var viewModel = GetLoginViewModel();
@@ -213,7 +229,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task LoginPost_SignInFailed_AddModelStateError() {
+        public async Task LoginPost_SignInFailed_AddModelStateError()
+        {
             _signInManager.Setup(s => s.PasswordSignInAsync(
                 It.IsAny<string>(),
                 It.IsAny<string>(),
@@ -229,7 +246,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task LoginPost_SignInFailed_AddReturnUrlInViewBagAndReturnViewResult() {
+        public async Task LoginPost_SignInFailed_AddReturnUrlInViewBagAndReturnViewResult()
+        {
             _signInManager.Setup(s => s.PasswordSignInAsync(
                 It.IsAny<string>(),
                 It.IsAny<string>(),
@@ -245,7 +263,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void RegisterGet_WhenCalled_ReturnPartialViewWithReturnUrl() {
+        public void RegisterGet_WhenCalled_ReturnPartialViewWithReturnUrl()
+        {
             var result = _controller.Register(_returnUrl);
 
             Assert.That(result, Is.TypeOf<PartialViewResult>());
@@ -253,7 +272,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task RegisterPost_CreatedUserSucceeded_ReturnRedirectToRouteResultWhenUrlIsNotLocal() {
+        public async Task RegisterPost_CreatedUserSucceeded_ReturnRedirectToRouteResultWhenUrlIsNotLocal()
+        {
             _urlHelper.Setup(u => u.IsLocalUrl(It.IsAny<string>())).Returns(false);
 
             var viewModel = GetRegisterViewModel();
@@ -264,7 +284,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task RegisterPost_CreatedUserSucceeded_ReturnRedirectResultWhenUrlIsLocal() {
+        public async Task RegisterPost_CreatedUserSucceeded_ReturnRedirectResultWhenUrlIsLocal()
+        {
             var viewModel = GetRegisterViewModel();
 
             var result = await _controller.Register(viewModel);
@@ -273,7 +294,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task RegisterPost_ModelStateNotValid_AddReturnUrlInViewBagAndReturnViewResult() {
+        public async Task RegisterPost_ModelStateNotValid_AddReturnUrlInViewBagAndReturnViewResult()
+        {
             _controller.ModelState.AddModelError("", "");
 
             var viewModel = GetRegisterViewModel();
@@ -284,7 +306,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task RegisterPost_CreateUserFailed_AddModelStateError() {
+        public async Task RegisterPost_CreateUserFailed_AddModelStateError()
+        {
             _userManager.Setup(u => u.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Failed("error")));
 
@@ -296,7 +319,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task RegisterPost_CreateUserFailed_AddReturnUrlInViewBagAndReturnViewResult() {
+        public async Task RegisterPost_CreateUserFailed_AddReturnUrlInViewBagAndReturnViewResult()
+        {
             _userManager.Setup(u => u.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Failed("error")));
 
@@ -308,14 +332,16 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void ForgotPasswordGet_WhenCalled_ReturnViewResult() {
+        public void ForgotPasswordGet_WhenCalled_ReturnViewResult()
+        {
             var result = _controller.ForgotPassword();
 
             Assert.That(result, Is.TypeOf<ViewResult>());
         }
 
         [Test]
-        public async Task ForgotPasswordPost_WhenCalled_ReturnForgotPasswordConfirmationView() {
+        public async Task ForgotPasswordPost_WhenCalled_ReturnForgotPasswordConfirmationView()
+        {
             var viewModel = GetForgotPasswordViewModel();
 
             var result = await _controller.ForgotPassword(viewModel);
@@ -324,7 +350,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task ForgotPasswordPost_ModelStateIsNotValid_ReturnViewResultWithViewModel() {
+        public async Task ForgotPasswordPost_ModelStateIsNotValid_ReturnViewResultWithViewModel()
+        {
             var viewModel = GetForgotPasswordViewModel();
             _controller.ModelState.AddModelError("", "");
 
@@ -334,7 +361,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task ForgotPasswordPost_CouldNotFindUser_ReturnForgotPasswordConfirmationView() {
+        public async Task ForgotPasswordPost_CouldNotFindUser_ReturnForgotPasswordConfirmationView()
+        {
             _userManager.Setup(u => u.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult((AppUser)null));
 
             var viewModel = GetForgotPasswordViewModel();
@@ -345,21 +373,24 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void ResetPasswordGet_CodeIsNull_ReturnErrorView() {
+        public void ResetPasswordGet_CodeIsNull_ReturnErrorView()
+        {
             var result = _controller.ResetPassword((string)null);
 
             Assert.That(result.ViewName, Is.EqualTo("Error"));
         }
 
         [Test]
-        public void ResetPasswordGet_CodeIsString_ReturnView() {
+        public void ResetPasswordGet_CodeIsString_ReturnView()
+        {
             var result = _controller.ResetPassword("code");
 
             Assert.That(result.ViewName, Is.Not.EqualTo("Error"));
         }
 
         [Test]
-        public async Task ResetPasswordPost_ResetSucceeded_ReturnResetPasswordConfirmationView() {
+        public async Task ResetPasswordPost_ResetSucceeded_ReturnResetPasswordConfirmationView()
+        {
             var viewModel = GetResetPasswordViewModel();
 
             var result = await _controller.ResetPassword(viewModel);
@@ -368,7 +399,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task ResetPasswordPost_ModelStateIsNotValid_ReturnViewResultWithViewModel() {
+        public async Task ResetPasswordPost_ModelStateIsNotValid_ReturnViewResultWithViewModel()
+        {
             var viewModel = GetResetPasswordViewModel();
             _controller.ModelState.AddModelError("", "");
 
@@ -378,7 +410,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task ResetPasswordPost_UserCouldNotBeFound_ReturnResetPasswordConfirmationView() {
+        public async Task ResetPasswordPost_UserCouldNotBeFound_ReturnResetPasswordConfirmationView()
+        {
             _userManager.Setup(u => u.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult((AppUser)null));
             var viewModel = GetResetPasswordViewModel();
 
@@ -388,7 +421,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task ResetPasswordPost_ResetFailed_AddModelStateError() {
+        public async Task ResetPasswordPost_ResetFailed_AddModelStateError()
+        {
             _userManager.Setup(u => u.ResetPasswordAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Failed("error")));
 
@@ -400,14 +434,16 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void LogOff_WhenCalled_ReturnRedirectToRouteResult() {
+        public void LogOff_WhenCalled_ReturnRedirectToRouteResult()
+        {
             var result = _controller.LogOff();
 
             Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
         }
 
         [Test]
-        public async Task EditProfile_WhenCalled_ReturnViewResultWithCurrentUserInViewModel() {
+        public async Task EditProfile_WhenCalled_ReturnViewResultWithCurrentUserInViewModel()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             var result = await _controller.EditProfile();
@@ -418,7 +454,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task EditProfile_RequestMessageExists_AddStatusMessageInTempData() {
+        public async Task EditProfile_RequestMessageExists_AddStatusMessageInTempData()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             _request.Setup(r => r["Message"]).Returns("test message");
@@ -429,7 +466,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task UserProfile_WhenCalled_ReturnViewResultWithUserInViewModel() {
+        public async Task UserProfile_WhenCalled_ReturnViewResultWithUserInViewModel()
+        {
             var testUserName = "testUser";
 
             var result = await _controller.UserProfile(testUserName);
@@ -440,7 +478,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task UserProfile_UserCouldNotBeFound_ReturnHttpNotFoundResult() {
+        public async Task UserProfile_UserCouldNotBeFound_ReturnHttpNotFoundResult()
+        {
             var testUserName = "testUser";
 
             _userManager.Setup(u => u.FindByNameAsync(It.IsAny<string>())).Returns(Task.FromResult((AppUser)null));
@@ -451,7 +490,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task LoadMore_UserCouldNotBeFound_ShouldReturnNull() {
+        public async Task LoadMore_UserCouldNotBeFound_ShouldReturnNull()
+        {
             var testUserName = "testUser";
 
             _userManager.Setup(u => u.FindByNameAsync(It.IsAny<string>())).Returns(Task.FromResult((AppUser)null));
@@ -462,7 +502,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task LoadMore_NoMoreActivity_ShouldReturnNull() {
+        public async Task LoadMore_NoMoreActivity_ShouldReturnNull()
+        {
             var testUserName = "testUser";
 
             var result = await _controller.LoadMore(0, testUserName);
@@ -471,7 +512,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void SaveProfile_WhenCalled_UpdateUserWithTrimmedValue() {
+        public void SaveProfile_WhenCalled_UpdateUserWithTrimmedValue()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             var viewModel = GetUserProfileViewModel();
@@ -484,7 +526,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void SaveProfile_UpdateOptionalValueIsNull_UpdateUserWithNullValue() {
+        public void SaveProfile_UpdateOptionalValueIsNull_UpdateUserWithNullValue()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             var viewModel = GetUserProfileViewModel();
@@ -499,7 +542,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void SaveProfile_WhenCalled_ReturnRedirectToRouteResult() {
+        public void SaveProfile_WhenCalled_ReturnRedirectToRouteResult()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             var viewModel = GetUserProfileViewModel();
@@ -510,7 +554,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void SaveProfile_ModelStateNotValid_ReturnViewResultWithViewModel() {
+        public void SaveProfile_ModelStateNotValid_ReturnViewResultWithViewModel()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             var viewModel = GetUserProfileViewModel();
@@ -523,7 +568,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void SaveProfile_SaveUserThrowException_AddModelStateError() {
+        public void SaveProfile_SaveUserThrowException_AddModelStateError()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             var viewModel = GetUserProfileViewModel();
@@ -536,7 +582,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void SaveProfile_SaveUserThrowException_ReturnViewResultWithViewModel() {
+        public void SaveProfile_SaveUserThrowException_ReturnViewResultWithViewModel()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             var viewModel = GetUserProfileViewModel();
@@ -550,7 +597,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void ChangePasswordGet_WhenCalled_ReturnViewResult() {
+        public void ChangePasswordGet_WhenCalled_ReturnViewResult()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             var result = _controller.ChangePassword();
@@ -559,7 +607,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task ChangePasswordPost_ChangePasswordSucceeded_ReturnRedirectToRouteResultWithMessageInRoute() {
+        public async Task ChangePasswordPost_ChangePasswordSucceeded_ReturnRedirectToRouteResultWithMessageInRoute()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             var viewModel = GetChangePasswordViewModel();
@@ -571,7 +620,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task ChangePasswordPost_ChangePasswordFailed_AddModelStateErrorAndReturnViewResultWithViewModel() {
+        public async Task ChangePasswordPost_ChangePasswordFailed_AddModelStateErrorAndReturnViewResultWithViewModel()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             var viewModel = GetChangePasswordViewModel();
@@ -586,7 +636,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task ChangePasswordPost_ModelStateNotValid_ReturnViewResultWithViewModel() {
+        public async Task ChangePasswordPost_ModelStateNotValid_ReturnViewResultWithViewModel()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             var viewModel = GetChangePasswordViewModel();
@@ -599,7 +650,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public async Task ChangePasswordPost_PasswordNotChanged_AddModelStateErrorAndReturnViewResultWithViewModel() {
+        public async Task ChangePasswordPost_PasswordNotChanged_AddModelStateErrorAndReturnViewResultWithViewModel()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(true);
 
             var viewModel = GetChangePasswordViewModel();
@@ -613,15 +665,19 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         // Helper methods
-        private LoginViewModel GetLoginViewModel() {
-            return new LoginViewModel {
+        private LoginViewModel GetLoginViewModel()
+        {
+            return new LoginViewModel
+            {
                 Email = _currentUser.Email,
                 Password = "userPassword"
             };
         }
 
-        private RegisterViewModel GetRegisterViewModel() {
-            return new RegisterViewModel() {
+        private RegisterViewModel GetRegisterViewModel()
+        {
+            return new RegisterViewModel()
+            {
                 Email = _newUser.Email,
                 Password = "userPassword",
                 FirstName = _newUser.FirstName,
@@ -630,44 +686,54 @@ namespace iKnow.UnitTests.Controllers {
             };
         }
 
-        private ForgotPasswordViewModel GetForgotPasswordViewModel() {
-            return new ForgotPasswordViewModel() {
+        private ForgotPasswordViewModel GetForgotPasswordViewModel()
+        {
+            return new ForgotPasswordViewModel()
+            {
                 Email = _newUser.Email
             };
         }
 
-        private ResetPasswordViewModel GetResetPasswordViewModel() {
-            return new ResetPasswordViewModel() {
+        private ResetPasswordViewModel GetResetPasswordViewModel()
+        {
+            return new ResetPasswordViewModel()
+            {
                 Email = _newUser.Email,
                 Password = "userPassword",
                 Code = "resetCode"
             };
         }
 
-        private UserProfileViewModel GetUserProfileViewModel() {
+        private UserProfileViewModel GetUserProfileViewModel()
+        {
             _saveUser.Gender = 1;
             _saveUser.Intro = " new intro ";
             _saveUser.Location = " new location ";
             _saveUser.Id = _currentUser.Id;
 
-            return new UserProfileViewModel {
+            return new UserProfileViewModel
+            {
                 AppUser = _saveUser
             };
         }
 
-        private ChangePasswordViewModel GetChangePasswordViewModel() {
-            return new ChangePasswordViewModel() {
+        private ChangePasswordViewModel GetChangePasswordViewModel()
+        {
+            return new ChangePasswordViewModel()
+            {
                 OldPassword = "oldpwd",
                 NewPassword = "newpwd"
             };
         }
 
-        private void VerifyReturnUrlIsInViewBagAndReturnViewResult(ActionResult result) {
+        private void VerifyReturnUrlIsInViewBagAndReturnViewResult(ActionResult result)
+        {
             Assert.That(_controller.ViewBag.ReturnUrl, Is.EqualTo(_returnUrl));
             Assert.That(result, Is.TypeOf<ViewResult>());
         }
 
-        private string GetLowerCaseNewUserName() {
+        private string GetLowerCaseNewUserName()
+        {
             return (_newUser.FirstName.Trim() + _newUser.LastName.Trim()).ToLower();
         }
     }
