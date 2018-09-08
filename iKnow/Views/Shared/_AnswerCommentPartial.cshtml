@@ -1,15 +1,22 @@
-﻿@model iKnow.Core.ViewModels.AnswerCommentsViewModel
+﻿@model IEnumerable<iKnow.Core.Models.Comment>
 
-<div class="comment-container">
-    <div class="comment-header">@Model.Comments.Count() Comment(s)</div>
-    <div class="comment-list">
-        @foreach (var comment in Model.Comments)
-        {
-            <div>@comment.Content</div>
-        }
+@foreach (var comment in Model)
+{
+    <div class="divided-section">
+        <div class="comment-item-header">
+            <div class="img-container">
+                <a href="@comment.AppUser.ProfilePageUrl">
+                    <img src=@comment.AppUser.IconPath />
+                </a>
+            </div>
+            <a href="@comment.AppUser.ProfilePageUrl">
+                @comment.AppUser.FullName
+            </a>
+            <div class="comment-date">
+                @comment.CreatedDate.ToString("MMM d")
+            </div>
+        </div>
+
+        <div class="comment-content">@comment.Content</div>
     </div>
-    <div class="write-comment">
-        <textarea rows="1" placeholder="Write your comment here..."></textarea>
-        <button class="btn" data-answer-id="@Model.AnswerId">Comment</button>
-    </div>
-</div>
+}

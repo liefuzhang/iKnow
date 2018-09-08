@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Data.Entity;
+using System.Threading;
 using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.ViewModels;
@@ -11,30 +12,39 @@ using iKnow.Helper;
 using iKnow.Persistence;
 using Constants = iKnow.Core.Models.Constants;
 using Microsoft.AspNet.Identity;
+using WebGrease.Css.Extensions;
 
-namespace iKnow.Controllers {
-    public class QuestionController : Controller {
+namespace iKnow.Controllers
+{
+    public class QuestionController : Controller
+    {
         private readonly IUnitOfWork _unitOfWork;
 
-        public QuestionController(IUnitOfWork unitOfWork) {
+        public QuestionController(IUnitOfWork unitOfWork)
+        {
             _unitOfWork = unitOfWork;
         }
 
-        public QuestionController() {
+        public QuestionController()
+        {
             _unitOfWork = new UnitOfWork();
         }
 
-        protected override void Dispose(bool disposing) {
+        protected override void Dispose(bool disposing)
+        {
             _unitOfWork.Dispose();
             base.Dispose(disposing);
         }
 
-        public PartialViewResult GetForm(int? id) {
+        public PartialViewResult GetForm(int? id)
+        {
             Question question = null;
-            if (id.HasValue && id.Value > 0) {
+            if (id.HasValue && id.Value > 0)
+            {
                 question = _unitOfWork.QuestionRepository.Single(q => q.Id == id, nameof(Question.Topics));
             }
-            if (question == null) {
+            if (question == null)
+            {
                 question = new Question();
             }
 
@@ -43,7 +53,8 @@ namespace iKnow.Controllers {
             return PartialView("_QuestionFormModalPartial", viewModel);
         }
 
-        public PartialViewResult GetTopic(int id) {
+        public PartialViewResult GetTopic(int id)
+        {
             var question = _unitOfWork.QuestionRepository.Single(q => q.Id == id, nameof(Question.Topics));
 
             var viewModel = ConstructQuestionFormViewModel(question);
@@ -51,15 +62,18 @@ namespace iKnow.Controllers {
             return PartialView("_QuestionTopicModalPartial", viewModel);
         }
 
-        private QuestionFormViewModel ConstructQuestionFormViewModel(Question question) {
-            var topics = _unitOfWork.TopicRepository.GetAll().Select(t => new {
+        private QuestionFormViewModel ConstructQuestionFormViewModel(Question question)
+        {
+            var topics = _unitOfWork.TopicRepository.GetAll().Select(t => new
+            {
                 TopicId = t.Id,
                 TopicName = t.Name
             }).ToList();
 
             var selectedTopicIds = question.Topics.Select(t => t.Id).ToArray();
 
-            var viewModel = new QuestionFormViewModel {
+            var viewModel = new QuestionFormViewModel
+            {
                 Question = question,
                 Topics = new MultiSelectList(topics, "TopicId", "TopicName"),
                 TopicIds = selectedTopicIds,
@@ -69,9 +83,11 @@ namespace iKnow.Controllers {
             return viewModel;
         }
 
-        public ActionResult Detail(int id) {
+        public ActionResult Detail(int id)
+        {
             var question = _unitOfWork.QuestionRepository.SingleOrDefault(q => q.Id == id, nameof(Question.Topics));
-            if (question == null) {
+            if (question == null)
+            {
                 return HttpNotFound();
             }
 
@@ -83,12 +99,14 @@ namespace iKnow.Controllers {
             return View(viewModel);
         }
 
-        private QuestionDetailViewModel ConstructQuestionDetailViewModel(Question question) {
+        private QuestionDetailViewModel ConstructQuestionDetailViewModel(Question question)
+        {
             var userId = User.Identity.GetUserId();
             var existingAnswer = _unitOfWork.AnswerRepository.SingleOrDefault(
                 a => a.QuestionId == question.Id && a.AppUserId == userId);
 
-            var viewModel = new QuestionDetailViewModel {
+            var viewModel = new QuestionDetailViewModel
+            {
                 Question = question,
                 CanUserEditQuestion = question.CanUserModify(User),
                 UserAnswerId = existingAnswer?.Id ?? 0,
@@ -98,17 +116,20 @@ namespace iKnow.Controllers {
             return viewModel;
         }
 
-        private IEnumerable<Answer> GetQuestionAnswers(int questionId, int currentPage, int pageSize = Constants.DefaultPageSize / 2) {
+        private IEnumerable<Answer> GetQuestionAnswers(int questionId, int currentPage, int pageSize = Constants.DefaultPageSize / 2)
+        {
             var answers = _unitOfWork.AnswerRepository.Get(a => a.QuestionId == questionId,
-                q => q.OrderByDescending(a => a.CreatedDate), null, currentPage * pageSize, pageSize);
+                q => q.OrderByDescending(a => a.CreatedDate), nameof(Answer.Comments), currentPage * pageSize, pageSize).ToList();
 
             return answers;
         }
 
         [Route("Question/LoadMore/{currentPage}")]
-        public PartialViewResult LoadMore(int currentPage, int questionId) {
+        public PartialViewResult LoadMore(int currentPage, int questionId)
+        {
             var answers = GetQuestionAnswers(questionId, ++currentPage);
-            if (!answers.Any()) {
+            if (!answers.Any())
+            {
                 return null;
             }
 
@@ -118,8 +139,10 @@ namespace iKnow.Controllers {
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult Save(QuestionFormViewModel formViewModel) {
-            if (!ModelState.IsValid) {
+        public ActionResult Save(QuestionFormViewModel formViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
                 // return to current page
                 return Redirect(Request.UrlReferrer.ToString());
             }
@@ -127,7 +150,8 @@ namespace iKnow.Controllers {
             formViewModel.Question.TrimTitleAndDescription();
 
             // check if new question title is unique 
-            if (DoesQuestionTitleExist(formViewModel.Question)) {
+            if (DoesQuestionTitleExist(formViewModel.Question))
+            {
                 TempData["pageError"] = "Question already exists.";
                 return Redirect(Request.UrlReferrer.ToString());
             }
@@ -136,13 +160,15 @@ namespace iKnow.Controllers {
             return RedirectToAction("Detail", new { id = questionSaved.Id });
         }
 
-        private Question SaveQuestion(QuestionFormViewModel formViewModel) {
+        private Question SaveQuestion(QuestionFormViewModel formViewModel)
+        {
             var questionToSave = formViewModel.Question;
             var isQuestionNew = questionToSave.Id == 0;
 
             questionToSave = UpdateOrAddQuestion(questionToSave);
 
-            if (questionToSave.CanUserModify(User)) {
+            if (questionToSave.CanUserModify(User))
+            {
                 UpdateQuestionTopics(formViewModel.TopicIds, questionToSave);
                 _unitOfWork.Complete();
 
@@ -153,21 +179,27 @@ namespace iKnow.Controllers {
             return questionToSave;
         }
 
-        private Question UpdateOrAddQuestion(Question question) {
-            if (question.Id > 0) {
+        private Question UpdateOrAddQuestion(Question question)
+        {
+            if (question.Id > 0)
+            {
                 question = UpdateQuestion(question);
-            } else {
+            }
+            else
+            {
                 AddQuestion(question);
             }
             return question;
         }
 
-        private void AddQuestion(Question question) {
+        private void AddQuestion(Question question)
+        {
             question.SetUserId(User.Identity.GetUserId());
             _unitOfWork.QuestionRepository.Add(question);
         }
 
-        private Question UpdateQuestion(Question question) {
+        private Question UpdateQuestion(Question question)
+        {
             var questionInDb = _unitOfWork.QuestionRepository.Single(
                 q => q.Id == question.Id, nameof(Question.Topics));
             questionInDb.UpdateTitleAndDescription(question.Title, question.Description);
@@ -175,7 +207,8 @@ namespace iKnow.Controllers {
             return questionInDb;
         }
 
-        private void UpdateQuestionTopics(int[] topicIds, Question question) {
+        private void UpdateQuestionTopics(int[] topicIds, Question question)
+        {
             if (topicIds == null || topicIds.Length == 0)
                 return;
 
@@ -186,11 +219,13 @@ namespace iKnow.Controllers {
             question.UpdateQuestionTopics(topics);
         }
 
-        private bool DoesQuestionTitleExist(Question question) {
+        private bool DoesQuestionTitleExist(Question question)
+        {
             return question.Id == 0 && _unitOfWork.QuestionRepository.Any(q => q.Title == question.Title);
         }
 
-        private void AddAddQuestionActivity(string userId, int questionId) {
+        private void AddAddQuestionActivity(string userId, int questionId)
+        {
             _unitOfWork.ActivityRepository.Add(
                 Activity.ActivityAddQuestion(userId, questionId));
             _unitOfWork.Complete();
@@ -199,7 +234,8 @@ namespace iKnow.Controllers {
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult SaveQuestionTopics(QuestionFormViewModel formViewModel) {
+        public ActionResult SaveQuestionTopics(QuestionFormViewModel formViewModel)
+        {
             var questionPosted = formViewModel.Question;
             var questionInDb = _unitOfWork.QuestionRepository.Single(
                 q => q.Id == questionPosted.Id,
@@ -211,7 +247,8 @@ namespace iKnow.Controllers {
             return RedirectToAction("Detail", new { id = questionInDb.Id });
         }
 
-        public PartialViewResult GetRelatedQuestions(int id) {
+        public PartialViewResult GetRelatedQuestions(int id)
+        {
             var currentQuestion = _unitOfWork.QuestionRepository.Single(q => q.Id == id, nameof(Question.Topics));
             var topicIds = currentQuestion.Topics.Select(t => t.Id);
             const int relatedQuestionMaxNumber = 5;
@@ -219,7 +256,8 @@ namespace iKnow.Controllers {
                 q.Id != id && q.Topics.Any(t => topicIds.Contains(t.Id)),
                 take: relatedQuestionMaxNumber).ToList();
 
-            if (!relatedQuestions.Any()) {
+            if (!relatedQuestions.Any())
+            {
                 return null;
             }
 
@@ -228,10 +266,12 @@ namespace iKnow.Controllers {
             return PartialView("_SideBarRelatedQuestionsPartial", viewModel);
         }
 
-        private QuestionAnswerCountViewModel ConstructQuestionAnswerCountViewModel(IEnumerable<Question> relatedQuestions) {
+        private QuestionAnswerCountViewModel ConstructQuestionAnswerCountViewModel(IEnumerable<Question> relatedQuestions)
+        {
             var questionsWithAnswerCount = _unitOfWork.QuestionRepository.GetQuestionsWithAnswerCount(relatedQuestions);
 
-            var viewModel = new QuestionAnswerCountViewModel {
+            var viewModel = new QuestionAnswerCountViewModel
+            {
                 QuestionsWithAnswerCount = questionsWithAnswerCount
             };
             return viewModel;
@@ -239,21 +279,22 @@ namespace iKnow.Controllers {
 
         public PartialViewResult GetComments(int id)
         {
-            var answer = _unitOfWork.AnswerRepository.Single(a => a.Id == id, nameof(Answer.Comments));
-            var viewModel = new AnswerCommentsViewModel {
-                AnswerId = id,
-                Comments = answer.Comments.AsEnumerable()
-            };
+            var comments = _unitOfWork.CommentRepository.Get(c => c.AnswerId == id, null, nameof(Comment.AppUser));
 
-            return PartialView("_AnswerCommentPartial", viewModel);
+            // todo remove
+            Thread.Sleep(2000);
+
+            return PartialView("_AnswerCommentPartial", comments);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult Delete(QuestionFormViewModel viewModel) {
+        public ActionResult Delete(QuestionFormViewModel viewModel)
+        {
             var question = _unitOfWork.QuestionRepository.Single(q => q.Id == viewModel.Question.Id, nameof(Question.Answers));
-            if (question.CanUserModify(User)) {
+            if (question.CanUserModify(User))
+            {
                 _unitOfWork.AnswerRepository.RemoveRange(question.Answers);
                 _unitOfWork.QuestionRepository.Remove(question);
 

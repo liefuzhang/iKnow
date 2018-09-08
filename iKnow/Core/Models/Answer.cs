@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
 
 namespace iKnow.Core.Models {
@@ -18,6 +19,8 @@ namespace iKnow.Core.Models {
         {
             Comments = new HashSet<Comment>();
         }
+
+        public int CommentCount => Comments.Count;
 
         public string PlainContent {
             get {

@@ -150,7 +150,10 @@
         if ($answerComment.hasClass("hide")) {
             var answerId = $answerComment.attr("data-answer-id");
             var success = function (html) {
-                $answerComment.html(html);
+                var $commentList = $answerComment.find(".comment-list");
+                $commentList.html(html);
+                $commentList.next(".comment-loading").addClass("hide");
+
             }
             questionService.getComments(success, answerId);
             $answerComment.removeClass("hide");
@@ -162,13 +165,14 @@
     var postComment = function () {
         var answerId = $(this).attr("data-answer-id");
         var $comment = $(this).prev();
-        if (!$comment.val())
+        var comment = $comment.val().trim();
+        if (!comment)
             return;
 
         var success = function () {
             $comment.val('');
         };
-        questionService.postComment(success, answerId, $comment.val());
+        questionService.postComment(success, answerId, comment);
     }
 
     var hideOrShowCollapseAnswerForShortAnswerInner = function ($selector) {

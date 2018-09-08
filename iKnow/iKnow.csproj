@@ -216,7 +216,6 @@
     <Compile Include="Core\ViewModels\Account\RegisterViewModel.cs" />
     <Compile Include="Core\ViewModels\Account\ResetPasswordViewModel.cs" />
     <Compile Include="Core\ViewModels\ActivityViewModel.cs" />
-    <Compile Include="Core\ViewModels\AnswerCommentsViewModel.cs" />
     <Compile Include="Core\ViewModels\AnswerDetailViewModel.cs" />
     <Compile Include="Core\ViewModels\HomeViewModel.cs" />
     <Compile Include="Core\ViewModels\QuestionAnswerCountViewModel.cs" />

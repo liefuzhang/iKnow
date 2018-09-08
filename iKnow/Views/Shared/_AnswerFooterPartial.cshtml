@@ -18,7 +18,24 @@
     </div>
     
     <div class="answer-comment hide" data-answer-id="@Model.Id">
-        
+        <div class="comment-container">
+            <div class="comment-header">
+                <div>
+                    <strong>@Model.CommentCount Comment(s)</strong>
+                </div>
+            </div>
+            <div class="comment-list-container">
+                <div class="comment-list">
+                </div>  
+                <div class="comment-loading">
+                    <i class="fa fa-spinner fa-pulse fa-fw"></i>
+                </div>
+            </div>
+            <div class="write-comment">
+                <textarea rows="1" placeholder="Write your comment here..."></textarea>
+                <button class="btn" data-answer-id="@Model.Id">Comment</button>
+            </div>
+        </div>
     </div>
 </div>
 
