@@ -181,6 +181,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ActivityController.cs" />
     <Compile Include="Controllers\AnswerController.cs" />
+    <Compile Include="Controllers\Api\AnswerCommentController.cs" />
     <Compile Include="Controllers\Api\AccountController.cs" />
     <Compile Include="Controllers\Api\TopicFollowingController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -190,6 +191,7 @@
     <Compile Include="Core\IUnitOfWork.cs" />
     <Compile Include="Core\Models\Activity.cs" />
     <Compile Include="Core\Models\ActivityType.cs" />
+    <Compile Include="Core\Models\Comment.cs" />
     <Compile Include="Core\Models\Answer.cs" />
     <Compile Include="Core\Models\AppUser.cs" />
     <Compile Include="Core\Models\Constants.cs" />
@@ -200,6 +202,7 @@
     <Compile Include="Core\Models\ImageFileTypesAttribute.cs" />
     <Compile Include="Core\Models\Question.cs" />
     <Compile Include="Core\Models\Topic.cs" />
+    <Compile Include="Core\Repositories\ICommentRepository.cs" />
     <Compile Include="Core\Repositories\IQuestionRepository.cs" />
     <Compile Include="Core\Repositories\IRepository.cs" />
     <Compile Include="Core\Repositories\IAnswerRepository.cs" />
@@ -213,11 +216,13 @@
     <Compile Include="Core\ViewModels\Account\RegisterViewModel.cs" />
     <Compile Include="Core\ViewModels\Account\ResetPasswordViewModel.cs" />
     <Compile Include="Core\ViewModels\ActivityViewModel.cs" />
+    <Compile Include="Core\ViewModels\AnswerCommentsViewModel.cs" />
     <Compile Include="Core\ViewModels\AnswerDetailViewModel.cs" />
     <Compile Include="Core\ViewModels\HomeViewModel.cs" />
     <Compile Include="Core\ViewModels\QuestionAnswerCountViewModel.cs" />
     <Compile Include="Core\ViewModels\QuestionDetailViewModel.cs" />
     <Compile Include="Core\ViewModels\QuestionFormViewModel.cs" />
+    <Compile Include="Core\ViewModels\AnswerPostCommentViewModel.cs" />
     <Compile Include="Core\ViewModels\SaveProfilePhotoViewModel.cs" />
     <Compile Include="Core\ViewModels\SearchResultViewModel.cs" />
     <Compile Include="Core\ViewModels\TopicDetailViewModel.cs" />
@@ -233,6 +238,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Persistence\EntityTypeConfigurations\CommentConfiguration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\AnswerConfiguration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\AppUserConfiguration.cs" />
     <Compile Include="Persistence\EntityTypeConfigurations\QuestionConfiguration.cs" />
@@ -324,7 +330,16 @@
     <Compile Include="Persistence\Migrations\201803190957172_AddFollowTopicSeedData.Designer.cs">
       <DependentUpon>201803190957172_AddFollowTopicSeedData.cs</DependentUpon>
     </Compile>
+    <Compile Include="Persistence\Migrations\201809080527425_AddCommentsTable.cs" />
+    <Compile Include="Persistence\Migrations\201809080527425_AddCommentsTable.Designer.cs">
+      <DependentUpon>201809080527425_AddCommentsTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\201809080702372_ChangeCommentReplyToAsOptional.cs" />
+    <Compile Include="Persistence\Migrations\201809080702372_ChangeCommentReplyToAsOptional.Designer.cs">
+      <DependentUpon>201809080702372_ChangeCommentReplyToAsOptional.cs</DependentUpon>
+    </Compile>
     <Compile Include="Persistence\Migrations\Configuration.cs" />
+    <Compile Include="Persistence\Repositories\CommentRepository.cs" />
     <Compile Include="Persistence\Repositories\ActivityRepository.cs" />
     <Compile Include="Persistence\Repositories\TopicFollowingRepository.cs" />
     <Compile Include="Persistence\Repositories\QuestionRepository.cs" />
@@ -495,6 +510,7 @@
     <Content Include="Views\Question\_QuestionAllAnswerPartial.cshtml" />
     <Content Include="Views\Shared\_AnswerFooterPartial.cshtml" />
     <Content Include="Views\Account\_ChangeProfilePhotoModalPartial.cshtml" />
+    <Content Include="Views\Shared\_AnswerCommentPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -567,6 +583,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Persistence\Migrations\201803190957172_AddFollowTopicSeedData.resx">
       <DependentUpon>201803190957172_AddFollowTopicSeedData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Persistence\Migrations\201809080527425_AddCommentsTable.resx">
+      <DependentUpon>201809080527425_AddCommentsTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Persistence\Migrations\201809080702372_ChangeCommentReplyToAsOptional.resx">
+      <DependentUpon>201809080702372_ChangeCommentReplyToAsOptional.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

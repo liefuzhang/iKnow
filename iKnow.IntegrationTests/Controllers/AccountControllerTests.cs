@@ -41,7 +41,7 @@ namespace iKnow.IntegrationTests.Controllers {
             _userManager = new Mock<AppUserManager>(userStore.Object);
             _userManager.Setup(u => u.FindByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(_firstUserInDb));
 
-            _controller = new AccountController(new UnitOfWork(new iKnowContext()), new EmailSender(), new FileHelper(),
+            _controller = new AccountController(new UnitOfWork(new iKnowContext()), new EmailSender(), 
                 _userManager.Object, null, null);
 
             _controller.MockContext(new Mock<HttpRequestBase>(), _currentUser);

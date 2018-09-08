@@ -21,6 +21,11 @@
                 300);
     }
 
+    var textareaAutoGrow = function () {
+        var scrollHeight = this.scrollHeight;
+        $(this).css('height', scrollHeight + 'px');
+    };
+
     var init = function () {
         ModalController.init();
         HeaderController.init();
@@ -32,6 +37,7 @@
 
     return {
         init: init, 
-        deleteEntity: deleteEntity
+        deleteEntity: deleteEntity, 
+        textareaAutoGrow: textareaAutoGrow
     }
 })();

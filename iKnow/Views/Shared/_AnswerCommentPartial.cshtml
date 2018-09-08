@@ -1,0 +1,15 @@
+﻿@model iKnow.Core.ViewModels.AnswerCommentsViewModel
+
+<div class="comment-container">
+    <div class="comment-header">@Model.Comments.Count() Comment(s)</div>
+    <div class="comment-list">
+        @foreach (var comment in Model.Comments)
+        {
+            <div>@comment.Content</div>
+        }
+    </div>
+    <div class="write-comment">
+        <textarea rows="1" placeholder="Write your comment here..."></textarea>
+        <button class="btn" data-answer-id="@Model.AnswerId">Comment</button>
+    </div>
+</div>

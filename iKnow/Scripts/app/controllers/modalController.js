@@ -32,16 +32,11 @@
             $(".topic-select").chosen({ width: "100%", max_selected_options: 5 });
         }
     }
-
-    var textareaAutoGrow = function() {
-        var scrollHeight = this.scrollHeight;
-        $(this).css('height', scrollHeight + 'px');
-    };
-
+    
     var init = function () {
         $(".modal-container").on("click", toggleModalClose);
         $(".modal-container").on("click", ".js-button-delete", appController.deleteEntity);
-        $(".modal-container").on("input", "textarea", textareaAutoGrow);
+        $(".modal-container").on("input", "textarea", appController.textareaAutoGrow);
         $(".modal-container").on("click", ".error li", WarningErrorController.hideError);
     };
 

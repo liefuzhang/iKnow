@@ -237,6 +237,17 @@ namespace iKnow.Controllers {
             return viewModel;
         }
 
+        public PartialViewResult GetComments(int id)
+        {
+            var answer = _unitOfWork.AnswerRepository.Single(a => a.Id == id, nameof(Answer.Comments));
+            var viewModel = new AnswerCommentsViewModel {
+                AnswerId = id,
+                Comments = answer.Comments.AsEnumerable()
+            };
+
+            return PartialView("_AnswerCommentPartial", viewModel);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]

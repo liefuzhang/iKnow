@@ -124,7 +124,7 @@
     var hideLoadMoreWhenAllAnswersDisplayed = function () {
         var $list = $(".load-more-list");
         var answerCount = $list.attr("data-answer-count");
-        if ($list.find(".answer-panel").length == answerCount) {
+        if ($list.find(".answer-panel").length === answerCount) {
             $(".load-more").addClass("end-of-list");
         }
     }
@@ -144,21 +144,49 @@
         }
     }
 
-    var hideCollapseAnswerForShortAnswerInner = function ($selector) {
+    var toggleComment = function() {
+        var $footerBar = $(this).parent(".answer-footer-bar");
+        var $answerComment = $footerBar.next(".answer-comment");
+        if ($answerComment.hasClass("hide")) {
+            var answerId = $answerComment.attr("data-answer-id");
+            var success = function (html) {
+                $answerComment.html(html);
+            }
+            questionService.getComments(success, answerId);
+            $answerComment.removeClass("hide");
+        } else {
+            $answerComment.addClass("hide");
+        }
+    }
+
+    var postComment = function () {
+        var answerId = $(this).attr("data-answer-id");
+        var $comment = $(this).prev();
+        if (!$comment.val())
+            return;
+
+        var success = function () {
+            $comment.val('');
+        };
+        questionService.postComment(success, answerId, $comment.val());
+    }
+
+    var hideOrShowCollapseAnswerForShortAnswerInner = function ($selector) {
         var $answers = $selector.closest(".answer-panel-content-container");
 
         if ($answers.outerHeight() < 800) {
             $answers.find(".collapse-answer").addClass("hide");
+        } else {
+            $answers.find(".collapse-answer").removeClass("hide");
         }
     }
 
     var hideCollapseAnswerForShortAnswer = function ($answer) {
         var $images = $answer.find("img");
-        if ($images.length === 0)
-            hideCollapseAnswerForShortAnswerInner($answer);
-        else {
+        hideOrShowCollapseAnswerForShortAnswerInner($answer);
+        if ($images.length > 0) {
             $images.on("load", function () {
-                hideCollapseAnswerForShortAnswerInner($answer);
+                hideOrShowCollapseAnswerForShortAnswerInner($answer);
             });
         }
     }
@@ -196,6 +224,9 @@
         $(".question-header-panel .js-edit-topic").on("click", toggleModalEditTopic);
         $(".whole-panel, .answer-panel-container").on("click", ".collapse-answer", toggleCollapse);
         $(".whole-panel, .answer-panel-container").on("click", ".answer-panel-content-container.is-collapsed", toggleCollapse);
+        $(".answer-footer-bar .comment-button").on("click", toggleComment);
+        $(".answer-comment").on("input", "textarea", appController.textareaAutoGrow);
+        $(".answer-comment").on("click", ".write-comment .btn", postComment);
 
         loadAnswerCallBack();
     };

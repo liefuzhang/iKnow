@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace iKnow.Core.Models {
@@ -11,6 +12,12 @@ namespace iKnow.Core.Models {
         public Question Question { get; set; }
         public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }
+        public ICollection<Comment> Comments { get; set; }
+
+        public Answer()
+        {
+            Comments = new HashSet<Comment>();
+        }
 
         public string PlainContent {
             get {

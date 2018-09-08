@@ -6,9 +6,19 @@
     } else {
         <span>Updated @Model.UpdatedDate.Value.ToString("MMM d, yyyy")</span>
     }
-    <a class="collapse-answer">
-        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
-        Collapse
-    </a>
+    <div class="answer-footer-bar">
+        <span class="comment-button">
+            <i class="fa fa-comment"></i>
+            <span>Add Comment</span>
+        </span>
+        <a class="collapse-answer">
+            <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+            Collapse
+        </a>
+    </div>
+    
+    <div class="answer-comment hide" data-answer-id="@Model.Id">
+        
+    </div>
 </div>
 
