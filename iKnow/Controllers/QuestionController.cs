@@ -277,14 +277,55 @@ namespace iKnow.Controllers
             return viewModel;
         }
 
-        public PartialViewResult GetComments(int id)
+        [Route("Question/GetComments/{answerId}/{currentPage}")]
+        public PartialViewResult GetComments(int answerId, int currentPage)
         {
-            var comments = _unitOfWork.CommentRepository.Get(c => c.AnswerId == id, null, nameof(Comment.AppUser));
+            var totalCount = _unitOfWork.CommentRepository.Count(c => c.AnswerId == answerId);
+            var pageSize = Constants.CommentPageSize;
+            var comments = _unitOfWork.CommentRepository.Get(c => c.AnswerId == answerId,
+                q => q.OrderBy(c => c.CreatedDate), nameof(Comment.AppUser), (currentPage - 1) * pageSize, pageSize).ToList();
+            var totalPageCount = (totalCount - 1) / Constants.CommentPageSize + 1;
 
-            // todo remove
+            var viewModel = new AnswerCommentViewModel
+            {
+                Comments = comments,
+                TotalPageCount = totalPageCount,
+                CurrentPage = currentPage,
+                DisplayPageNumbers = GetDisplayPageNumbers(currentPage, totalPageCount)
+            };
+
+            //todo remove
             Thread.Sleep(2000);
 
-            return PartialView("_AnswerCommentPartial", comments);
+            return PartialView("_AnswerCommentPartial", viewModel);
+        }
+
+        private List<int> GetDisplayPageNumbers(int currentPage, int totalPageCount)
+        {
+            var result = new List<int>();
+            if (totalPageCount <= 5)
+            {
+                for (int i = 1; i <= totalPageCount; i++)
+                {
+                    result.Add(i);
+                }
+                return result;
+            }
+
+            if (currentPage <= 3)
+            {
+                result.AddRange(new[] { 1, 2, 3, 4, totalPageCount });
+                return result;
+            }
+
+            if (totalPageCount - currentPage <= 2)
+            {
+                result.AddRange(new[] { 1, totalPageCount - 3, totalPageCount - 2, totalPageCount - 1, totalPageCount });
+                return result;
+            }
+
+            result.AddRange(new[] { 1, currentPage - 1, totalPageCount });
+            return result;
         }
 
         [HttpPost]

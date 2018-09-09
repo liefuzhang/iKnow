@@ -21,9 +21,9 @@
         });
     };
 
-    var getComments = function (success, answerId) {
+    var getComments = function (success, answerId, currentPage) {
         $.ajax({
-            url: "/question/getcomments/" + answerId,
+            url: "/question/getcomments/" + answerId + "/" + currentPage,
             dataType: "html",
             success: success,
             fail: function () {

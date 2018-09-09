@@ -1291,14 +1291,49 @@ h3.question-title > a {
             color: #8590a6;
         }
 
-        .write-comment {
-            padding: 12px 20px;
-            background: #fff;
-            border-top: 1px solid #ebebeb;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
+    .comment-list .comment-pagination-container {
+        border-top: 1px solid #ebebeb;
+        padding: 16px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: -20px;
+        margin-right: -20px;
+    }
+
+        .comment-list .comment-pagination-container .comment-page {
+            transition: color .2s;
+            padding: 0 15px;
+            cursor: pointer;
         }
+
+            .comment-list .comment-pagination-container .comment-page.comment-page-current {
+                cursor: default;
+                pointer-events: none;
+                color: #8590a6;
+                opacity: 0.5;
+            }
+
+        .comment-list .comment-pagination-container .comment-page-ellipsis {
+            padding: 0 15px;
+        }
+
+        .comment-list .comment-pagination-container .comment-page:hover {
+            color: #259;
+        }
+
+        .comment-list .comment-pagination-container .comment-page.comment-page-current:hover {
+            color: #8590a6;
+        }
+
+.write-comment {
+    padding: 12px 20px;
+    background: #fff;
+    border-top: 1px solid #ebebeb;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
 
     .write-comment textarea {
         border: 1px solid #ebebeb;

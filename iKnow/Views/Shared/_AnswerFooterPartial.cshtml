@@ -6,10 +6,10 @@
     } else {
         <span>Updated @Model.UpdatedDate.Value.ToString("MMM d, yyyy")</span>
     }
-    <div class="answer-footer-bar">
+    <div class="answer-footer-bar" data-total-comment="@Model.CommentCount Comment(s)">
         <span class="comment-button">
             <i class="fa fa-comment"></i>
-            <span>Add Comment</span>
+            <span class="comment-button-text">@Model.CommentCount Comment(s)</span>
         </span>
         <a class="collapse-answer">
             <i class="fa fa-angle-double-up" aria-hidden="true"></i>

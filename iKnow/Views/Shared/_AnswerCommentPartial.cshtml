@@ -1,6 +1,6 @@
-﻿@model IEnumerable<iKnow.Core.Models.Comment>
+﻿@model iKnow.Core.ViewModels.AnswerCommentViewModel
 
-@foreach (var comment in Model)
+@foreach (var comment in Model.Comments)
 {
     <div class="divided-section">
         <div class="comment-item-header">
@@ -18,5 +18,32 @@
         </div>
 
         <div class="comment-content">@comment.Content</div>
+    </div>
+}
+
+@if (Model.TotalPageCount > 1)
+{
+    <div class="comment-pagination-container">
+        @if (Model.CurrentPage > 1)
+        {
+            <div class="comment-prev-page comment-page" data-page-number="@(Model.CurrentPage-1)">Prev</div>
+        }
+
+        @for (var i = 0; i < Model.DisplayPageNumbers.Count; i++)
+        {
+            if (i > 0 && Model.DisplayPageNumbers[i] > Model.DisplayPageNumbers[i - 1] + 1)
+            {
+                <div class="comment-page-ellipsis">...</div>
+            }
+            <div class="comment-page @(Model.CurrentPage == Model.DisplayPageNumbers[i]? "comment-page-current" : "")"
+                 data-page-number="@Model.DisplayPageNumbers[i]">
+                @Model.DisplayPageNumbers[i]
+            </div>
+        }
+
+        @if (Model.CurrentPage < Model.TotalPageCount)
+        {
+            <div class="comment-next-page comment-page" data-page-number="@(Model.CurrentPage+1)">Next</div>
+        }
     </div>
 }

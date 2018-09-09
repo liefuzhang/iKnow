@@ -220,6 +220,7 @@
     <Compile Include="Core\ViewModels\HomeViewModel.cs" />
     <Compile Include="Core\ViewModels\QuestionAnswerCountViewModel.cs" />
     <Compile Include="Core\ViewModels\QuestionDetailViewModel.cs" />
+    <Compile Include="Core\ViewModels\AnswerCommentViewModel.cs" />
     <Compile Include="Core\ViewModels\QuestionFormViewModel.cs" />
     <Compile Include="Core\ViewModels\AnswerPostCommentViewModel.cs" />
     <Compile Include="Core\ViewModels\SaveProfilePhotoViewModel.cs" />

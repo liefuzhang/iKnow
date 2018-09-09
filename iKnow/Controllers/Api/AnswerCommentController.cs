@@ -5,6 +5,7 @@ using iKnow.Core.Models;
 using iKnow.Core.ViewModels;
 using iKnow.Persistence;
 using Microsoft.AspNet.Identity;
+using Constants = iKnow.Core.Models.Constants;
 
 namespace iKnow.Controllers.Api {
     [Authorize]
@@ -37,7 +38,10 @@ namespace iKnow.Controllers.Api {
             });
             _unitOfWork.Complete();
 
-            return Ok();
+            var newTotalCount = _unitOfWork.CommentRepository.Count(c => c.AnswerId == answerPostCommentViewModel.AnswerId);
+            var newTotalPageCount = (newTotalCount - 1) / Constants.CommentPageSize + 1;
+
+            return Ok(newTotalPageCount);
         }
     }
 }
