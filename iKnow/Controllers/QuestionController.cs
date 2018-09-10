@@ -280,6 +280,10 @@ namespace iKnow.Controllers
         [Route("Question/GetComments/{answerId}/{currentPage}")]
         public PartialViewResult GetComments(int answerId, int currentPage)
         {
+            if (currentPage < 1) {
+                return null;
+            }
+
             var totalCount = _unitOfWork.CommentRepository.Count(c => c.AnswerId == answerId);
             var pageSize = Constants.CommentPageSize;
             var comments = _unitOfWork.CommentRepository.Get(c => c.AnswerId == answerId,
@@ -293,9 +297,6 @@ namespace iKnow.Controllers
                 CurrentPage = currentPage,
                 DisplayPageNumbers = GetDisplayPageNumbers(currentPage, totalPageCount)
             };
-
-            //todo remove
-            Thread.Sleep(2000);
 
             return PartialView("_AnswerCommentPartial", viewModel);
         }

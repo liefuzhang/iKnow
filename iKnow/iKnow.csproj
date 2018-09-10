@@ -434,6 +434,7 @@
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controllers\modalController.js" />
     <Content Include="Scripts\app\controllers\headerController.js" />
+    <Content Include="Scripts\app\controllers\commentController.js" />
     <Content Include="Scripts\app\controllers\warningErrorController.js" />
     <Content Include="Scripts\app\controllers\registerController.js" />
     <Content Include="Scripts\app\controllers\photoUploadController.js" />
@@ -442,6 +443,7 @@
     <Content Include="Scripts\app\controllers\questionController.js" />
     <Content Include="Scripts\app\controllers\topicController.js" />
     <Content Include="Scripts\app\services\photoUploadService.js" />
+    <Content Include="Scripts\app\services\commentService.js" />
     <Content Include="Scripts\app\services\topicService.js" />
     <Content Include="Scripts\app\services\registerService.js" />
     <Content Include="Scripts\app\services\loadMoreService.js" />

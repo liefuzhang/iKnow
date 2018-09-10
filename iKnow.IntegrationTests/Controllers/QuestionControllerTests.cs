@@ -192,7 +192,7 @@ namespace iKnow.IntegrationTests.Controllers {
                 TopicIds = new[] { topic.Id }
             };
 
-            var result = _controller.Save(viewModel);
+            _controller.Save(viewModel);
 
             var questionInDb = _contextAfterAction.Questions.Include(q => q.Topics).SingleOrDefault();
 
@@ -244,6 +244,20 @@ namespace iKnow.IntegrationTests.Controllers {
             Assert.That(questionAnswerCountViewModel.QuestionsWithAnswerCount.Count, Is.EqualTo(1));
             Assert.That(questionAnswerCountViewModel.QuestionsWithAnswerCount.Keys.First().Id, Is.EqualTo(question2.Id));
             Assert.That(questionAnswerCountViewModel.QuestionsWithAnswerCount.Values.First(), Is.EqualTo(1));
+        }
+
+        [Test, Isolated]
+        public void GetComments_WhenCalled_ShouldReturnCommentsWithTotalPageCount()
+        {
+            var question = _context.AddTestQuestionToDatabase("Question?");
+            var answer = _context.AddTestAnswerToDatabase(question.Id);
+            var comment = _context.AddTestCommentToDatabase(answer.Id);
+            
+            var result = _controller.GetComments(answer.Id, 1);
+
+            var answerCommentViewModel = result.Model as AnswerCommentViewModel;
+            Assert.That(answerCommentViewModel.TotalPageCount, Is.EqualTo(1));
+            Assert.That(answerCommentViewModel.Comments.First().Id, Is.EqualTo(comment.Id));
         }
 
         [Test, Isolated]

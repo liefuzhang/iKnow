@@ -6,8 +6,6 @@
         public const double TopicIconDefaultSize = 60;
         public const string UserIconFolderPath = "/Content/Images/UserProfile/";
         public const string UserDefaultIconName = "default";
-        public const int UserDefaultIconMaxNumber = 9;
-        public const double UserIconDefaultSize = 160;
         public const int ShortAnswerLength = 200;
         public const int DefaultPageSize = 10;
         public const int CommentPageSize = 20;

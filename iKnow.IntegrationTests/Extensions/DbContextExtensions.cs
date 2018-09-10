@@ -57,6 +57,24 @@ namespace iKnow.IntegrationTests.Extensions
             return answer;
         }
 
+        public static Comment AddTestCommentToDatabase(this iKnowContext context, int answerId, string content = "Test comment",
+            string userId = null)
+        {
+            var comment = new Comment()
+            {
+                Content = content,
+                AppUserId = userId ?? context.Users.First().Id,
+                AnswerId = answerId,
+                CreatedDate = DateTime.Now
+            };
+
+            context.Comments.Add(comment);
+            context.SaveChanges();
+
+            context.Entry(comment).Reload();
+            return comment;
+        }
+
         public static TopicFollowing AddTestTopicFollowingToDatabase(this iKnowContext context, int topicId)
         {
             var topicFollowing = new TopicFollowing(context.Users.First().Id, topicId);

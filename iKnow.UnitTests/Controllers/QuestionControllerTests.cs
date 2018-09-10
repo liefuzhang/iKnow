@@ -19,9 +19,11 @@ using Moq;
 using NUnit.Framework;
 using Constants = iKnow.Core.Models.Constants;
 
-namespace iKnow.UnitTests.Controllers {
+namespace iKnow.UnitTests.Controllers
+{
     [TestFixture]
-    public class QuestionControllerTests {
+    public class QuestionControllerTests
+    {
         private Mock<IUnitOfWork> _unitOfWork;
         private QuestionController _controller;
         private Question _question1;
@@ -37,7 +39,8 @@ namespace iKnow.UnitTests.Controllers {
         private Mock<IPrincipal> _user;
 
         [SetUp]
-        public void Setup() {
+        public void Setup()
+        {
             InitializeQuestionsAndAnswersAndTopics();
 
             SetupUnitOfWork();
@@ -45,7 +48,8 @@ namespace iKnow.UnitTests.Controllers {
             SetupController();
         }
 
-        private void InitializeQuestionsAndAnswersAndTopics() {
+        private void InitializeQuestionsAndAnswersAndTopics()
+        {
             _topic1 = new Topic { Id = 1, Name = "tn1" };
             _topic2 = new Topic { Id = 2, Name = "tn2" };
             _newQuestion = new Question { Id = 0, Title = null, Description = null };
@@ -60,7 +64,8 @@ namespace iKnow.UnitTests.Controllers {
             };
         }
 
-        private void SetupUnitOfWork() {
+        private void SetupUnitOfWork()
+        {
             _unitOfWork = new Mock<IUnitOfWork>();
             _unitOfWork.MockRepositories();
 
@@ -78,7 +83,8 @@ namespace iKnow.UnitTests.Controllers {
                 .Returns(() => _question1);
         }
 
-        private void SetupController() {
+        private void SetupController()
+        {
             var request = new Mock<HttpRequestBase>();
             _controller = new QuestionController(_unitOfWork.Object);
             _user = new Mock<IPrincipal>();
@@ -88,14 +94,16 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void GetForm_WhenCalled_ReturnPartialViewResult() {
+        public void GetForm_WhenCalled_ReturnPartialViewResult()
+        {
             var result = _controller.GetForm(_question1.Id);
 
             Assert.That(result, Is.TypeOf<PartialViewResult>());
         }
 
         [Test]
-        public void GetForm_IdIsNotNull_ReturnQuestionInViewModel() {
+        public void GetForm_IdIsNotNull_ReturnQuestionInViewModel()
+        {
             var result = _controller.GetForm(_question1.Id);
 
             Assert.That(result.Model, Is.TypeOf<QuestionFormViewModel>());
@@ -103,7 +111,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void GetForm_IdIsNotNull_ReturnQuestionTopicIdsInViewModel() {
+        public void GetForm_IdIsNotNull_ReturnQuestionTopicIdsInViewModel()
+        {
             _question1.AddTopic(_topic1);
             _question1.AddTopic(_topic2);
 
@@ -114,7 +123,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void GetForm_IdIsNull_GetNewQuestion() {
+        public void GetForm_IdIsNull_GetNewQuestion()
+        {
             var result = _controller.GetForm(null);
 
             Assert.That(result.Model, Is.TypeOf<QuestionFormViewModel>());
@@ -122,7 +132,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void GetForm_IdIsNull_ReturnEmptyTopicIdsInViewModel() {
+        public void GetForm_IdIsNull_ReturnEmptyTopicIdsInViewModel()
+        {
             _question1.AddTopic(_topic1);
             _question1.AddTopic(_topic2);
 
@@ -134,7 +145,8 @@ namespace iKnow.UnitTests.Controllers {
 
 
         [Test]
-        public void GetForm_UserNotAuthenticated_UserCannotDelete() {
+        public void GetForm_UserNotAuthenticated_UserCannotDelete()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(false);
 
             var result = _controller.GetForm(_question1.Id);
@@ -144,7 +156,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void GetForm_CurrentUserIsNotQuestionOwnerOrAdmin_UserCannotDelete() {
+        public void GetForm_CurrentUserIsNotQuestionOwnerOrAdmin_UserCannotDelete()
+        {
             var claim = new Claim("testUserName2", _question2.AppUserId);
             _identity.Setup(i => i.FindFirst(It.IsAny<string>())).Returns(claim);
 
@@ -155,7 +168,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void GetForm_CurrentUserIsQuestionOwner_UserCanDelete() {
+        public void GetForm_CurrentUserIsQuestionOwner_UserCanDelete()
+        {
             var result = _controller.GetForm(_question1.Id);
 
             Assert.That(result.Model, Is.TypeOf<QuestionFormViewModel>());
@@ -163,7 +177,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void GetForm_IdIsNull_UserCanNotDelete() {
+        public void GetForm_IdIsNull_UserCanNotDelete()
+        {
             var result = _controller.GetForm(null);
 
             Assert.That(result.Model, Is.TypeOf<QuestionFormViewModel>());
@@ -171,7 +186,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void GetForm_CurrentUserIsAdmin_UserCanDelete() {
+        public void GetForm_CurrentUserIsAdmin_UserCanDelete()
+        {
             var claim = new Claim("testUserName2", _question2.AppUserId);
             _identity.Setup(i => i.FindFirst(It.IsAny<string>())).Returns(claim);
             _user.Setup(u => u.IsInRole(Constants.AdminRoleName)).Returns(true);
@@ -183,7 +199,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void GetTopic_WhenCalled_ReturnPartialViewResult() {
+        public void GetTopic_WhenCalled_ReturnPartialViewResult()
+        {
             var result = _controller.GetTopic(_question1.Id);
 
             Assert.That(result, Is.TypeOf<PartialViewResult>());
@@ -191,7 +208,8 @@ namespace iKnow.UnitTests.Controllers {
 
 
         [Test]
-        public void GetTopic_WhenCalled_ReturnQuestionInViewModel() {
+        public void GetTopic_WhenCalled_ReturnQuestionInViewModel()
+        {
             var result = _controller.GetTopic(_question1.Id);
 
             Assert.That(result.Model, Is.TypeOf<QuestionFormViewModel>());
@@ -199,7 +217,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void GetTopic_WhenCalled_ReturnQuestionTopicIdsInViewModel() {
+        public void GetTopic_WhenCalled_ReturnQuestionTopicIdsInViewModel()
+        {
             _question1.AddTopic(_topic1);
             _question1.AddTopic(_topic2);
 
@@ -210,14 +229,16 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Detail_WhenCalled_ReturnViewResult() {
+        public void Detail_WhenCalled_ReturnViewResult()
+        {
             var result = _controller.Detail(_question1.Id);
 
             Assert.That(result, Is.TypeOf<ViewResult>());
         }
 
         [Test]
-        public void Detail_WhenCalled_ReturnQuestionInViewModel() {
+        public void Detail_WhenCalled_ReturnQuestionInViewModel()
+        {
             var result = _controller.Detail(_question1.Id);
 
             Assert.That((result as ViewResult).Model, Is.TypeOf<QuestionDetailViewModel>());
@@ -225,7 +246,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Detail_QuestionNotFound_ReturnHttpNotFoundResult() {
+        public void Detail_QuestionNotFound_ReturnHttpNotFoundResult()
+        {
             _question1 = null;
 
             var result = _controller.Detail(1);
@@ -234,7 +256,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Detail_UserNotAuthenticated_UserCannotEditQuestion() {
+        public void Detail_UserNotAuthenticated_UserCannotEditQuestion()
+        {
             _identity.Setup(i => i.IsAuthenticated).Returns(false);
 
             var result = _controller.Detail(_question1.Id);
@@ -244,7 +267,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Detail_CurrentUserIsNotQuestionOwnerOrAdmin_UserCannotEditQuestion() {
+        public void Detail_CurrentUserIsNotQuestionOwnerOrAdmin_UserCannotEditQuestion()
+        {
             var claim = new Claim("testUserName2", _question2.AppUserId);
             _identity.Setup(i => i.FindFirst(It.IsAny<string>())).Returns(claim);
 
@@ -255,7 +279,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Detail_CurrentUserIsQuestionOwner_UserCanEditQuestion() {
+        public void Detail_CurrentUserIsQuestionOwner_UserCanEditQuestion()
+        {
             var result = _controller.Detail(_question1.Id);
 
             Assert.That((result as ViewResult).Model, Is.TypeOf<QuestionDetailViewModel>());
@@ -263,7 +288,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Detail_CurrentUserIsAdmin_UserCanEditQuestion() {
+        public void Detail_CurrentUserIsAdmin_UserCanEditQuestion()
+        {
             var claim = new Claim("testUserName2", _question2.AppUserId);
             _identity.Setup(i => i.FindFirst(It.IsAny<string>())).Returns(claim);
             _user.Setup(u => u.IsInRole(Constants.AdminRoleName)).Returns(true);
@@ -275,7 +301,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Detail_CurrentUserHasExistingAnswer_ReturnExistingAnswerIdInViewModel() {
+        public void Detail_CurrentUserHasExistingAnswer_ReturnExistingAnswerIdInViewModel()
+        {
             _unitOfWork.Setup(
                 u => u.AnswerRepository.SingleOrDefault(It.IsAny<Expression<Func<Answer, bool>>>(), It.IsAny<string>()))
                 .Returns(() => new Answer { Id = 1 });
@@ -287,7 +314,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Detail_CurrentUserHasExistingAnswer_UserCanDeleteAnswerPanelAnswer() {
+        public void Detail_CurrentUserHasExistingAnswer_UserCanDeleteAnswerPanelAnswer()
+        {
             _unitOfWork.Setup(
                 u => u.AnswerRepository.SingleOrDefault(It.IsAny<Expression<Func<Answer, bool>>>(), It.IsAny<string>()))
                 .Returns(() => new Answer { Id = 1 });
@@ -299,7 +327,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Detail_CurrentUserHasNoExistingAnswer_ReturnZeroAsUserAnswerIdInViewModel() {
+        public void Detail_CurrentUserHasNoExistingAnswer_ReturnZeroAsUserAnswerIdInViewModel()
+        {
             var result = _controller.Detail(_question1.Id);
 
             Assert.That((result as ViewResult).Model, Is.TypeOf<QuestionDetailViewModel>());
@@ -307,7 +336,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Detail_CurrentUserHasNoExistingAnswer_UserCannotDeleteAnswerPanelAnswer() {
+        public void Detail_CurrentUserHasNoExistingAnswer_UserCannotDeleteAnswerPanelAnswer()
+        {
             var result = _controller.Detail(_question1.Id);
 
             Assert.That((result as ViewResult).Model, Is.TypeOf<QuestionDetailViewModel>());
@@ -315,9 +345,10 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void LoadMore_QuestionAnswersIsEmpty_ReturnNull() {
+        public void LoadMore_QuestionAnswersIsEmpty_ReturnNull()
+        {
             _unitOfWork.Setup(
-                u => u.AnswerRepository.Get(It.IsAny<Expression<Func<Answer, bool>>>() ,It.IsAny<Func<IQueryable<Answer>, 
+                u => u.AnswerRepository.Get(It.IsAny<Expression<Func<Answer, bool>>>(), It.IsAny<Func<IQueryable<Answer>,
                 IOrderedQueryable<Answer>>>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
                 .Returns(new List<Answer>());
 
@@ -327,7 +358,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Save_WhenCalled_ReturnRedirectToRouteResult() {
+        public void Save_WhenCalled_ReturnRedirectToRouteResult()
+        {
             var viewModel = GetExistingQuestionFormViewModel();
 
             var result = _controller.Save(viewModel);
@@ -336,7 +368,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Save_WhenCalled_ContainQuestionIdInRouteValue() {
+        public void Save_WhenCalled_ContainQuestionIdInRouteValue()
+        {
             var viewModel = GetExistingQuestionFormViewModel();
 
             var result = _controller.Save(viewModel);
@@ -346,7 +379,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Save_NewQuestion_TitleAndDescriptionGetTrimmed() {
+        public void Save_NewQuestion_TitleAndDescriptionGetTrimmed()
+        {
             var viewModel = GetNewQuestionFormViewModel();
             _newQuestion.Title = " test title";
             _newQuestion.Description = " test description";
@@ -359,7 +393,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Save_NewQuestionTitleIsNotUnique_ReturnRedirectResult() {
+        public void Save_NewQuestionTitleIsNotUnique_ReturnRedirectResult()
+        {
             var viewModel = GetNewQuestionFormViewModel();
             _unitOfWork.Setup(u => u.QuestionRepository.Any(It.IsAny<Expression<Func<Question, bool>>>())).Returns(true);
 
@@ -369,7 +404,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Save_NewQuestionTitleIsNotUnique_AddErrorMessageInTempData() {
+        public void Save_NewQuestionTitleIsNotUnique_AddErrorMessageInTempData()
+        {
             var viewModel = GetNewQuestionFormViewModel();
             _unitOfWork.Setup(u => u.QuestionRepository.Any(It.IsAny<Expression<Func<Question, bool>>>())).Returns(true);
 
@@ -379,7 +415,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Save_ExistingQuestion_UpdateExistingQuestion() {
+        public void Save_ExistingQuestion_UpdateExistingQuestion()
+        {
             var viewModel = GetExistingQuestionFormViewModel();
 
             _controller.Save(viewModel);
@@ -388,7 +425,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Save_ModelStateIsNotValid_ReturnRedirectResult() {
+        public void Save_ModelStateIsNotValid_ReturnRedirectResult()
+        {
             var viewModel = GetExistingQuestionFormViewModel();
             _controller.ModelState.AddModelError("", "");
 
@@ -398,7 +436,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void SaveQuestionTopics_WhenCalled_ReturnRedirectToRouteResultWithQuestionIdInRouteValue() {
+        public void SaveQuestionTopics_WhenCalled_ReturnRedirectToRouteResultWithQuestionIdInRouteValue()
+        {
             var viewModel = GetExistingQuestionFormViewModel();
 
             var result = _controller.SaveQuestionTopics(viewModel);
@@ -408,7 +447,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void SaveQuestionTopics_UserIsNotQuestionOwner_ShouldNotUpdateQuestionTopics() {
+        public void SaveQuestionTopics_UserIsNotQuestionOwner_ShouldNotUpdateQuestionTopics()
+        {
             var viewModel = GetExistingQuestionFormViewModel();
             viewModel.Question.SetUserId(_question1.AppUserId + "-");
             viewModel.Question.AddTopic(new Topic());
@@ -419,7 +459,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void SaveQuestionTopics_UserIsNotQuestionOwnerButIsInAdminRole_ShouldUpdateQuestionTopics() {
+        public void SaveQuestionTopics_UserIsNotQuestionOwnerButIsInAdminRole_ShouldUpdateQuestionTopics()
+        {
             var viewModel = GetExistingQuestionFormViewModel();
             viewModel.Question.SetUserId(_question1.AppUserId + "-");
             viewModel.Question.AddTopic(new Topic());
@@ -437,7 +478,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void SaveQuestionTopics_UserIsQuestionOwner_ShouldUpdateQuestionTopics() {
+        public void SaveQuestionTopics_UserIsQuestionOwner_ShouldUpdateQuestionTopics()
+        {
             var viewModel = GetExistingQuestionFormViewModel();
             viewModel.Question.AddTopic(new Topic());
             viewModel.TopicIds = new[] { 1 };
@@ -453,7 +495,8 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void GetRelatedQuestions_WhenCalled_ReturnPartialView() {
+        public void GetRelatedQuestions_WhenCalled_ReturnPartialView()
+        {
             _unitOfWork.Setup(u => u.QuestionRepository.Get(
                 It.IsAny<Expression<Func<Question, bool>>>(),
                 It.IsAny<Func<IQueryable<Question>, IOrderedQueryable<Question>>>(),
@@ -470,7 +513,60 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         [Test]
-        public void Delete_WhenCalled_ReturnRedirectToRouteResult() {
+        public void GetComments_WhenCalled_ReturnPartialView()
+        {
+            _unitOfWork.Setup(u => u.CommentRepository.Get(
+                    It.IsAny<Expression<Func<Comment, bool>>>(),
+                    It.IsAny<Func<IQueryable<Comment>, IOrderedQueryable<Comment>>>(),
+                    It.IsAny<string>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<int?>()))
+                .Returns(new[] { new Comment() });
+
+            _unitOfWork.Setup(u => u.CommentRepository.Count(It.IsAny<Expression<Func<Comment, bool>>>()))
+                .Returns(1);
+
+            var result = _controller.GetComments(1, 1);
+
+            Assert.That(result, Is.TypeOf<PartialViewResult>());
+        }
+
+        [Test]
+        public void GetComments_CurrentPageLessThanOne_ReturnNull()
+        {
+            var result = _controller.GetComments(1, 0);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        [TestCase(1, 1, new[] { 1 })]
+        [TestCase(21, 1, new[] { 1, 2 })]
+        [TestCase(100, 5, new[] { 1, 2, 3, 4, 5 })]
+        [TestCase(120, 3, new[] { 1, 2, 3, 4, 6 })]
+        [TestCase(140, 5, new[] { 1, 4, 5, 6, 7 })]
+        [TestCase(140, 4, new[] { 1, 3, 7 })]
+        public void GetComments_WhenCalled_ReturnCorrectDisplayPageNumbersInResult(int totalCount, int currentPage, int[] displayNumbers)
+        {
+            _unitOfWork.Setup(u => u.CommentRepository.Get(
+                    It.IsAny<Expression<Func<Comment, bool>>>(),
+                    It.IsAny<Func<IQueryable<Comment>, IOrderedQueryable<Comment>>>(),
+                    It.IsAny<string>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<int?>()))
+                .Returns(new[] { new Comment() });
+
+            _unitOfWork.Setup(u => u.CommentRepository.Count(It.IsAny<Expression<Func<Comment, bool>>>()))
+                .Returns(totalCount);
+
+            var result = _controller.GetComments(1, currentPage);
+
+            Assert.That((result.Model as AnswerCommentViewModel).DisplayPageNumbers, Is.EquivalentTo(displayNumbers));
+        }
+
+        [Test]
+        public void Delete_WhenCalled_ReturnRedirectToRouteResult()
+        {
             var viewModel = GetExistingQuestionFormViewModel();
 
             var result = _controller.Delete(viewModel);
@@ -479,23 +575,28 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         // Helper Methods
-        private QuestionFormViewModel GetExistingQuestionFormViewModel() {
-            _saveQuestion = new Question {
+        private QuestionFormViewModel GetExistingQuestionFormViewModel()
+        {
+            _saveQuestion = new Question
+            {
                 Id = _question1.Id,
                 Title = "Edited title?",
                 Description = "Edited question"
             };
             _saveQuestion.SetUserId(_question1.AppUserId);
 
-            return new QuestionFormViewModel {
+            return new QuestionFormViewModel
+            {
                 Question = _saveQuestion
             };
         }
 
-        private QuestionFormViewModel GetNewQuestionFormViewModel() {
+        private QuestionFormViewModel GetNewQuestionFormViewModel()
+        {
             _saveQuestion = _newQuestion;
 
-            return new QuestionFormViewModel() {
+            return new QuestionFormViewModel()
+            {
                 Question = _newQuestion
             };
         }
