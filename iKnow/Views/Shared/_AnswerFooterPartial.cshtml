@@ -1,32 +1,42 @@
 ﻿@model iKnow.Core.Models.Answer
+@{
+    var totalComment = Model.CommentCount > 0 ? $"{Model.CommentCount} Comment(s)" : "Add Comment";
+}
 
 <div class="answer-footer">
-    @if (Model.UpdatedDate == null) {
+    @if (Model.UpdatedDate == null)
+    {
         <span>Answered @Model.CreatedDate.ToString("MMM d, yyyy")</span>
-    } else {
+    }
+    else
+    {
         <span>Updated @Model.UpdatedDate.Value.ToString("MMM d, yyyy")</span>
     }
-    <div class="answer-footer-bar" data-total-comment="@Model.CommentCount Comment(s)">
-        <span class="comment-button">
-            <i class="fa fa-comment"></i>
-            <span class="comment-button-text">@Model.CommentCount Comment(s)</span>
-        </span>
-        <a class="collapse-answer">
-            <i class="fa fa-angle-double-up" aria-hidden="true"></i>
-            Collapse
-        </a>
-    </div>
-    
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="answer-footer-bar">
+            <span class="comment-button">
+                <i class="fa fa-comment"></i>
+                <span class="comment-button-text" data-total-count="@Model.CommentCount">@totalComment</span>
+            </span>
+            <a class="collapse-answer">
+                <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+                Collapse
+            </a>
+        </div>
+    }
+
     <div class="answer-comment hide" data-answer-id="@Model.Id">
         <div class="comment-container">
             <div class="comment-header">
                 <div>
-                    <strong>@Model.CommentCount Comment(s)</strong>
+                    <strong>@totalComment</strong>
                 </div>
             </div>
             <div class="comment-list-container">
                 <div class="comment-list">
-                </div>  
+                </div>
                 <div class="comment-loading">
                     <i class="fa fa-spinner fa-pulse fa-fw"></i>
                 </div>

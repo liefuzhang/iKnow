@@ -21,6 +21,10 @@
         getComments($commentList, answerId, +pageNumber);
     }
 
+    var getTotalCommentText = function(commentCount) {
+        return commentCount > 0 ? `${commentCount} Comment(s)` : "Add Comment";
+    }
+
     var toggleComment = function () {
         var $footerBar = $(this).parent(".answer-footer-bar");
         var $commentButtonText = $footerBar.find(".comment-button-text");
@@ -33,9 +37,21 @@
             $commentButtonText.html("Hide Comment");
         } else {
             $answerComment.addClass("hide");
-            var totalCommentCount = $footerBar.attr("data-total-comment");
-            $commentButtonText.html(totalCommentCount);
+            var totalCommentCount = $commentButtonText.attr("data-total-count");
+            $commentButtonText.html(getTotalCommentText(totalCommentCount));
         }
+    }
+
+    var postCommentUpdateTotalCount = function ($commentContainer) {
+        var $commentHeaderText = $commentContainer.find(".comment-header strong");
+        var $commentButtonText = $commentContainer.closest(".answer-footer").find(".comment-button-text");
+        var totalCommentCount = $commentButtonText.attr("data-total-count");
+
+        totalCommentCount = +totalCommentCount + 1;
+        $commentButtonText.attr("data-total-count", totalCommentCount);
+        var totalCommentCountText = getTotalCommentText(totalCommentCount);
+        $commentHeaderText.html(totalCommentCountText);
+        $commentButtonText.html(totalCommentCountText);
     }
 
     var postComment = function () {
@@ -51,8 +67,10 @@
             var $commentContainer = $this.closest(".comment-container");
             var $commentList = $commentContainer.find(".comment-list");
 
+            postCommentUpdateTotalCount($commentContainer);
             getComments($commentList, answerId, newTotalPageCount);
         };
+
         commentService.postComment(success, answerId, comment);
     }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -9,14 +8,12 @@ using iKnow.Controllers;
 using iKnow.Core.Models;
 using iKnow.Core.Models.Identity;
 using iKnow.Core.ViewModels;
-using iKnow.Core.ViewModels.Account;
 using iKnow.Helper;
 using iKnow.IntegrationTests.Extensions;
 using iKnow.Persistence;
 using Microsoft.AspNet.Identity;
 using Moq;
 using NUnit.Framework;
-using System.Threading.Tasks;
 using Constants = iKnow.Core.Models.Constants;
 
 namespace iKnow.IntegrationTests.Controllers {

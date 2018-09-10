@@ -32,6 +32,8 @@
         container.on("mouseleave", ".short-answer-container", toggleMoreAnswerUnderline);
         container.on("click", ".short-answer-container", showMoreAnswer);
         container.on("click", ".collapse-answer", hideMoreAnswer);
+
+        CommentController.init();
     };
 
     return {
