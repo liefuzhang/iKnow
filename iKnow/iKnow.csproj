@@ -338,6 +338,10 @@
     <Compile Include="Persistence\Migrations\201809080702372_ChangeCommentReplyToAsOptional.Designer.cs">
       <DependentUpon>201809080702372_ChangeCommentReplyToAsOptional.cs</DependentUpon>
     </Compile>
+    <Compile Include="Persistence\Migrations\201809110518398_FixImageLinksInAnswers.cs" />
+    <Compile Include="Persistence\Migrations\201809110518398_FixImageLinksInAnswers.Designer.cs">
+      <DependentUpon>201809110518398_FixImageLinksInAnswers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Persistence\Migrations\Configuration.cs" />
     <Compile Include="Persistence\Repositories\CommentRepository.cs" />
     <Compile Include="Persistence\Repositories\ActivityRepository.cs" />
@@ -591,6 +595,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Persistence\Migrations\201809080702372_ChangeCommentReplyToAsOptional.resx">
       <DependentUpon>201809080702372_ChangeCommentReplyToAsOptional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Persistence\Migrations\201809110518398_FixImageLinksInAnswers.resx">
+      <DependentUpon>201809110518398_FixImageLinksInAnswers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
