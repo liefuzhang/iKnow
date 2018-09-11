@@ -1202,6 +1202,7 @@ h3.question-title > a {
 .answer-footer-bar {
     margin-top: 5px;
     display: flex;
+    align-items: center;
 }
 
     .answer-footer-bar > span {
@@ -1212,7 +1213,27 @@ h3.question-title > a {
             color: #77839c;
         }
 
+.like-button {
+    line-height: 30px;
+    padding: 0 12px;
+    background: rgba(0,132,255,.1);
+    color: #297fa3;
+}
+
+    .like-button:hover {
+        background: rgba(0,132,255,.15);
+        color: #297fa3 !important;
+    }
+
+    .like-button i {
+        margin-right: 3px;
+        font-size: 20px;
+        position: relative;
+        top: 1px;
+    }
+
 .comment-button i {
+    margin-left: 24px;
     margin-right: 3px;
     position: relative;
     bottom: 1px;

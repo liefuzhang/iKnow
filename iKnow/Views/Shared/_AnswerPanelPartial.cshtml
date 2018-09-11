@@ -4,8 +4,8 @@
 <div class="answer-panel-content-container">
     <div class="answer-panel-content">
         <div class="answer-panel-content-inner">@Html.Raw(Model.Content)</div>
-        @Html.Partial("_AnswerFooterPartial", Model)
         @Html.Action("EditIcon", "Answer", new {id = Model.Id})
+        @Html.Partial("_AnswerFooterPartial", Model)
     </div>
     <a class="expand-answer">
         Read More <i class="fa fa-angle-double-down" aria-hidden="true"></i>

@@ -1,4 +1,4 @@
-﻿var CommentController = (function (commentService) {
+﻿var AnswerFooterController = (function (answerFooterService) {
     var getComments = function ($commentList, answerId, pageNumber) {
         $commentList.html('');
         $commentList.next(".comment-loading").removeClass("hide");
@@ -8,7 +8,7 @@
             $commentList.next(".comment-loading").addClass("hide");
         }
 
-        commentService.getComments(success, answerId, pageNumber);
+        answerFooterService.getComments(success, answerId, pageNumber);
     }
 
     var getPageComments = function () {
@@ -71,7 +71,21 @@
             getComments($commentList, answerId, newTotalPageCount);
         };
 
-        commentService.postComment(success, answerId, comment);
+        answerFooterService.postComment(success, answerId, comment);
+    }
+
+    var toggleLike = function () {
+        var $likeButton = $(this);
+        var $footerBar = $likeButton.parent(".answer-footer-bar");
+        var answerId = $footerBar.attr("data-answer-id");
+        if ($likeButton.hasClass("answer-liked")) {
+            
+        } else {
+            var success = function() {
+                $likeButton.addClass("answer-liked");
+            }
+            answerFooterService.likeAnswer(success, answerId);
+        }
     }
 
     var init = function () {
@@ -79,10 +93,11 @@
         $(".answer-comment").on("input", "textarea", appController.textareaAutoGrow);
         $(".answer-comment").on("click", ".write-comment .btn", postComment);
         $(".answer-comment").on("click", ".comment-pagination-container .comment-page", getPageComments);
+        $(".answer-footer-bar .like-button").on("click", toggleLike);
     };
 
     return {
         init: init
     }
-})(CommentService);
+})(AnswerFooterService);
 

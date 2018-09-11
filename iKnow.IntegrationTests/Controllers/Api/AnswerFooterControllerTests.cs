@@ -18,9 +18,9 @@ using NUnit.Framework;
 
 namespace iKnow.IntegrationTests.Controllers.Api {
     [TestFixture]
-    public class AnswerCommentControllerTests
+    public class AnswerFooterControllerTests
     {
-        private AnswerCommentController _controller;
+        private AnswerFooterController _controller;
         private iKnowContext _context;
         private iKnowContext _contextAfterAction;
         private Mock<IPrincipal> _currentUser;
@@ -29,7 +29,7 @@ namespace iKnow.IntegrationTests.Controllers.Api {
         [SetUp]
         public void Setup() {
             _context = new iKnowContext();
-            _controller = new AnswerCommentController(new UnitOfWork(_context));
+            _controller = new AnswerFooterController(new UnitOfWork(_context));
 
             _currentUser = new Mock<IPrincipal>();
             _controller.User = _currentUser.Object;

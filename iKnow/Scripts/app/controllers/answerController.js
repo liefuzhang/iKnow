@@ -33,7 +33,7 @@
         container.on("click", ".short-answer-container", showMoreAnswer);
         container.on("click", ".collapse-answer", hideMoreAnswer);
 
-        CommentController.init();
+        AnswerFooterController.init();
     };
 
     return {

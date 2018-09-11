@@ -181,7 +181,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ActivityController.cs" />
     <Compile Include="Controllers\AnswerController.cs" />
-    <Compile Include="Controllers\Api\AnswerCommentController.cs" />
+    <Compile Include="Controllers\Api\AnswerFooterController.cs" />
     <Compile Include="Controllers\Api\AccountController.cs" />
     <Compile Include="Controllers\Api\TopicFollowingController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -191,6 +191,7 @@
     <Compile Include="Core\IUnitOfWork.cs" />
     <Compile Include="Core\Models\Activity.cs" />
     <Compile Include="Core\Models\ActivityType.cs" />
+    <Compile Include="Core\Models\AnswerLike.cs" />
     <Compile Include="Core\Models\Comment.cs" />
     <Compile Include="Core\Models\Answer.cs" />
     <Compile Include="Core\Models\AppUser.cs" />
@@ -202,6 +203,7 @@
     <Compile Include="Core\Models\ImageFileTypesAttribute.cs" />
     <Compile Include="Core\Models\Question.cs" />
     <Compile Include="Core\Models\Topic.cs" />
+    <Compile Include="Core\Repositories\IAnswerLikeRepository.cs" />
     <Compile Include="Core\Repositories\ICommentRepository.cs" />
     <Compile Include="Core\Repositories\IQuestionRepository.cs" />
     <Compile Include="Core\Repositories\IRepository.cs" />
@@ -342,7 +344,12 @@
     <Compile Include="Persistence\Migrations\201809110518398_FixImageLinksInAnswers.Designer.cs">
       <DependentUpon>201809110518398_FixImageLinksInAnswers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Persistence\Migrations\201809110911568_AddedAnswerLikesTable.cs" />
+    <Compile Include="Persistence\Migrations\201809110911568_AddedAnswerLikesTable.Designer.cs">
+      <DependentUpon>201809110911568_AddedAnswerLikesTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Persistence\Migrations\Configuration.cs" />
+    <Compile Include="Persistence\Repositories\AnswerLikeRepository.cs" />
     <Compile Include="Persistence\Repositories\CommentRepository.cs" />
     <Compile Include="Persistence\Repositories\ActivityRepository.cs" />
     <Compile Include="Persistence\Repositories\TopicFollowingRepository.cs" />
@@ -438,7 +445,7 @@
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controllers\modalController.js" />
     <Content Include="Scripts\app\controllers\headerController.js" />
-    <Content Include="Scripts\app\controllers\commentController.js" />
+    <Content Include="Scripts\app\controllers\answerFooterController.js" />
     <Content Include="Scripts\app\controllers\warningErrorController.js" />
     <Content Include="Scripts\app\controllers\registerController.js" />
     <Content Include="Scripts\app\controllers\photoUploadController.js" />
@@ -447,7 +454,7 @@
     <Content Include="Scripts\app\controllers\questionController.js" />
     <Content Include="Scripts\app\controllers\topicController.js" />
     <Content Include="Scripts\app\services\photoUploadService.js" />
-    <Content Include="Scripts\app\services\commentService.js" />
+    <Content Include="Scripts\app\services\answerFooterService.js" />
     <Content Include="Scripts\app\services\topicService.js" />
     <Content Include="Scripts\app\services\registerService.js" />
     <Content Include="Scripts\app\services\loadMoreService.js" />
@@ -598,6 +605,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Persistence\Migrations\201809110518398_FixImageLinksInAnswers.resx">
       <DependentUpon>201809110518398_FixImageLinksInAnswers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Persistence\Migrations\201809110911568_AddedAnswerLikesTable.resx">
+      <DependentUpon>201809110911568_AddedAnswerLikesTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

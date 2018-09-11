@@ -7,17 +7,19 @@ using iKnow.Persistence;
 using Microsoft.AspNet.Identity;
 using Constants = iKnow.Core.Models.Constants;
 
-namespace iKnow.Controllers.Api {
+namespace iKnow.Controllers.Api
+{
     [Authorize]
-    public class AnswerCommentController : ApiController {
+    public class AnswerFooterController : ApiController
+    {
         private readonly IUnitOfWork _unitOfWork;
 
-        public AnswerCommentController(IUnitOfWork unitOfWork)
+        public AnswerFooterController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public AnswerCommentController()
+        public AnswerFooterController()
         {
             _unitOfWork = new UnitOfWork();
         }
@@ -29,8 +31,11 @@ namespace iKnow.Controllers.Api {
         }
 
         [HttpPost]
-        public IHttpActionResult PostComment(AnswerPostCommentViewModel answerPostCommentViewModel) {
-            _unitOfWork.CommentRepository.Add(new Comment {
+        [Route("answerFooter/postComment")]
+        public IHttpActionResult PostComment(AnswerPostCommentViewModel answerPostCommentViewModel)
+        {
+            _unitOfWork.CommentRepository.Add(new Comment
+            {
                 AnswerId = answerPostCommentViewModel.AnswerId,
                 Content = answerPostCommentViewModel.Comment,
                 AppUserId = User.Identity.GetUserId(),
@@ -42,6 +47,23 @@ namespace iKnow.Controllers.Api {
             var newTotalPageCount = (newTotalCount - 1) / Constants.CommentPageSize + 1;
 
             return Ok(newTotalPageCount);
+        }
+
+        [HttpPost]
+        [Route("answerFooter/likeAnswer/{answerId}")]
+        public IHttpActionResult LikeAnswer(int answerId)
+        {
+            var userId = User.Identity.GetUserId();
+            if (_unitOfWork.AnswerLikeRepository.Any(al => al.AppUserId == userId && al.AnswerId == answerId))
+            {
+                return BadRequest("User has already liked this answer.");
+            }
+
+            _unitOfWork.AnswerLikeRepository.Add(new AnswerLike(userId, answerId));
+
+            _unitOfWork.Complete();
+
+            return Ok();
         }
     }
 }

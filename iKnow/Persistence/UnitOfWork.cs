@@ -7,8 +7,10 @@ using iKnow.Core;
 using iKnow.Core.Repositories;
 using iKnow.Persistence.Repositories;
 
-namespace iKnow.Persistence {
-    public class UnitOfWork : IUnitOfWork {
+namespace iKnow.Persistence
+{
+    public class UnitOfWork : IUnitOfWork
+    {
         private readonly iKnowContext _context;
         public IUserRepository UserRepository { get; set; }
         public IAnswerRepository AnswerRepository { get; set; }
@@ -17,8 +19,10 @@ namespace iKnow.Persistence {
         public ITopicFollowingRepository TopicFollowingRepository { get; set; }
         public IActivityRepository ActivityRepository { get; set; }
         public ICommentRepository CommentRepository { get; set; }
+        public IAnswerLikeRepository AnswerLikeRepository { get; set; }
 
-        public UnitOfWork(iKnowContext context = null) {
+        public UnitOfWork(iKnowContext context = null)
+        {
             _context = context ?? new iKnowContext();
             TopicRepository = new TopicRepository(_context);
             UserRepository = new UserRepository(_context);
@@ -27,13 +31,16 @@ namespace iKnow.Persistence {
             TopicFollowingRepository = new TopicFollowingRepository(_context);
             ActivityRepository = new ActivityRepository(_context);
             CommentRepository = new CommentRepository(_context);
+            AnswerLikeRepository = new AnswerLikeRepository(_context);
         }
 
-        public int Complete() {
+        public int Complete()
+        {
             return _context.SaveChanges();
         }
 
-        public void Dispose() {
+        public void Dispose()
+        {
             _context.Dispose();
         }
     }

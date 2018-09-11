@@ -3,9 +3,12 @@ using iKnow.Core.Models;
 using iKnow.Persistence.EntityTypeConfigurations;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace iKnow.Persistence {
-    public class iKnowContext : IdentityDbContext<AppUser> {
-        public iKnowContext(): base("DefaultConnection") {
+namespace iKnow.Persistence
+{
+    public class iKnowContext : IdentityDbContext<AppUser>
+    {
+        public iKnowContext() : base("DefaultConnection")
+        {
         }
 
         public DbSet<Question> Questions { get; set; }
@@ -14,8 +17,10 @@ namespace iKnow.Persistence {
         public DbSet<TopicFollowing> TopicFollowings { get; set; }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<AnswerLike> AnswerLikes { get; set; }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder) {
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
             modelBuilder.Configurations.Add(new AppUserConfiguration());
             modelBuilder.Configurations.Add(new QuestionConfiguration());
             modelBuilder.Configurations.Add(new AnswerConfiguration());

@@ -12,6 +12,7 @@ namespace iKnow.Core
         ITopicFollowingRepository TopicFollowingRepository { get; set; }
         IActivityRepository ActivityRepository { get; set; }
         ICommentRepository CommentRepository { get; set; }
+        IAnswerLikeRepository AnswerLikeRepository { get; set; }
         int Complete();
     }
 }

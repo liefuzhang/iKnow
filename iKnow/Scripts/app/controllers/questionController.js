@@ -198,7 +198,7 @@
         $(".whole-panel, .answer-panel-container").on("click", ".collapse-answer", toggleCollapse);
         $(".whole-panel, .answer-panel-container").on("click", ".answer-panel-content-container.is-collapsed", toggleCollapse);
 
-        CommentController.init();
+        AnswerFooterController.init();
         loadAnswerCallBack();
     };
 

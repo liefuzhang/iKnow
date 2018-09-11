@@ -14,12 +14,12 @@ using NUnit.Framework;
 
 namespace iKnow.UnitTests.Controllers.Api {
     [TestFixture]
-    public class AnswerCommentControllerTests
+    public class AnswerFooterControllerTests
     {
         private Mock<IUnitOfWork> _unitOfWork;
         private Mock<ClaimsIdentity> _identity;
         private Mock<IPrincipal> _user;
-        private AnswerCommentController _controller;
+        private AnswerFooterController _controller;
 
         [SetUp]
         public void Setup() {
@@ -28,7 +28,7 @@ namespace iKnow.UnitTests.Controllers.Api {
 
         private void SetupController() {
             _unitOfWork = new Mock<IUnitOfWork>();
-            _controller = new AnswerCommentController(_unitOfWork.Object);
+            _controller = new AnswerFooterController(_unitOfWork.Object);
             _user = new Mock<IPrincipal>();
 
             _controller.User = _user.Object;

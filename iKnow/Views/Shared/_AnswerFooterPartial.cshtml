@@ -15,7 +15,11 @@
 
     @if (User.Identity.IsAuthenticated)
     {
-        <div class="answer-footer-bar">
+        <div class="answer-footer-bar" data-answer-id="@Model.Id">
+            <span class="like-button">
+                <i class="fa fa-caret-up"></i>
+                <span class="like-button-text" data-like-count>Like</span>
+            </span>
             <span class="comment-button">
                 <i class="fa fa-comment"></i>
                 <span class="comment-button-text" data-total-count="@Model.CommentCount">@totalComment</span>
