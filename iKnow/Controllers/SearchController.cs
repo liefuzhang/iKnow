@@ -68,5 +68,9 @@ namespace iKnow.Controllers {
             };
             return viewModel;
         }
+
+        public ViewResult SearchFullResult() {
+            return View();
+        }
     }
 }

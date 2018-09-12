@@ -1,0 +1,40 @@
+﻿@model iKnow.Core.ViewModels.HomeViewModel
+@{
+    ViewBag.Title = "Search";
+    ViewBag.CurrentPage = "Search";
+}
+
+<style>
+    body {
+        background-color: #f3f3f3;
+    }
+</style>
+
+<div class="search-container-inner">
+    <div class="search-detail-container">
+        <div class="main-content-container">
+            <div class="search-question-answer-container question-answer-container load-more-list">
+                @*@Html.Partial("_QuestionAnswerPairPartial", Model.QuestionAnswers)*@
+            </div>
+
+            @Html.Partial("_LoadMorePartial")
+        </div>
+
+        <div class="sidebar panel-sidebar">
+            <div class="panel">
+                @Html.Action("GetRecommendedTopics", "Topic")
+            </div>
+            @Html.Partial("_SideBarSiteInfoPartial")
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document)
+            .ready(function () {
+                AnswerController.init();
+                LoadMoreController.init("search");
+            });
+    </script>
+}

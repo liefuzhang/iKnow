@@ -525,6 +525,7 @@
     <Content Include="Views\Account\_ChangeProfilePhotoModalPartial.cshtml" />
     <Content Include="Views\Shared\_AnswerCommentPartial.cshtml" />
     <Content Include="Views\Activity\_ActivityLikeAnswerPartial.cshtml" />
+    <Content Include="Views\Search\SearchFullResult.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

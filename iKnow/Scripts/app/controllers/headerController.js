@@ -23,20 +23,16 @@
 
     var search = function (e) {
         var input = $(".search").val();
-        if (input === "" || ($(e.currentTarget).hasClass("search") && e.keyCode === 27)) {
+        if (input === "" || e.keyCode === 27) {
             $(".search-result-container").html("");
             return;
         }
 
-        if ($(e.currentTarget).hasClass("search") && e.keyCode === 13 ||
-            $(e.currentTarget).hasClass("btn")) {
-            searchService.search(input,
-                function (html) {
-                    if (html) {
-                        $(".search-result-container").html(html);
-                    }
-                });
-        }
+        searchService.search(input, function (html) {
+            if (html) {
+                $(".search-result-container").html(html);
+            }
+        });
     }
 
     var closeSearchResult = function (e) {
@@ -56,7 +52,6 @@
         $(".add-question-button").on("click", toggleModalAddQuestion);
         $(".user-profile-inner").on("click", showUserProfileDropDown);
         $(".search").on("keyup", search);
-        $(".search-container .btn").on("click", search);
         $(document).on("click", pageClickHandler);
     };
 

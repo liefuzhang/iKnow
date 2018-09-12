@@ -1975,10 +1975,13 @@ h3.question-title > a {
     color: #666;
     padding: 8px;
 }
+
+.search-detail-container {
+    display: flex;
+}
+
 /*#endregion search*/
-
 /*#region contact */
-
 .contact-content {
     width: 660px;
     font-size: 18px;
