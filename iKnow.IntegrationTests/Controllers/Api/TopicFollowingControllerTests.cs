@@ -70,5 +70,16 @@ namespace iKnow.IntegrationTests.Controllers.Api {
             Assert.That(_context.TopicFollowings.Count(), Is.EqualTo(0));
         }
 
+        [Test, Isolated]
+        public void Unfollow_WhenCalled_ShouldRemoveFollowTopicActivityFromDatabase()
+        {
+            var topic = _context.AddTestTopicToDatabase();
+            var following = _context.AddTestTopicFollowingToDatabase(topic.Id);
+            _context.AddTestActivityTopicFollowingToDatabase(topic.Id);
+
+            var result = _controller.Unfollow(topic.Id);
+
+            Assert.That(_context.Activities.Count(), Is.EqualTo(0));
+        }
     }
 }

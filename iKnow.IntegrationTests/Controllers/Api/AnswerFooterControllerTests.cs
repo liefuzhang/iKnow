@@ -59,5 +59,54 @@ namespace iKnow.IntegrationTests.Controllers.Api {
             Assert.That(comment.Content, Is.EqualTo("Comment"));
             Assert.That((result as OkNegotiatedContentResult<int>).Content, Is.EqualTo(1));
         }
+
+        [Test, Isolated]
+        public void LikeAnswer_WhenCalled_ShouldSaveLikeAnswerToDatabase()
+        {
+            var question = _context.AddTestQuestionToDatabase();
+            var answer = _context.AddTestAnswerToDatabase(question.Id);
+
+            var result = _controller.LikeAnswer(answer.Id);
+
+            Assert.That(_context.AnswerLikes.Count(), Is.EqualTo(1));
+        }
+
+        [Test, Isolated]
+        public void LikeAnswer_WhenCalled_ShouldSaveLikeAnswerActivityToDatabase()
+        {
+            var question = _context.AddTestQuestionToDatabase();
+            var answer = _context.AddTestAnswerToDatabase(question.Id);
+
+            var result = _controller.LikeAnswer(answer.Id);
+            var activity = _context.Activities.Single();
+
+            Assert.That(activity.Type, Is.EqualTo(ActivityType.LikeAnswer));
+            Assert.That(activity.AnswerId, Is.EqualTo(answer.Id));
+        }
+
+        [Test, Isolated]
+        public void UnlikeAnswer_WhenCalled_ShouldRemoveLikeAnswerFromDatabase()
+        {
+            var question = _context.AddTestQuestionToDatabase();
+            var answer = _context.AddTestAnswerToDatabase(question.Id);
+            _context.AddTestAnswerLikeToDatabase(answer.Id);
+
+            var result = _controller.UnlikeAnswer(answer.Id);
+
+            Assert.That(_contextAfterAction.AnswerLikes.Count(), Is.EqualTo(0));
+        }
+
+        [Test, Isolated]
+        public void UnlikeAnswer_WhenCalled_ShouldRemoveLikeAnswerActivityFromDatabase()
+        {
+            var question = _context.AddTestQuestionToDatabase();
+            var answer = _context.AddTestAnswerToDatabase(question.Id);
+            _context.AddTestAnswerLikeToDatabase(answer.Id);
+            _context.AddTestActivityLikeAnswerToDatabase(question.Id, answer.Id);
+
+            var result = _controller.UnlikeAnswer(answer.Id);
+
+            Assert.That(_contextAfterAction.Activities.Count(), Is.EqualTo(0));
+        }
     }
 }

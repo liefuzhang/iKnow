@@ -13,16 +13,19 @@ using Moq;
 using System.Data.Entity;
 using NUnit.Framework;
 
-namespace iKnow.IntegrationTests.Controllers {
+namespace iKnow.IntegrationTests.Controllers
+{
     [TestFixture]
-    public class QuestionControllerTests {
+    public class QuestionControllerTests
+    {
         private QuestionController _controller;
         private iKnowContext _context;
         private iKnowContext _contextAfterAction;
         private Mock<IPrincipal> _currentUser;
 
         [SetUp]
-        public void Setup() {
+        public void Setup()
+        {
             _context = new iKnowContext();
             _contextAfterAction = new iKnowContext();
             _controller = new QuestionController(new UnitOfWork(new iKnowContext()));
@@ -35,13 +38,15 @@ namespace iKnow.IntegrationTests.Controllers {
         }
 
         [TearDown]
-        public void TearDown() {
+        public void TearDown()
+        {
             _context.Dispose();
             _contextAfterAction.Dispose();
         }
 
         [Test, Isolated]
-        public void GetForm_IdIsNotNull_ShouldReturnQuestionWithGivenIdAndWithItsTopicsAndAllTopics() {
+        public void GetForm_IdIsNotNull_ShouldReturnQuestionWithGivenIdAndWithItsTopicsAndAllTopics()
+        {
             var topic1 = _context.AddTestTopicToDatabase();
             var topic2 = _context.AddTestTopicToDatabase();
             var question = _context.AddTestQuestionToDatabase();
@@ -58,7 +63,8 @@ namespace iKnow.IntegrationTests.Controllers {
         }
 
         [Test, Isolated]
-        public void GetForm_IdIsNull_ShouldReturnNewQuestionAndAllTopics() {
+        public void GetForm_IdIsNull_ShouldReturnNewQuestionAndAllTopics()
+        {
             var topic1 = _context.AddTestTopicToDatabase();
             var topic2 = _context.AddTestTopicToDatabase();
 
@@ -71,7 +77,8 @@ namespace iKnow.IntegrationTests.Controllers {
         }
 
         [Test, Isolated]
-        public void GetTopic_WhenCalled_ShouldReturnQuestionWithGivenIdAndWithItsTopicsAndAllTopics() {
+        public void GetTopic_WhenCalled_ShouldReturnQuestionWithGivenIdAndWithItsTopicsAndAllTopics()
+        {
             var topic1 = _context.AddTestTopicToDatabase();
             var topic2 = _context.AddTestTopicToDatabase();
             var question = _context.AddTestQuestionToDatabase();
@@ -88,7 +95,8 @@ namespace iKnow.IntegrationTests.Controllers {
         }
 
         [Test, Isolated]
-        public void Detail_WhenCalled_ShouldReturnQuestionWithGivenId() {
+        public void Detail_WhenCalled_ShouldReturnQuestionWithGivenId()
+        {
             var question = _context.AddTestQuestionToDatabase();
             var answer = _context.AddTestAnswerToDatabase(question.Id);
 
@@ -101,7 +109,8 @@ namespace iKnow.IntegrationTests.Controllers {
         }
 
         [Test, Isolated]
-        public void Detail_WhenCalled_ShouldLoadAnswersForQuestionAndReturnAnswerCount() {
+        public void Detail_WhenCalled_ShouldLoadAnswersForQuestionAndReturnAnswerCount()
+        {
             var question = _context.AddTestQuestionToDatabase();
             var answer = _context.AddTestAnswerToDatabase(question.Id);
 
@@ -114,11 +123,13 @@ namespace iKnow.IntegrationTests.Controllers {
         }
 
         [Test, Isolated]
-        public void LoadMore_WhenCalled_ShouldLoadAnswersForQuestion() {
+        public void LoadMore_WhenCalled_ShouldLoadAnswersForQuestion()
+        {
             var question = _context.AddTestQuestionToDatabase();
             var answer = _context.AddTestAnswerToDatabase(question.Id);
 
-            for (var i = 0; i < Constants.DefaultPageSize/2; i ++) {
+            for (var i = 0; i < Constants.DefaultPageSize / 2; i++)
+            {
                 _context.AddTestAnswerToDatabase(question.Id);
             }
 
@@ -130,15 +141,18 @@ namespace iKnow.IntegrationTests.Controllers {
         }
 
         [Test, Isolated]
-        public void Save_NewQuestion_ShouldSaveQuestionAndItsTopicsToDatabase() {
+        public void Save_NewQuestion_ShouldSaveQuestionAndItsTopicsToDatabase()
+        {
             var topic = _context.AddTestTopicToDatabase();
 
-            var question = new Question {
+            var question = new Question
+            {
                 Title = "New Question?",
                 Description = "New desc"
             };
 
-            var viewModel = new QuestionFormViewModel {
+            var viewModel = new QuestionFormViewModel
+            {
                 Question = question,
                 TopicIds = new[] { topic.Id }
             };
@@ -154,13 +168,16 @@ namespace iKnow.IntegrationTests.Controllers {
         }
 
         [Test, Isolated]
-        public void Save_NewQuestion_ShouldSaveAddQuestionActivityToDatabase() {
-            var question = new Question {
+        public void Save_NewQuestion_ShouldSaveAddQuestionActivityToDatabase()
+        {
+            var question = new Question
+            {
                 Title = "New Question?",
                 Description = "New desc"
             };
 
-            var viewModel = new QuestionFormViewModel {
+            var viewModel = new QuestionFormViewModel
+            {
                 Question = question
             };
 
@@ -173,21 +190,24 @@ namespace iKnow.IntegrationTests.Controllers {
         }
 
         [Test, Isolated]
-        public void Save_ExistingQuestion_ShouldUpdateQuestionAndItsTopicsInDatabase() {
+        public void Save_ExistingQuestion_ShouldUpdateQuestionAndItsTopicsInDatabase()
+        {
             var topic = _context.AddTestTopicToDatabase();
             var existingQuestion = _context.AddTestQuestionToDatabase();
 
             var title = existingQuestion.Title;
             var description = existingQuestion.Description;
 
-            var question = new Question {
+            var question = new Question
+            {
                 Title = title + "?",
                 Description = description + "-",
                 Id = existingQuestion.Id,
             };
             question.SetUserId(existingQuestion.AppUserId);
 
-            var viewModel = new QuestionFormViewModel {
+            var viewModel = new QuestionFormViewModel
+            {
                 Question = question,
                 TopicIds = new[] { topic.Id }
             };
@@ -202,17 +222,20 @@ namespace iKnow.IntegrationTests.Controllers {
         }
 
         [Test, Isolated]
-        public void SaveQuestionTopics_WhenCalled_ShouldUpdateQuestionTopicsInDatabase() {
+        public void SaveQuestionTopics_WhenCalled_ShouldUpdateQuestionTopicsInDatabase()
+        {
             var topic = _context.AddTestTopicToDatabase();
             var existingQuestion = _context.AddTestQuestionToDatabase();
 
-            var question = new Question {
+            var question = new Question
+            {
                 Title = existingQuestion.Title,
                 Id = existingQuestion.Id,
             };
             question.SetUserId(existingQuestion.AppUserId);
 
-            var viewModel = new QuestionFormViewModel {
+            var viewModel = new QuestionFormViewModel
+            {
                 Question = question,
                 TopicIds = new[] { topic.Id }
             };
@@ -225,7 +248,8 @@ namespace iKnow.IntegrationTests.Controllers {
         }
 
         [Test, Isolated]
-        public void GetRelatedQuestions_WhenCalled_ShouldReturnRelatedQuestionsWithAnswerCount() {
+        public void GetRelatedQuestions_WhenCalled_ShouldReturnRelatedQuestionsWithAnswerCount()
+        {
             var topic = _context.AddTestTopicToDatabase();
             var question1 = _context.AddTestQuestionToDatabase("Question 1?");
             var question2 = _context.AddTestQuestionToDatabase("Question 2?");
@@ -252,7 +276,7 @@ namespace iKnow.IntegrationTests.Controllers {
             var question = _context.AddTestQuestionToDatabase("Question?");
             var answer = _context.AddTestAnswerToDatabase(question.Id);
             var comment = _context.AddTestCommentToDatabase(answer.Id);
-            
+
             var result = _controller.GetComments(answer.Id, 1);
 
             var answerCommentViewModel = result.Model as AnswerCommentViewModel;
@@ -261,11 +285,13 @@ namespace iKnow.IntegrationTests.Controllers {
         }
 
         [Test, Isolated]
-        public void Delete_WhenCalled_ShouldRemoveQuestionAndItsAnswersFromDatabase() {
+        public void Delete_WhenCalled_ShouldRemoveQuestionAndItsAnswersFromDatabase()
+        {
             var question = _context.AddTestQuestionToDatabase("Question 2?");
             _context.AddTestAnswerToDatabase(question.Id);
 
-            var viewModel = new QuestionFormViewModel {
+            var viewModel = new QuestionFormViewModel
+            {
                 Question = question
             };
 
@@ -273,6 +299,22 @@ namespace iKnow.IntegrationTests.Controllers {
 
             Assert.That(_contextAfterAction.Questions.Count(), Is.EqualTo(0));
             Assert.That(_contextAfterAction.Answers.Count(), Is.EqualTo(0));
+        }
+
+        [Test, Isolated]
+        public void Delete_WhenCalled_ShouldRemoveAnswerQuestionActivityFromDatabase()
+        {
+            var question = _context.AddTestQuestionToDatabase();
+            var viewModel = new QuestionFormViewModel
+            {
+                Question = question
+            };
+
+            _context.AddTestActivityAddQuestionToDatabase(question.Id);
+
+            var result = _controller.Delete(viewModel);
+
+            Assert.That(_context.Activities.Count(), Is.EqualTo(0));
         }
     }
 }

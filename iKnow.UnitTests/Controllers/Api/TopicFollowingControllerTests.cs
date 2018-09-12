@@ -39,6 +39,8 @@ namespace iKnow.UnitTests.Controllers.Api {
             _unitOfWork = new Mock<IUnitOfWork>();
             _unitOfWork.SetupGet(u => u.TopicFollowingRepository)
                 .Returns(Mock.Of<ITopicFollowingRepository>());
+            _unitOfWork.SetupGet(u => u.ActivityRepository)
+                .Returns(Mock.Of<IActivityRepository>());
 
             _unitOfWork.Setup(
                 u => u.TopicFollowingRepository.Any(It.IsAny<Expression<Func<TopicFollowing, bool>>>()))

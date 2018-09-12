@@ -1,4 +1,5 @@
-﻿using iKnow.Core.Models;
+﻿using System.Collections.Generic;
+using iKnow.Core.Models;
 using NUnit.Framework;
 
 namespace iKnow.UnitTests.Core.Models {
@@ -76,6 +77,25 @@ namespace iKnow.UnitTests.Core.Models {
 
             Assert.That(answer.Content, Is.EqualTo("2"));
             Assert.That(answer.UpdatedDate.HasValue, Is.True);
+        }
+
+        [Test]
+        public void SetLikedByCurrentUser_WhenCalled_UpdateLikedByCurrentUser()
+        {
+            var userId = "1";
+            var answer = new Answer
+            {
+                Id = 1,
+                Content = "1", 
+                AnswerLikes = new List<AnswerLike> { new AnswerLike(userId, 1)}
+            };
+
+
+            answer.SetLikedByCurrentUser(userId + '-');
+            Assert.That(answer.LikedByCurrentUser, Is.False);
+
+            answer.SetLikedByCurrentUser(userId);
+            Assert.That(answer.LikedByCurrentUser, Is.True);
         }
     }
 }

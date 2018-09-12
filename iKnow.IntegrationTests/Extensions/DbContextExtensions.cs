@@ -75,6 +75,17 @@ namespace iKnow.IntegrationTests.Extensions
             return comment;
         }
 
+        public static AnswerLike AddTestAnswerLikeToDatabase(this iKnowContext context, int answerId, string userId = null)
+        {
+            var answerLike = new AnswerLike(userId ?? context.Users.First().Id, answerId);
+
+            context.AnswerLikes.Add(answerLike);
+            context.SaveChanges();
+
+            context.Entry(answerLike).Reload();
+            return answerLike;
+        }
+
         public static TopicFollowing AddTestTopicFollowingToDatabase(this iKnowContext context, int topicId)
         {
             var topicFollowing = new TopicFollowing(context.Users.First().Id, topicId);
@@ -103,6 +114,13 @@ namespace iKnow.IntegrationTests.Extensions
         public static Activity AddTestActivityAddQuestionToDatabase(this iKnowContext context, int questionId)
         {
             var activity = Activity.ActivityAddQuestion(context.Users.First().Id, questionId);
+
+            return AddActivity(context, activity);
+        }
+
+        public static Activity AddTestActivityLikeAnswerToDatabase(this iKnowContext context, int questionId, int answerId)
+        {
+            var activity = Activity.ActivityLikeAnswer(context.Users.First().Id, questionId, answerId);
 
             return AddActivity(context, activity);
         }

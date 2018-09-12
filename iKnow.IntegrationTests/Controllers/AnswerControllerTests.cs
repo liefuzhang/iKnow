@@ -180,5 +180,24 @@ namespace iKnow.IntegrationTests.Controllers {
 
             Assert.That(_contextAfterAction.Answers.Count(), Is.EqualTo(0));
         }
+
+        [Test, Isolated]
+        public void Delete_WhenCalled_ShouldRemoveAnswerQuestionActivityFromDatabase()
+        {
+            var question = _context.AddTestQuestionToDatabase();
+            var answer = _context.AddTestAnswerToDatabase(question.Id);
+
+            var viewModel = new QuestionDetailViewModel
+            {
+                Question = question,
+                UserAnswerId = answer.Id
+            };
+
+            _context.AddTestActivityAnswerQuestionToDatabase(question.Id, answer.Id);
+
+            _controller.Delete(viewModel);
+
+            Assert.That(_contextAfterAction.Activities.Count(), Is.EqualTo(0));
+        }
     }
 }
