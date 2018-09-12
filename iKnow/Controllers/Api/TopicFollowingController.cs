@@ -50,6 +50,13 @@ namespace iKnow.Controllers.Api {
             }
             
             _unitOfWork.TopicFollowingRepository.Remove(following);
+
+            var activity = _unitOfWork.ActivityRepository.SingleOrDefault(a => a.Type == ActivityType.FollowTopic &&
+                                                                               a.AppUserId == userId &&
+                                                                               a.TopicId == id);
+            if (activity != null)
+                _unitOfWork.ActivityRepository.Remove(activity);
+
             _unitOfWork.Complete();
 
             return Ok();

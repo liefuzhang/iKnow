@@ -48,6 +48,25 @@ namespace iKnow.Core.Models {
             };
         }
 
+        public static Activity ActivityLikeAnswer(string userId, int questionId, int answerId)
+        {
+            if (questionId <= 0)
+            {
+                throw new ArgumentException(nameof(questionId));
+            }
+
+            if (answerId <= 0)
+            {
+                throw new ArgumentException(nameof(answerId));
+            }
+
+            return new Activity(userId, ActivityType.LikeAnswer)
+            {
+                QuestionId = questionId,
+                AnswerId = answerId
+            };
+        }
+
         public static Activity ActivityAddQuestion(string userId, int questionId) {
             if (questionId <= 0) {
                 throw new ArgumentException(nameof(questionId));

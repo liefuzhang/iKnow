@@ -248,11 +248,11 @@ namespace iKnow.Controllers {
             if (user == null) {
                 return HttpNotFound();
             }
-            var userProfileViewModel1 = new UserProfileViewModel {
+
+            var userProfileViewModel = new UserProfileViewModel {
                 AppUser = user,
                 Activities = GetActivities(user, 0)
             };
-            var userProfileViewModel = userProfileViewModel1;
             return View("UserProfile", userProfileViewModel);
         }
 

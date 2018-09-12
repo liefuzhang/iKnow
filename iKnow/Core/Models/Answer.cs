@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace iKnow.Core.Models {
-    public class Answer {
+namespace iKnow.Core.Models
+{
+    public class Answer
+    {
         public int Id { get; set; }
         public string Content { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -13,17 +16,27 @@ namespace iKnow.Core.Models {
         public Question Question { get; set; }
         public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }
+
+        [NotMapped]
+        public bool LikedByCurrentUser { get; set; }
+
         public ICollection<Comment> Comments { get; set; }
+        public ICollection<AnswerLike> AnswerLikes { get; set; }
 
         public Answer()
         {
             Comments = new HashSet<Comment>();
+            AnswerLikes = new HashSet<AnswerLike>();
         }
 
         public int CommentCount => Comments.Count;
 
-        public string PlainContent {
-            get {
+        public int LikeCount => AnswerLikes.Count;
+
+        public string PlainContent
+        {
+            get
+            {
                 var parsed = Regex.Replace(Content, "</(p|li|h2|blockquote)>", " ");
                 return Regex.Replace(parsed, "<.*?>", String.Empty).Trim();
             }
@@ -34,16 +47,27 @@ namespace iKnow.Core.Models {
                 ? PlainContent.Substring(0, Constants.ShortAnswerLength) + "..."
                 : PlainContent;
 
-        public string ShortContentImageData {
-            get {
+        public string ShortContentImageData
+        {
+            get
+            {
                 var match = Regex.Match(Content, "<img src=\".*?\">");
                 return match.Success ? match.Value : null;
             }
         }
 
-        public void UpdateContent(string content) {
+        public void UpdateContent(string content)
+        {
             Content = content;
             UpdatedDate = DateTime.Now;
+        }
+
+        public void SetLikedByCurrentUser(string currentUserId)
+        {
+            if (AnswerLikes.Any(al => al.AppUserId == currentUserId))
+            {
+                LikedByCurrentUser = true;
+            }
         }
     }
 }

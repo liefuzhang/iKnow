@@ -21,7 +21,7 @@
         getComments($commentList, answerId, +pageNumber);
     }
 
-    var getTotalCommentText = function(commentCount) {
+    var getTotalCommentText = function (commentCount) {
         return commentCount > 0 ? `${commentCount} Comment(s)` : "Add Comment";
     }
 
@@ -74,17 +74,32 @@
         answerFooterService.postComment(success, answerId, comment);
     }
 
+    var getTotalLikeText = function (likeCount, liked) {
+        return likeCount > 0 ? (liked ? `Liked ${likeCount}` : `Like ${likeCount}`) : "Like";
+    }
+
     var toggleLike = function () {
         var $likeButton = $(this);
         var $footerBar = $likeButton.parent(".answer-footer-bar");
         var answerId = $footerBar.attr("data-answer-id");
+        var totalLikeCount = $likeButton.attr("data-like-count");
+        var $likeButtonText = $likeButton.find(".like-button-text");
         if ($likeButton.hasClass("answer-liked")) {
-            
-        } else {
-            var success = function() {
-                $likeButton.addClass("answer-liked");
+            var unlikeSuccess = function () {
+                $likeButton.removeClass("answer-liked");
+                totalLikeCount = +totalLikeCount - 1;
+                $likeButtonText.html(getTotalLikeText(totalLikeCount, false));
+                $likeButton.attr("data-like-count", totalLikeCount);
             }
-            answerFooterService.likeAnswer(success, answerId);
+            answerFooterService.unlikeAnswer(unlikeSuccess, answerId);
+        } else {
+            var likeSuccess = function () {
+                $likeButton.addClass("answer-liked");
+                totalLikeCount = +totalLikeCount + 1;
+                $likeButtonText.html(getTotalLikeText(totalLikeCount, true));
+                $likeButton.attr("data-like-count", totalLikeCount);
+            }
+            answerFooterService.likeAnswer(likeSuccess, answerId);
         }
     }
 

@@ -9,6 +9,7 @@ using iKnow.Core.ViewModels;
 using Microsoft.AspNet.Identity;
 using Constants = iKnow.Core.Models.Constants;
 using iKnow.Persistence;
+using WebGrease.Css.Extensions;
 
 namespace iKnow.Controllers
 {
@@ -66,7 +67,8 @@ namespace iKnow.Controllers
 
         public ActionResult Detail(int id)
         {
-            var answer = _unitOfWork.AnswerRepository.SingleOrDefault(a => a.Id == id, "Question");
+            var answer = _unitOfWork.AnswerRepository.SingleOrDefault(a => a.Id == id, 
+                nameof(Answer.Question) + "," + nameof(Answer.AnswerLikes) + "," + nameof(Answer.Comments));
             if (answer == null)
             {
                 return HttpNotFound();
@@ -81,12 +83,17 @@ namespace iKnow.Controllers
         {
             var question = _unitOfWork.QuestionRepository.Single(q => q.Id == answer.Question.Id, nameof(Question.Topics));
             var answerCount = _unitOfWork.AnswerRepository.Count(a => a.QuestionId == question.Id);
-            var moreAnswers = _unitOfWork.AnswerRepository.Get(a => a.Id != answer.Id && a.QuestionId == question.Id, take: 2);
+            var moreAnswers = _unitOfWork.AnswerRepository.Get(a => a.Id != answer.Id && a.QuestionId == question.Id, 
+                    includeProperties: nameof(Answer.AnswerLikes) + "," + nameof(Answer.Comments), take: 2)
+                .ToList();
 
             // TODO: can we utilize ConstructQuestionDetailViewModel method in QuestionController?
             var userId = User.Identity.GetUserId();
             var existingAnswer = _unitOfWork.AnswerRepository.SingleOrDefault(
                 a => a.QuestionId == question.Id && a.AppUserId == userId);
+
+            answer.SetLikedByCurrentUser(userId);
+            moreAnswers.ForEach(ma=>ma.SetLikedByCurrentUser(userId));
 
             var questionDetailViewModel = new QuestionDetailViewModel
             {
@@ -204,6 +211,13 @@ namespace iKnow.Controllers
                 return new HttpUnauthorizedResult();
             }
             _unitOfWork.AnswerRepository.Remove(answer);
+
+            var activity = _unitOfWork.ActivityRepository.SingleOrDefault(a => a.Type == ActivityType.AnswerQuestion &&
+                                                                               a.AppUserId == currentUserId &&
+                                                                               a.AnswerId == viewModel.UserAnswerId);
+            if (activity != null)
+                _unitOfWork.ActivityRepository.Remove(activity);
+
             _unitOfWork.Complete();
 
             return RedirectToAction("Detail", "Question", new { id = viewModel.Question.Id });

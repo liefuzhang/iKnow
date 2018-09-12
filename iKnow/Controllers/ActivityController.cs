@@ -3,6 +3,7 @@ using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.ViewModels;
 using iKnow.Persistence;
+using Microsoft.AspNet.Identity;
 
 namespace iKnow.Controllers {
     public class ActivityController : Controller {
@@ -33,18 +34,35 @@ namespace iKnow.Controllers {
             return PartialView("_ActivityFollowTopicPartial", viewModel);
         }
 
-        public PartialViewResult GetAnswerQuestion(int id) {
+        private ActivityViewModel GetQuestionAnswerViewModel(int id)
+        {
             var activity = _unitOfWork.ActivityRepository.Single(a => a.Id == id);
-            var question = _unitOfWork.QuestionRepository.Single(q=> q.Id == activity.QuestionId);
-            var answer = _unitOfWork.AnswerRepository.Single(a=> a.Id == activity.AnswerId, nameof(Answer.AppUser));
+            var question = _unitOfWork.QuestionRepository.Single(q => q.Id == activity.QuestionId);
+            var answer = _unitOfWork.AnswerRepository.Single(a => a.Id == activity.AnswerId,
+                nameof(Answer.AppUser) + "," + nameof(Answer.AnswerLikes) + "," + nameof(Answer.Comments));
+            answer.SetLikedByCurrentUser(User.Identity.GetUserId());
 
-            var viewModel = new ActivityViewModel {
+            var viewModel = new ActivityViewModel
+            {
                 DateTime = activity.DateTime,
                 Question = question,
                 Answer = answer
             };
+            return viewModel;
+        }
+
+        public PartialViewResult GetAnswerQuestion(int id)
+        {
+            var viewModel = GetQuestionAnswerViewModel(id);
 
             return PartialView("_ActivityAnswerQuestionPartial", viewModel);
+        }
+
+        public PartialViewResult GetLikeAnswer(int id)
+        {
+            var viewModel = GetQuestionAnswerViewModel(id);
+
+            return PartialView("_ActivityLikeAnswerPartial", viewModel);
         }
 
         public PartialViewResult GetAddQuestion(int id) {

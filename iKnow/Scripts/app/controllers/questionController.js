@@ -169,7 +169,7 @@
         if ($lastDisplayedAnswer)
             $answers = $lastDisplayedAnswer.nextAll().find(".answer-panel-content");
         else
-            $answers = $(".whole-panel").find(".answer-panel-content");
+            $answers = $(".whole-panel, .current-answer-panel").find(".answer-panel-content");
 
         $.each($answers, function (index) {
             hideCollapseAnswerForShortAnswer($(this));

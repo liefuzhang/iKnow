@@ -27,7 +27,7 @@
     }
 
     var init = function () {
-        var container = $(".question-answer-container, .activity-answer-question-inner");
+        var container = $(".question-answer-container, .activity-panel");
         container.on("mouseenter", ".short-answer-container", toggleMoreAnswerUnderline);
         container.on("mouseleave", ".short-answer-container", toggleMoreAnswerUnderline);
         container.on("click", ".short-answer-container", showMoreAnswer);

@@ -35,9 +35,22 @@
         });
     }
 
+    var unlikeAnswer = function (success, answerId) {
+        $.ajax({
+            url: "/answerFooter/unlikeAnswer/" + answerId,
+            type: 'DELETE',
+            contentType: "application/json; charset=utf-8",
+            success: success,
+            fail: function () {
+                console.error("Something went wrong with AnswerFooterService unlikeAnswer.");
+            }
+        });
+    }
+
     return {
         getComments: getComments,
         postComment: postComment,
-        likeAnswer: likeAnswer
+        likeAnswer: likeAnswer,
+        unlikeAnswer: unlikeAnswer
     }
 })();

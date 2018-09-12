@@ -59,11 +59,45 @@ namespace iKnow.Controllers.Api
                 return BadRequest("User has already liked this answer.");
             }
 
+            var answer = _unitOfWork.AnswerRepository.SingleOrDefault(a => a.Id == answerId, nameof(Answer.Question));
+            if (answer == null)
+            {
+                return BadRequest("Answer doesn't exist.");
+            }
+
             _unitOfWork.AnswerLikeRepository.Add(new AnswerLike(userId, answerId));
+            _unitOfWork.ActivityRepository.Add(
+                Activity.ActivityLikeAnswer(userId, answer.Question.Id, answerId));
 
             _unitOfWork.Complete();
 
             return Ok();
         }
+
+        [HttpDelete]
+        [Route("answerFooter/unlikeAnswer/{answerId}")]
+        public IHttpActionResult UnlikeAnswer(int answerId)
+        {
+            var userId = User.Identity.GetUserId();
+            var answerLike = _unitOfWork.AnswerLikeRepository.SingleOrDefault(al => al.AppUserId == userId &&
+                                                                                    al.AnswerId == answerId);
+            if (answerLike == null)
+            {
+                return BadRequest("User hasn't liked this answer.");
+            }
+
+            _unitOfWork.AnswerLikeRepository.Remove(answerLike);
+
+            var activity = _unitOfWork.ActivityRepository.SingleOrDefault(a => a.Type == ActivityType.LikeAnswer &&
+                                                                               a.AppUserId == userId &&
+                                                                               a.AnswerId == answerId);
+            if (activity != null)
+                _unitOfWork.ActivityRepository.Remove(activity);
+
+            _unitOfWork.Complete();
+
+            return Ok();
+        }
+
     }
 }

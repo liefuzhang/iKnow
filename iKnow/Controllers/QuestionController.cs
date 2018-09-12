@@ -119,7 +119,11 @@ namespace iKnow.Controllers
         private IEnumerable<Answer> GetQuestionAnswers(int questionId, int currentPage, int pageSize = Constants.DefaultPageSize / 2)
         {
             var answers = _unitOfWork.AnswerRepository.Get(a => a.QuestionId == questionId,
-                q => q.OrderByDescending(a => a.CreatedDate), nameof(Answer.Comments), currentPage * pageSize, pageSize).ToList();
+                q => q.OrderByDescending(a => a.CreatedDate), nameof(Answer.Comments) + "," + nameof(Answer.AnswerLikes),
+                currentPage * pageSize, pageSize).ToList();
+
+            var currentUserId = User.Identity.GetUserId();
+            answers.ForEach(a => a.SetLikedByCurrentUser(currentUserId));
 
             return answers;
         }
@@ -280,7 +284,8 @@ namespace iKnow.Controllers
         [Route("Question/GetComments/{answerId}/{currentPage}")]
         public PartialViewResult GetComments(int answerId, int currentPage)
         {
-            if (currentPage < 1) {
+            if (currentPage < 1)
+            {
                 return null;
             }
 
@@ -339,6 +344,11 @@ namespace iKnow.Controllers
             {
                 _unitOfWork.AnswerRepository.RemoveRange(question.Answers);
                 _unitOfWork.QuestionRepository.Remove(question);
+
+                var activity = _unitOfWork.ActivityRepository.SingleOrDefault(a => a.Type == ActivityType.AddQuestion &&
+                                                                                   a.QuestionId == viewModel.Question.Id);
+                if (activity != null)
+                    _unitOfWork.ActivityRepository.Remove(activity);
 
                 _unitOfWork.Complete();
             }

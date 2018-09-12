@@ -1200,7 +1200,7 @@ h3.question-title > a {
 }
 
 .answer-footer-bar {
-    margin-top: 5px;
+    margin-top: 7px;
     display: flex;
     align-items: center;
 }
@@ -1218,11 +1218,17 @@ h3.question-title > a {
     padding: 0 12px;
     background: rgba(0,132,255,.1);
     color: #297fa3;
+    border-radius: 3px;
 }
 
     .like-button:hover {
         background: rgba(0,132,255,.15);
         color: #297fa3 !important;
+    }
+
+    .like-button.answer-liked, .like-button.answer-liked:hover {
+        background-color: #297fa3;
+        color: #fff !important;
     }
 
     .like-button i {

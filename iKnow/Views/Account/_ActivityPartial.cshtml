@@ -10,6 +10,9 @@
             case ActivityType.AnswerQuestion:
                 @Html.Action("GetAnswerQuestion", "Activity", new { id = activity.Id })
                 break;
+            case ActivityType.LikeAnswer:
+                @Html.Action("GetLikeAnswer", "Activity", new { id = activity.Id })
+                break;
             case ActivityType.AddQuestion:
                 @Html.Action("GetAddQuestion", "Activity", new { id = activity.Id })
                 break;

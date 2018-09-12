@@ -1,6 +1,7 @@
 ﻿@model iKnow.Core.Models.Answer
 @{
     var totalComment = Model.CommentCount > 0 ? $"{Model.CommentCount} Comment(s)" : "Add Comment";
+    var totalLike = Model.LikeCount > 0 ? (Model.LikedByCurrentUser ? $"Liked {Model.LikeCount}" : $"Like {Model.LikeCount}") : "Like";
 }
 
 <div class="answer-footer">
@@ -16,9 +17,9 @@
     @if (User.Identity.IsAuthenticated)
     {
         <div class="answer-footer-bar" data-answer-id="@Model.Id">
-            <span class="like-button">
+            <span class="like-button @(Model.LikedByCurrentUser?"answer-liked":"")" data-like-count="@Model.LikeCount">
                 <i class="fa fa-caret-up"></i>
-                <span class="like-button-text" data-like-count>Like</span>
+                <span class="like-button-text">@totalLike</span>
             </span>
             <span class="comment-button">
                 <i class="fa fa-comment"></i>
