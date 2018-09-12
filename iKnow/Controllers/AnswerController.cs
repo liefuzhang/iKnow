@@ -195,7 +195,7 @@ namespace iKnow.Controllers
         public PartialViewResult GetAnswerPanelHeader(string id)
         {
             var user = _unitOfWork.UserRepository.Single(u => u.Id == id);
-            return PartialView("_AnswerPanelHeaderPartial", user);
+            return PartialView("_UserInfoPartial", user);
         }
 
         [HttpPost]

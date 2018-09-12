@@ -31,16 +31,26 @@ namespace iKnow.Controllers {
             }
 
             var keywords = TrimInput(input);
+            var user = GetUsers(keywords);
             var topics = GetTopics(keywords);
             var questions = GetQuestions(keywords);
 
-            var viewModel = ConstructSearchResultViewModel(questions, topics);
+            var viewModel = ConstructSearchResultViewModel(user, topics, questions);
 
             return PartialView("_SearchResultPartial", viewModel);
         }
         
         private static string[] TrimInput(string input) {
             return input.Trim().Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        private IEnumerable<AppUser> GetUsers(string[] keywords)
+        {
+            const int userCount = 2;
+            return _unitOfWork.UserRepository.Get(
+                user => keywords.All(
+                    keyword => user.FirstName.ToLower().StartsWith(keyword.ToLower())
+                               || user.LastName.ToLower().StartsWith(keyword.ToLower())), take: userCount);
         }
 
         private IEnumerable<Topic> GetTopics(string[] keywords) {
@@ -59,10 +69,11 @@ namespace iKnow.Controllers {
                     || question.Title.ToLower().Contains(" " + keyword.ToLower())), take: questionCount);
         }
 
-        private SearchResultViewModel ConstructSearchResultViewModel(IEnumerable<Question> questions, IEnumerable<Topic> topics) {
+        private SearchResultViewModel ConstructSearchResultViewModel(IEnumerable<AppUser> users, IEnumerable<Topic> topics, IEnumerable<Question> questions) {
             var questionsWithAnswerCount = _unitOfWork.QuestionRepository.GetQuestionsWithAnswerCount(questions);
         
             var viewModel = new SearchResultViewModel {
+                Users = users,
                 Topics = topics,
                 QuestionsWithAnswerCount = questionsWithAnswerCount
             };
