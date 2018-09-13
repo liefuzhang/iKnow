@@ -18,6 +18,7 @@ namespace iKnow.UnitTests.Controllers {
         private Mock<IUnitOfWork> _unitOfWork;
         private SearchController _controller;
         private string _input;
+        private List<AppUser> _users;
         private List<Topic> _topics;
         private List<Question> _questions;
         private Dictionary<Question, int> _questionsWithAnswerCount;
@@ -33,6 +34,7 @@ namespace iKnow.UnitTests.Controllers {
         }
 
         private void InitializeTopicsAndQuestions() {
+            _users = new List<AppUser>();
             _topics = new List<Topic>();
             _questions = new List<Question>();
             _questionsWithAnswerCount = new Dictionary<Question, int>();
@@ -42,6 +44,11 @@ namespace iKnow.UnitTests.Controllers {
             _unitOfWork = new Mock<IUnitOfWork>();
             _unitOfWork.MockRepositories();
 
+            _unitOfWork.Setup(
+                    u => u.UserRepository.Get(It.IsAny<Expression<Func<AppUser, bool>>>(),
+                        It.IsAny<Func<IQueryable<AppUser>, IOrderedQueryable<AppUser>>>(),
+                        It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
+                .Returns(_users);
             _unitOfWork.Setup(
                 u => u.TopicRepository.Get(It.IsAny<Expression<Func<Topic, bool>>>(),
                     It.IsAny<Func<IQueryable<Topic>, IOrderedQueryable<Topic>>>(),
@@ -70,6 +77,7 @@ namespace iKnow.UnitTests.Controllers {
 
             Assert.That(result, Is.TypeOf<PartialViewResult>());
             Assert.That(result.Model, Is.TypeOf<SearchResultViewModel>());
+            Assert.That((result.Model as SearchResultViewModel).Users, Is.EqualTo(_users));
             Assert.That((result.Model as SearchResultViewModel).Topics, Is.EqualTo(_topics));
             Assert.That((result.Model as SearchResultViewModel).QuestionsWithAnswerCount, Is.EqualTo(_questionsWithAnswerCount));
         }
