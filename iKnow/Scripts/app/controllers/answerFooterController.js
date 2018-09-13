@@ -104,11 +104,12 @@
     }
 
     var init = function () {
-        $(".answer-footer-bar .comment-button").on("click", toggleComment);
-        $(".answer-comment").on("input", "textarea", appController.textareaAutoGrow);
-        $(".answer-comment").on("click", ".write-comment .btn", postComment);
-        $(".answer-comment").on("click", ".comment-pagination-container .comment-page", getPageComments);
-        $(".answer-footer-bar .like-button").on("click", toggleLike);
+        var $container = $(".question-answer-container, .activity-whole-panel");
+        $container.on("click", ".answer-footer-bar .comment-button", toggleComment);
+        $container.on("input", ".answer-comment textarea", appController.textareaAutoGrow);
+        $container.on("click", ".answer-comment .write-comment .btn", postComment);
+        $container.on("click", ".answer-comment .comment-pagination-container .comment-page", getPageComments);
+        $container.on("click", ".answer-footer-bar .like-button", toggleLike);
     };
 
     return {

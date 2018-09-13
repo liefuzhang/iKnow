@@ -36,8 +36,8 @@
                             <div class="search-question-answer-container question-answer-container load-more-list">
                                 @Html.Partial("_QuestionAnswerPairPartial", Model.QuestionAnswers)
                             </div>
+                            @Html.Partial("_LoadMorePartial")
                         </div>
-                        @Html.Partial("_LoadMorePartial")
                     }
                 </div>
             }
@@ -63,7 +63,7 @@
     <script>
         $(document).ready(function () {
             AnswerController.init();
-            LoadMoreController.init("search");
+            LoadMoreController.init("search", "?search=" + "@Model.Search");
         });
     </script>
 }

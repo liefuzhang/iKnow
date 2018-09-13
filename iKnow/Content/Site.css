@@ -870,7 +870,8 @@ a.collapse-answer:hover {
     display: flex;
 }
 
-    .question-detail-container .load-more.end-of-list {
+    .question-detail-container .load-more.end-of-list,
+    .search-question-answer-panel .load-more.end-of-list {
         display: none;
     }
 
@@ -2004,7 +2005,7 @@ h3.question-title > a {
     display: flex;
 }
 
-    .search-detail-container .user-intro {
+    .search-detail-container .search-user-topic-panel .user-intro {
         font-size: 1em;
         color: #333;
     }

@@ -67,7 +67,7 @@
     <div class="user-profile-detail-container">
         <div class="main-content-container">
             @if (Model.Activities.Any()) {
-                <div class="whole-panel panel load-more-list">
+                <div class="whole-panel activity-whole-panel panel load-more-list">
                     @Html.Partial("_ActivityPartial", Model.Activities)
                 </div>
                 @Html.Partial("_LoadMorePartial")
