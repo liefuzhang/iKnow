@@ -1,7 +1,7 @@
-﻿@model iKnow.Core.ViewModels.HomeViewModel
+﻿@model iKnow.Core.ViewModels.SearchFullResultViewModel
 @{
-    ViewBag.Title = "Search";
-    ViewBag.CurrentPage = "Search";
+    ViewBag.Title = "Search - " + Model.Search;
+    ViewBag.CurrentPage = "Search - " + Model.Search;
 }
 
 <style>
@@ -13,11 +13,41 @@
 <div class="search-container-inner">
     <div class="search-detail-container">
         <div class="main-content-container">
-            <div class="search-question-answer-container question-answer-container load-more-list">
-                @*@Html.Partial("_QuestionAnswerPairPartial", Model.QuestionAnswers)*@
-            </div>
-
-            @Html.Partial("_LoadMorePartial")
+            <div class="search-detail-header panel">Search Results for <b>"@Model.Search"</b></div>
+            @if (Model.User != null || Model.Topic != null || Model.QuestionAnswers != null && Model.QuestionAnswers.Any())
+            {
+                <div class="search-detail-container-inner">
+                    @if (Model.User != null || Model.Topic != null)
+                    {
+                        <div class="search-user-topic-panel panel">
+                            @if (Model.User != null)
+                            {
+                                <div>@Html.Partial("_UserInfoPartial", Model.User)</div>
+                            }
+                            @if (Model.Topic != null)
+                            {
+                                <div>@Html.Partial("_TopicInfoPartial", Model.Topic)</div>
+                            }
+                        </div>
+                    }
+                    @if (Model.QuestionAnswers != null && Model.QuestionAnswers.Any())
+                    {
+                        <div class="search-question-answer-panel panel">
+                            <div class="search-question-answer-container question-answer-container load-more-list">
+                                @Html.Partial("_QuestionAnswerPairPartial", Model.QuestionAnswers)
+                            </div>
+                        </div>
+                        @Html.Partial("_LoadMorePartial")
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="empty-container">
+                    <i class="fa fa-frown-o fa-4x" aria-hidden="true"></i>
+                    No search result found.
+                </div>
+            }
         </div>
 
         <div class="sidebar panel-sidebar">
@@ -31,10 +61,9 @@
 
 @section scripts {
     <script>
-        $(document)
-            .ready(function () {
-                AnswerController.init();
-                LoadMoreController.init("search");
-            });
+        $(document).ready(function () {
+            AnswerController.init();
+            LoadMoreController.init("search");
+        });
     </script>
 }

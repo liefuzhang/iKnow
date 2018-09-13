@@ -1,0 +1,16 @@
+﻿@model iKnow.Core.Models.Topic
+<div class="topic-info-container">
+    @if (Model != null) {
+        <div class="img-container">
+            <a href="@Url.Action("Detail", "Topic", new {id = Model.Id})">
+                <img src=@Model.IconPath />
+            </a>
+        </div>
+        <div class="topic-info">
+            <a href="@Url.Action("Detail", "Topic", new {id = Model.Id})">
+                <b>@Model.Name</b>
+            </a>
+            <div class="topic-intro">@Model.Description</div>
+        </div>
+    }
+</div>

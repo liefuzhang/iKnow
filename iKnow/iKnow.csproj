@@ -226,6 +226,7 @@
     <Compile Include="Core\ViewModels\QuestionFormViewModel.cs" />
     <Compile Include="Core\ViewModels\AnswerPostCommentViewModel.cs" />
     <Compile Include="Core\ViewModels\SaveProfilePhotoViewModel.cs" />
+    <Compile Include="Core\ViewModels\SearchFullResultViewModel.cs" />
     <Compile Include="Core\ViewModels\SearchResultViewModel.cs" />
     <Compile Include="Core\ViewModels\TopicDetailViewModel.cs" />
     <Compile Include="Core\ViewModels\TopicFormViewModel.cs" />
@@ -526,6 +527,7 @@
     <Content Include="Views\Shared\_AnswerCommentPartial.cshtml" />
     <Content Include="Views\Activity\_ActivityLikeAnswerPartial.cshtml" />
     <Content Include="Views\Search\SearchFullResult.cshtml" />
+    <Content Include="Views\Shared\_TopicInfoPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

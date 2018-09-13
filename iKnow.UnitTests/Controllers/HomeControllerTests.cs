@@ -37,7 +37,7 @@ namespace iKnow.UnitTests.Controllers {
             _unitOfWork = new Mock<IUnitOfWork>();
             _unitOfWork.MockRepositories();
 
-            _unitOfWork.Setup(u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>()))
+            _unitOfWork.Setup(u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>(), null))
                 .Returns(new Dictionary<Question, Answer> { { new Question(), new Answer() } });
             _unitOfWork.Setup(
                 u => u.UserRepository.Single(It.IsAny<Expression<Func<AppUser, bool>>>(), It.IsAny<string>()))
@@ -63,7 +63,7 @@ namespace iKnow.UnitTests.Controllers {
         [Test]
         public void LoadMore_WhenCalled_ReturnPartialViewResult() {
             _unitOfWork.Setup(
-                u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>()))
+                u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>(), null))
                 .Returns(new Dictionary<Question, Answer> { { new Question(), new Answer() } });
 
             var result = _controller.LoadMore(1);
@@ -74,7 +74,7 @@ namespace iKnow.UnitTests.Controllers {
         [Test]
         public void LoadMore_NoMoreQuestionAnswerPair_ReturnNull() {
             _unitOfWork.Setup(
-                u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>()))
+                u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>(), null))
                 .Returns(new Dictionary<Question, Answer>());
 
             var result = _controller.LoadMore(1);
@@ -85,7 +85,7 @@ namespace iKnow.UnitTests.Controllers {
         [Test]
         public void LoadMore_QuestionAnswerPairIsNull_ReturnNull() {
             _unitOfWork.Setup(
-                u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>()))
+                u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>(), null))
                 .Returns((IDictionary<Question, Answer>) null);
 
             var result = _controller.LoadMore(1);

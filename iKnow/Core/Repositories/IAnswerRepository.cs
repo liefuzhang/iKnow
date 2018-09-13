@@ -5,8 +5,10 @@ using System.Linq.Expressions;
 using System.Web;
 using iKnow.Core.Models;
 
-namespace iKnow.Core.Repositories {
-    public interface IAnswerRepository : IRepository<Answer> {
-        IDictionary<Question, Answer> GetQuestionAnswerPairsForGivenQuestions(List<int> questionIds);
+namespace iKnow.Core.Repositories
+{
+    public interface IAnswerRepository : IRepository<Answer>
+    {
+        IDictionary<Question, Answer> GetQuestionAnswerPairsForGivenQuestions(List<int> questionIds, string currentUserId = null);
     }
 }

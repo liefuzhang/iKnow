@@ -153,7 +153,7 @@ namespace iKnow.UnitTests.Controllers {
             _topic1.Questions = new List<Question>();
 
             _unitOfWork.Setup(
-                u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>()))
+                u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>(), null))
                 .Returns(new Dictionary<Question, Answer>());
 
             var result = _controller.LoadMore(0, 1);

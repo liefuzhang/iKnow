@@ -39,7 +39,7 @@ namespace iKnow.Controllers {
                 query.OrderByDescending(question => question.Id), nameof(Question.Topics), currentPage * pageSize, pageSize).ToList();
             var questionIds = questions.Select(q => q.Id).ToList();
 
-            var questionAnswers = _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds);
+            var questionAnswers = _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds, User.Identity.GetUserId());
 
             return questionAnswers;
         }
