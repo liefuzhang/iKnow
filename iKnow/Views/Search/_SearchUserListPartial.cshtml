@@ -1,0 +1,5 @@
+﻿@model IEnumerable<iKnow.Core.Models.AppUser>
+@foreach (var user in Model)
+{
+    <div>@Html.Partial("_UserInfoPartial", user)</div>
+}

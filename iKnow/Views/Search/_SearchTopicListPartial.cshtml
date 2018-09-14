@@ -1,0 +1,5 @@
+﻿@model IEnumerable<iKnow.Core.Models.Topic>
+@foreach (var topic in Model)
+{
+    <div>@Html.Partial("_TopicInfoPartial", topic)</div>
+}

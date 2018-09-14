@@ -1,0 +1,19 @@
+﻿@using iKnow.Core.ViewModels
+@model SearchTopicsFullResultViewModel
+@{
+    Layout = "~/Views/Search/_LayoutSearchResult.cshtml";
+}
+
+<div class="search-user-topic-panel panel load-more-list">
+    @Html.Partial("_SearchTopicListPartial", Model.Topics)
+</div>
+@Html.Partial("_LoadMorePartial")
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            AnswerController.init();
+            LoadMoreController.init("search", "?search=" + "@Model.Search" + "&type=" + "@(nameof(SearchFullResultViewModel.Topic))");
+        });
+    </script>
+}

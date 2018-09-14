@@ -2032,6 +2032,14 @@ h3.question-title > a {
     margin-top: 20px;
 }
 
+.search-user-topic-panel .search-view-more {
+    font-size: 14px;
+    color: #259;
+    position: relative;
+    left: 76px;
+    bottom: 6px;
+}
+
 .search-question-answer-panel {
     padding: 0 20px;
     margin-top: 10px;

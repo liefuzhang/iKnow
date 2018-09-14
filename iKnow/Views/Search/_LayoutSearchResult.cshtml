@@ -1,0 +1,43 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Search - " + Model.Search;
+    ViewBag.CurrentPage = "Search - " + Model.Search;
+}
+
+<style>
+    body {
+        background-color: #f3f3f3;
+    }
+</style>
+
+<div class="search-container-inner">
+    <div class="search-detail-container">
+        <div class="main-content-container">
+            <div class="search-detail-header panel">Search @Model.SearchType Results for <b>"@Model.Search"</b></div>
+            @if (!Model.IsEmptyResult)
+            {
+                <div class="search-detail-container-inner">
+                    @RenderBody()
+                </div>
+            }
+            else
+            {
+                <div class="empty-container">
+                    <i class="fa fa-frown-o fa-4x" aria-hidden="true"></i>
+                    No search result found.
+                </div>
+            }
+        </div>
+
+        <div class="sidebar panel-sidebar">
+            <div class="panel">
+                @Html.Action("GetRecommendedTopics", "Topic")
+            </div>
+            @Html.Partial("_SideBarSiteInfoPartial")
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @RenderSection("scripts")
+}

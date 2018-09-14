@@ -57,29 +57,40 @@ namespace iKnow.Controllers
             return input.Trim().Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        private IEnumerable<AppUser> GetUsers(string[] keywords, int getUserCount)
+        private IEnumerable<AppUser> GetUsers(string[] keywords, int getUserCount = Constants.DefaultPageSize, int skip = 0)
         {
             return _unitOfWork.UserRepository.Get(
                 user => keywords.All(
                     keyword => user.FirstName.ToLower().StartsWith(keyword.ToLower())
-                               || user.LastName.ToLower().StartsWith(keyword.ToLower())), take: getUserCount);
+                               || user.LastName.ToLower().StartsWith(keyword.ToLower())),
+                query => query.OrderByDescending(user => user.Id), skip: skip, take: getUserCount);
         }
 
-        private IEnumerable<Topic> GetTopics(string[] keywords, int getTopicCount)
+        private IEnumerable<Topic> GetTopics(string[] keywords, int getTopicCount = Constants.DefaultPageSize, int skip = 0)
         {
             return _unitOfWork.TopicRepository.Get(
                 topic => keywords.All(
                     keyword => topic.Name.ToLower().StartsWith(keyword.ToLower())
-                    || topic.Name.ToLower().Contains(" " + keyword.ToLower())), take: getTopicCount);
+                    || topic.Name.ToLower().Contains(" " + keyword.ToLower())),
+                query => query.OrderByDescending(topic => topic.Id), skip: skip, take: getTopicCount);
         }
 
-        private IEnumerable<Question> GetQuestions(string[] keywords, int getQuestionCount, int skip = 0)
+        private IEnumerable<Question> GetQuestions(string[] keywords, int getQuestionCount = Constants.DefaultPageSize, int skip = 0)
         {
             return _unitOfWork.QuestionRepository.Get(
                 question => keywords.All(
                     keyword => question.Title.ToLower().StartsWith(keyword.ToLower())
                     || question.Title.ToLower().Contains(" " + keyword.ToLower())),
                 query => query.OrderByDescending(question => question.Id), skip: skip, take: getQuestionCount);
+        }
+
+        private IDictionary<Question, Answer> GetQuestionAnswers(string[] keywords, int skip = 0)
+        {
+            var questions = GetQuestions(keywords, skip: skip).ToList();
+            var questionIds = questions.Select(q => q.Id).ToList();
+            var questionAnswers =
+                _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds, User.Identity.GetUserId());
+            return questionAnswers;
         }
 
         private SearchResultViewModel ConstructSearchResultViewModel(IEnumerable<AppUser> users, IEnumerable<Topic> topics, IEnumerable<Question> questions)
@@ -96,23 +107,30 @@ namespace iKnow.Controllers
         }
 
         [Route("Search/LoadMore/{currentPage}")]
-        public PartialViewResult LoadMore(int currentPage, string search)
+        public PartialViewResult LoadMore(int currentPage, string search, string type = null)
         {
             if (string.IsNullOrWhiteSpace(search))
             {
                 return null;
             }
             var keywords = TrimInput(search);
-            var questionAnswers = GetQuestionAnswers(keywords, ++currentPage * Constants.DefaultPageSize);
-            if (questionAnswers == null || !questionAnswers.Any())
+
+            switch (type)
             {
-                return null;
+                case nameof(SearchFullResultViewModel.User):
+                    var users = GetUsers(keywords, skip: ++currentPage * Constants.DefaultPageSize);
+                    return users?.FirstOrDefault() == null ? null : PartialView("_SearchUserListPartial", users);
+                case nameof(SearchFullResultViewModel.Topic):
+                    var topics = GetTopics(keywords, skip: ++currentPage * Constants.DefaultPageSize);
+                    return topics?.FirstOrDefault() == null ? null : PartialView("_SearchTopicListPartial", topics);
+                default:
+                    var questionAnswers = GetQuestionAnswers(keywords, ++currentPage * Constants.DefaultPageSize);
+                    return questionAnswers?.FirstOrDefault() == null ? null : PartialView("_QuestionAnswerPairPartial", questionAnswers);
             }
 
-            return PartialView("_QuestionAnswerPairPartial", questionAnswers);
         }
 
-        public ViewResult SearchFullResult(string search)
+        public ViewResult SearchFullResult(string search, string type = null)
         {
             if (string.IsNullOrWhiteSpace(search))
             {
@@ -120,39 +138,55 @@ namespace iKnow.Controllers
             }
 
             var keywords = TrimInput(search);
+
+            switch (type)
+            {
+                case nameof(SearchFullResultViewModel.User):
+                    return View("SearchUsersFullResult", ConstructSearchUsersFullResultViewModel(search, keywords));
+                case nameof(SearchFullResultViewModel.Topic):
+                    return View("SearchTopicsFullResult", ConstructSearchTopicsFullResultViewModel(search, keywords));
+                default:
+                    return View(ConstructSearchFullResultViewModel(search, keywords));
+            }
+        }
+
+        private SearchUsersFullResultViewModel ConstructSearchUsersFullResultViewModel(string search, string[] keywords)
+        {
+            var users = GetUsers(keywords, Constants.DefaultPageSize);
+            var viewModel = new SearchUsersFullResultViewModel
+            {
+                Users = users,
+                Search = search
+            };
+            return viewModel;
+        }
+
+        private SearchTopicsFullResultViewModel ConstructSearchTopicsFullResultViewModel(string search, string[] keywords)
+        {
+            var topics = GetTopics(keywords, Constants.DefaultPageSize);
+            var viewModel = new SearchTopicsFullResultViewModel
+            {
+                Topics = topics,
+                Search = search
+            };
+            return viewModel;
+        }
+
+        private SearchFullResultViewModel ConstructSearchFullResultViewModel(string search, string[] keywords)
+        {
             const int getUserCount = 1;
             const int getTopicCount = 1;
             var user = GetUsers(keywords, getUserCount);
             var topics = GetTopics(keywords, getTopicCount);
             var questionAnswers = GetQuestionAnswers(keywords);
 
-            var viewModel = ConstructSearchFullResultViewModel(user, topics, questionAnswers, search);
-
-            return View(viewModel);
-        }
-
-        private IDictionary<Question, Answer> GetQuestionAnswers(string[] keywords, int skip = 0)
-        {
-            var questions = GetQuestions(keywords, Constants.DefaultPageSize, skip).ToList();
-            var questionIds = questions.Select(q => q.Id).ToList();
-            var questionAnswers =
-                _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds, User.Identity.GetUserId());
-            return questionAnswers;
-        }
-
-        private static SearchFullResultViewModel ConstructSearchFullResultViewModel(IEnumerable<AppUser> users,
-            IEnumerable<Topic> topics,
-            IDictionary<Question, Answer> questionAnswers,
-            string search)
-        {
             var viewModel = new SearchFullResultViewModel
             {
-                User = users.FirstOrDefault(),
+                User = user.FirstOrDefault(),
                 Topic = topics.FirstOrDefault(),
                 QuestionAnswers = questionAnswers,
                 Search = search
             };
-
             return viewModel;
         }
     }
