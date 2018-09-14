@@ -16,6 +16,7 @@ namespace iKnow.Core.Models
         public Question Question { get; set; }
         public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }
+        public bool IsDeleted { get; set; }
 
         [NotMapped]
         public bool LikedByCurrentUser { get; set; }

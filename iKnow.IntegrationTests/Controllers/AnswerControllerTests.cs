@@ -167,7 +167,7 @@ namespace iKnow.IntegrationTests.Controllers {
         }
 
         [Test, Isolated]
-        public void Delete_WhenCalled_ShouldRemoveAnswerFromDatabase() {
+        public void Delete_WhenCalled_ShouldSoftDeleteAnswerFromDatabase() {
             var question = _context.AddTestQuestionToDatabase();
             var answer = _context.AddTestAnswerToDatabase(question.Id);
 
@@ -178,7 +178,7 @@ namespace iKnow.IntegrationTests.Controllers {
 
             _controller.Delete(viewModel);
 
-            Assert.That(_contextAfterAction.Answers.Count(), Is.EqualTo(0));
+            Assert.That(_contextAfterAction.Answers.Single().IsDeleted, Is.True);
         }
 
         [Test, Isolated]

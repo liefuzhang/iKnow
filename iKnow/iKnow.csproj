@@ -351,6 +351,10 @@
     <Compile Include="Persistence\Migrations\201809110911568_AddedAnswerLikesTable.Designer.cs">
       <DependentUpon>201809110911568_AddedAnswerLikesTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Persistence\Migrations\201809142212596_AddIsDeletedToQuestionAndAnswer.cs" />
+    <Compile Include="Persistence\Migrations\201809142212596_AddIsDeletedToQuestionAndAnswer.Designer.cs">
+      <DependentUpon>201809142212596_AddIsDeletedToQuestionAndAnswer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Persistence\Migrations\Configuration.cs" />
     <Compile Include="Persistence\Repositories\AnswerLikeRepository.cs" />
     <Compile Include="Persistence\Repositories\CommentRepository.cs" />
@@ -619,6 +623,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Persistence\Migrations\201809110911568_AddedAnswerLikesTable.resx">
       <DependentUpon>201809110911568_AddedAnswerLikesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Persistence\Migrations\201809142212596_AddIsDeletedToQuestionAndAnswer.resx">
+      <DependentUpon>201809142212596_AddIsDeletedToQuestionAndAnswer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

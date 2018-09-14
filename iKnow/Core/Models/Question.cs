@@ -20,6 +20,7 @@ namespace iKnow.Core.Models {
         public string Description { get; set; }
         public AppUser AppUser { get; set; }
         public string AppUserId { get; private set; }
+        public bool IsDeleted { get; set; }
         public ICollection<Topic> Topics { get; private set; }
         public ICollection<Answer> Answers { get; private set; }
 

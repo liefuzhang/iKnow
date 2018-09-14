@@ -9,32 +9,25 @@ using iKnow.Core.ViewModels;
 using Microsoft.AspNet.Identity;
 using iKnow.Persistence;
 using Constants = iKnow.Core.Models.Constants;
-namespace iKnow.Controllers
-{
-    public class SearchController : Controller
-    {
+namespace iKnow.Controllers {
+    public class SearchController : Controller {
         private readonly IUnitOfWork _unitOfWork;
 
-        public SearchController(IUnitOfWork unitOfWork)
-        {
+        public SearchController(IUnitOfWork unitOfWork) {
             _unitOfWork = unitOfWork;
         }
 
-        public SearchController()
-        {
+        public SearchController() {
             _unitOfWork = new UnitOfWork();
         }
 
-        protected override void Dispose(bool disposing)
-        {
+        protected override void Dispose(bool disposing) {
             _unitOfWork.Dispose();
             base.Dispose(disposing);
         }
 
-        public PartialViewResult GetResult(string input)
-        {
-            if (string.IsNullOrWhiteSpace(input))
-            {
+        public PartialViewResult GetResult(string input) {
+            if (string.IsNullOrWhiteSpace(input)) {
                 return null;
             }
 
@@ -52,13 +45,11 @@ namespace iKnow.Controllers
             return PartialView("_SearchResultPartial", viewModel);
         }
 
-        private static string[] TrimInput(string input)
-        {
+        private static string[] TrimInput(string input) {
             return input.Trim().Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        private IEnumerable<AppUser> GetUsers(string[] keywords, int getUserCount = Constants.DefaultPageSize, int skip = 0)
-        {
+        private IEnumerable<AppUser> GetUsers(string[] keywords, int getUserCount = Constants.DefaultPageSize, int skip = 0) {
             return _unitOfWork.UserRepository.Get(
                 user => keywords.All(
                     keyword => user.FirstName.ToLower().StartsWith(keyword.ToLower())
@@ -66,8 +57,7 @@ namespace iKnow.Controllers
                 query => query.OrderByDescending(user => user.Id), skip: skip, take: getUserCount);
         }
 
-        private IEnumerable<Topic> GetTopics(string[] keywords, int getTopicCount = Constants.DefaultPageSize, int skip = 0)
-        {
+        private IEnumerable<Topic> GetTopics(string[] keywords, int getTopicCount = Constants.DefaultPageSize, int skip = 0) {
             return _unitOfWork.TopicRepository.Get(
                 topic => keywords.All(
                     keyword => topic.Name.ToLower().StartsWith(keyword.ToLower())
@@ -76,8 +66,7 @@ namespace iKnow.Controllers
         }
 
         private IEnumerable<Question> GetQuestions(string[] keywords, int getQuestionCount = Constants.DefaultPageSize,
-            int skip = 0, bool onlyQuestionsWithAnswers = false)
-        {
+            int skip = 0, bool onlyQuestionsWithAnswers = false) {
             return _unitOfWork.QuestionRepository.Get(
                 question => keywords.All(
                     keyword => question.Title.ToLower().StartsWith(keyword.ToLower())
@@ -86,8 +75,7 @@ namespace iKnow.Controllers
                 query => query.OrderByDescending(question => question.Id), skip: skip, take: getQuestionCount);
         }
 
-        private IDictionary<Question, Answer> GetQuestionAnswers(string[] keywords, int skip = 0)
-        {
+        private IDictionary<Question, Answer> GetQuestionAnswers(string[] keywords, int skip = 0) {
             var questions = GetQuestions(keywords, skip: skip, onlyQuestionsWithAnswers: true).ToList();
             var questionIds = questions.Select(q => q.Id).ToList();
             var questionAnswers =
@@ -95,12 +83,10 @@ namespace iKnow.Controllers
             return questionAnswers;
         }
 
-        private SearchResultViewModel ConstructSearchResultViewModel(IEnumerable<AppUser> users, IEnumerable<Topic> topics, IEnumerable<Question> questions)
-        {
+        private SearchResultViewModel ConstructSearchResultViewModel(IEnumerable<AppUser> users, IEnumerable<Topic> topics, IEnumerable<Question> questions) {
             var questionsWithAnswerCount = _unitOfWork.QuestionRepository.GetQuestionsWithAnswerCount(questions);
 
-            var viewModel = new SearchResultViewModel
-            {
+            var viewModel = new SearchResultViewModel {
                 Users = users,
                 Topics = topics,
                 QuestionsWithAnswerCount = questionsWithAnswerCount
@@ -109,16 +95,13 @@ namespace iKnow.Controllers
         }
 
         [Route("Search/LoadMore/{currentPage}")]
-        public PartialViewResult LoadMore(int currentPage, string search, string type = null)
-        {
-            if (string.IsNullOrWhiteSpace(search))
-            {
+        public PartialViewResult LoadMore(int currentPage, string search, string type = null) {
+            if (string.IsNullOrWhiteSpace(search)) {
                 return null;
             }
             var keywords = TrimInput(search);
 
-            switch (type)
-            {
+            switch (type) {
                 case nameof(SearchFullResultViewModel.User):
                     var users = GetUsers(keywords, skip: ++currentPage * Constants.DefaultPageSize);
                     return users?.FirstOrDefault() == null ? null : PartialView("_SearchUserListPartial", users);
@@ -133,17 +116,14 @@ namespace iKnow.Controllers
             }
         }
 
-        public ViewResult SearchFullResult(string search, string type = null)
-        {
-            if (string.IsNullOrWhiteSpace(search))
-            {
+        public ViewResult SearchFullResult(string search, string type = null) {
+            if (string.IsNullOrWhiteSpace(search)) {
                 return null;
             }
 
             var keywords = TrimInput(search);
 
-            switch (type)
-            {
+            switch (type) {
                 case nameof(SearchFullResultViewModel.User):
                     return View("SearchUsersFullResult", ConstructSearchUsersFullResultViewModel(search, keywords));
                 case nameof(SearchFullResultViewModel.Topic):
@@ -153,38 +133,32 @@ namespace iKnow.Controllers
             }
         }
 
-        private SearchUsersFullResultViewModel ConstructSearchUsersFullResultViewModel(string search, string[] keywords)
-        {
+        private SearchUsersFullResultViewModel ConstructSearchUsersFullResultViewModel(string search, string[] keywords) {
             var users = GetUsers(keywords, Constants.DefaultPageSize);
-            var viewModel = new SearchUsersFullResultViewModel
-            {
+            var viewModel = new SearchUsersFullResultViewModel {
                 Users = users,
                 Search = search
             };
             return viewModel;
         }
 
-        private SearchTopicsFullResultViewModel ConstructSearchTopicsFullResultViewModel(string search, string[] keywords)
-        {
+        private SearchTopicsFullResultViewModel ConstructSearchTopicsFullResultViewModel(string search, string[] keywords) {
             var topics = GetTopics(keywords, Constants.DefaultPageSize);
-            var viewModel = new SearchTopicsFullResultViewModel
-            {
+            var viewModel = new SearchTopicsFullResultViewModel {
                 Topics = topics,
                 Search = search
             };
             return viewModel;
         }
 
-        private SearchFullResultViewModel ConstructSearchFullResultViewModel(string search, string[] keywords)
-        {
+        private SearchFullResultViewModel ConstructSearchFullResultViewModel(string search, string[] keywords) {
             const int getUserCount = 1;
             const int getTopicCount = 1;
             var users = GetUsers(keywords, getUserCount);
             var topics = GetTopics(keywords, getTopicCount);
             var questionAnswers = GetQuestionAnswers(keywords);
 
-            var viewModel = new SearchFullResultViewModel
-            {
+            var viewModel = new SearchFullResultViewModel {
                 User = users.FirstOrDefault(),
                 Topic = topics.FirstOrDefault(),
                 QuestionAnswers = questionAnswers,

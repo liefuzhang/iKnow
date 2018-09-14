@@ -226,7 +226,7 @@ namespace iKnow.UnitTests.Controllers {
 
             Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
         }
-
+        
         [Test]
         public void Delete_WhenUserIsNotAnswerOwner_ShouldReturnHttpUnauthorizedResult() {
             var claim = new Claim("testUserName2", _answer2.AppUserId);

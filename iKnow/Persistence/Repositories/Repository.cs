@@ -18,18 +18,23 @@ namespace iKnow.Persistence.Repositories {
 
         // refer to https://docs.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application
 
-        private IQueryable<TEntity> GetQueryable(
+        protected virtual IQueryable<TEntity> GetQueryable(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = null,
             int? skip = null,
-            int? take = null) {
+            int? take = null,
+            Expression<Func<TEntity, bool>> anotherFilter = null) {
 
             IQueryable<TEntity> query = _dbSet;
             includeProperties = includeProperties ?? "";
 
             if (filter != null) {
                 query = query.Where(filter);
+            }
+
+            if (anotherFilter != null) {
+                query = query.Where(anotherFilter);
             }
 
             foreach (var includeProperty in includeProperties.Split
