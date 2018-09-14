@@ -24,6 +24,22 @@ namespace iKnow.IntegrationTests.Extensions
             return topic;
         }
 
+        public static AppUser AddTestUserToDatabase(this iKnowContext context, string firstName = "Test first name", string lastName = "Test last name")
+        {
+            var user = new AppUser
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                UserName = firstName + lastName
+            };
+
+            context.Users.Add(user);
+            context.SaveChanges();
+
+            context.Entry(user).Reload();
+            return user;
+        }
+
         public static Question AddTestQuestionToDatabase(this iKnowContext context, string title = "Test question?")
         {
             var question = new Question

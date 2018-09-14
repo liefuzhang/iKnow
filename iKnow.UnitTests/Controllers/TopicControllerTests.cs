@@ -153,12 +153,26 @@ namespace iKnow.UnitTests.Controllers {
             _topic1.Questions = new List<Question>();
 
             _unitOfWork.Setup(
-                u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>(), null))
+                u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>(), It.IsAny<string>()))
                 .Returns(new Dictionary<Question, Answer>());
 
             var result = _controller.LoadMore(0, 1);
 
             Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void LoadMore_WhenCalled_ReturnNull()
+        {
+            _topic1.Questions = new List<Question>();
+
+            _unitOfWork.Setup(
+                    u => u.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(It.IsAny<List<int>>(), It.IsAny<string>()))
+                .Returns(new Dictionary<Question, Answer> { { new Question(), new Answer() } });
+
+            var result = _controller.LoadMore(0, 1);
+
+            Assert.That(result, Is.TypeOf<PartialViewResult>());
         }
 
         [Test]

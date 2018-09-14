@@ -76,7 +76,6 @@ namespace iKnow.IntegrationTests.Controllers {
 
             var question = _context.AddTestQuestionToDatabase();
             question.AddTopic(topic);
-
             var answer = _context.AddTestAnswerToDatabase(question.Id);
 
             for (var i = 0; i < Constants.DefaultPageSize; i++) {
@@ -84,6 +83,8 @@ namespace iKnow.IntegrationTests.Controllers {
                 moreQuestion.AddTopic(topic);
                 _context.AddTestAnswerToDatabase(moreQuestion.Id);
             }
+
+            _context.AddTestQuestionToDatabase("Question without answers");
 
             _context.SaveChanges();
 

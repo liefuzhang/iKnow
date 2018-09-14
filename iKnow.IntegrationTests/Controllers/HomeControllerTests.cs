@@ -57,7 +57,12 @@ namespace iKnow.IntegrationTests.Controllers {
             var answer = _context.AddTestAnswerToDatabase(question.Id);
 
             for (var i = 0; i < Constants.DefaultPageSize; i++)
-                _context.AddTestQuestionToDatabase("First Page Questions" + i);
+            {
+                var newQuestion = _context.AddTestQuestionToDatabase("First Page Questions" + i);
+                _context.AddTestAnswerToDatabase(newQuestion.Id, "First Page Answers" + i);
+            }
+
+            _context.AddTestQuestionToDatabase("Question without Answers");
 
             var result = _controller.LoadMore(0);
 

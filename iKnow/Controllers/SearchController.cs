@@ -75,18 +75,20 @@ namespace iKnow.Controllers
                 query => query.OrderByDescending(topic => topic.Id), skip: skip, take: getTopicCount);
         }
 
-        private IEnumerable<Question> GetQuestions(string[] keywords, int getQuestionCount = Constants.DefaultPageSize, int skip = 0)
+        private IEnumerable<Question> GetQuestions(string[] keywords, int getQuestionCount = Constants.DefaultPageSize,
+            int skip = 0, bool onlyQuestionsWithAnswers = false)
         {
             return _unitOfWork.QuestionRepository.Get(
                 question => keywords.All(
                     keyword => question.Title.ToLower().StartsWith(keyword.ToLower())
-                    || question.Title.ToLower().Contains(" " + keyword.ToLower())),
+                    || question.Title.ToLower().Contains(" " + keyword.ToLower())) &&
+                question.Answers.Count > (onlyQuestionsWithAnswers ? 0 : -1),
                 query => query.OrderByDescending(question => question.Id), skip: skip, take: getQuestionCount);
         }
 
         private IDictionary<Question, Answer> GetQuestionAnswers(string[] keywords, int skip = 0)
         {
-            var questions = GetQuestions(keywords, skip: skip).ToList();
+            var questions = GetQuestions(keywords, skip: skip, onlyQuestionsWithAnswers: true).ToList();
             var questionIds = questions.Select(q => q.Id).ToList();
             var questionAnswers =
                 _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds, User.Identity.GetUserId());
@@ -123,11 +125,12 @@ namespace iKnow.Controllers
                 case nameof(SearchFullResultViewModel.Topic):
                     var topics = GetTopics(keywords, skip: ++currentPage * Constants.DefaultPageSize);
                     return topics?.FirstOrDefault() == null ? null : PartialView("_SearchTopicListPartial", topics);
-                default:
+                case nameof(SearchFullResultViewModel.QuestionAnswers):
                     var questionAnswers = GetQuestionAnswers(keywords, ++currentPage * Constants.DefaultPageSize);
                     return questionAnswers?.FirstOrDefault() == null ? null : PartialView("_QuestionAnswerPairPartial", questionAnswers);
+                default:
+                    return null;
             }
-
         }
 
         public ViewResult SearchFullResult(string search, string type = null)
@@ -176,13 +179,13 @@ namespace iKnow.Controllers
         {
             const int getUserCount = 1;
             const int getTopicCount = 1;
-            var user = GetUsers(keywords, getUserCount);
+            var users = GetUsers(keywords, getUserCount);
             var topics = GetTopics(keywords, getTopicCount);
             var questionAnswers = GetQuestionAnswers(keywords);
 
             var viewModel = new SearchFullResultViewModel
             {
-                User = user.FirstOrDefault(),
+                User = users.FirstOrDefault(),
                 Topic = topics.FirstOrDefault(),
                 QuestionAnswers = questionAnswers,
                 Search = search

@@ -1,4 +1,5 @@
-﻿@model iKnow.Core.ViewModels.SearchFullResultViewModel
+﻿@using iKnow.Core.ViewModels
+@model SearchFullResultViewModel
 @{
     Layout = "~/Views/Search/_LayoutSearchResult.cshtml";
 }
@@ -42,7 +43,8 @@
     <script>
         $(document).ready(function () {
             AnswerController.init();
-            LoadMoreController.init("search", "?search=" + "@Model.Search");
+            LoadMoreController.init("search", "?search=" + "@Model.Search" +
+                "&type=" + "@(nameof(SearchFullResultViewModel.QuestionAnswers))");
         });
     </script>
 }
