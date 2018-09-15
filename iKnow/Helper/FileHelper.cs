@@ -9,7 +9,10 @@ using iKnow.Core.Models;
 
 namespace iKnow {
     public class FileHelper : IFileHelper {
-        public void SaveTopicIcon(HttpPostedFileBase postedFile, string topicName) {
+        public void SaveTopicIcon(HttpPostedFileBase postedFile, Topic topic) {
+            if (topic == null)
+                return;
+
             if (postedFile != null && postedFile.ContentLength > 0) {
                 var bitmap = Image.FromStream(postedFile.InputStream);
                 var scale = Math.Max(bitmap.Width / Constants.TopicIconDefaultSize,
@@ -17,22 +20,22 @@ namespace iKnow {
                 var resized = new Bitmap(bitmap,
                     new Size(Convert.ToInt32(bitmap.Width / scale), Convert.ToInt32(bitmap.Height / scale)));
 
-                var iconFolder = HostingEnvironment.MapPath(Constants.TopicIconFolderPath);
-                var fileName = topicName.ToLower().Replace(' ', '-') + Constants.DefaultIconExtension;
-                resized.Save(iconFolder + fileName, ImageFormat.Png);
+                resized.Save(topic.IconSavePathOnServer, ImageFormat.Png);
             }
         }
+        public void DeleteTopicIcon(string iconSavePath) {
+            if (DoesFileExist(iconSavePath))
+                File.Delete(iconSavePath);
+        }
 
-        public void SaveUserIcon(string dataURL, string userId) {
+        public void SaveUserIcon(string dataURL, AppUser user) {
             if (!string.IsNullOrEmpty(dataURL)) {
                 var search = ";base64,";
                 var match = dataURL.IndexOf(search, StringComparison.Ordinal);
                 if (match > 0) {
                     dataURL = dataURL.Substring(match + search.Length);
                 }
-                var iconFolder = HostingEnvironment.MapPath(Constants.UserIconFolderPath);
-                var fileName = userId.ToLower().Replace(' ', '-') + Constants.DefaultIconExtension;
-                File.WriteAllBytes(iconFolder + fileName, Convert.FromBase64String(dataURL));
+                File.WriteAllBytes(user.IconSavePathOnServer, Convert.FromBase64String(dataURL));
             }
         }
 

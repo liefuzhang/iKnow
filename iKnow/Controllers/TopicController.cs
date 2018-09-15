@@ -160,7 +160,7 @@ namespace iKnow.Controllers
             {
                 SaveTopic(topic);
 
-                _fileHelper.SaveTopicIcon(viewModel.PostedFile, topic.Name);
+                _fileHelper.SaveTopicIcon(viewModel.PostedFile, topic);
 
                 return RedirectToAction("Index", new { selectedTopicId = topic.Id });
             }
@@ -223,6 +223,8 @@ namespace iKnow.Controllers
 
             _unitOfWork.TopicRepository.Remove(topicInDb);
             _unitOfWork.Complete();
+
+            _fileHelper.DeleteTopicIcon(topicInDb.IconSavePathOnServer);
 
             return RedirectToAction("Index");
         }

@@ -45,13 +45,16 @@ namespace iKnow.Core.Models {
 
         public Byte DefaultIconNumber { get; set; }
 
+        private string IconSavePath => Constants.UserIconFolderPath
+                                      + (Id ?? String.Empty).ToLower().Replace(' ', '-') + Constants.DefaultIconExtension;
+
+        public string IconSavePathOnServer => HostingEnvironment.MapPath(IconSavePath);
         public string IconPath {
             get {
-                var file = Constants.UserIconFolderPath + (Id ?? String.Empty).ToLower().Replace(' ', '-') + Constants.DefaultIconExtension;
-                if (!_fileHelper.DoesFileExist(HostingEnvironment.MapPath(file))) {
-                    file = Constants.UserIconFolderPath + Constants.UserDefaultIconName + DefaultIconNumber + Constants.DefaultIconExtension;
+                if (!_fileHelper.DoesFileExist(IconSavePathOnServer)) {
+                    return Constants.UserIconFolderPath + Constants.UserDefaultIconName + DefaultIconNumber + Constants.DefaultIconExtension;
                 }
-                return file;
+                return IconSavePath;
             }
         }
 

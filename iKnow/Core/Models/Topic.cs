@@ -27,19 +27,22 @@ namespace iKnow.Core.Models {
 
         public string Description { get; set; }
 
+        private string IconSavePath => Constants.TopicIconFolderPath
+                                      + (Name ?? String.Empty).ToLower().Replace(' ', '-') + Constants.DefaultIconExtension;
+        public string IconSavePathOnServer => HostingEnvironment.MapPath(IconSavePath);
         public string IconPath {
             get {
                 if (Id == 0) {
                     return string.Empty;
                 }
 
-                var file = Constants.TopicIconFolderPath + (Name ?? String.Empty).ToLower().Replace(' ', '-') + Constants.DefaultIconExtension;
-                if (!_fileHelper.DoesFileExist(HostingEnvironment.MapPath(file))) {
-                    file = Constants.TopicDefaultIconPath;
+                if (!_fileHelper.DoesFileExist(IconSavePathOnServer)) {
+                    return Constants.TopicDefaultIconPath;
                 }
-                return file;
+                return IconSavePath;
             }
         }
+
         public ICollection<AppUser> AppUsers { get; set; }
         public ICollection<Question> Questions { get; set; }
         public ICollection<TopicFollowing> Followings { get; set; }

@@ -10,12 +10,15 @@ namespace iKnow.Controllers.Api {
     [Authorize]
     public class AccountController : ApiController {
         private readonly IFileHelper _fileHelper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AccountController(IFileHelper fileHelper) {
+        public AccountController(IFileHelper fileHelper, IUnitOfWork unitOfWork) {
             _fileHelper = fileHelper;
+            _unitOfWork = unitOfWork;
         }
 
         public AccountController() {
+            _unitOfWork = new UnitOfWork();
             _fileHelper = new FileHelper();
         }
 
@@ -23,7 +26,8 @@ namespace iKnow.Controllers.Api {
         public IHttpActionResult SaveProfilePhoto(SaveProfilePhotoViewModel saveProfilePhotoViewModel) {
             try
             {
-                _fileHelper.SaveUserIcon(saveProfilePhotoViewModel.DataUrl, saveProfilePhotoViewModel.UserId);
+                var user = _unitOfWork.UserRepository.Single(u => u.Id == saveProfilePhotoViewModel.UserId);
+                _fileHelper.SaveUserIcon(saveProfilePhotoViewModel.DataUrl, user);
             }
             catch (Exception)
             {
