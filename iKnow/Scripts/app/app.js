@@ -26,6 +26,13 @@
         $(this).css('height', scrollHeight + 'px');
     };
 
+    var submitSearch = function() {
+        var val = $(".search-form .search").val();
+        if (!val)
+            return false;
+        return true;
+    }
+
     var init = function () {
         ModalController.init();
         HeaderController.init();
@@ -33,6 +40,7 @@
 
         $(window).scroll(backToTopDetect);
         $(".back-top").on("click", goToTop);
+        $(".search-form").on("submit", submitSearch);
     };
 
     return {

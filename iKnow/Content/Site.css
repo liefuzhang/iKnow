@@ -863,7 +863,7 @@ a.collapse-answer:hover {
         font-size: 14px;
         line-height: 30px;
         color: #297fa3;
-        background: #eef4fa;
+        background: rgba(0,132,255,.1);
         border-radius: 100px;
         margin: 3px 5px 3px 0;
         border: none;
@@ -1976,7 +1976,7 @@ h3.question-title > a {
 
     .search-result-question a:hover {
         text-decoration: none;
-        background-color: #eef4fa;
+        background-color: rgba(0,132,255,.1);
     }
 
 .search-answer-count {
