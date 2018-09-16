@@ -604,9 +604,18 @@ ul.navbar-nav li {
         height: 60px;
     }
 
-.topic-detail-inner .question-answer-inner {
-    padding: 16px 0;
+.topic-detail-container .topic-detail-buttons {
+    display: flex;
+    flex-direction: column;
 }
+
+    .topic-detail-container .topic-detail-buttons a {
+        margin-top: 10px;
+    }
+
+    .topic-detail-inner .question-answer-inner {
+        padding: 16px 0;
+    }
 
 .topic-detail-inner .question-answer-topic {
     display: none;

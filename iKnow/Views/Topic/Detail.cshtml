@@ -1,4 +1,5 @@
-﻿@model iKnow.Core.ViewModels.TopicDetailViewModel
+﻿@using iKnow.Core.Models
+@model iKnow.Core.ViewModels.TopicDetailViewModel
 @{
     ViewBag.Title = "Topic Detail";
     ViewBag.ShowFooter = true;
@@ -12,11 +13,16 @@
         <h2>
             @Model.Topic.Name
         </h2>
-        @if (User.Identity.IsAuthenticated) {
-            <button data-topic-id="@Model.Topic.Id" class="align-right btn js-topic-toggle @(Model.IsFollowing ? "btn-grey" : "")">
-                @(Model.IsFollowing ? "Following" : "Follow")
-            </button>
-        }
+        <div class="topic-detail-buttons align-right">
+            @if (User.Identity.IsAuthenticated) {
+                <button data-topic-id="@Model.Topic.Id" class="btn js-topic-toggle @(Model.IsFollowing ? "btn-grey" : "")">
+                    @(Model.IsFollowing ? "Following" : "Follow")
+                </button>
+            }
+            @if (User.IsInRole(Constants.AdminRoleName)) {
+                @Html.ActionLink("Edit Topic", "Edit", "Topic", new { id = Model.Topic.Id }, new { @class = "btn" })
+            }
+        </div>
     </div>
 
     @if (Model.QuestionAnswers.Any()) {
