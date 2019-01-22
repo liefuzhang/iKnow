@@ -23,6 +23,10 @@ namespace iKnow.UnitTests.Controllers {
         private Mock<IUnitOfWork> _unitOfWork;
         private ActivityController _controller;
         private Activity _activity;
+        private Mock<IPrincipal> _user;
+        private Mock<HttpRequestBase> _request;
+        private Mock<ClaimsIdentity> _identity;
+        private AppUser _currentUser;
 
         [SetUp]
         public void Setup() {
@@ -43,6 +47,19 @@ namespace iKnow.UnitTests.Controllers {
 
         private void SetupController() {
             _controller = new ActivityController(_unitOfWork.Object);
+            _user = new Mock<IPrincipal>();
+            _request = new Mock<HttpRequestBase>();
+            _currentUser = new AppUser
+            {
+                Id = "1",
+                Email = "testEmail",
+                FirstName = "Tester",
+                LastName = "Smith"
+            };
+
+            _controller.MockContext(_request, _user);
+            _identity = _user.MockIdentity(_currentUser.Id);
+            _identity.Setup(i => i.IsAuthenticated).Returns(false);
         }
 
         [Test]
@@ -80,10 +97,14 @@ namespace iKnow.UnitTests.Controllers {
         [Test]
         public void GetAddQuestion_WhenCalled_ReturnQuestionInViewModel() {
             var question = new Question();
+            var answer = new Answer();
 
             _unitOfWork.Setup(
                 u => u.QuestionRepository.Single(It.IsAny<Expression<Func<Question, bool>>>(), It.IsAny<string>()))
                 .Returns(question);
+            _unitOfWork.Setup(
+                    u => u.AnswerRepository.Single(It.IsAny<Expression<Func<Answer, bool>>>(), It.IsAny<string>()))
+                .Returns(answer);
 
             var result = _controller.GetAnswerQuestion(_activity.Id);
 
