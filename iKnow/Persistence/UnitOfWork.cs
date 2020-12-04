@@ -21,9 +21,9 @@ namespace iKnow.Persistence
         public ICommentRepository CommentRepository { get; set; }
         public IAnswerLikeRepository AnswerLikeRepository { get; set; }
 
-        public UnitOfWork(iKnowContext context = null)
+        public UnitOfWork(iKnowContext context)
         {
-            _context = context ?? new iKnowContext();
+            _context = context;
             TopicRepository = new TopicRepository(_context);
             UserRepository = new UserRepository(_context);
             AnswerRepository = new AnswerRepository(_context);

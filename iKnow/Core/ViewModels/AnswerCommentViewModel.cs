@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Mvc;
 using iKnow.Core.Models;
 
 namespace iKnow.Core.ViewModels {

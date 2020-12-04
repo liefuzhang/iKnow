@@ -1,13 +1,14 @@
-﻿using System.Data.Entity;
-using iKnow.Core.Models;
+﻿using iKnow.Core.Models;
 using iKnow.Persistence.EntityTypeConfigurations;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace iKnow.Persistence
 {
     public class iKnowContext : IdentityDbContext<AppUser>
     {
-        public iKnowContext() : base("DefaultConnection")
+        public iKnowContext(DbContextOptions<iKnowContext> options)
+            : base(options)
         {
         }
 
@@ -18,16 +19,12 @@ namespace iKnow.Persistence
         public DbSet<Activity> Activities { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<AnswerLike> AnswerLikes { get; set; }
+        public DbSet<TopicQuestion> TopicQuestions { get; set; }
+        public DbSet<TopicUser> TopicUsers { get; set; }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Configurations.Add(new AppUserConfiguration());
-            modelBuilder.Configurations.Add(new QuestionConfiguration());
-            modelBuilder.Configurations.Add(new AnswerConfiguration());
-            modelBuilder.Configurations.Add(new TopicConfiguration());
-            modelBuilder.Configurations.Add(new TopicFollowingConfiguration());
-            modelBuilder.Configurations.Add(new ActivityConfiguration());
-            modelBuilder.Configurations.Add(new CommentConfiguration());
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppUserConfiguration).Assembly);
 
             base.OnModelCreating(modelBuilder);
         }

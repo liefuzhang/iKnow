@@ -45,9 +45,9 @@
             <p>@Model.Topic.Description</p>
         </div>
     }
-    <div class="topic-sidebar sidebar-section divided-section">
-        @Html.Action("GetRecommendedTopics", "Topic", new { id = Model.Topic.Id })
-    </div>
+<div class="topic-sidebar sidebar-section divided-section">
+    @await Component.InvokeAsync("GetRecommendedTopics")
+</div>
     <div class="sidebar-section divided-section">
         @Html.Partial("_SideBarSiteInfoPartial")
     </div>

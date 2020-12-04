@@ -1,16 +1,19 @@
 ﻿using System;
-using System.Web.Http;
+using System.Diagnostics;
+using System.Security.Claims;
 using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.ViewModels;
 using iKnow.Persistence;
-using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Activity = iKnow.Core.Models.Activity;
 using Constants = iKnow.Core.Models.Constants;
 
 namespace iKnow.Controllers.Api
 {
     [Authorize]
-    public class AnswerFooterController : ApiController
+    public class AnswerFooterController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -18,27 +21,16 @@ namespace iKnow.Controllers.Api
         {
             _unitOfWork = unitOfWork;
         }
-
-        public AnswerFooterController()
-        {
-            _unitOfWork = new UnitOfWork();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _unitOfWork.Dispose();
-            base.Dispose(disposing);
-        }
-
+        
         [HttpPost]
         [Route("answerFooter/postComment")]
-        public IHttpActionResult PostComment(AnswerPostCommentViewModel answerPostCommentViewModel)
+        public IActionResult PostComment(AnswerPostCommentViewModel answerPostCommentViewModel)
         {
             _unitOfWork.CommentRepository.Add(new Comment
             {
                 AnswerId = answerPostCommentViewModel.AnswerId,
                 Content = answerPostCommentViewModel.Comment,
-                AppUserId = User.Identity.GetUserId(),
+                AppUserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                 CreatedDate = DateTime.Now
             });
             _unitOfWork.Complete();
@@ -51,9 +43,9 @@ namespace iKnow.Controllers.Api
 
         [HttpPost]
         [Route("answerFooter/likeAnswer/{answerId}")]
-        public IHttpActionResult LikeAnswer(int answerId)
+        public IActionResult LikeAnswer(int answerId)
         {
-            var userId = User.Identity.GetUserId();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (_unitOfWork.AnswerLikeRepository.Any(al => al.AppUserId == userId && al.AnswerId == answerId))
             {
                 return BadRequest("User has already liked this answer.");
@@ -76,9 +68,9 @@ namespace iKnow.Controllers.Api
 
         [HttpDelete]
         [Route("answerFooter/unlikeAnswer/{answerId}")]
-        public IHttpActionResult UnlikeAnswer(int answerId)
+        public IActionResult UnlikeAnswer(int answerId)
         {
-            var userId = User.Identity.GetUserId();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var answerLike = _unitOfWork.AnswerLikeRepository.SingleOrDefault(al => al.AppUserId == userId &&
                                                                                     al.AnswerId == answerId);
             if (answerLike == null)

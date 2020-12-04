@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
 using iKnow.Core.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace iKnow.Persistence.Repositories {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class {
@@ -27,7 +27,7 @@ namespace iKnow.Persistence.Repositories {
             Expression<Func<TEntity, bool>> anotherFilter = null) {
 
             IQueryable<TEntity> query = _dbSet;
-            includeProperties = includeProperties ?? "";
+            includeProperties ??= "";
 
             if (filter != null) {
                 query = query.Where(filter);

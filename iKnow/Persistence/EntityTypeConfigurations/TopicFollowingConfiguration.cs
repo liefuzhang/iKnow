@@ -1,10 +1,12 @@
-﻿using System.Data.Entity.ModelConfiguration;
-using iKnow.Core.Models;
+﻿using iKnow.Core.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace iKnow.Persistence.EntityTypeConfigurations {
-    internal class TopicFollowingConfiguration : EntityTypeConfiguration<TopicFollowing> {
-        public TopicFollowingConfiguration() {
-            HasKey(f => new {f.UserId, f.TopicId});
+    internal class TopicFollowingConfiguration : IEntityTypeConfiguration<TopicFollowing> {
+        public void Configure(EntityTypeBuilder<TopicFollowing> builder)
+        {
+            builder.HasKey(f => new {f.UserId, f.TopicId});
         }
     }
 }

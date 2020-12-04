@@ -1,20 +1,22 @@
 ﻿@using iKnow.Core.Models
 @model IEnumerable<Activity>
 
-@foreach (var activity in Model) {
+@foreach (var activity in Model)
+{
     <div class="activity-panel divided-section">
-        @switch (activity.Type) {
+        @switch (activity.Type)
+        {
             case ActivityType.FollowTopic:
-                @Html.Action("GetFollowTopic", "Activity", new { id = activity.Id })
+                @await Component.InvokeAsync("GetFollowTopic", new { id = activity.Id })
                 break;
             case ActivityType.AnswerQuestion:
-                @Html.Action("GetAnswerQuestion", "Activity", new { id = activity.Id })
+                @await Component.InvokeAsync("GetAnswerQuestion", new { id = activity.Id })
                 break;
             case ActivityType.LikeAnswer:
-                @Html.Action("GetLikeAnswer", "Activity", new { id = activity.Id })
+                @await Component.InvokeAsync("GetLikeAnswer", new { id = activity.Id })
                 break;
             case ActivityType.AddQuestion:
-                @Html.Action("GetAddQuestion", "Activity", new { id = activity.Id })
+                @await Component.InvokeAsync("GetAddQuestion", new { id = activity.Id })
                 break;
         }
     </div>

@@ -1,4 +1,5 @@
-﻿@model iKnow.Core.ViewModels.TopicFormViewModel
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@model iKnow.Core.ViewModels.TopicFormViewModel
 
 @{
     ViewBag.Title = "Topic Form";
@@ -8,7 +9,7 @@
     <h3 class="content-header">@(Model.Topic.Id == 0 ? "Add Topic" : "Edit Topic")</h3>
     <pre class="return-link">@Html.ActionLink("Return to Topics  >  ", "Index", "Topic")</pre>
 
-    @using (@Html.BeginForm("Save", "Topic", null, FormMethod.Post, new { enctype = "multipart/form-data" })) {
+    @using (@Html.BeginForm("Save", "Topic", null, FormMethod.Post, true, new { enctype = "multipart/form-data" })) {
         @Html.ValidationSummary("", new { @class = "error" })
         <div class="form-group">
             @Html.LabelFor(m => m.Topic.Name)
@@ -41,8 +42,6 @@
 </div>
 
 @section scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-
     <script>
         $(".topic-form-container .js-button-delete").on("click", appController.deleteEntity);
         TopicPhotoUploadController.init(".js-topic-photo-upload", ".topic-form-container .img-container img");

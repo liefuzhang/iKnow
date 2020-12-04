@@ -1,10 +1,12 @@
-﻿using System.Data.Entity.ModelConfiguration;
-using iKnow.Core.Models;
+﻿using iKnow.Core.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace iKnow.Persistence.EntityTypeConfigurations {
-    internal class CommentConfiguration : EntityTypeConfiguration<Comment> {
-        public CommentConfiguration() {
-            Property(a => a.Content)
+    internal class CommentConfiguration : IEntityTypeConfiguration<Comment> {
+        public void Configure(EntityTypeBuilder<Comment> builder)
+        {
+            builder.Property(a => a.Content)
                 .IsRequired();
         }
     }

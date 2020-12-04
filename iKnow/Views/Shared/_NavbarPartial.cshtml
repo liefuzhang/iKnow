@@ -1,5 +1,5 @@
 ﻿<span class="logo">@Html.ActionLink("iKnow", "Index", "Home")</span>
-@using (Html.BeginForm("SearchFullResult", "Search", FormMethod.Get, new {@class="search-form"}))
+@using (Html.BeginForm("SearchFullResult", "Search", FormMethod.Get, new { @class = "search-form" }))
 {
     <div class="search-container">
         <input class="search" autocomplete="off" type="text" name="search" placeholder="Search iKnow" />
@@ -20,5 +20,5 @@
     <li><button class="add-question-button btn">Add Question</button></li>
 </ul>
 <div class="navbar-user">
-    @Html.Action("GetUserProfile", "Home")
+    @await Component.InvokeAsync("UserProfile")
 </div>

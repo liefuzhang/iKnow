@@ -5,11 +5,11 @@
     <div class="divided-section">
         <div class="comment-item-header">
             <div class="img-container">
-                <a href="@comment.AppUser.ProfilePageUrl">
+                <a href="@Url.Action("UserProfile", "Account", new {userName = comment.AppUser.UserName})">
                     <img src=@comment.AppUser.IconPath />
                 </a>
             </div>
-            <a href="@comment.AppUser.ProfilePageUrl">
+            <a href="@Url.Action("UserProfile", "Account", new {userName = comment.AppUser.UserName})">
                 @comment.AppUser.FullName
             </a>
             <div class="comment-date">

@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Web.Http;
 using iKnow.Core;
-using iKnow.Core.Models;
 using iKnow.Core.ViewModels;
+using iKnow.Helper;
 using iKnow.Persistence;
-using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace iKnow.Controllers.Api {
     [Authorize]
-    public class AccountController : ApiController {
+    public class AccountController : ControllerBase {
         private readonly IFileHelper _fileHelper;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -17,13 +17,8 @@ namespace iKnow.Controllers.Api {
             _unitOfWork = unitOfWork;
         }
 
-        public AccountController() {
-            _unitOfWork = new UnitOfWork();
-            _fileHelper = new FileHelper();
-        }
-
         [HttpPost]
-        public IHttpActionResult SaveProfilePhoto(SaveProfilePhotoViewModel saveProfilePhotoViewModel) {
+        public IActionResult SaveProfilePhoto(SaveProfilePhotoViewModel saveProfilePhotoViewModel) {
             try
             {
                 var user = _unitOfWork.UserRepository.Single(u => u.Id == saveProfilePhotoViewModel.UserId);
@@ -31,7 +26,7 @@ namespace iKnow.Controllers.Api {
             }
             catch (Exception)
             {
-                return InternalServerError();
+                return BadRequest();
             }
 
             return Ok();

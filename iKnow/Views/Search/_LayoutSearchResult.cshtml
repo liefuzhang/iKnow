@@ -31,7 +31,7 @@
 
         <div class="sidebar panel-sidebar">
             <div class="panel">
-                @Html.Action("GetRecommendedTopics", "Topic")
+                @await Component.InvokeAsync("GetRecommendedTopics")
             </div>
             @Html.Partial("_SideBarSiteInfoPartial")
         </div>

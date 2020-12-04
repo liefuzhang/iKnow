@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Web.Mvc;
 using iKnow.Core.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace iKnow.Core.ViewModels {
     public class QuestionFormViewModel {

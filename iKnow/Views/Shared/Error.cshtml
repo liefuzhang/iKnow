@@ -1,4 +1,4 @@
-﻿@model HandleErrorInfo
+﻿@using System.Diagnostics
 @{
     ViewBag.Title = "Error";
 }
@@ -15,7 +15,7 @@
             @Html.ActionLink("iKnow Home", "Index", "Home")
         </p>
 
-        @if (Model != null && HttpContext.Current.IsDebuggingEnabled) {
+        @if (Model != null && Debugger.IsAttached) {
             <div>
                 <p>
                     <b>Exception:</b> @Model.Exception.Message<br />

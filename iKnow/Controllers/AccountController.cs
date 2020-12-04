@@ -1,90 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Validation;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
-using System.Web.Mvc;
 using iKnow.Core;
 using iKnow.Core.Models;
-using iKnow.Core.Models.Identity;
 using iKnow.Core.ViewModels;
 using iKnow.Core.ViewModels.Account;
-using iKnow.Helper;
-using iKnow.Persistence;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Constants = iKnow.Core.Models.Constants;
 
-namespace iKnow.Controllers {
-    public class AccountController : Controller {
-        private AppSignInManager _signInManager;
-        private AppUserManager _userManager;
+namespace iKnow.Controllers
+{
+    public class AccountController : Controller
+    {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailSender _emailSender;
-        private readonly IAuthenticationManager _authenticationManager;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public AccountController(IUnitOfWork unitOfWork, IEmailSender emailSender, 
-            AppUserManager userManager, AppSignInManager signInManager, IAuthenticationManager authenticationManager) {
+        public AccountController(IUnitOfWork unitOfWork, IEmailSender emailSender,
+            UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        {
             _unitOfWork = unitOfWork;
             _emailSender = emailSender;
-            UserManager = userManager;
-            SignInManager = signInManager;
-            _authenticationManager = authenticationManager;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
-
-        public AccountController(IUnitOfWork unitOfWork, IEmailSender emailSender) {
-            _unitOfWork = unitOfWork;
-            _emailSender = emailSender;
-        }
-
-        public AccountController() {
-            _unitOfWork = new UnitOfWork();
-            _emailSender = new EmailSender();
-        }
-
-        protected override void Dispose(bool disposing) {
-            if (disposing) {
-                if (_userManager != null) {
-                    _userManager.Dispose();
-                    _userManager = null;
-                }
-
-                if (_signInManager != null) {
-                    _signInManager.Dispose();
-                    _signInManager = null;
-                }
-            }
-            _unitOfWork.Dispose();
-            base.Dispose(disposing);
-        }
-
-        public AppSignInManager SignInManager {
-            get {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<AppSignInManager>();
-            }
-            private set {
-                _signInManager = value;
-            }
-        }
-
-        public AppUserManager UserManager {
-            get {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
-            }
-            private set {
-                _userManager = value;
-            }
-        }
-
-        public IAuthenticationManager AuthenticationManager => _authenticationManager ?? HttpContext.GetOwinContext().Authentication;
 
         //
         // GET: /Account/Login
-        public ActionResult Login(string returnUrl) {
-            if (User.Identity.IsAuthenticated) {
+        public ActionResult Login(string returnUrl)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
                 return RedirectToAction("Index", "Home");
             }
             ViewBag.ReturnUrl = returnUrl;
@@ -93,27 +46,26 @@ namespace iKnow.Controllers {
 
         //
         // POST: /Account/Login
-        [System.Web.Mvc.HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl) {
-            if (ModelState.IsValid) {
-                var user = await UserManager.FindByEmailAsync(model.Email.Trim());
-                if (user != null) {
-                    var userName = user.UserName;
+        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager.PasswordSignInAsync(model.Email.Trim(), model.Password, isPersistent: true, lockoutOnFailure: false);
 
-                    // This doesn't count login failures towards account lockout
-                    // To enable password failures to trigger account lockout, change to shouldLockout: true
-                    var result = await SignInManager.PasswordSignInAsync(userName, model.Password, isPersistent: true,
-                                shouldLockout: false);
-
-                    if (result == SignInStatus.Success) {
-                        return RedirectToLocal(returnUrl);
-                    }
+                if (result.Succeeded)
+                {
+                    return LocalRedirect(returnUrl);
                 }
-
-                ModelState.AddModelError("", "Invalid login attempt.");
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return View();
+                }
             }
 
+            ModelState.AddModelError("", "Invalid login attempt.");
             // If we got this far, something failed, redisplay form
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
@@ -121,8 +73,10 @@ namespace iKnow.Controllers {
 
         //
         // GET: /Account/Register
-        public PartialViewResult Register(string returnUrl) {
-            var viewModel = new RegisterViewModel {
+        public PartialViewResult Register(string returnUrl)
+        {
+            var viewModel = new RegisterViewModel
+            {
                 ReturnUrl = returnUrl
             };
             return PartialView("_RegisterModalPartial", viewModel);
@@ -130,17 +84,20 @@ namespace iKnow.Controllers {
 
         //
         // POST: /Account/Register
-        [System.Web.Mvc.HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model) {
-            if (ModelState.IsValid) {
+        public async Task<ActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
                 model.FirstName = model.FirstName.Trim();
                 model.LastName = model.LastName.Trim();
                 model.Email = model.Email.Trim();
 
                 var userName = GetUserName(model);
 
-                var user = new AppUser {
+                var user = new AppUser
+                {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Email = model.Email,
@@ -149,10 +106,11 @@ namespace iKnow.Controllers {
                     DefaultIconNumber = (byte)(new Random()).Next(10)
                 };
 
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded) {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                    return RedirectToLocal(model.ReturnUrl);
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return LocalRedirect(model.ReturnUrl);
                 }
                 AddErrors(result);
             }
@@ -162,14 +120,16 @@ namespace iKnow.Controllers {
             return View("Login");
         }
 
-        private string GetUserName(RegisterViewModel model) {
+        private string GetUserName(RegisterViewModel model)
+        {
             var fullName = (model.FirstName + model.LastName).ToLower();
             var userNames = _unitOfWork.UserRepository.Get(u => u.UserName.StartsWith(fullName))
                 .Select(u => u.UserName)
                 .ToList();
 
             var increment = 0;
-            while (userNames.Contains(fullName + increment)) {
+            while (userNames.Contains(fullName + increment))
+            {
                 increment++;
             }
 
@@ -179,26 +139,31 @@ namespace iKnow.Controllers {
 
         //
         // GET: /Account/ForgotPassword
-        public ActionResult ForgotPassword() {
+        public ActionResult ForgotPassword()
+        {
             return View();
         }
 
         //
         // POST: /Account/ForgotPassword
-        [System.Web.Mvc.HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel model) {
-            if (ModelState.IsValid) {
-                var user = await UserManager.FindByEmailAsync(model.Email.Trim());
-                if (user == null) {
+        public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email.Trim());
+                if (user == null)
+                {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
                 }
 
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Scheme);
                 await _emailSender.SendForgotPasswordMailAsync(user, callbackUrl);
                 return View("ForgotPasswordConfirmation");
             }
@@ -209,25 +174,30 @@ namespace iKnow.Controllers {
 
         //
         // GET: /Account/ResetPassword
-        public ViewResult ResetPassword(string code) {
+        public ViewResult ResetPassword(string code)
+        {
             return code == null ? View("Error") : View();
         }
 
         //
         // POST: /Account/ResetPassword
-        [System.Web.Mvc.HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ViewResult> ResetPassword(ResetPasswordViewModel model) {
-            if (!ModelState.IsValid) {
+        public async Task<ViewResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
                 return View(model);
             }
-            var user = await UserManager.FindByEmailAsync(model.Email.Trim());
-            if (user == null) {
+            var user = await _userManager.FindByEmailAsync(model.Email.Trim());
+            if (user == null)
+            {
                 // Don't reveal that the user does not exist
                 return View("ResetPasswordConfirmation");
             }
-            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
-            if (result.Succeeded) {
+            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            if (result.Succeeded)
+            {
                 return View("ResetPasswordConfirmation");
             }
             AddErrors(result);
@@ -236,87 +206,104 @@ namespace iKnow.Controllers {
 
         //
         // POST: /Account/LogOff
-        [System.Web.Mvc.HttpPost]
-        public ActionResult LogOff() {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+        [HttpPost]
+        public async Task<ActionResult> LogOff()
+        {
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 
-        [System.Web.Mvc.Route("Account/UserProfile/{userName}")]
-        public async Task<ActionResult> UserProfile(string userName) {
-            var user = await UserManager.FindByNameAsync(userName);
-            if (user == null) {
-                return HttpNotFound();
+        [Route("Account/UserProfile/{userName}")]
+        public async Task<ActionResult> UserProfile(string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user == null)
+            {
+                return NotFound();
             }
 
-            var userProfileViewModel = new UserProfileViewModel {
+            var userProfileViewModel = new UserProfileViewModel
+            {
                 AppUser = user,
                 Activities = GetActivities(user, 0)
             };
             return View("UserProfile", userProfileViewModel);
         }
 
-        private IEnumerable<Activity> GetActivities(AppUser user, int currentPage, int pageSize = Constants.DefaultPageSize) {
+        private IEnumerable<Activity> GetActivities(AppUser user, int currentPage, int pageSize = Constants.DefaultPageSize)
+        {
             return _unitOfWork.ActivityRepository
                 .Get(a => a.AppUserId == user.Id, q => q.OrderByDescending(a => a.DateTime),
                     null, currentPage * pageSize, pageSize);
         }
 
-        [System.Web.Mvc.Route("Account/LoadMore/{currentPage}")]
-        public async Task<PartialViewResult> LoadMore(int currentPage, string userName) {
-            var user = await UserManager.FindByNameAsync(userName);
-            if (user == null) {
-                return null;
+        [Route("Account/LoadMore/{currentPage}")]
+        public async Task<IActionResult> LoadMore(int currentPage, string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user == null)
+            {
+                return Content(string.Empty);
             }
 
             var activities = GetActivities(user, ++currentPage);
-            if (!activities.Any()) {
-                return null;
+            if (!activities.Any())
+            {
+                return Content(string.Empty);
             }
 
             return PartialView("_ActivityPartial", activities);
         }
 
-        public async Task<ActionResult> EditProfile() {
-            if (Request["Message"] != null) {
-                TempData["statusMessage"] = Request["Message"];
+        public async Task<ActionResult> EditProfile()
+        {
+            if (Request.Query["Message"].ToString() != null)
+            {
+                TempData["statusMessage"] = Request.Query["Message"].ToString();
             }
-            var currentUserId = User.Identity.GetUserId();
-            var currentUser = await UserManager.FindByIdAsync(currentUserId);
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUser = await _userManager.FindByIdAsync(currentUserId);
 
-            var userProfileViewModel = new UserProfileViewModel {
+            var userProfileViewModel = new UserProfileViewModel
+            {
                 AppUser = currentUser
             };
             return View("EditProfile", userProfileViewModel);
         }
 
-        [System.Web.Mvc.HttpPost]
-        [System.Web.Mvc.Authorize]
+        [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public ActionResult SaveProfile(UserProfileViewModel viewModel) {
-            try {
-                if (!ModelState.IsValid) {
+        public ActionResult SaveProfile(UserProfileViewModel viewModel)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
                     return View("EditProfile", viewModel);
                 }
 
                 var user = viewModel.AppUser;
-                var currentUserId = User.Identity.GetUserId();
+                var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                if (currentUserId != user.Id) {
+                if (currentUserId != user.Id)
+                {
                     return View("EditProfile", viewModel);
                 }
 
                 SaveUserChanges(user);
 
                 return RedirectToAction("UserProfile", "Account", new { userName = user.UserName });
-            } catch (DbEntityValidationException ex) {
-                var error = ex.EntityValidationErrors?.FirstOrDefault()?.ValidationErrors?.FirstOrDefault();
-                ModelState.AddModelError("", error?.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
                 return View("EditProfile", viewModel);
             }
         }
 
-        private void SaveUserChanges(AppUser user) {
+        private void SaveUserChanges(AppUser user)
+        {
             var userInDb = _unitOfWork.UserRepository.Single(u => u.Id == user.Id);
             userInDb.UpdateInfo(user.Gender, user.Intro, user.Location);
 
@@ -327,7 +314,7 @@ namespace iKnow.Controllers {
         // GET: /Account/EditProfilePhoto
         public async Task<PartialViewResult> EditProfilePhoto(string userId)
         {
-            var user = await UserManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
             var viewModel = new UserProfileViewModel
             {
                 AppUser = user
@@ -337,31 +324,36 @@ namespace iKnow.Controllers {
 
         //
         // GET: /Manage/ChangePassword
-        [System.Web.Mvc.Authorize]
-        public ActionResult ChangePassword() {
+        [Authorize]
+        public ActionResult ChangePassword()
+        {
             return View();
         }
 
         //
         // POST: /Manage/ChangePassword
-        [System.Web.Mvc.HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        [System.Web.Mvc.Authorize]
-        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model) {
-            if (!ModelState.IsValid) {
+        [Authorize]
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
                 return View(model);
             }
 
-            if (model.OldPassword == model.NewPassword) {
+            if (model.OldPassword == model.NewPassword)
+            {
                 ModelState.AddModelError("", "New password should differ from old password.");
                 return View(model);
             }
 
-            var userId = User.Identity.GetUserId();
-            var result = await UserManager.ChangePasswordAsync(userId, model.OldPassword, model.NewPassword);
-            if (result.Succeeded) {
-                var user = await UserManager.FindByIdAsync(userId);
-                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await _userManager.FindByIdAsync(userId);
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
 
                 return RedirectToAction("EditProfile", new { Message = "Password changed successfully." });
             }
@@ -371,14 +363,18 @@ namespace iKnow.Controllers {
 
         #region Helpers
 
-        private void AddErrors(IdentityResult result) {
-            foreach (var error in result.Errors) {
-                ModelState.AddModelError("", error);
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
             }
         }
 
-        private ActionResult RedirectToLocal(string returnUrl) {
-            if (Url.IsLocalUrl(returnUrl)) {
+        private ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
                 return Redirect(returnUrl);
             }
             return RedirectToAction("Index", "Home");

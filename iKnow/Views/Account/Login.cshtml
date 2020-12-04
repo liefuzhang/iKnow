@@ -7,7 +7,7 @@
 <div class="login-form-container">
     <h3 class="content-header">@ViewBag.Title</h3>
     <div class="login-inner">
-        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, null)) {
+        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, true, null)) {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(false, "", new { @class = "error" })
             <div class="form-group">
@@ -39,8 +39,6 @@
 }
 
 @section scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-
     <script>
         RegisterController.init();
     </script>

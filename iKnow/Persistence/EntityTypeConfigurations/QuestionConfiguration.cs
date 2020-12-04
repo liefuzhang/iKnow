@@ -1,23 +1,17 @@
-﻿using System.Data.Entity.ModelConfiguration;
-using iKnow.Core.Models;
+﻿using iKnow.Core.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace iKnow.Persistence.EntityTypeConfigurations {
-    internal class QuestionConfiguration : EntityTypeConfiguration<Question> {
-        public QuestionConfiguration() {
-            Property(q => q.Title)
+    internal class QuestionConfiguration : IEntityTypeConfiguration<Question> {
+        public void Configure(EntityTypeBuilder<Question> builder)
+        {
+            builder.Property(q => q.Title)
                 .IsRequired()
                 .HasMaxLength(255);
 
-            Property(q => q.Description)
+            builder.Property(q => q.Description)
                 .HasMaxLength(1000);
-
-            HasMany(q => q.Topics)
-                .WithMany(t => t.Questions)
-                .Map(m => {
-                    m.ToTable("TopicQuestions");
-                    m.MapLeftKey("TopicId");
-                    m.MapRightKey("QuestionId");
-                });
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using System.Security.Claims;
 using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.ViewModels;
 using iKnow.Persistence;
-using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Constants = iKnow.Core.Models.Constants;
 
 namespace iKnow.Controllers
@@ -17,11 +17,6 @@ namespace iKnow.Controllers
         public HomeController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-        }
-
-        public HomeController()
-        {
-            _unitOfWork = new UnitOfWork();
         }
 
         protected override void Dispose(bool disposing)
@@ -44,40 +39,42 @@ namespace iKnow.Controllers
         private IDictionary<Question, Answer> GetQuestionAnswerPairs(int currentPage, int pageSize = Constants.DefaultPageSize)
         {
             var questions = _unitOfWork.QuestionRepository.Get(q => q.Answers.Any(), query =>
-                   query.OrderByDescending(question => question.Id), nameof(Question.Topics), currentPage * pageSize, pageSize).ToList();
+                   query.OrderByDescending(question => question.Id), nameof(Question.TopicQuestions), currentPage * pageSize, pageSize).ToList();
+            var topicIds = questions.SelectMany(q => q.TopicQuestions.Select(tq => tq.TopicId));
+            _ = _unitOfWork.TopicRepository.Get(t => topicIds.Contains(t.Id)).ToList();
             var questionIds = questions.Select(q => q.Id).ToList();
 
-            var questionAnswers = _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds, User.Identity.GetUserId());
+            var questionAnswers = _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds, User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             return questionAnswers;
         }
 
         [Route("Home/LoadMore/{currentPage}")]
-        public PartialViewResult LoadMore(int currentPage)
+        public IActionResult LoadMore(int currentPage)
         {
             var pairs = GetQuestionAnswerPairs(++currentPage);
             if (pairs == null || !pairs.Any())
             {
-                return null;
+                return Content(string.Empty);
             }
 
             return PartialView("_QuestionAnswerPairPartial", pairs);
         }
 
-        public PartialViewResult GetUserProfile()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                var userId = User.Identity.GetUserId();
-                var currentUser = _unitOfWork.UserRepository.Single(u => u.Id == userId);
-                return PartialView("_UserProfilePartial", currentUser);
-            }
-            return PartialView("_UserProfilePartial");
-        }
-
         public ActionResult Contact()
         {
             return View();
+        }
+
+
+        private void Update()
+        {
+            var users = _unitOfWork.UserRepository.GetAll();
+            foreach (var appUser in users)
+            {
+                appUser.NormalizedEmail = appUser.Email.ToUpper().Normalize();
+                appUser.NormalizedUserName = appUser.UserName.ToUpper().Normalize();
+            }
         }
     }
 }

@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System.Security.Claims;
 using System.Security.Principal;
-using System.Web.Mvc;
 using iKnow.Helper;
-using Microsoft.AspNet.Identity;
 
 namespace iKnow.Core.Models {
     public class Question {
@@ -12,34 +10,34 @@ namespace iKnow.Core.Models {
 
         [Required]
         [MaxLength(255)]
-        [AllowHtml]
+        //[AllowHtml]
         public string Title { get; set; }
 
         [MaxLength(1000)]
-        [AllowHtml]
+        //[AllowHtml]
         public string Description { get; set; }
         public AppUser AppUser { get; set; }
         public string AppUserId { get; private set; }
         public bool IsDeleted { get; set; }
-        public ICollection<Topic> Topics { get; private set; }
+        public ICollection<TopicQuestion> TopicQuestions { get; private set; }
         public ICollection<Answer> Answers { get; private set; }
 
         public Question() {
-            Topics = new HashSet<Topic>();
+            TopicQuestions = new HashSet<TopicQuestion>();
             Answers = new HashSet<Answer>();
         }
 
         public void AddTopic(Topic topic) {
-            Topics.Add(topic);
+            TopicQuestions.Add(new TopicQuestion(topic, this));
         }
 
         public void ClearTopics() {
-            Topics.Clear();
+            TopicQuestions.Clear();
         }
 
-        public bool CanUserModify(IPrincipal user) {
+        public bool CanUserModify(ClaimsPrincipal user) {
             return user.Identity.IsAuthenticated
-                   && (AppUserId == user.Identity.GetUserId()
+                   && (AppUserId == user.FindFirstValue(ClaimTypes.NameIdentifier)
                     || (user.IsInRole(Constants.AdminRoleName) && Id > 0));
         }
 

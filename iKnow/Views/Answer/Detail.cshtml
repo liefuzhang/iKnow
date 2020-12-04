@@ -44,7 +44,7 @@
 
         <div class="sidebar panel-sidebar">
             <div class="panel">
-                @Html.Action("GetRelatedQuestions", "Question", new { id = Model.QuestionDetailViewModel.Question.Id })
+                @await Component.InvokeAsync("GetRelatedQuestions", new { id = Model.QuestionDetailViewModel.Question.Id })
             </div>
             @Html.Partial("_SideBarSiteInfoPartial")
         </div>
@@ -52,14 +52,7 @@
 </div>
 
 
-@section styles {
-    <link rel="stylesheet" href="~/Content/quill.snow.css" />
-}
-
 @section scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    <script src="/Scripts/quill.min.js"></script>
-
     <script>
         $(document)
             .ready(function () {

@@ -1,0 +1,17 @@
+﻿@model iKnow.Core.Models.AppUser
+<div class="user-info-container">
+    @if (Model != null)
+    {
+        <div class="img-container">
+            <a href="@Url.Action("UserProfile", "Account", new {userName = Model.UserName})">
+                <img src=@Model.IconPath />
+            </a>
+        </div>
+        <div class="user-info">
+            <a href="@Url.Action("UserProfile", "Account", new {userName = Model.UserName})">
+                <b>@Model.FullName</b>
+            </a>
+            <div class="user-intro">@Model.Intro</div>
+        </div>
+    }
+</div>

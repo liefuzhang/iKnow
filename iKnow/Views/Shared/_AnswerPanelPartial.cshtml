@@ -1,10 +1,10 @@
 ﻿@model iKnow.Core.Models.Answer
 
-@Html.Action("GetAnswerPanelHeader", "Answer", new { id = Model.AppUserId })
+@await Component.InvokeAsync("AnswerPanelHeader", new { id = Model.AppUserId })
 <div class="answer-panel-content-container">
     <div class="answer-panel-content">
         <div class="answer-panel-content-inner">@Html.Raw(Model.Content)</div>
-        @Html.Action("EditIcon", "Answer", new {id = Model.Id})
+        @await Component.InvokeAsync("AnswerEditIcon", new { id = Model.Id })
         @Html.Partial("_AnswerFooterPartial", Model)
     </div>
     <a class="expand-answer">

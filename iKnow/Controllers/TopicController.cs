@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Validation;
 using System.Linq;
-using System.Web.Mvc;
+using System.Security.Claims;
 using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.ViewModels;
+using iKnow.Helper;
 using iKnow.Persistence;
-using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Constants = iKnow.Core.Models.Constants;
 
 namespace iKnow.Controllers
@@ -16,16 +17,11 @@ namespace iKnow.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFileHelper _fileHelper;
+
         public TopicController(IUnitOfWork unitOfWork, IFileHelper fileHelper)
         {
             _unitOfWork = unitOfWork;
             _fileHelper = fileHelper;
-        }
-
-        public TopicController()
-        {
-            _unitOfWork = new UnitOfWork();
-            _fileHelper = new FileHelper();
         }
 
         protected override void Dispose(bool disposing)
@@ -41,9 +37,9 @@ namespace iKnow.Controllers
             Topic selectedTopic = null;
             if (topics.Any())
             {
-                if (Request["selectedTopicId"] != null)
+                if (Request.Query["selectedTopicId"].ToString() != null)
                 {
-                    selectedTopic = topics.SingleOrDefault(t => t.Id.ToString() == Request["selectedTopicId"]);
+                    selectedTopic = topics.SingleOrDefault(t => t.Id.ToString() == Request.Query["selectedTopicId"].ToString());
                 }
                 if (selectedTopic == null)
                 {
@@ -65,10 +61,10 @@ namespace iKnow.Controllers
             var topic = _unitOfWork.TopicRepository.SingleOrDefault(t => t.Id == id);
             if (topic == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
-            var userId = User.Identity.GetUserId();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var viewModel = new TopicDetailViewModel
             {
                 Topic = topic,
@@ -82,28 +78,28 @@ namespace iKnow.Controllers
 
         private IDictionary<Question, Answer> GetQuestionAnswerPairsForTopic(int topicId, int currentPage, int pageSize = Constants.DefaultPageSize)
         {
-            var questions = _unitOfWork.QuestionRepository.Get(q => q.Topics.Any(t => t.Id == topicId) && q.Answers.Any(),
+            var questions = _unitOfWork.QuestionRepository.Get(q => q.TopicQuestions.Any(tq => tq.TopicId == topicId) && q.Answers.Any(),
                 query => query.OrderByDescending(question => question.Id), null, currentPage * pageSize, pageSize).ToList();
             var questionIds = questions.Select(q => q.Id).ToList();
             var questionAnswers = _unitOfWork.AnswerRepository
-                .GetQuestionAnswerPairsForGivenQuestions(questionIds, User.Identity.GetUserId());
+                .GetQuestionAnswerPairsForGivenQuestions(questionIds, User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             return questionAnswers;
         }
 
         [Route("Topic/LoadMore/{currentPage}")]
-        public PartialViewResult LoadMore(int currentPage, int topicId)
+        public IActionResult LoadMore(int currentPage, int topicId)
         {
             var topic = _unitOfWork.TopicRepository.SingleOrDefault(t => t.Id == topicId);
             if (topic == null)
             {
-                return null;
+                return Content(string.Empty);
             }
 
             var pairs = GetQuestionAnswerPairsForTopic(topic.Id, ++currentPage);
             if (pairs == null || !pairs.Any())
             {
-                return null;
+                return Content(string.Empty);
             }
 
             return PartialView("_QuestionAnswerPairPartial", pairs);
@@ -111,12 +107,12 @@ namespace iKnow.Controllers
 
 
         // GET: Topic/About/1
-        public PartialViewResult About(int id)
+        public IActionResult About(int id)
         {
             var topic = _unitOfWork.TopicRepository.SingleOrDefault(t => t.Id == id);
             if (topic == null)
             {
-                return null;
+                return Content(string.Empty);
             }
 
             return PartialView("_TopicBodyPartial", topic);
@@ -164,10 +160,9 @@ namespace iKnow.Controllers
 
                 return RedirectToAction("Index", new { selectedTopicId = topic.Id });
             }
-            catch (DbEntityValidationException ex)
+            catch (Exception ex)
             {
-                var error = ex.EntityValidationErrors?.FirstOrDefault()?.ValidationErrors?.FirstOrDefault();
-                ModelState.AddModelError("", error?.ErrorMessage);
+                ModelState.AddModelError("", ex.Message);
                 return View("TopicForm", viewModel);
             }
         }
@@ -199,7 +194,7 @@ namespace iKnow.Controllers
             var topic = _unitOfWork.TopicRepository.SingleOrDefault(t => t.Id == id);
             if (topic == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = new TopicFormViewModel
@@ -218,7 +213,7 @@ namespace iKnow.Controllers
             var topicInDb = _unitOfWork.TopicRepository.SingleOrDefault(t => t.Id == topic.Id);
             if (topicInDb == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             _unitOfWork.TopicRepository.Remove(topicInDb);
@@ -227,16 +222,6 @@ namespace iKnow.Controllers
             _fileHelper.DeleteTopicIcon(topicInDb.IconSavePathOnServer);
 
             return RedirectToAction("Index");
-        }
-
-        public PartialViewResult GetRecommendedTopics(int? id)
-        {
-            IEnumerable<Topic> topics = id == null
-                ? _unitOfWork.TopicRepository.GetAll(q => q.OrderBy(t => Guid.NewGuid()), null, null,
-                    Constants.RecommendedTopicNumber).ToList()
-                : _unitOfWork.TopicRepository.Get(t => t.Id != id.Value, q => q.OrderBy(t => Guid.NewGuid()), null, null,
-                    Constants.RecommendedTopicNumber).ToList();
-            return PartialView("_SideBarRecommendedTopicsPartial", topics);
         }
     }
 }

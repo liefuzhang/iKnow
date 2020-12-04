@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 using iKnow.Core.Models;
 
 namespace iKnow.Core.ViewModels {
     public class QuestionDetailViewModel {
         public Question Question { get; set; }
-        [AllowHtml]
+        //[AllowHtml]
         [Required]
         public string AnswerPanelContent { get; set; }
         public bool CanUserDeleteAnswerPanelAnswer { get; set; }

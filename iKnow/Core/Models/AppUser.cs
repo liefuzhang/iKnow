@@ -1,34 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Hosting;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using iKnow.Helper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Hosting.Internal;
 
 namespace iKnow.Core.Models {
     public class AppUser : IdentityUser {
         private IFileHelper _fileHelper;
-        private HttpRequestBase _httpRequestBase;
-
-        public HttpRequestBase HttpRequestBase =>
-            _httpRequestBase ?? (_httpRequestBase = new HttpContextWrapper(HttpContext.Current).Request);
 
         public AppUser() {
             Questions = new HashSet<Question>();
-            Topics = new HashSet<Topic>();
+            TopicUsers = new HashSet<TopicUser>();
             Answers = new HashSet<Answer>();
             Followings = new HashSet<TopicFollowing>();
             Activities = new HashSet<Activity>();
             _fileHelper = new FileHelper();
         }
 
-        public AppUser(IFileHelper fileHelper, HttpRequestBase httpRequestBase) {
+        public AppUser(IFileHelper fileHelper) {
             _fileHelper = fileHelper;
-            _httpRequestBase = httpRequestBase;
         }
 
         public string FirstName { get; set; }
@@ -48,37 +42,21 @@ namespace iKnow.Core.Models {
         private string IconSavePath => Constants.UserIconFolderPath
                                       + (Id ?? String.Empty).ToLower().Replace(' ', '-') + Constants.DefaultIconExtension;
 
-        public string IconSavePathOnServer => HostingEnvironment.MapPath(IconSavePath);
+        public string IconSavePathOnServer => ServerHelper.MapPath(IconSavePath);
         public string IconPath {
             get {
                 if (!_fileHelper.DoesFileExist(IconSavePathOnServer)) {
-                    return Constants.UserIconFolderPath + Constants.UserDefaultIconName + DefaultIconNumber + Constants.DefaultIconExtension;
+                    return "/" + Constants.UserIconFolderPath + Constants.UserDefaultIconName + DefaultIconNumber + Constants.DefaultIconExtension;
                 }
-                return IconSavePath;
-            }
-        }
-
-        public string ProfilePageUrl {
-            get {
-                var url =
-                    $"http{((HttpRequestBase.IsSecureConnection) ? "s" : "")}://{HttpRequestBase.Url?.Host}{"/Account/UserProfile/" + UserName}";
-
-                return url;
+                return "/" + IconSavePath;
             }
         }
 
         public ICollection<Question> Questions { get; private set; }
-        public ICollection<Topic> Topics { get; private set; }
+        public ICollection<TopicUser> TopicUsers { get; private set; }
         public ICollection<Answer> Answers { get; private set; }
         public ICollection<TopicFollowing> Followings { get; private set; }
         public ICollection<Activity> Activities { get; private set; }
-
-        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<AppUser> manager) {
-            // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
-            var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
-            // Add custom user claims here
-            return userIdentity;
-        }
 
         public void UpdateInfo(byte gender, string intro, string location) {
             Gender = gender;

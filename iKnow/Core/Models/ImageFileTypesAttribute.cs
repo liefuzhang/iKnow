@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace iKnow.Core.Models {
     public class ImageFileTypesAttribute : ValidationAttribute {
@@ -18,7 +19,7 @@ namespace iKnow.Core.Models {
             var fileExt = System.IO
                                 .Path
                                 .GetExtension((value as
-                                         HttpPostedFileBase).FileName).Substring(1);
+                                         IFormFile).FileName).Substring(1);
             return _types.Contains(fileExt, StringComparer.OrdinalIgnoreCase);
         }
 

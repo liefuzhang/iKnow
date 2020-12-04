@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web;
 using iKnow.Core.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace iKnow.Core.ViewModels {
     public class UserProfileViewModel {
@@ -9,6 +10,6 @@ namespace iKnow.Core.ViewModels {
         public IEnumerable<Activity> Activities { get; set; }
 
         [ImageFileTypes("jpg,jpeg,png")]
-        public HttpPostedFileBase PostedPhoto { get; set; }
+        public IFormFile PostedPhoto { get; set; }
     }
 }

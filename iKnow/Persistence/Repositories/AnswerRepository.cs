@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using iKnow.Core.Models;
 using iKnow.Core.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace iKnow.Persistence.Repositories {
     public class AnswerRepository : Repository<Answer>, IAnswerRepository {
@@ -23,6 +23,7 @@ namespace iKnow.Persistence.Repositories {
 
             var answers = _iKnowContext.Answers
                 .Where(a => questionIds.Contains(a.QuestionId))
+                .ToList()
                 .GroupBy(a => a.QuestionId, (qId, g) => new {
                     QuestionId = qId,
                     Answer = g.OrderBy(a => Guid.NewGuid()).FirstOrDefault()

@@ -1,5 +1,4 @@
 ﻿@using iKnow.Core.Models
-@using Microsoft.AspNet.Identity
 @model iKnow.Core.ViewModels.UserProfileViewModel
 @{
     ViewBag.Title = "Edit Profile";
@@ -11,11 +10,12 @@
     <pre class="return-link">@Html.ActionLink("Return to Profile  >  ", "UserProfile", "Account", new {userName = Model.AppUser.UserName}, null)</pre>
 
     <div class="user-profile-page-inner">
-        @using (Html.BeginForm("SaveProfile", "Account", null, FormMethod.Post, new { enctype = "multipart/form-data" })) {
+        @using (Html.BeginForm("SaveProfile", "Account", null, FormMethod.Post, true, new { enctype = "multipart/form-data" }))
+        {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary("", new { @class = "error" })
             <div class="edit-profile-photo img-container">
-                <img src="@Model.AppUser.IconPath" data-user-id="@Model.AppUser.Id"/>
+                <img src="@Model.AppUser.IconPath" data-user-id="@Model.AppUser.Id" />
                 <div class="mask">
                     <div class="mask-backdrop"></div>
                     <div class="mask-content">
@@ -46,7 +46,7 @@
                 <div class="form-group">
                     @Html.Label("Profile Page")
                     @{
-                        <a href="@Model.AppUser.ProfilePageUrl">@Model.AppUser.ProfilePageUrl</a>
+                        <a href="@Url.Action("UserProfile", "Account", new {userName = Model.AppUser.UserName})">@(Context.Request.Host + Url.Action("UserProfile", "Account", new { userName = Model.AppUser.UserName }))</a>
                     }
                 </div>
                 <div class="form-group">
@@ -59,7 +59,7 @@
                 @Html.HiddenFor(m => m.AppUser.Id)
                 @Html.HiddenFor(m => m.AppUser.UserName)
             </div>
-                        }
+        }
     </div>
 </div>
 
@@ -72,8 +72,6 @@
 }
 
 @section scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-
     <script>
         $(".mask-content").on("click", function () { $(".js-profile-photo-upload").click(); });
         PhotoUploadController.init(".js-profile-photo-upload", ".edit-profile-photo img");

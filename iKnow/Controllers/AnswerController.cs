@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Validation;
 using System.Linq;
-using System.Web.Mvc;
+using System.Security.Claims;
 using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.ViewModels;
-using Microsoft.AspNet.Identity;
 using Constants = iKnow.Core.Models.Constants;
 using iKnow.Persistence;
-using WebGrease.Css.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace iKnow.Controllers
 {
@@ -20,11 +19,6 @@ namespace iKnow.Controllers
         public AnswerController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-        }
-
-        public AnswerController()
-        {
-            _unitOfWork = new UnitOfWork();
         }
 
         protected override void Dispose(bool disposing)
@@ -54,12 +48,12 @@ namespace iKnow.Controllers
         }
 
         [Route("Answer/LoadMore/{currentPage}")]
-        public PartialViewResult LoadMore(int currentPage)
+        public IActionResult LoadMore(int currentPage)
         {
             var questionsWithAnswerCount = GetQuestionsWithAnswerCount(++currentPage);
             if (questionsWithAnswerCount == null || !questionsWithAnswerCount.Any())
             {
-                return null;
+                return Content(string.Empty);
             }
 
             return PartialView("_AnswerQuestionListPartial", questionsWithAnswerCount);
@@ -71,7 +65,7 @@ namespace iKnow.Controllers
                 nameof(Answer.Question) + "," + nameof(Answer.AnswerLikes) + "," + nameof(Answer.Comments));
             if (answer == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = ConstructAnswerDetailViewModel(answer);
@@ -81,14 +75,16 @@ namespace iKnow.Controllers
 
         private AnswerDetailViewModel ConstructAnswerDetailViewModel(Answer answer)
         {
-            var question = _unitOfWork.QuestionRepository.Single(q => q.Id == answer.Question.Id, nameof(Question.Topics));
+            var question = _unitOfWork.QuestionRepository.Single(q => q.Id == answer.Question.Id, nameof(Question.TopicQuestions));
+            var topicIds = question.TopicQuestions.Select(tq => tq.TopicId);
+            _ = _unitOfWork.TopicRepository.Get(t => topicIds.Contains(t.Id)).ToList();
             var answerCount = _unitOfWork.AnswerRepository.Count(a => a.QuestionId == question.Id);
             var moreAnswers = _unitOfWork.AnswerRepository.Get(a => a.Id != answer.Id && a.QuestionId == question.Id, 
                     includeProperties: nameof(Answer.AnswerLikes) + "," + nameof(Answer.Comments), take: 2)
                 .ToList();
 
             // TODO: can we utilize ConstructQuestionDetailViewModel method in QuestionController?
-            var userId = User.Identity.GetUserId();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var existingAnswer = _unitOfWork.AnswerRepository.SingleOrDefault(
                 a => a.QuestionId == question.Id && a.AppUserId == userId);
 
@@ -118,7 +114,7 @@ namespace iKnow.Controllers
         [Authorize]
         public ActionResult Save(QuestionDetailViewModel viewModel)
         {
-            var userId = User.Identity.GetUserId();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var existingAnswer =
                 _unitOfWork.AnswerRepository.SingleOrDefault(
                     a => a.QuestionId == viewModel.Question.Id && a.AppUserId == userId);
@@ -137,10 +133,9 @@ namespace iKnow.Controllers
                     _unitOfWork.Complete();
                 }
             }
-            catch (DbEntityValidationException ex)
+            catch (Exception ex)
             {
-                var error = ex.EntityValidationErrors?.FirstOrDefault()?.ValidationErrors?.FirstOrDefault();
-                ModelState.AddModelError("", error?.ErrorMessage);
+                ModelState.AddModelError("", ex.Message);
                 return View("~/Views/Question/Detail.cshtml", viewModel);
             }
 
@@ -167,7 +162,7 @@ namespace iKnow.Controllers
             {
                 Content = viewModel.AnswerPanelContent,
                 QuestionId = viewModel.Question.Id,
-                AppUserId = User.Identity.GetUserId(),
+                AppUserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                 CreatedDate = DateTime.Now
             };
             _unitOfWork.AnswerRepository.Add(answer);
@@ -180,35 +175,17 @@ namespace iKnow.Controllers
             return existingAnswer;
         }
 
-        public PartialViewResult EditIcon(int id)
-        {
-            var answer = _unitOfWork.AnswerRepository.Single(a => a.Id == id);
-            if (User.Identity.IsAuthenticated
-                && answer.AppUserId == User.Identity.GetUserId())
-            {
-                return PartialView("_AnswerEditIconPartial");
-            }
-
-            return null;
-        }
-
-        public PartialViewResult GetAnswerPanelHeader(string id)
-        {
-            var user = _unitOfWork.UserRepository.Single(u => u.Id == id);
-            return PartialView("_UserInfoPartial", user);
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
         public ActionResult Delete(QuestionDetailViewModel viewModel)
         {
-            var currentUserId = User.Identity.GetUserId();
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var answer = _unitOfWork.AnswerRepository.Single(a => a.Id == viewModel.UserAnswerId);
 
             if (answer.AppUserId != currentUserId)
             {
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
             }
             _unitOfWork.AnswerRepository.Remove(answer);
 

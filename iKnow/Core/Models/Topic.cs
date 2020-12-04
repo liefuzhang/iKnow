@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Web.Hosting;
 using iKnow.Helper;
 
 namespace iKnow.Core.Models {
@@ -10,8 +8,8 @@ namespace iKnow.Core.Models {
         private IFileHelper _fileHelper;
 
         public Topic() {
-            AppUsers = new HashSet<AppUser>();
-            Questions = new HashSet<Question>();
+            TopicUsers = new HashSet<TopicUser>();
+            TopicQuestions = new HashSet<TopicQuestion>();
             Followings = new HashSet<TopicFollowing>();
             _fileHelper = new FileHelper();
         }
@@ -29,7 +27,7 @@ namespace iKnow.Core.Models {
 
         private string IconSavePath => Constants.TopicIconFolderPath
                                       + (Name ?? String.Empty).ToLower().Replace(' ', '-') + Constants.DefaultIconExtension;
-        public string IconSavePathOnServer => HostingEnvironment.MapPath(IconSavePath);
+        public string IconSavePathOnServer => ServerHelper.MapPath(IconSavePath);
         public string IconPath {
             get {
                 if (Id == 0) {
@@ -37,14 +35,14 @@ namespace iKnow.Core.Models {
                 }
 
                 if (!_fileHelper.DoesFileExist(IconSavePathOnServer)) {
-                    return Constants.TopicDefaultIconPath;
+                    return "/" + Constants.TopicDefaultIconPath;
                 }
-                return IconSavePath;
+                return "/" + IconSavePath;
             }
         }
 
-        public ICollection<AppUser> AppUsers { get; set; }
-        public ICollection<Question> Questions { get; set; }
+        public ICollection<TopicUser> TopicUsers { get; private set; }
+        public ICollection<TopicQuestion> TopicQuestions { get; set; }
         public ICollection<TopicFollowing> Followings { get; set; }
 
         public void TrimNameAndDescription() {

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using System.Security.Claims;
 using iKnow.Core;
 using iKnow.Core.Models;
 using iKnow.Core.ViewModels;
-using Microsoft.AspNet.Identity;
 using iKnow.Persistence;
+using Microsoft.AspNetCore.Mvc;
 using Constants = iKnow.Core.Models.Constants;
 namespace iKnow.Controllers {
     public class SearchController : Controller {
@@ -17,18 +16,14 @@ namespace iKnow.Controllers {
             _unitOfWork = unitOfWork;
         }
 
-        public SearchController() {
-            _unitOfWork = new UnitOfWork();
-        }
-
         protected override void Dispose(bool disposing) {
             _unitOfWork.Dispose();
             base.Dispose(disposing);
         }
 
-        public PartialViewResult GetResult(string input) {
+        public IActionResult GetResult(string input) {
             if (string.IsNullOrWhiteSpace(input)) {
-                return null;
+                return Content(string.Empty);
             }
 
             const int getUserCount = 2;
@@ -79,7 +74,7 @@ namespace iKnow.Controllers {
             var questions = GetQuestions(keywords, skip: skip, onlyQuestionsWithAnswers: true).ToList();
             var questionIds = questions.Select(q => q.Id).ToList();
             var questionAnswers =
-                _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds, User.Identity.GetUserId());
+                _unitOfWork.AnswerRepository.GetQuestionAnswerPairsForGivenQuestions(questionIds, User.FindFirstValue(ClaimTypes.NameIdentifier));
             return questionAnswers;
         }
 

@@ -9,11 +9,13 @@
         <h3>Topics</h3>
     </div>
     <ul class="topic-list">
-        @foreach (var topic in Model.Topics) {
+        @foreach (var topic in Model.Topics)
+        {
             <li data-topic-id="@topic.Id" class="@(Model.SelectedTopic.Id == topic.Id ? "active" : "")">@topic.Name</li>
         }
     </ul>
-    @if (Model.SelectedTopic != null) {
+    @if (Model.SelectedTopic != null)
+    {
         <div class="topic-body">
             @Html.Partial("_TopicBodyPartial", Model.SelectedTopic)
         </div>
@@ -22,7 +24,7 @@
 
 <div class="sidebar">
     <div class="topic-sidebar  sidebar-section divided-section">
-        @Html.Action("GetRecommendedTopics", "Topic")
+        @await Component.InvokeAsync("GetRecommendedTopics")
     </div>
     <div class="sidebar-section divided-section">
         @Html.Partial("_SideBarSiteInfoPartial")

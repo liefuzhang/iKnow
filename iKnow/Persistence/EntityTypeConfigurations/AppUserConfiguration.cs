@@ -1,40 +1,33 @@
-﻿using System.Data.Entity.ModelConfiguration;
-using iKnow.Core.Models;
+﻿using iKnow.Core.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace iKnow.Persistence.EntityTypeConfigurations {
-    internal class AppUserConfiguration : EntityTypeConfiguration<AppUser> {
-        public AppUserConfiguration() {
-            Property(u => u.FirstName)
+    internal class AppUserConfiguration : IEntityTypeConfiguration<AppUser> {
+        public void Configure(EntityTypeBuilder<AppUser> builder) { 
+            builder.Property(u => u.FirstName)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            Property(u => u.LastName)
+            builder.Property(u => u.LastName)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            Property(u => u.Location)
+            builder.Property(u => u.Location)
                 .HasMaxLength(50);
 
-            Property(u => u.Intro)
+            builder.Property(u => u.Intro)
                 .HasMaxLength(255);
 
-            HasMany(u => u.Questions)
-                .WithRequired(q => q.AppUser)
+            builder.HasMany(u => u.Questions)
+                .WithOne(q => q.AppUser)
                 .HasForeignKey(q => q.AppUserId)
-                .WillCascadeOnDelete(false);
+                .OnDelete(DeleteBehavior.NoAction);
 
-            HasMany(u => u.Topics)
-                .WithMany(t => t.AppUsers)
-                .Map(m => {
-                    m.ToTable("TopicUsers");
-                    m.MapLeftKey("UserId");
-                    m.MapRightKey("TopicId");
-                });
-
-            HasMany(u => u.Answers)
-                .WithRequired(a => a.AppUser)
+            builder.HasMany(u => u.Answers)
+                .WithOne(a => a.AppUser)
                 .HasForeignKey(a => a.AppUserId)
-                .WillCascadeOnDelete(false);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
