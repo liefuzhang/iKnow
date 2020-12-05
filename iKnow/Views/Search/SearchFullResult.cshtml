@@ -10,7 +10,7 @@
         @if (Model.User != null)
         {
             <div>
-                <div>@Html.Partial("_UserInfoPartial", Model.User)</div>
+                <div>@Html.Partial("~/Views/Shared/Components/AnswerPanelHeader/Default.cshtml", Model.User)</div>
                 <a class="search-view-more"
                    href="@Url.Action("SearchFullResult", "Search", new { search = Model.Search, type = nameof(Model.User) })">
                     View More <b>@(nameof(Model.User))</b> Search Results >

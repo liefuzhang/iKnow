@@ -1,0 +1,6 @@
+pg_dump -U postgres iknow > iknow.sql
+
+replace 锘? with <
+
+cat iknow.sql | heroku pg:psql -a iknow-netcore
+

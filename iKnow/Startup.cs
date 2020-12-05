@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Npgsql;
 
 namespace iKnow
 {
@@ -28,7 +29,7 @@ namespace iKnow
             services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddDbContext<iKnowContext>(options =>
-                options.UseSqlServer(Configuration["DefaultConnection"]));
+                options.UseNpgsql(GetConnectString(Configuration["DefaultConnection"])));
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<iKnowContext>()
                 .AddDefaultTokenProviders();
@@ -83,6 +84,33 @@ namespace iKnow
             // setup app's root folders
             AppDomain.CurrentDomain.SetData("ContentRootPath", env.ContentRootPath);
             AppDomain.CurrentDomain.SetData("WebRootPath", env.WebRootPath);
+        }
+
+        private static string GetConnectString(string connectionStringInConfig)
+        {
+            string connectionString;
+            var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+            if (string.IsNullOrEmpty(databaseUrl))
+            {
+                connectionString = connectionStringInConfig;
+            }
+            else
+            {
+                var databaseUri = new Uri(databaseUrl);
+                var userInfo = databaseUri.UserInfo.Split(':');
+
+                var builder = new NpgsqlConnectionStringBuilder
+                {
+                    Host = databaseUri.Host,
+                    Port = databaseUri.Port,
+                    Username = userInfo[0],
+                    Password = userInfo[1],
+                    Database = databaseUri.LocalPath.TrimStart('/')
+                };
+                connectionString = builder.ToString();
+            }
+
+            return connectionString;
         }
     }
 }

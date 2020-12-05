@@ -2,6 +2,7 @@
 using iKnow.Persistence.EntityTypeConfigurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace iKnow.Persistence
 {
@@ -25,7 +26,7 @@ namespace iKnow.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppUserConfiguration).Assembly);
-
+            
             base.OnModelCreating(modelBuilder);
         }
     }

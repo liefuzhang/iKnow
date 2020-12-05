@@ -9,7 +9,7 @@
                 @foreach (var user in Model.Users)
                 {
                     <div class="search-result-user">
-                        <div>@Html.Partial("_UserInfoPartial", user)</div>
+                        <div>@Html.Partial("~/Views/Shared/Components/AnswerPanelHeader/Default.cshtml", user)</div>
                     </div>
                 }
             </div>

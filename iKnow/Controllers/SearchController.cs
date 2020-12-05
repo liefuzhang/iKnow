@@ -44,30 +44,37 @@ namespace iKnow.Controllers {
             return input.Trim().Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        private IEnumerable<AppUser> GetUsers(string[] keywords, int getUserCount = Constants.DefaultPageSize, int skip = 0) {
-            return _unitOfWork.UserRepository.Get(
-                user => keywords.All(
-                    keyword => user.FirstName.ToLower().StartsWith(keyword.ToLower())
-                               || user.LastName.ToLower().StartsWith(keyword.ToLower())),
-                query => query.OrderByDescending(user => user.Id), skip: skip, take: getUserCount);
+        private IEnumerable<AppUser> GetUsers(string[] keywords, int getUserCount = Constants.DefaultPageSize, int skip = 0)
+        {
+            return _unitOfWork.UserRepository.GetAll().Where(
+                    user => keywords.All(
+                        keyword => user.FirstName.ToLower().StartsWith(keyword.ToLower())
+                                   || user.LastName.ToLower().StartsWith(keyword.ToLower())))
+                .OrderByDescending(user => user.Id)
+                .Skip(skip)
+                .Take(getUserCount);
         }
 
         private IEnumerable<Topic> GetTopics(string[] keywords, int getTopicCount = Constants.DefaultPageSize, int skip = 0) {
-            return _unitOfWork.TopicRepository.Get(
+            return _unitOfWork.TopicRepository.GetAll().Where(
                 topic => keywords.All(
                     keyword => topic.Name.ToLower().StartsWith(keyword.ToLower())
-                    || topic.Name.ToLower().Contains(" " + keyword.ToLower())),
-                query => query.OrderByDescending(topic => topic.Id), skip: skip, take: getTopicCount);
+                    || topic.Name.ToLower().Contains(" " + keyword.ToLower())))
+                .OrderByDescending(topic => topic.Id)
+                .Skip(skip)
+                .Take(getTopicCount);
         }
 
         private IEnumerable<Question> GetQuestions(string[] keywords, int getQuestionCount = Constants.DefaultPageSize,
             int skip = 0, bool onlyQuestionsWithAnswers = false) {
-            return _unitOfWork.QuestionRepository.Get(
+            return _unitOfWork.QuestionRepository.GetAll().Where(
                 question => keywords.All(
                     keyword => question.Title.ToLower().StartsWith(keyword.ToLower())
                     || question.Title.ToLower().Contains(" " + keyword.ToLower())) &&
-                question.Answers.Count > (onlyQuestionsWithAnswers ? 0 : -1),
-                query => query.OrderByDescending(question => question.Id), skip: skip, take: getQuestionCount);
+                question.Answers.Count > (onlyQuestionsWithAnswers ? 0 : -1))
+                .OrderByDescending(question => question.Id)
+                .Skip(skip)
+                .Take(getQuestionCount);
         }
 
         private IDictionary<Question, Answer> GetQuestionAnswers(string[] keywords, int skip = 0) {

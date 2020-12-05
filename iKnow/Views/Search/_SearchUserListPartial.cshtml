@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<iKnow.Core.Models.AppUser>
 @foreach (var user in Model)
 {
-    <div>@Html.Partial("_UserInfoPartial", user)</div>
+    <div>@Html.Partial("~/Views/Shared/Components/AnswerPanelHeader/Default.cshtml", user)</div>
 }
