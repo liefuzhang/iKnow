@@ -2,7 +2,6 @@
 using iKnow.Persistence.EntityTypeConfigurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
 
 namespace iKnow.Persistence
 {

@@ -41,7 +41,7 @@ namespace iKnow.Helper {
 
         private string ConstructEmailBody(AppUser user, string callbackUrl) {
             var emailTemplate = ServerHelper.MapPath("~/App_Data/EmailTemplateForgotPassword.htm");
-            var logoUrl = ServerHelper.MapPath("~/Content/Images/logo.png");
+            var logoUrl = ServerHelper.MapPath("~/content/images/logo.png");
 
             var body = string.Empty;
             if (!string.IsNullOrEmpty(emailTemplate)) {
