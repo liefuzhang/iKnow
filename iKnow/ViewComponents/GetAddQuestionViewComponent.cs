@@ -16,12 +16,12 @@ namespace iKnow.ViewComponents
         public IViewComponentResult Invoke(int id)
         {
             var activity = _unitOfWork.ActivityRepository.Single(a => a.Id == id);
-            var topic = _unitOfWork.TopicRepository.Single(t => t.Id == activity.TopicId);
+            var question = _unitOfWork.QuestionRepository.Single(q => q.Id == activity.QuestionId);
 
             var viewModel = new ActivityViewModel
             {
                 DateTime = activity.DateTime,
-                Topic = topic
+                Question = question
             };
 
             return View(viewModel);

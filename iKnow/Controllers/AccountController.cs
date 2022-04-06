@@ -103,7 +103,8 @@ namespace iKnow.Controllers
                     Email = model.Email,
                     UserName = userName,
                     Gender = 0,
-                    DefaultIconNumber = (byte)(new Random()).Next(10)
+                    DefaultIconNumber = (byte)(new Random()).Next(10),
+                    NormalizedUserName = userName.ToUpper()
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);

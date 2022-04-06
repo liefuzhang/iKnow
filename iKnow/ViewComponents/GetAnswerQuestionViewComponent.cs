@@ -1,4 +1,5 @@
 ﻿using iKnow.Core;
+using iKnow.Core.Models;
 using iKnow.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,12 +17,15 @@ namespace iKnow.ViewComponents
         public IViewComponentResult Invoke(int id)
         {
             var activity = _unitOfWork.ActivityRepository.Single(a => a.Id == id);
-            var topic = _unitOfWork.TopicRepository.Single(t => t.Id == activity.TopicId);
+            var answer = _unitOfWork.AnswerRepository.Single(a => a.Id == activity.AnswerId,
+                nameof(Answer.AppUser) + "," + nameof(Answer.AnswerLikes) + "," + nameof(Answer.Comments));
+            var question = _unitOfWork.QuestionRepository.Single(q => q.Id == answer.QuestionId);
 
             var viewModel = new ActivityViewModel
             {
                 DateTime = activity.DateTime,
-                Topic = topic
+                Answer = answer,
+                Question = question
             };
 
             return View(viewModel);
